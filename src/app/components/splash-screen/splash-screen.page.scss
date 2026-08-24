@@ -1,0 +1,163 @@
+* {
+  font-family: 'Francus', sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.splash-container {
+  width: 100%;
+  height: 100vh;
+  background-color: #751717;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.splash-container.fade-out {
+  opacity: 0;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.logo-container {
+  width: 100%;
+  max-width: 300px;
+
+  margin-bottom: 60px;
+
+  opacity: 0;
+
+  animation: logoEntrance 1.2s ease forwards;
+}
+
+.logo {
+  width: 100%;
+  display: block;
+}
+
+/* =========================
+   INTEGRANTES
+========================= */
+
+.integrantes-container {
+  width: 100%;
+  text-align: center;
+  color: white;
+}
+
+.integrantes-container h2 {
+  margin: 0 0 20px;
+
+  font-family: 'Frances', sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+
+  opacity: 0;
+
+  animation:
+    fadeInUp 0.6s ease forwards;
+
+  animation-delay: 1s;
+}
+
+.integrante {
+  margin: 8px 0;
+
+  font-family: 'Frances', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+
+  color: white;
+
+  opacity: 0;
+}
+
+/* Animación escalonada */
+
+.integrante-1 {
+  animation: integranteEntrance 0.5s ease forwards;
+  animation-delay: 1.4s;
+}
+
+.integrante-2 {
+  animation: integranteEntrance 0.5s ease forwards;
+  animation-delay: 1.7s;
+}
+
+.integrante-3 {
+  animation: integranteEntrance 0.5s ease forwards;
+  animation-delay: 2s;
+}
+
+.integrante-4 {
+  animation: integranteEntrance 0.5s ease forwards;
+  animation-delay: 2.3s;
+}
+
+/* =========================
+   ANIMACIONES
+========================= */
+
+@keyframes logoEntrance {
+
+  0% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.85);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(0) scale(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+
+
+@keyframes fadeInUp {
+
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+@keyframes integranteEntrance {
+
+  from {
+    opacity: 0;
+    transform: translateX(-25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
