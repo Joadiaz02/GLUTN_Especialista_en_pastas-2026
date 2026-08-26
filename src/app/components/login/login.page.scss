@@ -1,0 +1,175 @@
+/* Frame 146 */
+.login{
+    /* Login */
+
+position: relative;
+width: 375px;
+height: 812px;
+
+background: #FFFFFF;
+
+}
+
+.textos{
+        /* Iniciar sesión */
+
+    width: 327px;
+    height: 27px;
+
+    /* Heading/Bold/H5 */
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 150%;
+    /* idéntico a la altura del cuadro o 27px */
+
+    /* Label Colors/Primary */
+    color: #1F1F1F;
+
+
+    /* Dentro del diseño automático */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+
+}
+
+
+
+.input{
+    /* Input */
+
+box-sizing: border-box;
+
+/* Diseño automático */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 10px 16px;
+gap: 10px;
+
+width: 327px;
+height: 55px;
+
+background: rgba(186, 31, 39, 0.05);
+/* Primary/Normal */
+border: 1px solid #BA1F27;
+border-radius: 12px;
+
+/* Dentro del diseño automático */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+}
+
+.boton_i{
+    /* Button */
+
+/* Diseño automático */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 10px;
+gap: 10px;
+
+position: absolute;
+width: 327px;
+height: 56px;
+left: 24px;
+top: 341px;
+
+/* Primary/Normal */
+background: #BA1F27;
+border-radius: 50px;
+
+}
+
+.linea_isq {
+/* Line 13 */
+
+display: block;
+/* Border */
+border: 1px solid #E4E8ED;
+
+/* Dentro del diseño automático */
+flex: none;
+order: 0;
+flex-grow: 1;
+
+}
+
+.punto {
+  display: block;         
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;     
+  background-color: #697586;  
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.registrate {
+  text-align: center;
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  color: #697586;
+  margin-top: 24px; // reemplaza al position/top de Figma
+}
+
+.boton_c{
+    /* Button */
+
+box-sizing: border-box;
+
+/* Diseño automático */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 10px;
+gap: 10px;
+
+position: absolute;
+width: 327px;
+height: 56px;
+left: 24px;
+top: 482px;
+
+/* Border */
+border: 1px solid #E4E8ED;
+border-radius: 50px;
+
+}
+.boton_a{
+    /* Button */
+
+box-sizing: border-box;
+
+/* Diseño automático */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 10px;
+gap: 10px;
+
+position: absolute;
+width: 327px;
+height: 56px;
+left: 24px;
+top: 554px;
+
+/* Border */
+border: 1px solid #E4E8ED;
+border-radius: 50px;
+
+}
