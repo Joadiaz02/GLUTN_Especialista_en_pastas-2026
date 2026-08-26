@@ -1,0 +1,53 @@
+ion-input {
+  &.input {
+    min-height: 56px;
+    
+    font-size: 14px;
+    font-weight: 500;
+
+    --border-width: 0;
+
+    --padding-start: 16px;
+    --padding-end: 16px;
+
+    --placeholder-color: #697586;
+    --placeholder-opacity: 1;
+    
+    --highlight-height: 1px;
+    
+    --border-color: #E4E8ED;
+    --border-style: solid;
+    --border-width: 1px;
+
+    --highlight-color-invalid: var(--ion-color-danger);
+    --highlight-color-valid: var(--ion-color-primary);
+  
+    &.has-focus {
+      --background: hsla(357, 71%, 43%, 0.05);
+    }
+  }
+  
+  &.input-fill-outline {
+    --border-radius: 12px !important;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1F1F1F;
+  }
+
+  .field__error {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ion-color-danger);
+    text-align: right;
+  }
+}
