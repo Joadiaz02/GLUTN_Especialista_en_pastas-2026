@@ -67,7 +67,7 @@
    FONDO GLOBAL
 ========================= */
 ion-content {
-  --background: var(--glutn-rojo-claro);
+  --background: var(--glutn-blanco);
 }
 
 /* =========================
@@ -77,6 +77,8 @@ ion-content {
   width: 180px;
   display: block;
   margin: 0 auto;
+  background-color: var(--glutn-rojo);
+  border-radius: 25px;
 }
 
 
