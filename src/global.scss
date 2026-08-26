@@ -35,3 +35,61 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* =========================
+   PALETA GLOBAL GLUTN
+========================= */
+:root {
+  --glutn-rojo: #751717;
+  --glutn-rojo-secundario: #BA1F27;
+  --glutn-rojo-oscuro: #580C0E;
+  --glutn-rojo-claro: #FDEBEB;
+  --glutn-crema: #FFF4E6;
+  --glutn-gris: #333333;
+  --glutn-blanco: #FFFFFF;
+  --glutn-rojo: #751717;
+  --glutn-verde: #2E6732;
+  --glutn-verde-secundario:#25A449;
+  --glutn-verde-oscuro: #1A5E2F;
+  --glutn-verde-claro: #EEF5EB;
+}
+
+/* =========================
+   TIPOGRAFÍA GLOBAL
+========================= */
+* {
+  font-family: 'Francus', sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* =========================
+   FONDO GLOBAL
+========================= */
+ion-content {
+  --background: var(--glutn-rojo-claro);
+}
+
+/* =========================
+   LOGO GLOBAL
+========================= */
+.logo {
+  width: 180px;
+  display: block;
+  margin: 0 auto;
+}
+
+
+/* =========================
+   ANIMACIONES GLOBALES
+========================= */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes logoEntrance {
+  0%   { opacity: 0; transform: translateY(-40px) scale(0.85); }
+  60%  { opacity: 1; transform: translateY(0) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}

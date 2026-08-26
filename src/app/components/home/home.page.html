@@ -1,0 +1,139 @@
+<ion-content>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <ion-button fill="clear" class="login-btn" (click)="onLoginClick()">
+      {{ isLoggedIn ? 'Cerrar sesión' : 'Login' }}
+    </ion-button>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="logo-container">
+      <img src="assets/images/LOGO-GLUTN.png" alt="GLUTN" class="logo" />
+    </div>
+
+    <!-- BOTONES PRINCIPALES -->
+    <div class="hero-buttons">
+
+      <ion-button expand="block" shape="round" (click)="toggleReserva()">
+        Reservar mesa
+      </ion-button>
+
+      <ion-button expand="block" shape="round" (click)="goToCarta()">
+        Carta
+      </ion-button>
+
+      <ion-button expand="block" shape="round" (click)="toggleDestacados()">
+        Productos destacados
+      </ion-button>
+
+      <ion-button expand="block" shape="round"
+                  [disabled]="!enMesa"
+                  (click)="goToChat()">
+        Sala de chat
+      </ion-button>
+
+      <ion-button expand="block" shape="round" (click)="goToEncuestas()">
+        Encuestas realizadas
+      </ion-button>
+
+      <ion-button expand="block" shape="round" (click)="toggleQuienesSomos()">
+        Quiénes somos
+      </ion-button>
+
+    </div>
+  </div>
+
+  <!-- RESERVA -->
+  @if (showReserva) {
+    <div class="reserva-container">
+      <h2>Reservar mesa</h2>
+
+      <ion-item>
+        <ion-label>Fecha</ion-label>
+        <ion-datetime
+          presentation="date"
+          [min]="today"
+          (ionChange)="fecha = formatDate($event.detail.value)">
+        </ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Hora</ion-label>
+        <ion-datetime
+          presentation="time"
+          [min]="now"
+          (ionChange)="hora = formatDate($event.detail.value)">
+        </ion-datetime>
+      </ion-item>
+
+      <ion-button expand="block" shape="round" (click)="solicitarReserva()">
+        Solicitar
+      </ion-button>
+    </div>
+  }
+
+  <!-- PRODUCTOS DESTACADOS -->
+  @if (showDestacados) {
+    <div class="destacados-container">
+      <h2>Productos destacados</h2>
+
+      <ion-list>
+        @for (prod of productos; track prod.nombre) {
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <img [src]="prod.imagen" />
+            </ion-thumbnail>
+            <ion-label>
+              <h3>{{ prod.nombre }}</h3>
+              <p>{{ prod.detalle }}</p>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    </div>
+  }
+
+  <!-- QUIÉNES SOMOS -->
+  @if (showQuienesSomos) {
+    <div class="historia">
+      <h2>Quiénes somos</h2>
+      <p>
+        GLUTN es una empresa dedicada a la elaboración de pastas artesanales...
+      </p>
+    </div>
+  }
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>GLUTN © 2026 – Todos los derechos reservados</p>
+    <p>Versión 1.0.0</p>
+
+    <a href="https://instagram.com/glutn" target="_blank" class="instagram-icon">
+      <ion-icon name="logo-instagram"></ion-icon>
+    </a>
+  </div>
+
+  <!-- MENÚ INFERIOR -->
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+
+      <ion-tab-button tab="home">
+        <ion-icon name="home-outline"></ion-icon>
+        <ion-label>Inicio</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button class="scan-btn" (click)="goToScanner()">
+        <ion-icon name="qr-code-outline"></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button tab="perfil">
+        <ion-icon name="person-outline"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-tab-button>
+
+    </ion-tab-bar>
+  </ion-tabs>
+
+</ion-content>
