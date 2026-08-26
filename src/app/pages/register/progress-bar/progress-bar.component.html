@@ -1,0 +1,11 @@
+<!-- <div class="progress">
+  <div class="progress-fill"></div>
+  <div class="progress-fill"></div>
+  <div class="progress-fill"></div>
+</div> -->
+
+<div class="progress">
+  @for (step of stepsArray(); track step) {
+    <div class="progress-fill" [class.active]="isStepActive(step)"></div>
+  }
+</div>

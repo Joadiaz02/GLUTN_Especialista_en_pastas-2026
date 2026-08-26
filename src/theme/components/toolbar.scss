@@ -1,0 +1,20 @@
+ion-toolbar {
+  --min-height: 72px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+
+  ion-title {
+    position: absolute;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1F1F1F;
+    letter-spacing: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: grid;
+    place-content: center;
+  }
+}
