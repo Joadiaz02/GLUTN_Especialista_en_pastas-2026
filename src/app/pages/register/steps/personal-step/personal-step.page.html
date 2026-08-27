@@ -1,0 +1,207 @@
+<div
+  class="wrapper"
+  [formGroup]="formGroup"
+>
+  <div>
+    <h1 class="title">
+      ¿Quién sos?
+    </h1>
+
+    <p class="subtitle">
+      Escaneá tu DNI o completá tus datos manualmente para empezar.
+    </p>
+
+    <div class="fields">
+
+      <!-- NOMBRE -->
+
+      <div class="field">
+        <label class="label">
+          Nombre
+        </label>
+
+        <ion-input
+          type="text"
+          fill="outline"
+          class="input"
+          placeholder="Nombre"
+          formControlName="name"
+        />
+
+        @if (
+          getFormControl('name')?.invalid &&
+          (
+            getFormControl('name')?.touched ||
+            getFormControl('name')?.dirty
+          )
+        ) {
+
+          @if (
+            getFormControl('name')?.hasError('required')
+          ) {
+            <p class="field__error">
+              El nombre es obligatorio.
+            </p>
+          }
+
+          @if (
+            getFormControl('name')?.hasError('minlength')
+          ) {
+            <p class="field__error">
+              El nombre debe tener al menos 2 caracteres.
+            </p>
+          }
+
+          @if (
+            getFormControl('name')?.hasError('maxlength')
+          ) {
+            <p class="field__error">
+              El nombre no puede superar los 50 caracteres.
+            </p>
+          }
+
+          @if (
+            getFormControl('name')?.hasError('pattern')
+          ) {
+            <p class="field__error">
+              El nombre solo puede contener letras.
+            </p>
+          }
+
+        }
+      </div>
+
+      <!-- APELLIDO -->
+
+      <div class="field">
+        <label class="label">
+          Apellido
+        </label>
+
+        <ion-input
+          type="text"
+          fill="outline"
+          class="input"
+          placeholder="Apellido"
+          formControlName="lastName"
+        />
+
+        @if (
+          getFormControl('lastName')?.invalid &&
+          (
+            getFormControl('lastName')?.touched ||
+            getFormControl('lastName')?.dirty
+          )
+        ) {
+
+          @if (
+            getFormControl('lastName')?.hasError('required')
+          ) {
+            <p class="field__error">
+              El apellido es obligatorio.
+            </p>
+          }
+
+          @if (
+            getFormControl('lastName')?.hasError('minlength')
+          ) {
+            <p class="field__error">
+              El apellido debe tener al menos 2 caracteres.
+            </p>
+          }
+
+          @if (
+            getFormControl('lastName')?.hasError('maxlength')
+          ) {
+            <p class="field__error">
+              El apellido no puede superar los 50 caracteres.
+            </p>
+          }
+
+          @if (
+            getFormControl('lastName')?.hasError('pattern')
+          ) {
+            <p class="field__error">
+              El apellido solo puede contener letras.
+            </p>
+          }
+
+        }
+      </div>
+
+      <!-- DNI -->
+
+      <div>
+        <div class="field">
+          <label class="label">
+            DNI
+          </label>
+
+          <div class="dni-group">
+
+            <ion-input
+              type="tel"
+              inputmode="numeric"
+              fill="outline"
+              class="input"
+              maxlength="8"
+              placeholder="12345678"
+              formControlName="dni"
+            />
+
+            <ion-button
+              fill="outline"
+              shape="round"
+              (click)="scanDNI()"
+              [disabled]="scanning"
+            >
+              <ion-icon
+                slot="icon-only"
+                src="assets/icons/scan.svg"
+              ></ion-icon>
+            </ion-button>
+
+          </div>
+
+          @if (
+            getFormControl('dni')?.invalid &&
+            (
+              getFormControl('dni')?.touched ||
+              getFormControl('dni')?.dirty
+            )
+          ) {
+
+            @if (
+              getFormControl('dni')?.hasError('required')
+            ) {
+              <p class="field__error">
+                El DNI es obligatorio.
+              </p>
+            }
+
+            @if (
+              getFormControl('dni')?.hasError('pattern')
+            ) {
+              <p class="field__error">
+                Ingresá un DNI válido de 7 u 8 números.
+              </p>
+            }
+
+          }
+
+          @if (scanError) {
+            <p class="field__error">
+              {{ scanError }}
+            </p>
+          }
+        </div>
+
+        <p class="hint">
+          Escaneá el código de tu DNI para completar
+          los datos automáticamente.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>

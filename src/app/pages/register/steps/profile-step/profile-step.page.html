@@ -1,0 +1,74 @@
+<div
+  class="wrapper"
+  [formGroup]="formGroup"
+>
+  <div>
+
+    <h1 class="title">
+      Sumá tu foto
+    </h1>
+
+    <p class="subtitle">
+      Así el mozo y el metre te reconocen apenas llegás.
+    </p>
+
+    <div class="photo-section">
+
+      <p class="photo-title">
+        Tomá tu foto
+      </p>
+
+      <div
+        class="container"
+        (click)="takePhoto()"
+      >
+        <div class="photo-circle">
+
+          @if (photoPreview()) {
+
+            <img
+              [src]="photoPreview()"
+              class="photo-image"
+              alt="Foto de perfil"
+            />
+
+          } @else {
+
+            <div class="avatar"></div>
+
+          }
+
+        </div>
+      </div>
+
+      <p class="photo-hint">
+        @if (photoPreview()) {
+          Presioná para cambiar la foto
+        } @else {
+          Presioná en el círculo para abrir la cámara
+        }
+      </p>
+
+    </div>
+
+    @if (
+      getFormControl('file')?.invalid &&
+      getFormControl('file')?.touched
+    ) {
+
+      <p class="field__error">
+        Debes agregar una foto para continuar.
+      </p>
+
+    }
+
+    @if (photoError) {
+
+      <p class="field__error">
+        {{ photoError }}
+      </p>
+
+    }
+
+  </div>
+</div>
