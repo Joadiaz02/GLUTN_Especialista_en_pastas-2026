@@ -34,64 +34,25 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+// @import '@ionic/angular/css/palettes/dark.system.css';
 
-/* =========================
-   PALETA GLOBAL GLUTN
-========================= */
+@import './theme/components/button.scss';
+@import './theme/components/input.scss';
+@import './theme/components/toolbar.scss';
+
+@import './theme/pages/register.scss';
+
 :root {
-  --glutn-rojo: #751717;
-  --glutn-rojo-secundario: #BA1F27;
-  --glutn-rojo-oscuro: #580C0E;
-  --glutn-rojo-claro: #FDEBEB;
-  --glutn-crema: #FFF4E6;
-  --glutn-gris: #333333;
-  --glutn-blanco: #FFFFFF;
-  --glutn-rojo: #751717;
-  --glutn-verde: #2E6732;
-  --glutn-verde-secundario:#25A449;
-  --glutn-verde-oscuro: #1A5E2F;
-  --glutn-verde-claro: #EEF5EB;
-}
+  --ion-background-color: #FFFFFF;
+  --ion-font-family: "Manrope", sans-serif;
+  --ion-text-color: #1F1F1F;
+  --ion-color-primary: #BA1F27;
+  --ion-color-primary-shade: #a41b22;
+  --ion-color-danger: #EF2F4B;
 
-/* =========================
-   TIPOGRAFÍA GLOBAL
-========================= */
-* {
-  font-family: 'Francus', sans-serif;
-  font-weight: 600;
-  font-style: normal;
-}
+  --ion-input-color: blue;
+  --ion-card-color: #1E1F21;
+  --ion-muted-foreground: red;
 
-/* =========================
-   FONDO GLOBAL
-========================= */
-ion-content {
-  --background: var(--glutn-blanco);
-}
-
-/* =========================
-   LOGO GLOBAL
-========================= */
-.logo {
-  width: 180px;
-  display: block;
-  margin: 0 auto;
-  background-color: var(--glutn-rojo);
-  border-radius: 25px;
-}
-
-
-/* =========================
-   ANIMACIONES GLOBALES
-========================= */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(25px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes logoEntrance {
-  0%   { opacity: 0; transform: translateY(-40px) scale(0.85); }
-  60%  { opacity: 1; transform: translateY(0) scale(1.05); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  --ion-border-color: #E4E8ED;
 }

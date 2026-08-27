@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { SplashScreenPage } from './components/splash-screen/splash-screen.page';
 import { LoginPage } from './components/login/login.page';
-import { HomePage } from './components/home/home.page';
+import { HomePage } from './pages/home/home.page';
 
 export const routes: Routes = [
   {
@@ -23,6 +23,11 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () =>
       import('./pages/login/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./pages/home/home.page').then((m) => m.HomePage),
   },
 
   // {

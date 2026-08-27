@@ -1,0 +1,106 @@
+<ion-content>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="logo-container">
+      <img
+        src="assets/images/LOGO-GLUTN.png"
+        alt="GLUTN - Especialista en Pastas"
+        class="logo"
+      />
+    </div>
+
+    <!-- BOTONES PRINCIPALES -->
+    <ion-button expand="block" shape="round" (click)="toggleReserva()">
+      Reservar mesa
+    </ion-button>
+
+    <ion-button expand="block" shape="round" (click)="toggleDestacados()">
+      Productos destacados
+    </ion-button>
+
+    <ion-button expand="block" shape="round" (click)="toggleQuienesSomos()">
+      Quienes somos
+    </ion-button>
+
+    <ion-button expand="block" shape="round" (click)="goToCarta()">
+      Carta
+    </ion-button>
+
+    <ion-button expand="block" shape="round" (click)="goToChat()">
+      Chat
+    </ion-button>
+
+    <ion-button expand="block" shape="round" (click)="goToEncuestas()">
+      Encuestas
+    </ion-button>
+
+    <ion-button expand="block" shape="round" (click)="goToScanner()">
+      Scanner
+    </ion-button>
+  </div>
+
+
+  <!-- ============================
+       RESERVA
+  ============================ -->
+  <div *ngIf="showReserva" class="historia">
+    <h2>Reservar mesa</h2>
+
+    <ion-item>
+      <ion-label>Fecha</ion-label>
+      <ion-datetime
+        presentation="date"
+        [min]="today"
+        (ionChange)="fecha = formatDate($event.detail.value)"
+      ></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Hora</ion-label>
+      <ion-datetime
+        presentation="time"
+        (ionChange)="hora = formatDate($event.detail.value)"
+      ></ion-datetime>
+    </ion-item>
+
+    <ion-button expand="block" shape="round" (click)="solicitarReserva()">
+      Solicitar reserva
+    </ion-button>
+  </div>
+
+
+  <!-- ============================
+       PRODUCTOS DESTACADOS
+  ============================ -->
+  <ion-list *ngIf="showDestacados">
+    <ion-list-header>
+      <h2>Productos destacados</h2>
+    </ion-list-header>
+
+    <ion-item *ngFor="let p of productos">
+      <ion-thumbnail slot="start">
+        <img [src]="p.imagen" [alt]="p.nombre">
+      </ion-thumbnail>
+
+      <ion-label>
+        <h3>{{ p.nombre }}</h3>
+        <p>{{ p.detalle }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+
+  <!-- ============================
+       QUIENES SOMOS
+  ============================ -->
+  <div *ngIf="showQuienesSomos" class="historia">
+    <h2>Quienes somos</h2>
+    <p>
+      En GLUTN elaboramos pastas artesanales de tradición familiar.
+      Cada producto está hecho con ingredientes seleccionados y técnicas que
+      garantizan sabor, textura y calidad.
+    </p>
+  </div>
+
+</ion-content>

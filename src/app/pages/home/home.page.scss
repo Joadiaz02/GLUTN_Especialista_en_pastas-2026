@@ -1,0 +1,98 @@
+ion-content {
+  --background: var(--ion-background-color);
+  padding: 20px;
+}
+
+/* HERO */
+.hero {
+  background: var(--ion-color-primary);
+  padding: 40px 20px;
+  border-radius: 25px 25px 25px 25px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.logo-container {
+  width: 160px;
+  margin: 0 auto 20px auto;
+}
+
+.logo {
+  width: 100%;
+  display: block;
+}
+
+.hero h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: --ion-background-color;
+}
+
+.hero p {
+  font-size: 18px;
+  color: --ion-background-color;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+ion-button {
+  --background: var(--ion-color-primary);
+  --background-hover: var(--ion-color-primary-shade);
+  --border-radius: 25px;
+  font-size: 18px;
+  font-weight: 600;
+  height: 48px;
+}
+
+/* PRODUCTOS DESTACADOS */
+ion-list {
+  margin-top: 25px;
+  background: transparent;
+}
+
+ion-list-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+}
+
+ion-item {
+  --background: --ion-background-color;
+  border-radius: 12px;
+  margin: 10px 0;
+  border: 2px solid var(--ion-border-color);
+}
+
+ion-label h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+}
+
+ion-label p {
+  font-size: 15px;
+  color: var(--ion-text-color);
+}
+
+/* HISTORIA */
+.historia {
+  background: --ion-background-color;
+  padding: 25px;
+  margin-top: 25px;
+  border-radius: 18px;
+  border: 2px solid var(--ion-border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.historia h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  margin-bottom: 10px;
+}
+
+.historia p {
+  font-size: 16px;
+  color: var(--ion-text-color);
+  line-height: 1.6;
+}

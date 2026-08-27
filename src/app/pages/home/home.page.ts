@@ -7,11 +7,7 @@ import {
   IonItem,
   IonThumbnail,
   IonLabel,
-  IonDatetime,
-  IonIcon,
-  IonTabs,
-  IonTabBar,
-  IonTabButton
+  IonDatetime
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -20,19 +16,14 @@ import { Router } from '@angular/router';
   standalone: true,
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  imports: [
+  imports: [IonDatetime, 
     IonContent,
     IonButton,
     IonList,
-    //IonListHeader,
+    IonListHeader,
     IonItem,
     IonThumbnail,
-    IonLabel,
-    IonDatetime,
-    IonIcon,
-    IonTabs,
-    IonTabBar,
-    IonTabButton
+    IonLabel
   ],
 })
 export class HomePage {
@@ -136,7 +127,6 @@ export class HomePage {
   solicitarReserva() {
     console.log('Reserva solicitada:', this.fecha, this.hora);
 
-    // Simulación: al reservar, el cliente queda "en mesa"
     this.enMesa = true;
     localStorage.setItem('mesa', 'true');
 
@@ -144,9 +134,8 @@ export class HomePage {
   }
 
   formatDate(value: string | string[] | null | undefined): string {
-  if (!value) return '';
-  if (Array.isArray(value)) return value[0] ?? '';
-  return value;
+    if (!value) return '';
+    if (Array.isArray(value)) return value[0] ?? '';
+    return value;
   }
-
 }
