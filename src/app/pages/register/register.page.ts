@@ -12,7 +12,6 @@ import {
   IonTitle,
   IonToolbar,
   IonButton,
-  IonIcon,
   IonButtons,
   IonBackButton,
 } from '@ionic/angular';
@@ -32,7 +31,7 @@ const NAME_PATTERN =
 const DNI_PATTERN = /^\d{7,8}$/;
 
 const PASSWORD_PATTERN =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,64}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
 
 @Component({
   selector: 'app-register',
@@ -46,7 +45,6 @@ const PASSWORD_PATTERN =
     IonTitle,
     IonToolbar,
     IonButton,
-    IonIcon,
     IonButtons,
     IonBackButton,
     PersonalStepPage,
@@ -87,9 +85,9 @@ export class RegisterPage {
       password: new FormControl('', [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
+        Validators.pattern(PASSWORD_PATTERN),
       ]),
-}),
+    }),
 
     profile: new FormGroup({
       file: new FormControl<File | null>(

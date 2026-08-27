@@ -7,9 +7,7 @@
       ></ion-back-button>
     </ion-buttons>
 
-    <ion-title>
-      {{ getStepTitle() }}
-    </ion-title>
+    <ion-title>{{ getStepTitle() }}</ion-title>
   </ion-toolbar>
 
   <app-progress-bar
@@ -18,10 +16,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <form
-    class="wrapper"
-    [formGroup]="form"
-  >
+  <form class="wrapper" [formGroup]="form">
+
     @switch (currentStep()) {
 
       @case (1) {
@@ -95,5 +91,6 @@
 
       }
     </div>
+
   </form>
 </ion-content>

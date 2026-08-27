@@ -79,6 +79,7 @@ export class PersonalStepPage {
       this.parseBarcode(
         barcodes[0].rawValue,
       );
+
     } catch (error) {
       this.scanError =
         'Ocurrió un error al escanear. Intentá nuevamente.';

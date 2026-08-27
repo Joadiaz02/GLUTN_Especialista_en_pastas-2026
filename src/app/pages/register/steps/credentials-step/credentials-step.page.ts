@@ -1,11 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import {
   AbstractControl,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { IonInput } from '@ionic/angular';
+
+import {
+  IonInput,
+} from '@ionic/angular';
 
 @Component({
   selector: 'app-credentials-step',

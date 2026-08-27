@@ -1,5 +1,6 @@
 import {
   Component,
+  inject,
   Input,
   signal,
 } from '@angular/core';
@@ -14,6 +15,8 @@ import {
 
 import { Camera } from '@capacitor/camera';
 
+import { Storage } from '../../../../services/storage/storage';
+
 @Component({
   selector: 'app-profile-step',
   templateUrl: './profile-step.page.html',
@@ -25,6 +28,10 @@ import { Camera } from '@capacitor/camera';
 })
 export class ProfileStepPage {
   @Input() control!: AbstractControl;
+
+  private _storageService = inject(Storage);
+
+  uploading = signal(false);
 
   photoPreview =
     signal<string | null>(null);
@@ -47,7 +54,7 @@ export class ProfileStepPage {
       const photo =
         await Camera.takePhoto({
           quality: 100,
-          editable: "no",
+          editable: 'no',
           includeMetadata: true,
         });
 
@@ -82,9 +89,7 @@ export class ProfileStepPage {
       fileControl?.setValue(file);
 
       fileControl?.markAsDirty();
-
       fileControl?.markAsTouched();
-
       fileControl?.updateValueAndValidity();
 
       this.formGroup.updateValueAndValidity();
