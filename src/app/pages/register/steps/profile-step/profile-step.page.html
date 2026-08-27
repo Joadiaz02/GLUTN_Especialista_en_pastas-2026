@@ -1,0 +1,16 @@
+<div class="wrapper" [formGroup]="formGroup">
+  <div>
+    <h1 class="title">Súma tu foto</h1>
+    <p class="subtitle">Así el mozo y el metre te reconocen apenas llegás.</p>
+
+    <div class="container" (click)="takePhoto()">
+      <div class="photo-circle">
+        @if (photoPreview()) {
+        <img [src]="photoPreview()" class="photo-image" />
+        } @else {
+        <div class="avatar"></div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

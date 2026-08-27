@@ -1,0 +1,45 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Iniciar sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form class="wrapper" [formGroup]="form">
+    <div>
+      <h1 class="title">¡Hola de nuevo!</h1>
+
+      <div class="fields">
+        <div class="field">
+          <label class="label">Correo electrónico</label>
+
+          <ion-input
+            fill="outline"
+            class="input"
+            placeholder="ejemplo@ejemplo.com"
+            formControlName="email"
+          />
+        </div>
+
+        <div class="field">
+          <label class="label">Contraseña</label>
+
+          <ion-input
+            fill="outline"
+            class="input"
+            placeholder="Contraseña"
+            formControlName="password"
+            type="password"
+          />
+        </div>
+      </div>
+
+      <ion-button expand="block" shape="round">Iniciar sesion</ion-button>
+    </div>
+
+    <p class="caption">
+      ¿No tienes cuenta?
+      <a routerLink="/register" class="register-text">Regístrate</a>
+    </p>
+  </form>
+</ion-content>
