@@ -155,31 +155,31 @@ export class RegisterPage {
   }
 
   async register(): Promise<void> {
-    const profileForm = this.getFormGroup('profile');
+  const profileForm = this.getFormGroup('profile');
 
-    if (profileForm.invalid) {
-      profileForm.markAllAsTouched();
-      return;
-    }
-
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    try {
-      const credentials = this.form.getRawValue();
-
-      await this._authService.register(
-        credentials,
-        EPerfilUsuario.ClienteRegistrado,
-      );
-
-      await this._router.navigateByUrl('/login', {
-        replaceUrl: true,
-      });
-    } catch (error) {
-      console.error('Error al registrar el usuario:', error);
-    }
+  if (profileForm.invalid) {
+    profileForm.markAllAsTouched();
+    return;
   }
+
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
+
+  try {
+    const credentials = this.form.getRawValue();
+
+    await this._authService.register(
+      credentials,
+      EPerfilUsuario.ClienteRegistrado,
+    );
+
+    await this._router.navigateByUrl('/login', {
+      replaceUrl: true,
+    });
+  } catch (error) {
+    console.error('Error al registrar el usuario:', error);
+  }
+}
 }

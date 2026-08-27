@@ -12,11 +12,7 @@ export class Auth {
       request.profile.file,
     );
 
-    console.log(request);
-    console.log(role);
-    console.log(avatarUrl);
-
-    const { data, error } = await this._supabaseService.client.auth.signUp({
+    const { error } = await this._supabaseService.client.auth.signUp({
       email: request.credentials.email,
       password: request.credentials.password,
       options: {
@@ -29,5 +25,9 @@ export class Auth {
         },
       },
     });
+
+    if (error) {
+      throw error;
+    }
   }
 }
