@@ -1,22 +1,19 @@
 import { inject, Service } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
-import { Storage } from '../storage/storage';
+import { EPerfilUsuario } from '@app/enums';
+import { Storage } from '../storage';
 
 @Service()
 export class Auth {
   private _supabaseService = inject(SupabaseService);
   private _storageService = inject(Storage);
 
-  async register(request: any, role: any): Promise<void> {
+  async register(request: any, role: EPerfilUsuario): Promise<void> {
     const avatarUrl = await this._storageService.uploadImage(
-      request.profile.file,
+      request.profile.file
     );
 
-    console.log(request);
-    console.log(role);
-    console.log(avatarUrl);
-
-    const { data, error } = await this._supabaseService.client.auth.signUp({
+    const { error } = await this._supabaseService.client.auth.signUp({
       email: request.credentials.email,
       password: request.credentials.password,
       options: {
@@ -29,5 +26,22 @@ export class Auth {
         },
       },
     });
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async login(request: any) {
+    const { data, error } =
+      await this._supabaseService.client.auth.signInWithPassword({
+        email: request.email,
+        password: request.password,
+      });
+
+    if (error) throw new Error(`Login failed: ${error.message}`);
+    if (!data.user) throw new Error('Login failed: no user returned');
+
+    return data.user;
   }
 }

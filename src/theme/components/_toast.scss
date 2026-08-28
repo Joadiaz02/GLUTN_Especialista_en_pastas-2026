@@ -1,0 +1,17 @@
+ion-toast {
+  --background: var(--ion-text-color);
+  --box-shadow: none;
+  --color: var(--text-primary);
+  --border-radius: 12px;
+  --start: 24px;
+  --end: 24px;
+
+  &::part(message) {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  &::part(content) {
+    padding: 12px;
+  }
+}

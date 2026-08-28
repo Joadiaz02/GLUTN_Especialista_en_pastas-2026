@@ -1,0 +1,20 @@
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+
+  hr {
+    flex: 1;
+    border: none;
+    border-top: 1px solid #E3E8EF;
+    margin: 0;
+  }
+
+  .separator__text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #697586;
+    white-space: nowrap;
+  }
+}
