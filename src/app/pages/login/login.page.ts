@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -14,6 +14,10 @@ import {
   IonInput,
   IonTitle,
   IonToolbar,
+  IonSpinner,
+  IonIcon,
+  IonToast,
+  ToastController,
 } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 
@@ -31,6 +35,8 @@ import { RouterLink } from '@angular/router';
     CommonModule,
     ReactiveFormsModule,
     RouterLink,
+    IonSpinner,
+    IonIcon,
   ],
 })
 export class LoginPage {
@@ -38,4 +44,16 @@ export class LoginPage {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', Validators.required),
   });
+
+  private _toastController = inject(ToastController);
+
+  async presentToast() {
+    const toast = await this._toastController.create({
+      message: 'No pudimos completar la acción. Intentá nuevamente más tarde.',
+      duration: 5000,
+      position: 'top',
+    });
+
+    await toast.present();
+  }
 }

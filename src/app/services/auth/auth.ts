@@ -1,20 +1,17 @@
 import { inject, Service } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
-import { Storage } from '../storage/storage';
+import { EPerfilUsuario } from '@app/enums';
+import { Storage } from '../storage';
 
 @Service()
 export class Auth {
   private _supabaseService = inject(SupabaseService);
   private _storageService = inject(Storage);
 
-  async register(request: any, role: any): Promise<void> {
+  async register(request: any, role: EPerfilUsuario): Promise<void> {
     const avatarUrl = await this._storageService.uploadImage(
-      request.profile.file,
+      request.profile.file
     );
-
-    console.log(request);
-    console.log(role);
-    console.log(avatarUrl);
 
     const { data, error } = await this._supabaseService.client.auth.signUp({
       email: request.credentials.email,

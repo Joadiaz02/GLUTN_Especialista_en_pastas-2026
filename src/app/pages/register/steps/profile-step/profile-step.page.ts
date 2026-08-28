@@ -6,21 +6,21 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Camera } from '@capacitor/camera';
-import { Storage } from '../../../../services/storage/storage';
+import { IonButton, IonIcon, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile-step',
   templateUrl: './profile-step.page.html',
   styleUrls: ['./profile-step.page.scss'],
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, IonButton, IonIcon],
 })
 export class ProfileStepPage {
   @Input() control!: AbstractControl;
-  _storageService = inject(Storage);
 
   uploading = signal(false);
   photoPreview = signal<string | null>(null);
-  photoError: string | null = null;
+
+  private _toastController = inject(ToastController);
 
   get formGroup(): FormGroup {
     return this.control as FormGroup;
@@ -31,13 +31,10 @@ export class ProfileStepPage {
   }
 
   async takePhoto() {
-    this.photoError = null;
-
     try {
       const photo = await Camera.takePhoto({
-        quality: 100,
+        quality: 60,
         editable: 'no',
-        includeMetadata: true,
       });
 
       this.photoPreview.set(photo.webPath ?? null);
@@ -54,7 +51,14 @@ export class ProfileStepPage {
         this.formGroup.patchValue({ file });
       }
     } catch (err) {
-      this.photoError = null;
+      const toast = await this._toastController.create({
+        message:
+          'Ocurrió un problema al guardar tu información. Intentá nuevamente.',
+        duration: 5000,
+        position: 'top',
+      });
+
+      await toast.present();
     }
   }
 }

@@ -1,18 +1,69 @@
-<div class="wrapper" [formGroup]="formGroup">
-  <div>
-    <h1 class="title">¿Quién sos?</h1>
-    <p class="subtitle">
-      Escaneá tu DNI o completá tus datos manualmente para empezar.
-    </p>
+<div [formGroup]="formGroup">
+  <h1 class="step__title">¿Quién sos?</h1>
+  <p class="step__subtitle">
+    Escaneá tu DNI o completá tus datos manualmente para empezar.
+  </p>
 
-    <div class="fields">
+  <button type="button" class="scan-card" (click)="scanDNI()">
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect width="48" height="48" rx="24" fill="#ba1f27" />
+      <g clip-path="url(#a)">
+        <mask
+          id="b"
+          style="mask-type: luminance"
+          maskUnits="userSpaceOnUse"
+          x="14"
+          y="14"
+          width="20"
+          height="20"
+        >
+          <path d="M34 14H14v20h20z" fill="#fff" />
+        </mask>
+        <g
+          mask="url(#b)"
+          stroke="#fff"
+          stroke-width="1.25"
+          stroke-linecap="round"
+        >
+          <path
+            d="M24 26.4a1.376 1.376 0 0 1-1.375-1.376v-2.058c0-.758.617-1.375 1.375-1.375s1.375.617 1.375 1.375v2.058c0 .759-.617 1.375-1.375 1.375Z"
+          />
+          <path
+            d="M28.15 25.225A4.16 4.16 0 0 1 24 29.058a4.17 4.17 0 0 1-4.167-4.167v-1.783c0-2.3 1.867-4.167 4.167-4.167a4.16 4.16 0 0 1 4.141 3.742"
+          />
+          <path
+            d="M26.5 15.667h1.667c2.5 0 4.166 1.666 4.166 4.166V21.5m-16.666 0v-1.667c0-2.5 1.667-4.166 4.167-4.166H21.5m5 16.666h1.667c2.5 0 4.166-1.666 4.166-4.166V26.5m-16.666 0v1.667c0 2.5 1.667 4.166 4.167 4.166H21.5"
+            stroke-miterlimit="10"
+            stroke-linejoin="round"
+          />
+        </g>
+      </g>
+    </svg>
+
+    <p class="scan-card__title">Escanear DNI</p>
+    <p class="scan-card__subtitle">Autocompletá tus datos en 1 segundo.</p>
+  </button>
+
+  <div class="separator">
+    <hr />
+    <span class="separator__text">o cargá tus datos manualmente</span>
+    <hr />
+  </div>
+
+  <div class="fields">
+    <div class="fields__row">
       <div class="field">
-        <label class="label">Nombre</label>
+        <label class="field__label">Nombre</label>
 
         <ion-input
-          type="email"
           fill="outline"
-          class="input"
+          class="field__input"
           placeholder="Nombre"
           formControlName="name"
         />
@@ -25,11 +76,11 @@
       </div>
 
       <div class="field">
-        <label class="label">Apellido</label>
+        <label class="field__label">Apellido</label>
 
         <ion-input
           fill="outline"
-          class="input"
+          class="field__input"
           placeholder="Apellido"
           formControlName="lastName"
         />
@@ -41,37 +92,26 @@
         <p class="field__error">Campo requerido</p>
         } }
       </div>
+    </div>
 
-      <div>
-        <div class="field">
-          <label class="label"> DNI </label>
+    <div class="field">
+      <label class="field__label">DNI</label>
 
-          <div class="dni-group">
-            <ion-input
-              type="tel"
-              fill="outline"
-              class="input"
-              maxlength="8"
-              placeholder="xx.xxx.xxx"
-              formControlName="dni"
-            />
+      <ion-input
+        type="text"
+        inputmode="numeric"
+        fill="outline"
+        class="field__input"
+        maxlength="8"
+        placeholder="DNI"
+        formControlName="dni"
+      />
 
-            <ion-button fill="outline" shape="round" (click)="scanDNI()">
-              <ion-icon slot="icon-only" src="assets/icons/scan.svg"></ion-icon>
-            </ion-button>
-          </div>
-
-          @if (getFormControl('dni')?.invalid && (getFormControl('dni')?.touched
-          || getFormControl('dni')?.dirty)) { @if
-          (getFormControl('dni')?.hasError('required')) {
-          <p class="field__error">Campo requerido</p>
-          } }
-        </div>
-
-        <p class="hint">
-          Escaneá el código de tu DNI para completar los datos automáticamente.
-        </p>
-      </div>
+      @if (getFormControl('dni')?.invalid && (getFormControl('dni')?.touched ||
+      getFormControl('dni')?.dirty)) { @if
+      (getFormControl('dni')?.hasError('required')) {
+      <p class="field__error">Campo requerido</p>
+      } }
     </div>
   </div>
 </div>

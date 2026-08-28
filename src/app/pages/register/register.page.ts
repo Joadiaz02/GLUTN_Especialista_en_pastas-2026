@@ -1,9 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -13,13 +12,12 @@ import {
   IonTitle,
   IonToolbar,
   IonButton,
-  IonInput,
-  IonIcon,
-  IonNote,
   IonButtons,
   IonBackButton,
-  IonRouterOutlet,
+  IonSpinner,
   IonFooter,
+  ToastController,
+  IonToast,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
@@ -27,9 +25,9 @@ import { PersonalStepPage } from './steps/personal-step/personal-step.page';
 import { CredentialsStepPage } from './steps/credentials-step/credentials-step.page';
 import { ProfileStepPage } from './steps/profile-step/profile-step.page';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
-import { Auth } from '../../services/auth/auth';
-import { EPerfilUsuario } from '../../enums/role.enum';
 import { Router } from '@angular/router';
+import { Auth } from '@app/services';
+import { EPerfilUsuario } from '@app/enums';
 
 @Component({
   selector: 'app-register',
@@ -42,10 +40,7 @@ import { Router } from '@angular/router';
     IonHeader,
     IonTitle,
     IonToolbar,
-    IonInput,
     IonButton,
-    IonIcon,
-    IonNote,
     IonButtons,
     IonBackButton,
     PersonalStepPage,
@@ -53,7 +48,7 @@ import { Router } from '@angular/router';
     ProfileStepPage,
     ProgressBarComponent,
     IonBackButton,
-    IonRouterOutlet,
+    IonSpinner,
     IonFooter,
   ],
 })
@@ -74,9 +69,11 @@ export class RegisterPage {
   });
 
   currentStep = signal<number>(1);
+  isLoading = signal<boolean>(false);
 
   private _authService = inject(Auth);
   private _router = inject(Router);
+  private _toastController = inject(ToastController);
 
   constructor() {
     addIcons({ arrowBackOutline });
@@ -127,18 +124,27 @@ export class RegisterPage {
     try {
       const credentials = this.form.getRawValue();
 
-      // this.form.markAsPending();
+      this.isLoading.set(true);
+
+      this.form.markAsPending();
 
       await this._authService.register(
         credentials,
-        EPerfilUsuario.ClienteRegistrado,
+        EPerfilUsuario.ClienteRegistrado
       );
 
       this._router.navigateByUrl('/login', { replaceUrl: true });
     } catch (error) {
-      // this._toastService.error(
-      //   this._translateService.instant('login.errors.invalidCredentials')
-      // );
+      const toast = await this._toastController.create({
+        message:
+          'No pudimos completar la acción. Intentá nuevamente más tarde.',
+        duration: 5000,
+        position: 'top',
+      });
+
+      await toast.present();
+    } finally {
+      this.isLoading.set(false);
     }
   }
 }
