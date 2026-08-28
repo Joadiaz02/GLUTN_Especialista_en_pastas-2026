@@ -1,5 +1,14 @@
 <ion-content>
 
+  <!-- BOTÓN LOGIN / LOGOUT -->
+  <ion-button
+    class="login-btn"
+    fill="clear"
+    (click)="onLoginClick()"
+  >
+    {{ isLoggedIn ? 'Cerrar sesión' : 'Ingresar' }}
+  </ion-button>
+
   <!-- HERO -->
   <div class="hero">
     <div class="logo-container">
@@ -15,13 +24,82 @@
       Reservar mesa
     </ion-button>
 
+    <!-- ============================
+       RESERVA
+    ============================ -->
+    @if (showReserva) {
+      <div class="historia">
+        <h2>Reservar mesa</h2>
+
+        <ion-item>
+          <ion-label>Fecha</ion-label>
+          <ion-datetime
+            presentation="date"
+            [min]="today"
+            (ionChange)="fecha = formatDate($event.detail.value)"
+          ></ion-datetime>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Hora</ion-label>
+          <ion-datetime
+            presentation="time"
+            (ionChange)="hora = formatDate($event.detail.value)"
+          ></ion-datetime>
+        </ion-item>
+
+        <ion-button expand="block" shape="round" (click)="solicitarReserva()">
+          Solicitar reserva
+        </ion-button>
+      </div>
+    }
+
     <ion-button expand="block" shape="round" (click)="toggleDestacados()">
       Productos destacados
     </ion-button>
 
+    <!-- ============================
+       PRODUCTOS DESTACADOS
+    ============================ -->
+    @if (showDestacados) {
+      <ion-list>
+        <ion-list-header>
+          <h2>Productos destacados</h2>
+        </ion-list-header>
+
+        @for (p of productos; track p) {
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <img [src]="p.imagen" [alt]="p.nombre">
+            </ion-thumbnail>
+
+            <ion-label>
+              <h3>{{ p.nombre }}</h3>
+              <p>{{ p.detalle }}</p>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    }
+
     <ion-button expand="block" shape="round" (click)="toggleQuienesSomos()">
       Quienes somos
     </ion-button>
+
+    <!-- ============================
+       QUIENES SOMOS
+    ============================ -->
+    @if (showQuienesSomos) {
+      <div class="historia">
+        <h2>Quienes somos</h2>
+        <p>
+          Somos cuatro estudiantes de programación que,
+          entre parciales, commits y deploys, descubrieron que también compilaban buenas pastas.
+          Somos Joaquín, Javier, Mariano y Lucas, un equipo que debuggea recetas, versiona sabores
+          y cocina con la misma pasión con la que escribe código.
+        </p>
+      </div>
+    }
 
     <ion-button expand="block" shape="round" (click)="goToCarta()">
       Carta
@@ -39,68 +117,4 @@
       Scanner
     </ion-button>
   </div>
-
-
-  <!-- ============================
-       RESERVA
-  ============================ -->
-  <div *ngIf="showReserva" class="historia">
-    <h2>Reservar mesa</h2>
-
-    <ion-item>
-      <ion-label>Fecha</ion-label>
-      <ion-datetime
-        presentation="date"
-        [min]="today"
-        (ionChange)="fecha = formatDate($event.detail.value)"
-      ></ion-datetime>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Hora</ion-label>
-      <ion-datetime
-        presentation="time"
-        (ionChange)="hora = formatDate($event.detail.value)"
-      ></ion-datetime>
-    </ion-item>
-
-    <ion-button expand="block" shape="round" (click)="solicitarReserva()">
-      Solicitar reserva
-    </ion-button>
-  </div>
-
-
-  <!-- ============================
-       PRODUCTOS DESTACADOS
-  ============================ -->
-  <ion-list *ngIf="showDestacados">
-    <ion-list-header>
-      <h2>Productos destacados</h2>
-    </ion-list-header>
-
-    <ion-item *ngFor="let p of productos">
-      <ion-thumbnail slot="start">
-        <img [src]="p.imagen" [alt]="p.nombre">
-      </ion-thumbnail>
-
-      <ion-label>
-        <h3>{{ p.nombre }}</h3>
-        <p>{{ p.detalle }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-
-
-  <!-- ============================
-       QUIENES SOMOS
-  ============================ -->
-  <div *ngIf="showQuienesSomos" class="historia">
-    <h2>Quienes somos</h2>
-    <p>
-      En GLUTN elaboramos pastas artesanales de tradición familiar.
-      Cada producto está hecho con ingredientes seleccionados y técnicas que
-      garantizan sabor, textura y calidad.
-    </p>
-  </div>
-
 </ion-content>
