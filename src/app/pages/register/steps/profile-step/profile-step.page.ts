@@ -1,10 +1,13 @@
 import { Component, inject, Input, signal } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+
 import {
   AbstractControl,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
+
 import { Camera } from '@capacitor/camera';
 import { IonButton, IonIcon, ToastController } from '@ionic/angular';
 

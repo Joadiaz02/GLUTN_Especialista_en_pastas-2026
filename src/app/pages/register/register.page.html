@@ -30,7 +30,7 @@
       expand="block"
       shape="round"
       (click)="nextStep()"
-      [disabled]="!getFormGroup('personal').valid"
+      [disabled]="(getFormGroup('personal').statusChanges | async) !== 'VALID'"
       >Continuar</ion-button
     >
     } @else if (currentStep() === 2) {

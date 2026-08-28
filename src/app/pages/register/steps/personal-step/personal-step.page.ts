@@ -35,11 +35,7 @@ export class PersonalStepPage {
     return this.formGroup.get(controlName);
   }
 
-  constructor() {
-    addIcons({ scan });
-  }
-
-  async scanDNI() {
+  async scanDNI(): Promise<void> {
     this.scanError = null;
 
     try {
@@ -102,18 +98,45 @@ export class PersonalStepPage {
     }
   }
 
-  private parseBarcode(raw: any) {
+  private parseBarcode(raw: any): void {
     const fields = raw.split('@');
 
     if (fields.length < 5) {
-      this.scanError = 'The scanned code does not match the expected format.';
+      this.scanError = 'El código escaneado no tiene el formato esperado.';
+
       return;
     }
 
-    const dni = fields[4];
+    const lastName = fields[1]?.trim() ?? '';
+
+    const name = fields[2]?.trim() ?? '';
+
+    const dni = fields[4]?.trim() ?? '';
 
     this.formGroup.patchValue({
-      dni: dni,
+      lastName,
+      name,
+      dni,
     });
+
+    const nameControl = this.formGroup.get('name');
+
+    const lastNameControl = this.formGroup.get('lastName');
+
+    const dniControl = this.formGroup.get('dni');
+
+    nameControl?.markAsDirty();
+    nameControl?.markAsTouched();
+    nameControl?.updateValueAndValidity();
+
+    lastNameControl?.markAsDirty();
+    lastNameControl?.markAsTouched();
+    lastNameControl?.updateValueAndValidity();
+
+    dniControl?.markAsDirty();
+    dniControl?.markAsTouched();
+    dniControl?.updateValueAndValidity();
+
+    this.formGroup.updateValueAndValidity();
   }
 }

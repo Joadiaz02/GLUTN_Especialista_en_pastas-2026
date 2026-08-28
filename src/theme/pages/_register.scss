@@ -25,7 +25,7 @@
   .progress-fill {
     height: 100%;
     border-radius: 50px;
-    background-color:#F6F6F8;
+    background-color: var(--color-surface-muted);
     width: 33.33%;
     
     &.active {

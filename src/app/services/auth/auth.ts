@@ -13,7 +13,7 @@ export class Auth {
       request.profile.file
     );
 
-    const { data, error } = await this._supabaseService.client.auth.signUp({
+    const { error } = await this._supabaseService.client.auth.signUp({
       email: request.credentials.email,
       password: request.credentials.password,
       options: {
@@ -26,5 +26,22 @@ export class Auth {
         },
       },
     });
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async login(request: any) {
+    const { data, error } =
+      await this._supabaseService.client.auth.signInWithPassword({
+        email: request.email,
+        password: request.password,
+      });
+
+    if (error) throw new Error(`Login failed: ${error.message}`);
+    if (!data.user) throw new Error('Login failed: no user returned');
+
+    return data.user;
   }
 }
