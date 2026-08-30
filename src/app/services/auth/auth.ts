@@ -22,6 +22,7 @@ export class Auth {
   }
 
   async iniciarsesion(email: string, contrasena: string) {
+    console.log('Intentando login con:', { email, contrasena })
     const { data, error } = await this.supabaseService.client.auth.signInWithPassword({
       email,
       password: contrasena
@@ -31,7 +32,7 @@ export class Auth {
       this.usuarioActual = data.user;
     }
 
-    return { data, error };
+    return { data, error};
   }
   //cierra sesion
   async logout() {

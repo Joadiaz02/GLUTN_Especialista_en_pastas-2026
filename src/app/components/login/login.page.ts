@@ -1,55 +1,50 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, NgZone } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Auth } from '../../services/auth/auth';
+
+
+
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink],
+  imports: [ReactiveFormsModule,FormsModule, RouterLink],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })
 export class LoginPage {
   email = '';
   contrasena = '';
-  error_login = '';
   cargando = false;
+  credencialesInvalidas = false;
+  logo = 'assets/images/LOGO-GLUTN.png';
+   
+  constructor(
+    private router: Router,
+    private authService: Auth,
+  ) {}
 
-  private supabaseUrl = 'https://TU-PROYECTO.supabase.co';
-  private supabaseKey = 'TU-ANON-KEY';
+  get formularioValido(): boolean {
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
+    const contrasenaValida = this.contrasena.length > 0;
+    return emailValido && contrasenaValida;
+  }
 
-  constructor(private http: HttpClient, private router: Router) {}
+  async iniciarSesion(): Promise<void> {
+    if (!this.formularioValido) return;
 
-  iniciarSesion() {
-    this.error_login = '' , false;
+    this.credencialesInvalidas = false;
     this.cargando = true;
 
+    const { error } = await this.authService.iniciarsesion(this.email, this.contrasena);
 
-    const headers = new HttpHeaders({
-      apikey: this.supabaseKey,
-      'Content-Type': 'application/json'
-    });
+    if (error) {
+      this.credencialesInvalidas = true;
+      this.cargando = false ;
+      return;
+    }
 
-    const form = {
-      email: this.email,
-      password: this.contrasena
-    };
-
-    this.http.post<any>(
-      `${this.supabaseUrl}/auth/v1/token?grant_type=password`,
-      form,
-      { headers }
-    ).subscribe({
-      next: (respuesta) => {
-        this.cargando = false;
-        // respuesta trae access_token, refresh_token, user, etc.
-        console.log('Login OK:', respuesta);
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        this.cargando = false;
-        this.error_login = 'Email o contraseña incorrectos' , true;
-      }
-    });
+    this.router.navigate(['/home']);
   }
 }
+    
