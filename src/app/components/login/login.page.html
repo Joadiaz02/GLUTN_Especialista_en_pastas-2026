@@ -4,26 +4,28 @@
   <div class="logo_container">
     <img [src]="logo" class="logo">
   </div>
-  <div>
 
+  <div>
     <h1 class="textos">iniciar sesion</h1>
     <p class="textos">por favor inicie secion primero para drisfutar del servicio</p>
   </div>
 
-  <label class="textos" for="email" [style.color]="emailInput.touched && !email ? 'red' : 'white'">
-  {{ emailInput.touched && !email ? 'correo electrónico requerido' : 'correo electrónico' }}
-</label>
-<input [(ngModel)]="email" class="input" placeholder="jperez@ejemplo.com" id="email" #emailInput="ngModel">
-  <label class="textos" for="email" [style.color]="contraInput.touched && !contrasena ? 'red' : 'white'">
-  {{ contraInput.touched && !contrasena? 'contraseña requerida' : 'contraseña' }}
-  <input [(ngModel)]="contrasena" class="input"  ,placeholder="Contraseña" , type="password", #contraInput="ngModel">
-  @if (credencialesInvalidas == true) {
-    <p class="textos" style="color: rgb(255, 0, 0); font-size: 18px;">email o contraseña incorrecto</p>
-    
-  }
+  <div>
+    <label class="textos" for="email" [style.color]="emailInput.touched && !email ? 'red' : 'white'">
+      {{ emailInput.touched && !email ? 'correo electrónico requerido' : 'correo electrónico' }}
+    </label>
+    <input [(ngModel)]="email" class="input" placeholder="jperez@ejemplo.com" id="email" #emailInput="ngModel">
+    <label class="textos" for="contrasena" [style.color]="contraInput.touched && !contrasena ? 'red' : 'white'">
+      {{ contraInput.touched && !contrasena ? 'contraseña requerida' : 'contraseña' }}
+    </label>
+    <input [(ngModel)]="contrasena" class="input" placeholder="Contraseña" type="password" #contraInput="ngModel">
 
+    @if (credencialesInvalidas == true) {
+      <p class="textos" style="color: rgb(255, 0, 0); font-size: 18px;">email o contraseña incorrecto</p>
+    }
+  </div>
 
-  <button (click)="iniciarSesion()" [disabled]="cargando" class="boton_i" >
+  <button (click)="iniciarSesion()" [disabled]="cargando" class="boton_i">
     @if (cargando) {
       <div class="spinner"></div>
     } @else {
@@ -31,32 +33,37 @@
     }
   </button>
 
- <div class="separador">
+  <div class="separador">
     <span class="linea_isq"></span>
     <span class="punto"></span>
     <span class="linea_isq"></span>
-</div>
+  </div>
+
   <div>
-  <button routerLink="/invitado" [disabled]="cargando" class="boton_c" >
-    @if (cargando) {
-      <div class="spinner"></div>
-    } @else {
-      Continuar como invitado
-    }
-  </button>
+    <button routerLink="/invitado" [disabled]="cargando" class="boton_c">
+      @if (cargando) {
+        <div class="spinner"></div>
+      } @else {
+        Continuar como invitado
+      }
+    </button>
   </div>
-  <div calss="boton_container">
-  <button routerLink="/acceso_rapido" [disabled]="cargando" class="boton_a">
-    @if (cargando) {
-      <div class="spinner"></div>
-    } @else {
-      Acceso rapido
-    }
-  </button>
+
+  <div class="boton_container">
+    <button routerLink="/acceso_rapido" [disabled]="cargando" class="boton_a">
+      @if (cargando) {
+        <div class="spinner"></div>
+      } @else {
+        Acceso rapido
+      }
+    </button>
   </div>
+
   <div class="registrate">
-  <p class="textos">¿no tenes cuenta?<a routerLink="/registro" class="registrate_spam">Registrate</a></p>
+    <p class="textos">¿no tenes cuenta?<a routerLink="/registro" class="registrate_spam">Registrate</a></p>
+  </div>
 </div>
+
 
 
 

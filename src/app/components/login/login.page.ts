@@ -1,5 +1,5 @@
-import { Component, NgZone } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component  } from '@angular/core';
+import {  FormsModule, ReactiveFormsModule, } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth/auth';
 
@@ -35,16 +35,15 @@ export class LoginPage {
 
     this.credencialesInvalidas = false;
     this.cargando = true;
-
+    
     const { error } = await this.authService.iniciarsesion(this.email, this.contrasena);
-
+    
     if (error) {
       this.credencialesInvalidas = true;
-      this.cargando = false ;
+      this.cargando = false;
       return;
     }
 
     this.router.navigate(['/home']);
   }
 }
-    
