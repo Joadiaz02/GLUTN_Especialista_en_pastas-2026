@@ -16,14 +16,15 @@ import { Router } from '@angular/router';
   standalone: true,
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  imports: [IonDatetime, 
+  imports: [
     IonContent,
     IonButton,
     IonList,
     IonListHeader,
     IonItem,
     IonThumbnail,
-    IonLabel
+    IonLabel,
+    IonDatetime
   ],
 })
 export class HomePage {
@@ -32,8 +33,8 @@ export class HomePage {
   // ESTADOS
   // ============================
 
-  isLoggedIn = false;       // login / logout
-  enMesa = false;           // habilita sala de chat
+  isLoggedIn = false;
+  enMesa = false;
 
   showReserva = false;
   showDestacados = false;
@@ -44,10 +45,19 @@ export class HomePage {
   // ============================
 
   today = new Date().toISOString().split('T')[0];
-  now = new Date().toISOString();
+  maxDate: string;
 
-  fecha: string = '';
-  hora: string = '';
+  fecha = '';
+  hora = '';
+
+  constructor(private router: Router) {
+    // Calcular fecha máxima (1 mes exacto)
+    const now = new Date();
+    const nextMonth = new Date(now);
+    nextMonth.setMonth(now.getMonth() + 1);
+
+    this.maxDate = nextMonth.toISOString().split('T')[0];
+  }
 
   // ============================
   // PRODUCTOS (simulado)
@@ -58,8 +68,6 @@ export class HomePage {
     { nombre: 'Sorrentinos', imagen: 'assets/icons/sorrentinos.png', detalle: 'Jamón y queso, calabaza' },
     { nombre: 'Fideos', imagen: 'assets/icons/fideos.png', detalle: 'Spaghetti, tallarines' }
   ];
-
-  constructor(private router: Router) {}
 
   // ============================
   // LOGIN / LOGOUT

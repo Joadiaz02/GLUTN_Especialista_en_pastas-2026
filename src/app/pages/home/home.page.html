@@ -1,120 +1,140 @@
 <ion-content>
 
-  <!-- BOTÓN LOGIN / LOGOUT -->
+  <!-- LOGIN / LOGOUT -->
   <ion-button
     class="login-btn"
-    fill="clear"
     (click)="onLoginClick()"
   >
     {{ isLoggedIn ? 'Cerrar sesión' : 'Ingresar' }}
   </ion-button>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="logo-container">
-      <img
-        src="assets/images/LOGO-GLUTN.png"
-        alt="GLUTN - Especialista en Pastas"
-        class="logo"
-      />
+  <!-- LOGO -->
+  <div class="logo-container">
+    <img
+      src="assets/images/LOGO-GLUTN.png"
+      alt="GLUTN - Especialista en Pastas"
+      class="logo"
+    />
+  </div>
+
+  <!-- BOTONES PRINCIPALES -->
+  <ion-button class="home-button" expand="block" shape="round" (click)="toggleReserva()">
+    Reservar mesa
+  </ion-button>
+
+  @if (showReserva) {
+    <div class="historia">
+      <h2>Reservar mesa</h2>
+
+      <!-- FECHA -->
+      <ion-item>
+        <ion-label>Fecha</ion-label>
+        <ion-datetime
+          presentation="date"
+          [min]="today"
+          [max]="maxDate"
+          (ionChange)="fecha = formatDate($event.detail.value)"
+        ></ion-datetime>
+      </ion-item>
+
+      <!-- HORA -->
+      <ion-item>
+        <ion-label>Hora</ion-label>
+        <ion-datetime
+          presentation="time"
+          [minuteValues]="[0, 30]"
+          (ionChange)="hora = formatDate($event.detail.value)"
+        ></ion-datetime>
+      </ion-item>
+
+      <ion-button class="home-button" expand="block" shape="round" (click)="solicitarReserva()">
+        Solicitar reserva
+      </ion-button>
+    </div>
+  }
+
+  <ion-button class="home-button" expand="block" shape="round" (click)="toggleDestacados()">
+    Productos destacados
+  </ion-button>
+
+  @if (showDestacados) {
+    <ion-list>
+      <ion-list-header>
+        <h2>Productos destacados</h2>
+      </ion-list-header>
+
+      @for (p of productos; track p) {
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <img [src]="p.imagen" [alt]="p.nombre">
+          </ion-thumbnail>
+
+          <ion-label>
+            <h3>{{ p.nombre }}</h3>
+            <p>{{ p.detalle }}</p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  <ion-button class="home-button" expand="block" shape="round" (click)="toggleQuienesSomos()">
+    Quienes somos
+  </ion-button>
+
+  @if (showQuienesSomos) {
+    <div class="historia">
+      <h2>Quienes somos</h2>
+      <p>
+        Somos cuatro estudiantes de programación que,
+        entre parciales, commits y deploys, descubrieron que también compilaban buenas pastas.
+        Somos Joaquín, Javier, Mariano y Lucas, un equipo que debuggea recetas, versiona sabores
+        y cocina con la misma pasión con la que escribe código.
+      </p>
+    </div>
+  }
+
+  <ion-button class="home-button" expand="block" shape="round" (click)="goToCarta()">
+    Carta
+  </ion-button>
+
+  <ion-button class="home-button" expand="block" shape="round" (click)="goToEncuestas()">
+    Encuestas
+  </ion-button>
+
+  <!-- ESCÁNER CENTRADO SIMPLE -->
+  <div class="scan-access" (click)="goToScanner()">
+
+    <p class="scan-access__title">Escáner</p>
+
+    <div class="scan-access__icon">
+      <svg
+        width="70"
+        height="70"
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M14 10H10V14" stroke="#4285F4" stroke-width="4" stroke-linecap="round"/>
+        <path d="M34 10H38V14" stroke="#EA4335" stroke-width="4" stroke-linecap="round"/>
+        <path d="M10 34V38H14" stroke="#FBBC05" stroke-width="4" stroke-linecap="round"/>
+        <path d="M34 38H38V34" stroke="#34A853" stroke-width="4" stroke-linecap="round"/>
+        <rect x="16" y="16" width="16" height="16" rx="4" stroke="#ffffff" stroke-width="2"/>
+      </svg>
     </div>
 
-    <!-- BOTONES PRINCIPALES -->
-    <ion-button expand="block" shape="round" (click)="toggleReserva()">
-      Reservar mesa
-    </ion-button>
-
-    <!-- ============================
-       RESERVA
-    ============================ -->
-    @if (showReserva) {
-      <div class="historia">
-        <h2>Reservar mesa</h2>
-
-        <ion-item>
-          <ion-label>Fecha</ion-label>
-          <ion-datetime
-            presentation="date"
-            [min]="today"
-            (ionChange)="fecha = formatDate($event.detail.value)"
-          ></ion-datetime>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Hora</ion-label>
-          <ion-datetime
-            presentation="time"
-            (ionChange)="hora = formatDate($event.detail.value)"
-          ></ion-datetime>
-        </ion-item>
-
-        <ion-button expand="block" shape="round" (click)="solicitarReserva()">
-          Solicitar reserva
-        </ion-button>
-      </div>
-    }
-
-    <ion-button expand="block" shape="round" (click)="toggleDestacados()">
-      Productos destacados
-    </ion-button>
-
-    <!-- ============================
-       PRODUCTOS DESTACADOS
-    ============================ -->
-    @if (showDestacados) {
-      <ion-list>
-        <ion-list-header>
-          <h2>Productos destacados</h2>
-        </ion-list-header>
-
-        @for (p of productos; track p) {
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <img [src]="p.imagen" [alt]="p.nombre">
-            </ion-thumbnail>
-
-            <ion-label>
-              <h3>{{ p.nombre }}</h3>
-              <p>{{ p.detalle }}</p>
-            </ion-label>
-          </ion-item>
-        }
-      </ion-list>
-    }
-
-    <ion-button expand="block" shape="round" (click)="toggleQuienesSomos()">
-      Quienes somos
-    </ion-button>
-
-    <!-- ============================
-       QUIENES SOMOS
-    ============================ -->
-    @if (showQuienesSomos) {
-      <div class="historia">
-        <h2>Quienes somos</h2>
-        <p>
-          Somos cuatro estudiantes de programación que,
-          entre parciales, commits y deploys, descubrieron que también compilaban buenas pastas.
-          Somos Joaquín, Javier, Mariano y Lucas, un equipo que debuggea recetas, versiona sabores
-          y cocina con la misma pasión con la que escribe código.
-        </p>
-      </div>
-    }
-
-    <ion-button expand="block" shape="round" (click)="goToCarta()">
-      Carta
-    </ion-button>
-
-    <ion-button expand="block" shape="round" (click)="goToChat()">
-      Chat
-    </ion-button>
-
-    <ion-button expand="block" shape="round" (click)="goToEncuestas()">
-      Encuestas
-    </ion-button>
-
-    <ion-button expand="block" shape="round" (click)="goToScanner()">
-      Scanner
-    </ion-button>
   </div>
+
+
+  <!-- GLOBO DE CHAT -->
+  <div class="chat-bubble" (click)="goToChat()">
+    <p class="chat-bubble__title">Consultas</p>
+
+    <div class="chat-bubble__circle">
+      <img src="assets/images/LOGO-GLUTN.png" alt="Chat GLUTN" />
+    </div>
+
+    <p class="chat-bubble__subtitle">Chat</p>
+  </div>
+
 </ion-content>
