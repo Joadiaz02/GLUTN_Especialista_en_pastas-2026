@@ -1,0 +1,34 @@
+ion-input {
+  &.field__input {
+    --background: #fff;
+
+    min-height: 56px;
+    
+    font-size: 14px;
+    font-weight: 500;
+
+    --padding-start: 16px;
+    --padding-end: 16px;
+
+    --placeholder-color: var(--text-secondary);
+    --placeholder-opacity: 1;
+    
+    --highlight-height: 1px;
+    
+    --border-color: var(--border);
+    --border-style: solid;
+    --border-width: 1px;
+
+    --highlight-color-invalid: var(--ion-color-danger);
+    --highlight-color-valid: var(--ion-color-primary);
+  
+    &.has-focus {
+      --background: hsla(357, 71%, 43%, 0.05);
+    }
+  }
+  
+  &.input-fill-outline.sc-ion-input-md-h {
+    --border-color: var(--border);
+    --border-radius: 12px !important;
+  }
+}

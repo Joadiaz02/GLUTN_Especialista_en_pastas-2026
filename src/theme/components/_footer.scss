@@ -1,0 +1,7 @@
+ion-footer .footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 24px calc(24px + env(safe-area-inset-bottom));
+  background-color: var(--ion-background-color);
+}

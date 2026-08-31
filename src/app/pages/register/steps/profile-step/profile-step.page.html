@@ -1,0 +1,20 @@
+<div [formGroup]="formGroup">
+  <h1 class="step__title">Súma tu foto</h1>
+  <p class="step__subtitle">
+    Así el mozo y el metre te reconocen apenas llegás.
+  </p>
+
+  <div class="photo-upload">
+    <div class="photo-upload__circle">
+      @if (photoPreview()) {
+      <img [src]="photoPreview()" class="photo-upload__image" />
+      } @else {
+      <img src="assets/images/avatar.png" class="photo-upload__image" />
+      }
+
+      <ion-button shape="round" size="small" (click)="takePhoto()">
+        <ion-icon slot="icon-only" src="assets/icons/plus.svg"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</div>

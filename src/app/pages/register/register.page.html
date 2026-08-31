@@ -1,0 +1,70 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        text=""
+        icon="assets/icons/arrow-left.svg"
+      ></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>{{ getStepTitle() }}</ion-title>
+  </ion-toolbar>
+
+  <app-progress-bar [currentStep]="currentStep()"></app-progress-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @switch (currentStep()) { @case (1) {
+  <app-personal-step [control]="getFormGroup('personal')" />
+  } @case (2) {
+  <app-credentials-step [control]="getFormGroup('credentials')" />
+  } @case (3) {
+  <app-profile-step [control]="getFormGroup('profile')" />
+  } }
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="footer-actions">
+    @if (currentStep() === 1) {
+    <ion-button
+      expand="block"
+      shape="round"
+      (click)="nextStep()"
+      [disabled]="(getFormGroup('personal').statusChanges | async) !== 'VALID'"
+      >Continuar</ion-button
+    >
+    } @else if (currentStep() === 2) {
+    <ion-button
+      expand="block"
+      shape="round"
+      (click)="nextStep()"
+      [disabled]="!getFormGroup('credentials').valid"
+      >Continuar</ion-button
+    >
+    <ion-button
+      expand="block"
+      shape="round"
+      fill="outline"
+      (click)="previousStep()"
+      >Volver</ion-button
+    >
+    } @else {
+    <ion-button
+      expand="block"
+      shape="round"
+      (click)="register()"
+      [disabled]="(form.statusChanges | async) !== 'VALID'"
+    >
+      @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> } Crear
+      cuenta
+    </ion-button>
+    <ion-button
+      expand="block"
+      shape="round"
+      fill="outline"
+      (click)="previousStep()"
+      >Volver</ion-button
+    >
+    }
+  </div>
+</ion-footer>
