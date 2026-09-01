@@ -7,6 +7,18 @@ import { Storage } from '../storage';
 export class Auth {
   private _supabaseService = inject(SupabaseService);
   private _storageService = inject(Storage);
+  usuarioActual: any = null;
+
+  constructor() {
+    this.restaurarSesion();
+  }
+
+  private async restaurarSesion() {
+    const { data } = await this._supabaseService.client.auth.getSession();
+    if (data.session) {
+      this.usuarioActual = data.session.user;
+    }
+  }
 
   async register(request: any, role: EPerfilUsuario): Promise<void> {
     const avatarUrl = await this._storageService.uploadImage(
@@ -32,7 +44,7 @@ export class Auth {
     }
   }
 
-  async login(request: any) {
+  async iniciarsecion(request: any) {
     const { data, error } =
       await this._supabaseService.client.auth.signInWithPassword({
         email: request.email,
@@ -42,6 +54,16 @@ export class Auth {
     if (error) throw new Error(`Login failed: ${error.message}`);
     if (!data.user) throw new Error('Login failed: no user returned');
 
+    this.usuarioActual = data.user;
     return data.user;
+  }
+
+  async logout() {
+    await this._supabaseService.client.auth.signOut();
+    this.usuarioActual = null;
+  }
+
+  estaLogueado(): boolean {
+    return this.usuarioActual !== null;
   }
 }
