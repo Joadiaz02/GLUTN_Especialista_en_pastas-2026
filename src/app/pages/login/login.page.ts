@@ -14,8 +14,6 @@ import { Auth } from '../../services/auth/auth';
 export class LoginPage {
   email = '';
   contrasena = '';
-  cargando = false;
-  credencialesInvalidas = false;
   logo = 'assets/images/LOGO-GLUTN.png';
 
   private toastController = inject(ToastController);
@@ -34,9 +32,6 @@ export class LoginPage {
   async iniciarSesion(): Promise<void> {
     if (!this.formularioValido) return;
 
-    this.credencialesInvalidas = false;
-    this.cargando = true;
-
     try {
       await this.authService.iniciarsecion({
         email: this.email,
@@ -46,20 +41,20 @@ export class LoginPage {
       this.router.navigate(['/home']);
 
     } catch (error) {
-      this.credencialesInvalidas = true;
 
       const toast = await this.toastController.create({
         message: 'Correo o contraseña incorrectos. Verificá tus datos e intentá nuevamente.',
         duration: 5000,
         position: 'top',
+
       });
       await toast.present();
-
+      
       await this.vibrarError();
       this.reproducirSonidoError();
-
+      
     } finally {
-      this.cargando = false;
+      
     }
   }
 

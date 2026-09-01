@@ -20,17 +20,10 @@
     </label>
     <input [(ngModel)]="contrasena" class="input" placeholder="Contraseña" type="password" #contraInput="ngModel">
 
-    @if (credencialesInvalidas == true) {
-      <p class="textos" style="color: rgb(255, 0, 0); font-size: 18px;">email o contraseña incorrecto</p>
-    }
   </div>
 
-  <button (click)="iniciarSesion()" [disabled]="cargando" class="boton_i">
-    @if (cargando) {
-      <div class="spinner"></div>
-    } @else {
-      Iniciar sesión
-    }
+  <button (click)="iniciarSesion()"  class="boton_i">
+      Iniciar sesión 
   </button>
 
   <div class="separador">
@@ -40,27 +33,19 @@
   </div>
 
   <div>
-    <button routerLink="/invitado" [disabled]="cargando" class="boton_c">
-      @if (cargando) {
-        <div class="spinner"></div>
-      } @else {
+    <button routerLink="/invitado"  class="boton_c">
         Continuar como invitado
-      }
     </button>
   </div>
 
   <div class="boton_container">
-    <button routerLink="/acceso_rapido" [disabled]="cargando" class="boton_a">
-      @if (cargando) {
-        <div class="spinner"></div>
-      } @else {
+    <button routerLink="/acceso_rapido" class="boton_a">
         Acceso rapido
-      }
     </button>
   </div>
 
   <div class="registrate">
-    <p class="textos">¿no tenes cuenta?<a routerLink="/registro" class="registrate_spam">Registrate</a></p>
+    <p class="textos">¿no tenes cuenta?<a routerLink="/register" class="registrate_spam">Registrate</a></p>
   </div>
 </div>
 

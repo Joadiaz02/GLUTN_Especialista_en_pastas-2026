@@ -59,15 +59,14 @@ animation: spin 1s linear infinite;
 
 .input {
     box-sizing: border-box;
-
+    color: white;
     width: 100vi;
     max-width: 327px;
     height: 28px;
-
     display: flex;
     flex-direction: row;
     align-items: center;
-
+    
     padding: 6px;
     gap: 10px;
 
@@ -76,6 +75,9 @@ animation: spin 1s linear infinite;
     border-radius: 12px;
 
     margin-bottom: 1px;
+}
+input::placeholder{
+    color: white;
 }
 
 .boton_i {
@@ -92,7 +94,7 @@ animation: spin 1s linear infinite;
     padding: 10px;
     gap: 10px;
 
-    background: #1f7a17;
+    background: #7e0101;
     border: none;
     border-radius: 50px;
 
@@ -105,7 +107,7 @@ animation: spin 1s linear infinite;
     width: 100%;
     max-width: 327px;
     height: 56px;
-    background: #1f7a17;
+    background: #7e0101;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -113,7 +115,7 @@ animation: spin 1s linear infinite;
     padding: 10px;
     gap: 10px;
 
-    border: 1px solid #149e14;
+    border: 1px solid #7e0101;
     border-radius: 50px;
 
     margin-top: 15px;
@@ -127,7 +129,7 @@ animation: spin 1s linear infinite;
     width: 100%;
     max-width: 320px;
     height: 56px;
-    background: #1f7a17;
+    background: #7e0101;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -135,7 +137,7 @@ animation: spin 1s linear infinite;
     padding: 10px;
     gap: 10px;
 
-    border: 1px solid #189118;
+    border: 1px solid #7e0101;
     border-radius: 50px;
 
     text-align: center;
