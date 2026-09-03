@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Administración</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarSesion()">
+        <ion-icon
+          slot="icon-only"
+          name="log-out-outline"
+        ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="admin-container">
+
+    <div class="header-section">
+
+      <ion-button
+        class="back-button"
+        fill="clear"
+        (click)="volver()"
+      >
+        <ion-icon
+          slot="start"
+          name="arrow-back-outline"
+        ></ion-icon>
+
+        Volver
+      </ion-button>
+
+      <h1>Panel de administración</h1>
+
+      <p>
+        Seleccioná una sección para continuar.
+      </p>
+
+    </div>
+
+    <div class="modules-container">
+
+      <app-admin-module-card
+        *ngFor="let modulo of modulosVisibles"
+        [module]="modulo"
+        (selected)="seleccionarModulo($event)"
+      >
+      </app-admin-module-card>
+
+    </div>
+
+  </div>
+</ion-content>

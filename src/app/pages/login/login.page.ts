@@ -1,114 +1,166 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
+  Component,
+  inject
+} from '@angular/core';
+
+import {
+  FormsModule
 } from '@angular/forms';
+
 import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonInput,
-  IonTitle,
-  IonToolbar,
-  IonSpinner,
-  IonIcon,
-  IonToast,
-  ToastController,
-  IonFooter,
+  Router,
+  RouterLink
+} from '@angular/router';
+
+import {
+  ToastController
 } from '@ionic/angular';
-import { RouterLink } from '@angular/router';
-import { Haptics } from '@capacitor/haptics';
-import { Auth } from '@app/services';
+
+import {
+  Haptics
+} from '@capacitor/haptics';
+
+import { Auth } from '../../services/auth/auth';
+
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+
   imports: [
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonInput,
-    IonButton,
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
-    IonSpinner,
-    IonFooter,
+    FormsModule,
+    RouterLink
   ],
+
+  templateUrl: './login.page.html',
+
+  styleUrl: './login.page.scss'
 })
 export class LoginPage {
-  form = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required),
-  });
 
-  private _toastController = inject(ToastController);
-  private _authService = inject(Auth);
+  email = '';
 
-  isLoading = signal<boolean>(false);
+  contrasena = '';
 
-  get emailControl() {
-    return this.form.get('email') as FormControl;
+  logo =
+    'assets/images/LOGO-GLUTN.png';
+
+
+  private toastController =
+    inject(ToastController);
+
+
+  constructor(
+
+    private router: Router,
+
+    private authService: Auth
+
+  ) {}
+
+
+  get formularioValido(): boolean {
+
+    const emailValido =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(this.email);
+
+    const contrasenaValida =
+      this.contrasena.length > 0;
+
+    return (
+      emailValido &&
+      contrasenaValida
+    );
   }
 
-  get passwordControl() {
-    return this.form.get('password') as FormControl;
-  }
 
-  async login() {
+  async iniciarSesion(): Promise<void> {
+
+    if (!this.formularioValido) {
+      return;
+    }
+
+
     try {
-      const { email, password } = this.form.getRawValue();
 
-      this.form.markAsPending();
+      const usuario =
+        await this.authService.iniciarsecion({
 
-      this.isLoading.set(true);
+          email: this.email,
 
-      const user = await this._authService.login({
-        email: email,
-        password: password,
-      });
+          password: this.contrasena
 
-      console.log(user);
+        });
 
-      // const url = this._redirectService.redirectByRole(user.role);
 
-      // await this._router.navigateByUrl(url);
-    } catch (error) {
-      const toast = await this._toastController.create({
-        message:
-          'Correo o contraseña incorrectos. Verificá tus datos e intentá nuevamente.',
-        duration: 5000,
-        position: 'top',
-      });
+      if (
+        this.authService.esPersonal(usuario)
+      ) {
+
+        await this.router.navigate([
+          '/seleccion-acceso'
+        ]);
+
+        return;
+      }
+
+
+      await this.router.navigate([
+        '/home'
+      ]);
+
+    } catch {
+
+      const toast =
+        await this.toastController.create({
+
+          message:
+            'Correo o contraseña incorrectos. Verificá tus datos e intentá nuevamente.',
+
+          duration: 5000,
+
+          position: 'top',
+
+        });
+
 
       await toast.present();
 
-      await this.vibrateCustom();
+      await this.vibrarError();
 
-      this.playError();
-    } finally {
-      this.isLoading.set(false);
+      this.reproducirSonidoError();
     }
   }
 
-  async vibrateCustom(durationMs: number = 300) {
-    await Haptics.vibrate({ duration: durationMs });
+
+  private async vibrarError(
+    durationMs: number = 300
+  ): Promise<void> {
+
+    await Haptics.vibrate({
+      duration: durationMs
+    });
   }
 
-  playError() {
-    const audio = new Audio('assets/sounds/spongebob-fail.mp3');
+
+  private reproducirSonidoError(): void {
+
+    const audio =
+      new Audio(
+        'assets/sounds/spongebob-fail.mp3'
+      );
 
     audio.load();
-    audio.play().catch((error) => {
-      console.warn(
-        'El reproductor de audio requiere interacción previa del usuario:',
-        error
-      );
-    });
+
+    audio.play().catch(
+      (error) => {
+
+        console.warn(
+          'El reproductor de audio requiere interacción previa del usuario:',
+          error
+        );
+
+      }
+    );
   }
 }

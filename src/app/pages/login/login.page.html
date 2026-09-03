@@ -1,69 +1,55 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-title>Iniciar sesión</ion-title>
-  </ion-toolbar>
-</ion-header>
+<link rel="stylesheet" href="./login.page.scss">
 
-<ion-content [fullscreen]="true">
-  <form class="wrapper" [formGroup]="form">
-    <div>
-      <h1 class="step__title">¡Hola de nuevo!</h1>
-
-      <div class="fields">
-        <div class="field">
-          <label class="field__label">Correo electrónico</label>
-
-          <ion-input
-            type="email"
-            fill="outline"
-            class="field__input"
-            placeholder="ejemplo@ejemplo.com"
-            formControlName="email"
-          />
-
-          @if ( emailControl.invalid && ( emailControl.touched ||
-          emailControl.dirty ) ) { @if ( emailControl.hasError('required') ) {
-          <p class="field__error">El correo electrónico es obligatorio.</p>
-          }}
-        </div>
-
-        <div class="field">
-          <label class="field__label">Contraseña</label>
-
-          <ion-input
-            type="password"
-            fill="outline"
-            class="field__input"
-            placeholder="Contraseña"
-            formControlName="password"
-          />
-
-          @if ( passwordControl.invalid && ( passwordControl.touched ||
-          passwordControl.dirty ) ) { @if ( passwordControl.hasError('required')
-          ) {
-          <p class="field__error">La contraseña es obligatoria.</p>
-          }}
-        </div>
-      </div>
-
-      <ion-button
-        expand="block"
-        shape="round"
-        (click)="login()"
-        [disabled]="(form.statusChanges | async) !== 'VALID'"
-      >
-        @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> }
-        Iniciar sesion
-      </ion-button>
-    </div>
-  </form>
-</ion-content>
-
-<ion-footer class="ion-no-border">
-  <div class="footer-actions">
-    <p class="caption">
-      ¿No tienes cuenta?
-      <a routerLink="/register" class="register-text">Regístrate</a>
-    </p>
+<div class="login">
+  <div class="logo_container">
+    <img [src]="logo" class="logo">
   </div>
-</ion-footer>
+
+  <div>
+    <h1 class="textos">iniciar sesion</h1>
+    <p class="textos">por favor inicie secion primero para drisfutar del servicio</p>
+  </div>
+
+  <div>
+    <label class="textos" for="email" [style.color]="emailInput.touched && !email ? 'red' : 'white'">
+      {{ emailInput.touched && !email ? 'correo electrónico requerido' : 'correo electrónico' }}
+    </label>
+    <input [(ngModel)]="email" class="input" placeholder="jperez@ejemplo.com" id="email" #emailInput="ngModel">
+    <label class="textos" for="contrasena" [style.color]="contraInput.touched && !contrasena ? 'red' : 'white'">
+      {{ contraInput.touched && !contrasena ? 'contraseña requerida' : 'contraseña' }}
+    </label>
+    <input [(ngModel)]="contrasena" class="input" placeholder="Contraseña" type="password" #contraInput="ngModel">
+
+  </div>
+
+  <button (click)="iniciarSesion()"  class="boton_i">
+      Iniciar sesión 
+  </button>
+
+  <div class="separador">
+    <span class="linea_isq"></span>
+    <span class="punto"></span>
+    <span class="linea_isq"></span>
+  </div>
+
+  <div>
+    <button routerLink="/invitado"  class="boton_c">
+        Continuar como invitado
+    </button>
+  </div>
+
+  <div class="boton_container">
+    <button routerLink="/acceso_rapido" class="boton_a">
+        Acceso rapido
+    </button>
+  </div>
+
+  <div class="registrate">
+    <p class="textos">¿no tenes cuenta?<a routerLink="/register" class="registrate_spam">Registrate</a></p>
+  </div>
+</div>
+
+
+
+
+  

@@ -1,9 +1,202 @@
-.caption {
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
+.login {
+    width: 100%;
+    min-height: 100vh;
+    background: #165a08;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 24px;
+    box-sizing: border-box;
 }
 
-.fields {
-  margin: 24px 0;
+.logo_container {
+    width: 100%;
+    max-width: 100px;
+
+  
+}
+
+.logo {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+.spinner {
+width: 40px;
+height: 40px;
+border: 4px solid rgba(0, 0, 0, 0.1);
+border-left-color: #09f; /* Color del borde que gira */
+border-radius: 50%;
+animation: spin 1s linear infinite;
+}
+
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.textos {
+    width: 100%;
+    max-width: 327px;
+
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 150%;
+
+    color: #fff8f8;
+
+    margin-bottom: 16px;
+}
+
+.input {
+    box-sizing: border-box;
+    color: white;
+    width: 100vi;
+    max-width: 327px;
+    height: 28px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    padding: 6px;
+    gap: 10px;
+
+    background: rgba(186, 31, 39, 0.05);
+    border: 1px solid #ffffff;
+    border-radius: 12px;
+
+    margin-bottom: 1px;
+}
+input::placeholder{
+    color: white;
+}
+
+.boton_i {
+    box-sizing: border-box;
+
+    width: 100%;
+    max-width: 327px;
+    height: 56px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 10px;
+    gap: 10px;
+
+    background: #7e0101;
+    border: none;
+    border-radius: 50px;
+
+    margin-top: 16px;
+}
+
+.boton_c {
+    box-sizing: border-box;
+
+    width: 100%;
+    max-width: 327px;
+    height: 56px;
+    background: #7e0101;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 10px;
+    gap: 10px;
+
+    border: 1px solid #7e0101;
+    border-radius: 50px;
+
+    margin-top: 15px;
+}
+
+
+
+.boton_a {
+    box-sizing: border-box;
+
+    width: 100%;
+    max-width: 320px;
+    height: 56px;
+    background: #7e0101;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 10px;
+    gap: 10px;
+
+    border: 1px solid #7e0101;
+    border-radius: 50px;
+
+    text-align: center;
+    margin-top: 10px;
+}
+
+.separador {
+    width: 100%;
+    max-width: 327px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin: 10px 0;
+}
+
+.linea_isq {
+    height: 1px;
+    background: #fefeff;
+    border: none;
+
+    flex: 1;
+}
+
+.punto {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+    background-color: #f3f4f5;
+
+    flex: 0,1;
+}
+
+.registrate {
+    width: 100%;
+    max-width: 327px;
+
+    text-align: center;
+
+    font-family: 'Manrope';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+
+    color: #fcf9f9;
+
+    margin-top: auto;
+    padding-top: 1px;
+    padding-bottom: 10px;
+
+
+}
+.registrate_spam {
+    color: #10b91e;
+    
+    font-family: 'Manrope';
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 150%;
 }
