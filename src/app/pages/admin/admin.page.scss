@@ -1,0 +1,44 @@
+ion-content {
+  --background: #657a4d;
+}
+
+ion-toolbar {
+  --background: #a8b68a;
+  --color: #3f452f;
+}
+
+.admin-container {
+  padding: 20px;
+}
+
+.header-section {
+  margin-bottom: 24px;
+}
+
+.back-button {
+  --color: #f5e6c8;
+  margin-left: -10px;
+}
+
+.header-section h1 {
+  margin: 10px 0 6px;
+
+  font-size: 28px;
+  font-weight: 800;
+
+  color: #f5e6c8;
+}
+
+.header-section p {
+  margin: 0;
+
+  font-size: 15px;
+
+  color: #e4d7b9;
+}
+
+.modules-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}

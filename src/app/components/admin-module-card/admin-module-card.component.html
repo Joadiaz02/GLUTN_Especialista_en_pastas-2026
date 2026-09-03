@@ -1,0 +1,24 @@
+<ion-card
+  class="module-card"
+  button
+  (click)="seleccionar()"
+>
+  <ion-card-content>
+
+    <div class="module-icon">
+      <ion-icon [name]="module.icon"></ion-icon>
+    </div>
+
+    <div class="module-info">
+      <h2>{{ module.title }}</h2>
+
+      <p>{{ module.description }}</p>
+    </div>
+
+    <ion-icon
+      class="arrow-icon"
+      name="chevron-forward-outline"
+    ></ion-icon>
+
+  </ion-card-content>
+</ion-card>

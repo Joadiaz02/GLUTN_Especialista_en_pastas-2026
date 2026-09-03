@@ -2,68 +2,163 @@ import { inject, Service } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 import { EPerfilUsuario } from '@app/enums';
 import { Storage } from '../storage';
+import type { PerfilUsuario } from '@app/models/usuario.model';
 
 @Service()
 export class Auth {
+
   private _supabaseService = inject(SupabaseService);
   private _storageService = inject(Storage);
+
   usuarioActual: any = null;
 
   constructor() {
-    this.restaurarSesion();
+
+  void this.restaurarSesion();
+
+}
+
+  private async restaurarSesion(): Promise<void> {
+
+    const { data } =
+      await this._supabaseService.client.auth.getSession();
+
+    this.usuarioActual =
+      data.session?.user ?? null;
   }
 
-  private async restaurarSesion() {
-    const { data } = await this._supabaseService.client.auth.getSession();
-    if (data.session) {
-      this.usuarioActual = data.session.user;
-    }
+  async obtenerUsuarioActual(): Promise<any> {
+
+    const { data } =
+      await this._supabaseService.client.auth.getSession();
+
+    this.usuarioActual =
+      data.session?.user ?? null;
+
+    return this.usuarioActual;
   }
 
-  async register(request: any, role: EPerfilUsuario): Promise<void> {
-    const avatarUrl = await this._storageService.uploadImage(
-      request.profile.file
+  obtenerPerfil(
+  usuario: any = this.usuarioActual
+): PerfilUsuario | null {
+
+  const perfil = usuario?.user_metadata?.perfil;
+
+  if (!perfil) {
+    return null;
+  }
+
+  return perfil as PerfilUsuario;
+}
+
+  esPersonal(
+    usuario: any = this.usuarioActual
+  ): boolean {
+
+    const perfil =
+      this.obtenerPerfil(usuario);
+
+    return [
+
+      EPerfilUsuario.Dueno,
+      EPerfilUsuario.Supervisor,
+      EPerfilUsuario.Metre,
+      EPerfilUsuario.Mozo,
+      EPerfilUsuario.Cocinero,
+      EPerfilUsuario.Cantinero
+
+    ].includes(
+      perfil as EPerfilUsuario
     );
+  }
 
-    const { error } = await this._supabaseService.client.auth.signUp({
-      email: request.credentials.email,
-      password: request.credentials.password,
-      options: {
-        data: {
-          apellido: request.personal.lastName,
-          nombre: request.personal.name,
-          documento: request.personal.dni,
-          perfil: role,
-          avatar: avatarUrl,
+  async register(
+    request: any,
+    role: EPerfilUsuario
+  ): Promise<void> {
+
+    const avatarUrl =
+      await this._storageService.uploadImage(
+        request.profile.file
+      );
+
+    const { error } =
+      await this._supabaseService.client.auth.signUp({
+
+        email: request.credentials.email,
+
+        password: request.credentials.password,
+
+        options: {
+
+          data: {
+
+            apellido:
+              request.personal.lastName,
+
+            nombre:
+              request.personal.name,
+
+            documento:
+              request.personal.dni,
+
+            perfil:
+              role,
+
+            avatar:
+              avatarUrl,
+
+          },
+
         },
-      },
-    });
+
+      });
 
     if (error) {
       throw error;
     }
   }
 
-  async iniciarsecion(request: any) {
+  async iniciarsecion(
+    request: any
+  ) {
+
     const { data, error } =
       await this._supabaseService.client.auth.signInWithPassword({
+
         email: request.email,
+
         password: request.password,
+
       });
 
-    if (error) throw new Error(`Login failed: ${error.message}`);
-    if (!data.user) throw new Error('Login failed: no user returned');
+    if (error) {
+      throw new Error(
+        `Login failed: ${error.message}`
+      );
+    }
 
-    this.usuarioActual = data.user;
+    if (!data.user) {
+      throw new Error(
+        'Login failed: no user returned'
+      );
+    }
+
+    this.usuarioActual =
+      data.user;
+
     return data.user;
   }
 
-  async logout() {
+  async logout(): Promise<void> {
+
     await this._supabaseService.client.auth.signOut();
+
     this.usuarioActual = null;
   }
 
   estaLogueado(): boolean {
+
     return this.usuarioActual !== null;
   }
 }
