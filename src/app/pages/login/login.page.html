@@ -6,16 +6,16 @@
   </div>
 
   <div>
-    <h1 class="textos">iniciar sesion</h1>
-    <p class="textos">por favor inicie secion primero para drisfutar del servicio</p>
+    <h1 class="textos">iniciar sesión</h1>
+    <p class="textos">por favor iniciar sesión primero para disfrutar del servicio</p>
   </div>
 
   <div>
-    <label class="textos" for="email" [style.color]="emailInput.touched && !email ? 'red' : 'white'">
+    <label class="textos" for="email" [style.color]="emailInput.touched && !email ? '#E76F45 ' : '#D9A441 '">
       {{ emailInput.touched && !email ? 'correo electrónico requerido' : 'correo electrónico' }}
     </label>
     <input [(ngModel)]="email" class="input" placeholder="jperez@ejemplo.com" id="email" #emailInput="ngModel">
-    <label class="textos" for="contrasena" [style.color]="contraInput.touched && !contrasena ? 'red' : 'white'">
+    <label class="textos" for="contrasena" [style.color]="contraInput.touched && !contrasena ? '#E76F45 ' : '#D9A441 '">
       {{ contraInput.touched && !contrasena ? 'contraseña requerida' : 'contraseña' }}
     </label>
     <input [(ngModel)]="contrasena" class="input" placeholder="Contraseña" type="password" #contraInput="ngModel">
@@ -23,7 +23,7 @@
   </div>
 
   <button (click)="iniciarSesion()"  class="boton_i">
-      Iniciar sesión 
+      iniciar sesión 
   </button>
 
   <div class="separador">
@@ -40,12 +40,12 @@
 
   <div class="boton_container">
     <button routerLink="/acceso_rapido" class="boton_a">
-        Acceso rapido
+        Acceso rápido
     </button>
   </div>
 
   <div class="registrate">
-    <p class="textos">¿no tenes cuenta?<a routerLink="/register" class="registrate_spam">Registrate</a></p>
+    <p class="textos">¿no tienes cuenta?<a routerLink="/register" class="registrate_spam">Registrarse</a></p>
   </div>
 </div>
 

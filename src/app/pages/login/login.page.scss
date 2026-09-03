@@ -1,11 +1,12 @@
 .login {
     width: 100%;
     min-height: 100vh;
-    background: #165a08;
+    background: #657A4D ;
 
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; 
 
     padding: 24px;
     box-sizing: border-box;
@@ -13,7 +14,7 @@
 
 .logo_container {
     width: 100%;
-    max-width: 100px;
+    max-width: min(200px, 40vw);
 
   
 }
@@ -52,15 +53,15 @@ animation: spin 1s linear infinite;
     font-size: 18px;
     line-height: 150%;
 
-    color: #fff8f8;
+    color: #D9A441 ;
 
     margin-bottom: 16px;
 }
 
 .input {
     box-sizing: border-box;
-    color: white;
-    width: 100vi;
+    color: #A8B68A ;
+    width: 100vw;
     max-width: 327px;
     height: 28px;
     display: flex;
@@ -77,7 +78,7 @@ animation: spin 1s linear infinite;
     margin-bottom: 1px;
 }
 input::placeholder{
-    color: white;
+    color: #D9A441 ;
 }
 
 .boton_i {
@@ -94,7 +95,7 @@ input::placeholder{
     padding: 10px;
     gap: 10px;
 
-    background: #7e0101;
+    background: #E76F45 ;
     border: none;
     border-radius: 50px;
 
@@ -107,7 +108,7 @@ input::placeholder{
     width: 100%;
     max-width: 327px;
     height: 56px;
-    background: #7e0101;
+    background: #E76F45 ;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -115,7 +116,7 @@ input::placeholder{
     padding: 10px;
     gap: 10px;
 
-    border: 1px solid #7e0101;
+    border: 1px solid #E76F45 ;
     border-radius: 50px;
 
     margin-top: 15px;
@@ -129,7 +130,7 @@ input::placeholder{
     width: 100%;
     max-width: 320px;
     height: 56px;
-    background: #7e0101;
+    background: #E76F45 ;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -137,7 +138,7 @@ input::placeholder{
     padding: 10px;
     gap: 10px;
 
-    border: 1px solid #7e0101;
+    border: 1px solid #E76F45 ;
     border-radius: 50px;
 
     text-align: center;
@@ -157,7 +158,7 @@ input::placeholder{
 
 .linea_isq {
     height: 1px;
-    background: #fefeff;
+    background: #E76F45 ;
     border: none;
 
     flex: 1;
@@ -168,7 +169,7 @@ input::placeholder{
     height: 6px;
 
     border-radius: 50%;
-    background-color: #f3f4f5;
+    background-color: #D9A441 ;
 
     flex: 0,1;
 }
@@ -178,22 +179,22 @@ input::placeholder{
     max-width: 327px;
 
     text-align: center;
-
+    
     font-family: 'Manrope';
     font-weight: 500;
     font-size: 14px;
     line-height: 150%;
 
-    color: #fcf9f9;
+    color: #D9A441  ;
 
-    margin-top: auto;
-    padding-top: 1px;
+    margin-top: 32px;   
     padding-bottom: 10px;
 
 
 }
+
 .registrate_spam {
-    color: #10b91e;
+    color: #E76F45 ;
     
     font-family: 'Manrope';
     font-weight: 500;
