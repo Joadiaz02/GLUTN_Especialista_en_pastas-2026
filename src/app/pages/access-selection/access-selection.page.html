@@ -1,0 +1,155 @@
+<ion-content
+  [fullscreen]="true"
+  class="access-content"
+>
+
+  <main class="access-page">
+
+    <section class="brand-block">
+
+      <div class="brand-mark">
+
+        <img
+          src="assets/images/LOGO-GLUTN.png"
+          alt="GLUTN"
+        />
+
+      </div>
+
+      <span class="eyebrow">
+        ACCESO DE PERSONAL
+      </span>
+
+      <h1>
+        ¿A dónde querés ingresar?
+      </h1>
+
+      <p>
+        Hola,
+        <strong>{{ nombre }}</strong>.
+        Elegí cómo continuar en la aplicación.
+      </p>
+
+    </section>
+
+
+    <section class="profile-card">
+
+      <div class="profile-icon">
+
+        <ion-icon
+          name="person-circle-outline"
+        ></ion-icon>
+
+      </div>
+
+      <div>
+
+        <span>
+          Perfil actual
+        </span>
+
+        <strong>
+          {{ perfilNombre }}
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <section class="access-options">
+
+
+      <button
+        class="access-option main-option"
+        type="button"
+        (click)="irAlMenuPrincipal()"
+      >
+
+        <span class="option-icon">
+
+          <ion-icon
+            name="restaurant-outline"
+          ></ion-icon>
+
+        </span>
+
+
+        <span class="option-copy">
+
+          <strong>
+            Menú principal
+          </strong>
+
+          <small>
+            Accedé a las funciones generales
+            de la aplicación.
+          </small>
+
+        </span>
+
+
+        <span class="arrow">
+          ›
+        </span>
+
+      </button>
+
+
+
+      <button
+        class="access-option admin-option"
+        type="button"
+        (click)="irAlPanelAdministrativo()"
+      >
+
+        <span class="option-icon">
+
+          <ion-icon
+            name="settings-outline"
+          ></ion-icon>
+
+        </span>
+
+
+        <span class="option-copy">
+
+          <strong>
+            Panel administrativo
+          </strong>
+
+          <small>
+            Gestioná las tareas disponibles
+            para tu perfil.
+          </small>
+
+        </span>
+
+
+        <span class="arrow">
+          ›
+        </span>
+
+      </button>
+
+    </section>
+
+
+    <button
+      class="logout-button"
+      type="button"
+      (click)="cerrarSesion()"
+    >
+
+      <ion-icon
+        name="log-out-outline"
+      ></ion-icon>
+
+      Cerrar sesión
+
+    </button>
+
+  </main>
+
+</ion-content>
