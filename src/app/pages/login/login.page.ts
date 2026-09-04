@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ToastController } from '@ionic/angular';
@@ -15,9 +15,10 @@ export class LoginPage {
   email = '';
   contrasena = '';
   logo = 'assets/images/LOGO-GLUTN.png';
-
+  credencialesinvalidas = signal(<boolean | null>(null));
+  cargando = signal<boolean>(false);
   private toastController = inject(ToastController);
-
+  
   constructor(
     private router: Router,
     private authService: Auth,
@@ -28,20 +29,21 @@ export class LoginPage {
     const contrasenaValida = this.contrasena.length > 0;
     return emailValido && contrasenaValida;
   }
-
+  
   async iniciarSesion(): Promise<void> {
     if (!this.formularioValido) return;
+    this.cargando.set(true);
 
     try {
       await this.authService.iniciarsecion({
         email: this.email,
         password: this.contrasena
       });
-
+      this.credencialesinvalidas.set(false);
       this.router.navigate(['/home']);
 
     } catch (error) {
-
+      this.credencialesinvalidas.set(true);
       const toast = await this.toastController.create({
         message: 'Correo o contraseña incorrectos. Verificá tus datos e intentá nuevamente.',
         duration: 5000,
@@ -54,7 +56,7 @@ export class LoginPage {
       this.reproducirSonidoError();
       
     } finally {
-      
+      this.cargando.set(false);
     }
   }
 

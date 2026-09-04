@@ -22,8 +22,13 @@
 
   </div>
 
-  <button (click)="iniciarSesion()"  class="boton_i">
-      iniciar sesión 
+  <button (click)="iniciarSesion()" [disabled]="cargando()" class="boton_i">
+      @if (cargando()) {
+        <div class="spinner"></div>
+      }@else{
+        iniciar sesión
+      }
+      
   </button>
 
   <div class="separador">
@@ -49,7 +54,3 @@
   </div>
 </div>
 
-
-
-
-  
