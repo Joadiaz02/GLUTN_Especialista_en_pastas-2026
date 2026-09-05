@@ -1,11 +1,11 @@
-# GLUTN - Especialista en Pastas 🍝
+# GLUTN - Especialista en Pastas 
 
 ## Trabajo Final Integrador - 2026
 
 ## 🖼️ Logo del proyecto
 
 <p align="center">
-  <img src="images/logo.png" alt="Logo de GLUTN" width="250">
+  <img src="images/logo-glutn.png" alt="Logo de GLUTN" width="250">
 </p>
 
 ---
@@ -15,10 +15,78 @@
 ### Splash Screen
 
 <p align="center">
-  <img src="images/splash-screen.png" alt="Splash Screen" width="250">
+  <img src="images/splash-screen.jpg" alt="Splash Screen" width="250">
 </p>
 
 ---
+### Login
+
+<p align="center">
+  <img src="images/login.png" alt="Login" width="250">
+</p>
+
+---
+### Registro de clientes
+
+<p align="center">
+  <img src="images/Registro_cliente_uno.jpg" alt="Registro cliente" width="250">
+</p>
+
+<p align="center">
+  <img src="images/Registro_cliente_dos.jpg" alt="Registro cliente" width="250">
+</p>
+
+<p align="center">
+  <img src="images/Registro_cliente_tres.jpg" alt="Registro cliente" width="250">
+</p>
+
+---
+### Registro de invitados
+
+<p align="center">
+  <img src="images/registro_invitado_uno.jpeg" alt="Registro invitado" width="250">
+</p>
+
+<p align="center">
+  <img src="images/registro_invitado_dos.jpg" alt="Registro invitado" width="250">
+</p>
+
+---
+### Menú principal
+
+<p align="center">
+  <img src="images/splash-screen.png" alt="Menú principal" width="250">
+</p>
+
+---
+### Panel administrativo
+
+<p align="center">
+  <img src="images/Panel_administrativo_uno.jpg" alt="Panel administrativo" width="250">
+</p>
+
+---
+### Administración de bebidas
+
+<p align="center">
+  <img src="images/Creacion_bebidas_uno.jpg" alt="Creación bebidas" width="250">
+</p>
+
+<p align="center">
+  <img src="images/Creacion_bebidas_dos.jpg" alt="Creación bebidas" width="250">
+</p>
+
+<p align="center">
+  <img src="images/creacion_bebidas_tres.jpg" alt="Creación bebidas" width="250">
+</p>
+
+<p align="center">
+  <img src="images/Creacion_bebidas_cuatro.jpg" alt="Creación bebidas" width="250">
+</p>
+
+---
+
+
 
 Aplicación móvil desarrollada como Trabajo Final Integrador de la Tecnicatura Universitaria en Programación de la Universidad Tecnológica Nacional - Facultad Regional Avellaneda.
 
@@ -200,9 +268,14 @@ Cada integrante cuenta con funcionalidades principales asignadas. Esta división
 
 # 5. 📊 Avances del proyecto
 
-| Tarea | Responsable | Inicio | Finalización | Estado |
-|---|---|---|---|---|
-| Splash Screen | Joaquín Díaz | 23/08/2026 | 24/08/2026 | A espera de corrección |
-| Logo | Mariano Pastor | 23/08/2026 | 24/08/2026 | A espera de corrección |
-| Registro de usuarios | Javier Vilchez | 24/08/2026 | - | En progreso |
-| Login de usuarios | Lucas Ponte | 25/08/2026 | — | En progreso |
+| Tarea | Responsable | Inicio | Finalización | Estado | Rama |
+|---|---|---|---|---|---|
+| Logo | Mariano Pastor | 23/08/2026 | 24/08/2026 | A la espera de corrección | Joaquin-Diaz |
+| Splash Screen | Joaquín Díaz | 23/08/2026 | 24/08/2026 | A la espera de corrección | Joaquin-Diaz |
+| Registro de usuarios | Javier Vilchez | 24/08/2026 | 28/08/2026 | A la espera de corrección | Javier-Vilchez |
+| Login de usuarios registrados y personal | Lucas Ponte | 25/08/2026 | 03/09/2026 | A la espera de correción | Lucas-Ponte |
+| Diseño del menú principal | Mariano Pastor | 25/08/2026 | 03/09/2026 | A la espera de correción | Mariano-Pastor |
+| Diseño del panel administrativo | Joaquín Díaz | 01/09/2026 | 03/09/2026 | A la espera de correción | Joaquin-Diaz |
+| Diseño de administración de bebidas | Javier Vilchez | 04/09/2026 | 04/09/2026 | A la espera de correción | Javier-Vilchez |
+| Diseño de login de invitados | Javier Vilchez | 04/09/2026 | 04/09/2026 | A la espera de correción | Javier-Vilchez |
+
