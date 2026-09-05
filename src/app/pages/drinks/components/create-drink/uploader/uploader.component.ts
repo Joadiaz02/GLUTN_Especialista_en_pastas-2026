@@ -1,12 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import {
   IonIcon,
-  IonModal,
   ModalController,
   ToastController,
 } from '@ionic/angular';
 import { UploadOptionsComponent } from './upload-options/upload-options.component';
-import { Camera, CameraSource } from '@capacitor/camera';
+import { Camera, MediaResult } from '@capacitor/camera';
 
 @Component({
   selector: 'app-uploader',
@@ -17,6 +16,8 @@ import { Camera, CameraSource } from '@capacitor/camera';
 export class UploaderComponent {
   uploading = signal<boolean>(false);
   photoPreview = signal<string | null>(null);
+
+  fileSelected = output<File>();
 
   private _toastController = inject(ToastController);
   private _modalController = inject(ModalController);
@@ -31,42 +32,67 @@ export class UploaderComponent {
 
     const { data, role } = await modal.onWillDismiss();
 
-    if (role === 'confirm' && data?.source) {
-      this.takePhoto(
-        data.source === 'camera' ? CameraSource.Camera : CameraSource.Photos
-      );
+    if (role === 'confirm' && data?.source === 'camera') {
+      this.takePhoto();
+    } else if (role === 'confirm' && data?.source === 'gallery') {
+      this.selectFromGallery();
     }
   }
 
-  async takePhoto(source: CameraSource) {
+  async takePhoto() {
     try {
       const photo = await Camera.takePhoto({
         quality: 60,
         editable: 'no',
+        includeMetadata: true,
       });
 
-      this.photoPreview.set(photo.webPath ?? null);
+      await this.processPhoto(photo);
+    } catch (err) {
+      this.showErrorToast();
+    }
+  }
 
-      if (photo.webPath) {
-        const response = await fetch(photo.webPath);
-        const blob = await response.blob();
+  async selectFromGallery() {
+    try {
+      const result = await Camera.chooseFromGallery({
+        includeMetadata: true,
+      });
 
-        const format = photo.metadata?.format ?? 'jpeg';
-        const file = new File([blob], `profile-${Date.now()}.${format}`, {
-          type: `image/${format}`,
-        });
+      const media = result.results?.[0];
 
-        // this.formGroup.patchValue({ file });
+      if (media) {
+        await this.processPhoto(media);
       }
     } catch (err) {
-      const toast = await this._toastController.create({
-        message:
-          'Ocurrió un problema al guardar tu información. Intentá nuevamente.',
-        duration: 5000,
-        position: 'top',
+      this.showErrorToast();
+    }
+  }
+
+  private async processPhoto(photo: MediaResult) {
+    this.photoPreview.set(photo.webPath ?? null);
+
+    if (photo.webPath) {
+      const response = await fetch(photo.webPath);
+      const blob = await response.blob();
+
+      const format = photo.metadata?.format ?? 'jpeg';
+      const file = new File([blob], `profile-${Date.now()}.${format}`, {
+        type: `image/${format}`,
       });
 
-      await toast.present();
+      this.fileSelected.emit(file);
     }
+  }
+
+  private async showErrorToast() {
+    const toast = await this._toastController.create({
+      message:
+        'Ocurrió un problema al guardar tu información. Intentá nuevamente.',
+      duration: 5000,
+      position: 'top',
+    });
+
+    await toast.present();
   }
 }
