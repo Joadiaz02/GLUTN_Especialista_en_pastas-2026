@@ -55,7 +55,7 @@
 ### Menú principal
 
 <p align="center">
-  <img src="images/splash-screen.png" alt="Menú principal" width="250">
+  <img src="images/menu_principal.jpg" alt="Menú principal" width="250">
 </p>
 
 ---
@@ -274,7 +274,7 @@ Cada integrante cuenta con funcionalidades principales asignadas. Esta división
 | Splash Screen | Joaquín Díaz | 23/08/2026 | 24/08/2026 | A la espera de corrección | Joaquin-Diaz |
 | Registro de usuarios | Javier Vilchez | 24/08/2026 | 28/08/2026 | A la espera de corrección | Javier-Vilchez |
 | Login de usuarios registrados y personal | Lucas Ponte | 25/08/2026 | 03/09/2026 | A la espera de correción | Lucas-Ponte |
-| Diseño del menú principal | Mariano Pastor | 25/08/2026 | 03/09/2026 | A la espera de correción | Mariano-Pastor |
+| Diseño del menú principal | Mariano Pastor | 25/08/2026 | - | En curso | Mariano-Pastor |
 | Diseño del panel administrativo | Joaquín Díaz | 01/09/2026 | 03/09/2026 | A la espera de correción | Joaquin-Diaz |
 | Diseño de administración de bebidas | Javier Vilchez | 04/09/2026 | 04/09/2026 | A la espera de correción | Javier-Vilchez |
 | Diseño de login de invitados | Javier Vilchez | 04/09/2026 | 04/09/2026 | A la espera de correción | Javier-Vilchez |
