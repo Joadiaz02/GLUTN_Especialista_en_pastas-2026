@@ -1,17 +1,14 @@
-import { AdminModule } from "@app/models/admin.model";
+import { AdminModule } from '@app/models/admin.model';
 import { EPerfilUsuario } from '../../../enums/role.enum';
 
 export const ADMIN_MODULES: AdminModule[] = [
-
   {
     id: 'empleados',
     title: 'Empleados',
     description: 'Gestionar empleados del restaurante',
     icon: 'people-outline',
-    roles: [
-      EPerfilUsuario.Dueno,
-      EPerfilUsuario.Supervisor
-    ]
+    roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor],
+    path: 'employees',
   },
 
   {
@@ -19,9 +16,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Platos',
     description: 'Gestionar los platos del menú',
     icon: 'restaurant-outline',
-    roles: [
-      EPerfilUsuario.Cocinero
-    ]
+    roles: [EPerfilUsuario.Cocinero],
+    path: 'dishes',
   },
 
   {
@@ -29,9 +25,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Bebidas',
     description: 'Gestionar las bebidas del menú',
     icon: 'wine-outline',
-    roles: [
-      EPerfilUsuario.Cantinero
-    ]
+    roles: [EPerfilUsuario.Cantinero],
+    path: 'drinks',
   },
 
   {
@@ -39,10 +34,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Mesas',
     description: 'Gestionar las mesas del restaurante',
     icon: 'grid-outline',
-    roles: [
-      EPerfilUsuario.Dueno,
-      EPerfilUsuario.Supervisor
-    ]
+    roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor],
+    path: 'tables',
   },
 
   {
@@ -50,10 +43,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Clientes',
     description: 'Gestionar clientes registrados',
     icon: 'person-outline',
-    roles: [
-      EPerfilUsuario.Dueno,
-      EPerfilUsuario.Supervisor
-    ]
+    roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor],
+    path: 'clients',
   },
 
   {
@@ -61,9 +52,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Lista de espera',
     description: 'Consultar clientes esperando una mesa',
     icon: 'time-outline',
-    roles: [
-      EPerfilUsuario.Metre
-    ]
+    roles: [EPerfilUsuario.Metre],
+    path: 'waiting-list',
   },
 
   {
@@ -71,9 +61,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Asignación de mesas',
     description: 'Asignar mesas a los clientes',
     icon: 'restaurant-outline',
-    roles: [
-      EPerfilUsuario.Metre
-    ]
+    roles: [EPerfilUsuario.Metre],
+    path: 'table-assignment',
   },
 
   {
@@ -81,9 +70,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Consultas',
     description: 'Responder consultas de los clientes',
     icon: 'chatbubble-ellipses-outline',
-    roles: [
-      EPerfilUsuario.Mozo
-    ]
+    roles: [EPerfilUsuario.Mozo],
+    path: 'queries',
   },
 
   {
@@ -91,9 +79,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Pedidos',
     description: 'Gestionar pedidos de los clientes',
     icon: 'receipt-outline',
-    roles: [
-      EPerfilUsuario.Mozo
-    ]
+    roles: [EPerfilUsuario.Mozo],
+    path: 'orders',
   },
 
   {
@@ -101,9 +88,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Cocina',
     description: 'Consultar y preparar pedidos',
     icon: 'restaurant-outline',
-    roles: [
-      EPerfilUsuario.Cocinero
-    ]
+    roles: [EPerfilUsuario.Cocinero],
+    path: 'kitchen',
   },
 
   {
@@ -111,9 +97,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Bar',
     description: 'Consultar y preparar bebidas',
     icon: 'wine-outline',
-    roles: [
-      EPerfilUsuario.Cantinero
-    ]
+    roles: [EPerfilUsuario.Cantinero],
+    path: 'bar',
   },
 
   {
@@ -121,9 +106,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Pedidos listos',
     description: 'Consultar pedidos preparados',
     icon: 'checkmark-circle-outline',
-    roles: [
-      EPerfilUsuario.Mozo
-    ]
+    roles: [EPerfilUsuario.Mozo],
+    path: 'ready-orders',
   },
 
   {
@@ -131,9 +115,8 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Entrega de pedidos',
     description: 'Gestionar la entrega de pedidos',
     icon: 'bag-check-outline',
-    roles: [
-      EPerfilUsuario.Mozo
-    ]
+    roles: [EPerfilUsuario.Mozo],
+    path: 'order-delivery',
   },
 
   {
@@ -141,9 +124,7 @@ export const ADMIN_MODULES: AdminModule[] = [
     title: 'Pagos',
     description: 'Gestionar pagos de los clientes',
     icon: 'card-outline',
-    roles: [
-      EPerfilUsuario.Mozo
-    ]
-  }
-
+    roles: [EPerfilUsuario.Mozo],
+    path: 'payments',
+  },
 ];

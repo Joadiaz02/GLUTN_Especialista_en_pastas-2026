@@ -1,0 +1,68 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        text=""
+        icon="assets/icons/arrow-left.svg"
+      ></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Crear Bebida</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="upload-container">
+    <app-uploader />
+    <app-uploader />
+    <app-uploader />
+  </div>
+
+  <div class="fields">
+    <div class="field">
+      <label class="field__label">Nombre</label>
+
+      <ion-input fill="outline" class="field__input" placeholder="Nombre" />
+    </div>
+
+    <div class="field">
+      <label class="field__label">Descripción</label>
+
+      <ion-input
+        fill="outline"
+        class="field__input"
+        placeholder="Descripción"
+      />
+    </div>
+
+    <div class="fields__row">
+      <div class="field">
+        <label class="field__label">Elaboración</label>
+
+        <ion-input
+          type="number"
+          fill="outline"
+          class="field__input"
+          placeholder="Elaboración"
+        />
+      </div>
+
+      <div class="field">
+        <label class="field__label">Precio</label>
+
+        <ion-input
+          type="number"
+          fill="outline"
+          class="field__input"
+          placeholder="Precio"
+        />
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="footer-actions">
+    <ion-button expand="block" shape="round">Guardar</ion-button>
+  </div>
+</ion-footer>

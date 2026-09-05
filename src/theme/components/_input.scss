@@ -1,6 +1,6 @@
 ion-input {
   &.field__input {
-    --background: #fff;
+    --background: var(--color-surface-muted);
 
     min-height: 56px;
     
@@ -15,7 +15,7 @@ ion-input {
     
     --highlight-height: 1px;
     
-    --border-color: var(--border);
+    --border-color: var(--color-surface-muted);
     --border-style: solid;
     --border-width: 1px;
 
@@ -23,12 +23,12 @@ ion-input {
     --highlight-color-valid: var(--ion-color-primary);
   
     &.has-focus {
-      --background: hsla(357, 71%, 43%, 0.05);
+      --background: hsla(16, 77%, 59%, 0.15);
     }
   }
   
   &.input-fill-outline.sc-ion-input-md-h {
-    --border-color: var(--border);
+    --border-color: var(--color-surface-muted);
     --border-radius: 12px !important;
   }
 }

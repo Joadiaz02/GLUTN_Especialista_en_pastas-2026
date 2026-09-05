@@ -1,0 +1,7 @@
+<button (click)="open()" class="upload-placeholder">
+  @if (photoPreview()) {
+  <img [src]="photoPreview()" alt="Preview" class="upload-preview" />
+  } @else {
+  <ion-icon src="assets/icons/plus.svg"></ion-icon>
+  }
+</button>
