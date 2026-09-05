@@ -1,5 +1,4 @@
 ion-button {
-  // --color: var(--ion-text-color);
   text-transform: none;
   letter-spacing: 0px;
   
@@ -35,7 +34,6 @@ ion-button {
 
   &.button-outline {
     --color: var(--ion-text-color);
-    // --border-color: #1f1f1f;
     --border-color: var(--border);
     --border-style: solid;
     --border-width: 1px;
