@@ -1,7 +1,26 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonButton, IonFooter, ToastController, IonInput, IonSpinner } from '@ionic/angular';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonButton,
+  IonFooter,
+  ToastController,
+  IonInput,
+  IonSpinner,
+} from '@ionic/angular';
 import { UploaderComponent } from './uploader/uploader.component';
 import { Storage, Table } from '@app/services';
 import { Router } from '@angular/router';
@@ -24,8 +43,8 @@ import { Router } from '@angular/router';
     IonInput,
     ReactiveFormsModule,
     UploaderComponent,
-    IonSpinner
-],
+    IonSpinner,
+  ],
 })
 export class CreateDrinkPage {
   uploading = signal(false);
@@ -69,21 +88,18 @@ export class CreateDrinkPage {
 
       this.form.markAsPending();
 
-      const image01 =
-      await this._storageService.uploadImage(
+      const image01 = await this._storageService.uploadImage(
         data.images[0] as File
       );
 
-      const image02 =
-      await this._storageService.uploadImage(
+      const image02 = await this._storageService.uploadImage(
         data.images[1] as File
       );
 
-      const image03 =
-      await this._storageService.uploadImage(
+      const image03 = await this._storageService.uploadImage(
         data.images[2] as File
       );
-  
+
       await this._tableService.add({
         titulo: data.title,
         descripcion: data.description,
@@ -94,7 +110,7 @@ export class CreateDrinkPage {
         imagen_3: image03,
       });
 
-      this._router.navigateByUrl('/drinks', { replaceUrl: true });
+      this._router.navigateByUrl('/admin/drinks');
     } catch (error) {
       const toast = await this._toastController.create({
         message:

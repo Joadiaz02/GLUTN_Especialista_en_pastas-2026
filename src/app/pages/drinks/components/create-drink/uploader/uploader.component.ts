@@ -1,9 +1,5 @@
 import { Component, inject, output, signal } from '@angular/core';
-import {
-  IonIcon,
-  ModalController,
-  ToastController,
-} from '@ionic/angular';
+import { IonIcon, ModalController, ToastController } from '@ionic/angular';
 import { UploadOptionsComponent } from './upload-options/upload-options.component';
 import { Camera, MediaResult } from '@capacitor/camera';
 
@@ -72,12 +68,22 @@ export class UploaderComponent {
   private async processPhoto(photo: MediaResult) {
     this.photoPreview.set(photo.webPath ?? null);
 
-    if (photo.webPath) {
-      const response = await fetch(photo.webPath);
-      const blob = await response.blob();
+    const base64Src = photo.thumbnail;
 
-      const format = photo.metadata?.format ?? 'jpeg';
-      const file = new File([blob], `profile-${Date.now()}.${format}`, {
+    if (base64Src) {
+      let format = (photo.metadata?.format ?? 'jpeg').toLowerCase();
+      if (format === 'jpg') format = 'jpeg';
+
+      const cleanBase64 = base64Src.replace(/^data:image\/\w+;base64,/, '');
+      const byteCharacters = atob(cleanBase64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+
+      const blob = new Blob([byteArray], { type: `image/${format}` });
+      const file = new File([blob], `table-${Date.now()}.${format}`, {
         type: `image/${format}`,
       });
 

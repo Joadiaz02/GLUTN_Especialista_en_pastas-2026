@@ -22,13 +22,18 @@
     <div class="field">
       <label class="field__label">Titulo</label>
 
-      <ion-input fill="outline" class="field__input" placeholder="Titulo" formControlName="title" />
+      <ion-input
+        fill="outline"
+        class="field__input"
+        placeholder="Titulo"
+        formControlName="title"
+      />
 
-      @if ( getFormControl('title')?.invalid && (getFormControl('title')?.touched || getFormControl('title')?.dirty ) ) {
-        @if ( getFormControl('title')?.hasError('required') ) {
-          <p class="field__error">El campo es obligatorio.</p>
-        }
-      }
+      @if ( getFormControl('title')?.invalid &&
+      (getFormControl('title')?.touched || getFormControl('title')?.dirty ) ) {
+      @if ( getFormControl('title')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
     </div>
 
     <div class="field">
@@ -41,11 +46,12 @@
         formControlName="description"
       />
 
-      @if ( getFormControl('description')?.invalid && (getFormControl('description')?.touched || getFormControl('description')?.dirty ) ) {
-        @if ( getFormControl('description')?.hasError('required') ) {
-          <p class="field__error">El campo es obligatorio.</p>
-        }
-      }
+      @if ( getFormControl('description')?.invalid &&
+      (getFormControl('description')?.touched ||
+      getFormControl('description')?.dirty ) ) { @if (
+      getFormControl('description')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
     </div>
 
     <div class="fields__row">
@@ -53,36 +59,41 @@
         <label class="field__label">Elaboración</label>
 
         <ion-input
-          type="number"
+          type="text"
+          inputmode="numeric"
+          maxlength="3"
           fill="outline"
           class="field__input"
           placeholder="Elaboración"
           formControlName="preparation"
         />
 
-        @if ( getFormControl('preparation')?.invalid && (getFormControl('preparation')?.touched || getFormControl('preparation')?.dirty ) ) {
-        @if ( getFormControl('preparation')?.hasError('required') ) {
-          <p class="field__error">El campo es obligatorio.</p>
-        }
-      }
+        @if ( getFormControl('preparation')?.invalid &&
+        (getFormControl('preparation')?.touched ||
+        getFormControl('preparation')?.dirty ) ) { @if (
+        getFormControl('preparation')?.hasError('required') ) {
+        <p class="field__error">El campo es obligatorio.</p>
+        } }
       </div>
 
       <div class="field">
         <label class="field__label">Precio</label>
 
         <ion-input
-          type="number"
+          type="text"
+          inputmode="numeric"
+          maxlength="6"
           fill="outline"
           class="field__input"
           placeholder="Precio"
           formControlName="price"
         />
 
-        @if ( getFormControl('price')?.invalid && (getFormControl('price')?.touched || getFormControl('price')?.dirty ) ) {
-        @if ( getFormControl('price')?.hasError('required') ) {
-          <p class="field__error">El campo es obligatorio.</p>
-        }
-      }
+        @if ( getFormControl('price')?.invalid &&
+        (getFormControl('price')?.touched || getFormControl('price')?.dirty ) )
+        { @if ( getFormControl('price')?.hasError('required') ) {
+        <p class="field__error">El campo es obligatorio.</p>
+        } }
       </div>
     </div>
   </form>
@@ -90,8 +101,14 @@
 
 <ion-footer class="ion-no-border">
   <div class="footer-actions">
-    <ion-button expand="block" shape="round" [disabled]="(form.statusChanges | async) !== 'VALID'" (click)="create()">
+    <ion-button
+      expand="block"
+      shape="round"
+      [disabled]="(form.statusChanges | async) !== 'VALID'"
+      (click)="create()"
+    >
       @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> }
-      Guardar</ion-button>
+      Guardar</ion-button
+    >
   </div>
 </ion-footer>

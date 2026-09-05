@@ -170,6 +170,7 @@ export class RegisterPage {
 
       this._router.navigateByUrl('/login', { replaceUrl: true });
     } catch (error) {
+      console.log(error);
       const toast = await this._toastController.create({
         message:
           'No pudimos completar la acción. Intentá nuevamente más tarde.',
