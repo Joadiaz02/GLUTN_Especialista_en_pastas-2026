@@ -39,6 +39,7 @@ export class LoginPage {
       const usuario =
         await this.authService.iniciarsecion({email: this.email,password: this.contrasena});
       this.credencialesinvalidas.set(false);
+      
       if (this.authService.esPersonal(usuario)) {
         await this.router.navigate(['/seleccion-acceso']);
         return;

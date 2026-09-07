@@ -16,7 +16,7 @@
     width: 100%;
     max-width: min(200px, 40vw);
     margin-top: 10%;
-  
+    
 }
 
 .logo {
@@ -58,14 +58,14 @@ animation: spin 1s linear infinite;
 
 .input {
     box-sizing: border-box;
-    color: #A8B68A ;
+    color: #D9A441 ;
     width: 100vw;
     max-width: 327px;
     height: 28%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    
+
     padding: 6px;
     gap: 10px;
 
@@ -76,7 +76,7 @@ animation: spin 1s linear infinite;
     margin-bottom: 10px;
 }
 input::placeholder{
-    color: #E76F45 ;
+    color: #D9A441 ;
 }
 
 .boton_i {
