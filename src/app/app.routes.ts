@@ -8,7 +8,7 @@ export const routes: Routes = [
 
     loadComponent: () =>
       import('./pages/splash-screen/splash-screen.page').then(
-        (m) => m.SplashScreenPage
+        (m) => m.SplashScreenPage,
       ),
   },
 
@@ -27,13 +27,19 @@ export const routes: Routes = [
   },
 
   {
+    path: 'guest',
+    loadComponent: () =>
+      import('./pages/guest/guest.page').then((m) => m.GuestPage),
+  },
+
+  {
     path: 'seleccion-acceso',
 
     canActivate: [staffGuard],
 
     loadComponent: () =>
       import('./pages/access-selection/access-selection.page').then(
-        (m) => m.AccessSelectionPage
+        (m) => m.AccessSelectionPage,
       ),
   },
 
@@ -50,7 +56,30 @@ export const routes: Routes = [
     path: 'home',
 
     loadComponent: () =>
-      import('./components/home/home.component').then((m) => m.HomeComponent),
+      import('./pages/home/home.page').then((m) => m.HomePage),
   },
-  
+  {
+    path: 'admin/tables',
+    loadComponent: () =>
+      import('./pages/tables/tables.page').then((m) => m.TablesPage),
+  },
+  {
+    path: 'admin/drinks',
+    loadComponent: () =>
+      import('./pages/drinks/drinks.page').then((m) => m.DrinksPage),
+  },
+  {
+    path: 'admin/drinks/create',
+    loadComponent: () =>
+      import('./pages/drinks/components/create-drink/create-drink.page').then(
+        (m) => m.CreateDrinkPage
+      ),
+  },
+  {
+    path: 'admin/drinks/edit',
+    loadComponent: () =>
+      import('./pages/drinks/components/edit-drink/edit-drink.page').then(
+        (m) => m.EditDrinkPage
+      ),
+  },
 ];

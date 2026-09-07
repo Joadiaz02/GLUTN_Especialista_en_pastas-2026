@@ -1,0 +1,12 @@
+<div class="drink-card">
+  <img class="drink-card__image" [src]="image()" />
+
+  <div class="drink-card__info">
+    <div class="drink-card__details">
+      <h3 class="drink-card__name">{{ name() }}</h3>
+      <p class="drink-card__description">{{ description() }}</p>
+    </div>
+
+    <span class="drink-card__price">{{ price() | currency }}</span>
+  </div>
+</div>

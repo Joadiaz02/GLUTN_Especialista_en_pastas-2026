@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import {
   IonHeader,
@@ -9,7 +9,7 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
-  IonContent
+  IonContent,
 } from '@ionic/angular';
 
 import { Auth } from '../../services/auth/auth';
@@ -29,13 +29,14 @@ import { AdminModuleCardComponent } from '@app/components/admin-module-card/admi
     IonButton,
     IonIcon,
     IonContent,
-    AdminModuleCardComponent
+    AdminModuleCardComponent,
+
+    RouterLink,
   ],
   templateUrl: './admin.page.html',
-  styleUrls: ['./admin.page.scss']
+  styleUrls: ['./admin.page.scss'],
 })
 export class AdminPage implements OnInit {
-
   modulosVisibles: AdminModule[] = [];
 
   constructor(
@@ -49,7 +50,6 @@ export class AdminPage implements OnInit {
   }
 
   private async cargarModulos(): Promise<void> {
-
     const usuario = await this.auth.obtenerUsuarioActual();
 
     console.log('========== ADMIN ==========');
@@ -73,8 +73,8 @@ export class AdminPage implements OnInit {
       return;
     }
 
-    this.modulosVisibles = ADMIN_MODULES.filter(
-      modulo => modulo.roles.includes(perfil)
+    this.modulosVisibles = ADMIN_MODULES.filter((modulo) =>
+      modulo.roles.includes(perfil)
     );
 
     console.log('Módulos visibles:', this.modulosVisibles);

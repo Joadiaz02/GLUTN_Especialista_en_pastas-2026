@@ -2,7 +2,7 @@
   margin: 0 0 8px;
   font-size: 24px;
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--text-primary);
 }
 
 .step__subtitle {
@@ -26,7 +26,7 @@
     height: 100%;
     border-radius: 50px;
     background-color: var(--color-surface-muted);
-    width: 33.33%;
+    width: 100%;
     
     &.active {
       background-color: var(--ion-color-primary);

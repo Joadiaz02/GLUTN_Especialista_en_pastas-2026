@@ -23,10 +23,10 @@ import {
 import { PersonalStepPage } from './steps/personal-step/personal-step.page';
 import { CredentialsStepPage } from './steps/credentials-step/credentials-step.page';
 import { ProfileStepPage } from './steps/profile-step/profile-step.page';
-import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { Router } from '@angular/router';
 import { Auth } from '@app/services';
 import { EPerfilUsuario } from '@app/enums';
+import { ProgressBarComponent } from '@app/components';
 
 const NAME_PATTERN =
   /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/;
