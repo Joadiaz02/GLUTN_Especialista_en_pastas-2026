@@ -13,16 +13,27 @@
 
 <ion-content [fullscreen]="true">
   <div class="upload-container">
-    <app-uploader />
-    <app-uploader />
-    <app-uploader />
+    <app-uploader (fileSelected)="onPhotoSelected(0, $event)" />
+    <app-uploader (fileSelected)="onPhotoSelected(1, $event)" />
+    <app-uploader (fileSelected)="onPhotoSelected(2, $event)" />
   </div>
 
-  <div class="fields">
+  <form [formGroup]="form" class="fields">
     <div class="field">
-      <label class="field__label">Nombre</label>
+      <label class="field__label">Titulo</label>
 
-      <ion-input fill="outline" class="field__input" placeholder="Nombre" />
+      <ion-input
+        fill="outline"
+        class="field__input"
+        placeholder="Titulo"
+        formControlName="title"
+      />
+
+      @if ( getFormControl('title')?.invalid &&
+      (getFormControl('title')?.touched || getFormControl('title')?.dirty ) ) {
+      @if ( getFormControl('title')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
     </div>
 
     <div class="field">
@@ -32,7 +43,15 @@
         fill="outline"
         class="field__input"
         placeholder="Descripción"
+        formControlName="description"
       />
+
+      @if ( getFormControl('description')?.invalid &&
+      (getFormControl('description')?.touched ||
+      getFormControl('description')?.dirty ) ) { @if (
+      getFormControl('description')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
     </div>
 
     <div class="fields__row">
@@ -40,29 +59,56 @@
         <label class="field__label">Elaboración</label>
 
         <ion-input
-          type="number"
+          type="text"
+          inputmode="numeric"
+          maxlength="3"
           fill="outline"
           class="field__input"
           placeholder="Elaboración"
+          formControlName="preparation"
         />
+
+        @if ( getFormControl('preparation')?.invalid &&
+        (getFormControl('preparation')?.touched ||
+        getFormControl('preparation')?.dirty ) ) { @if (
+        getFormControl('preparation')?.hasError('required') ) {
+        <p class="field__error">El campo es obligatorio.</p>
+        } }
       </div>
 
       <div class="field">
         <label class="field__label">Precio</label>
 
         <ion-input
-          type="number"
+          type="text"
+          inputmode="numeric"
+          maxlength="6"
           fill="outline"
           class="field__input"
           placeholder="Precio"
+          formControlName="price"
         />
+
+        @if ( getFormControl('price')?.invalid &&
+        (getFormControl('price')?.touched || getFormControl('price')?.dirty ) )
+        { @if ( getFormControl('price')?.hasError('required') ) {
+        <p class="field__error">El campo es obligatorio.</p>
+        } }
       </div>
     </div>
-  </div>
+  </form>
 </ion-content>
 
 <ion-footer class="ion-no-border">
   <div class="footer-actions">
-    <ion-button expand="block" shape="round">Guardar</ion-button>
+    <ion-button
+      expand="block"
+      shape="round"
+      [disabled]="(form.statusChanges | async) !== 'VALID'"
+      (click)="create()"
+    >
+      @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> }
+      Guardar</ion-button
+    >
   </div>
 </ion-footer>

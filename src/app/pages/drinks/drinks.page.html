@@ -17,13 +17,15 @@
       <ion-icon src="assets/icons/plus.svg"></ion-icon>
     </button>
 
-    @for (drink of drinks; track $index) {
+    @if (!isLoading()) { @for (drink of drinks(); track $index) {
     <app-drink-card
-      [name]="drink.nombre"
+      [name]="drink.titulo"
       [description]="drink.descripcion"
       [price]="drink.precio"
-      [image]="drink.imagen"
+      [image]="drink.imagen_1"
     ></app-drink-card>
-    }
+    } } @else { @for (i of [1, 2, 3, 4, 5]; track $index) {
+    <app-skeleton-card />
+    } }
   </div>
 </ion-content>

@@ -1,0 +1,19 @@
+.drink-card {
+  display: flex;
+  padding: 12px;
+  border-radius: 12px;
+  gap: 12px;
+  background-color: #A8B68A;
+
+  .drink-card__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  .drink-card__details {
+    display: flex;
+    flex-direction: column;
+  }
+}

@@ -11,7 +11,7 @@ export class SupabaseService {
   constructor() {
     this.supabase = createClient(
       environment.supabaseUrl,
-      environment.supabaseKey,
+      environment.supabaseKey
     );
   }
 
@@ -19,8 +19,18 @@ export class SupabaseService {
     return this.supabase;
   }
 
-  uploadAvatar(filePath: string, file: File) {
-    return this.supabase.storage.from('images').upload(filePath, file);
+  async uploadAvatar(filePath: string, file: File) {
+    const { data, error } = await this.supabase.storage
+      .from('images')
+      .upload(filePath, file, {
+        contentType: file.type,
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
   }
 
   getAvatarUrl(filePath: string) {
