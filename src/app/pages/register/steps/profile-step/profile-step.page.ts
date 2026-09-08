@@ -40,13 +40,25 @@ export class ProfileStepPage {
         editable: 'no',
       });
 
-      this.photoPreview.set(photo.webPath ?? null);
-
       if (photo.webPath) {
-        const response = await fetch(photo.webPath);
-        const blob = await response.blob();
+        this.photoPreview.set(photo.webPath);
+      }
 
+      if (photo.thumbnail) {
         const format = photo.metadata?.format ?? 'jpeg';
+
+        const base64Data = photo.thumbnail.replace(
+          /^data:image\/\w+;base64,/,
+          ''
+        );
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: `image/${format}` });
+
         const file = new File([blob], `profile-${Date.now()}.${format}`, {
           type: `image/${format}`,
         });

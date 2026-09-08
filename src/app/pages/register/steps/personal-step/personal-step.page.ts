@@ -5,19 +5,18 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { IonInput, ToastController } from '@ionic/angular';
-import { addIcons } from 'ionicons';
-import { scan } from 'ionicons/icons';
+import { IonInput, ToastController, IonIcon } from '@ionic/angular';
 import {
   BarcodeScanner,
   BarcodeFormat,
 } from '@capacitor-mlkit/barcode-scanning';
+import { DniFormat } from '@app/directives/dni-format/dni-format';
 
 @Component({
   selector: 'app-personal-step',
   templateUrl: './personal-step.page.html',
   styleUrls: ['./personal-step.page.scss'],
-  imports: [CommonModule, ReactiveFormsModule, IonInput],
+  imports: [CommonModule, ReactiveFormsModule, IonInput, DniFormat, IonIcon],
 })
 export class PersonalStepPage {
   @Input() control!: AbstractControl;
@@ -39,6 +38,8 @@ export class PersonalStepPage {
     this.scanError = null;
 
     try {
+      this.scanning = true;
+
       const permission = await BarcodeScanner.checkPermissions();
 
       if (permission.camera !== 'granted') {
@@ -65,8 +66,6 @@ export class PersonalStepPage {
 
         await BarcodeScanner.installGoogleBarcodeScannerModule();
       }
-
-      this.scanning = true;
 
       const { barcodes } = await BarcodeScanner.scan({
         formats: [BarcodeFormat.Pdf417],
@@ -118,25 +117,5 @@ export class PersonalStepPage {
       name,
       dni,
     });
-
-    const nameControl = this.formGroup.get('name');
-
-    const lastNameControl = this.formGroup.get('lastName');
-
-    const dniControl = this.formGroup.get('dni');
-
-    nameControl?.markAsDirty();
-    nameControl?.markAsTouched();
-    nameControl?.updateValueAndValidity();
-
-    lastNameControl?.markAsDirty();
-    lastNameControl?.markAsTouched();
-    lastNameControl?.updateValueAndValidity();
-
-    dniControl?.markAsDirty();
-    dniControl?.markAsTouched();
-    dniControl?.updateValueAndValidity();
-
-    this.formGroup.updateValueAndValidity();
   }
 }
