@@ -4,6 +4,8 @@ ion-button {
   
   --padding-start: 24px;
   --padding-end: 24px;
+  --padding-top: 18px;
+  --padding-bottom: 18px;
   --box-shadow: none;
   
   margin: 0;
@@ -14,9 +16,9 @@ ion-button {
   
   
   &::part(native) {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
-    height: 56px;
+    line-height: 24px;
   }
 
   &[size="small"]::part(native) {

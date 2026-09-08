@@ -31,7 +31,7 @@ import { ProgressBarComponent } from '@app/components';
 const NAME_PATTERN =
   /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/;
 
-const DNI_PATTERN = /^\d{7,8}$/;
+const DNI_PATTERN = /^\d{8}$/;
 
 const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
 
@@ -170,6 +170,7 @@ export class RegisterPage {
 
       this._router.navigateByUrl('/login', { replaceUrl: true });
     } catch (error) {
+      console.log(error);
       const toast = await this._toastController.create({
         message:
           'No pudimos completar la acción. Intentá nuevamente más tarde.',

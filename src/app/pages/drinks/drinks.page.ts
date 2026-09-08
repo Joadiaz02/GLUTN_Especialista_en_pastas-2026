@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,6 +12,8 @@ import {
 } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 import { DrinkCardComponent } from './components/drink-card/drink-card.component';
+import { Table } from '@app/services';
+import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 
 @Component({
   selector: 'app-drinks',
@@ -29,31 +31,23 @@ import { DrinkCardComponent } from './components/drink-card/drink-card.component
     RouterLink,
     DrinkCardComponent,
     IonIcon,
+    SkeletonCardComponent,
   ],
 })
-export class DrinksPage {
-  drinks = [
-    {
-      id: 1,
-      nombre: '7Up sin azucar 354 ml',
-      descripcion: 'Gaseosa',
-      imagen: 'https://images.rappi.com.ar/products/955342-1587755959609.png',
-      precio: 4000,
-    },
-    {
-      id: 2,
-      nombre: 'Pepsi 354ml',
-      descripcion: 'Gaseosa',
-      imagen: 'https://images.rappi.com.ar/products/955322-1593457721222.png',
-      precio: 4000,
-    },
-    {
-      id: 3,
-      nombre: 'Cepita Manzana 200 ml',
-      descripcion: 'Jugo',
-      imagen:
-        'https://images.rappi.com.ar/products/ec9e4016-834c-4f37-be6c-2eba509d2ab3.png',
-      precio: 2800,
-    },
-  ];
+export class DrinksPage implements OnInit {
+  drinks = signal<any[]>([]);
+
+  isLoading = signal<boolean>(false);
+
+  private _tableService = inject(Table);
+
+  async ngOnInit() {
+    this.isLoading.set(true);
+
+    const drinks = await this._tableService.getList();
+
+    this.isLoading.set(false);
+
+    this.drinks.set(drinks);
+  }
 }

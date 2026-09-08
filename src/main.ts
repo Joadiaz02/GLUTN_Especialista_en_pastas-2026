@@ -18,7 +18,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),
-      withComponentInputBinding(),
+      withComponentInputBinding()
     ),
     provideIonicAngular({
       mode: 'md',
