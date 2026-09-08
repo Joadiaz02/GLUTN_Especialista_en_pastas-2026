@@ -93,6 +93,23 @@ ion-label p {
   color: var(--ion-text-color);
 }
 
+ 
+/* =========================
+   RESERVA - FECHA/HORA
+========================= */
+ 
+// ion-datetime trae su propio fondo clarito por defecto, sin heredar
+// el tema oscuro de la app. Y como --ion-text-color es blanco a nivel
+// global, quedaba texto blanco sobre fondo claro (invisible).
+// Acá lo sobreescribimos SOLO para este componente (las variables CSS
+// heredan hacia adentro sin afectar el resto de la app).
+.historia ion-datetime {
+  --background: var(--border);
+  --ion-text-color:  var( --ion-background-color);
+  border-radius: 12px;
+  border: 1px solid var( --ion-background-color);
+}
+
 /* =========================
    HISTORIA
 ========================= */
@@ -109,13 +126,13 @@ ion-label p {
 .historia h2 {
   font-size: 24px;
   font-weight: 700;
-  color: var(--ion-text-color);
+  color: var(--ion-color-primary);
   margin-bottom: 10px;
 }
 
 .historia p {
   font-size: 16px;
-  color: var(--ion-text-color);
+  color: var(--ion-background-color);
   line-height: 1.6;
 }
 

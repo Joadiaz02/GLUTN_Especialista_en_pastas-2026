@@ -1,30 +1,28 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 import { EPerfilUsuario } from '@app/enums';
 import { Storage } from '../storage';
 import type { PerfilUsuario } from '@app/models/usuario.model';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class Auth {
 
   private _supabaseService = inject(SupabaseService);
   private _storageService = inject(Storage);
 
-  usuarioActual: any = null;
+  // Signal en vez de variable plana: cualquier componente que lo lea
+  // en su template (usuarioActual()) se actualiza SOLO cuando cambia.
+  usuarioActual = signal<any>(null);
 
   constructor() {
 
-  void this.restaurarSesion();
+    // onAuthStateChange es el evento oficial de Supabase: se dispara
+    // en login, logout, refresh de token, y al arrancar la app con
+    // la sesión restaurada. Mantiene el signal sincronizado solo.
+    this._supabaseService.client.auth.onAuthStateChange((_event, session) => {
+      this.usuarioActual.set(session?.user ?? null);
+    });
 
-}
-
-  private async restaurarSesion(): Promise<void> {
-
-    const { data } =
-      await this._supabaseService.client.auth.getSession();
-
-    this.usuarioActual =
-      data.session?.user ?? null;
   }
 
   async obtenerUsuarioActual(): Promise<any> {
@@ -32,14 +30,15 @@ export class Auth {
     const { data } =
       await this._supabaseService.client.auth.getSession();
 
-    this.usuarioActual =
-      data.session?.user ?? null;
+    this.usuarioActual.set(
+      data.session?.user ?? null
+    );
 
-    return this.usuarioActual;
+    return this.usuarioActual();
   }
 
   obtenerPerfil(
-  usuario: any = this.usuarioActual
+  usuario: any = this.usuarioActual()
 ): PerfilUsuario | null {
 
   const perfil = usuario?.user_metadata?.perfil;
@@ -52,7 +51,7 @@ export class Auth {
 }
 
   esPersonal(
-    usuario: any = this.usuarioActual
+    usuario: any = this.usuarioActual()
   ): boolean {
 
     const perfil =
@@ -144,8 +143,7 @@ export class Auth {
       );
     }
 
-    this.usuarioActual =
-      data.user;
+    this.usuarioActual.set(data.user);
 
     return data.user;
   }
@@ -154,11 +152,11 @@ export class Auth {
 
     await this._supabaseService.client.auth.signOut();
 
-    this.usuarioActual = null;
+    this.usuarioActual.set(null);
   }
 
   estaLogueado(): boolean {
 
-    return this.usuarioActual !== null;
+    return this.usuarioActual() !== null;
   }
 }

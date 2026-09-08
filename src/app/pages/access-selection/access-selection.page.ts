@@ -84,7 +84,7 @@ export class AccessSelectionPage {
 
 
     const usuario =
-      this.auth.usuarioActual;
+      this.auth.usuarioActual();
 
 
     this.perfil =

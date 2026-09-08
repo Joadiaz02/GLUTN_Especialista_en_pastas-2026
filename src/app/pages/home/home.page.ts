@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import {
   IonContent,
   IonButton,
@@ -7,9 +7,11 @@ import {
   IonItem,
   IonThumbnail,
   IonLabel,
-  IonDatetime
+  IonDatetime,
+  ToastController
 } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Auth } from '../../services/auth/auth';
 
 @Component({
   selector: 'app-home',
@@ -29,11 +31,19 @@ import { Router } from '@angular/router';
 })
 export class HomePage {
 
+  private authService = inject(Auth);
+  private toastController = inject(ToastController);
+
   // ============================
   // ESTADOS
   // ============================
 
-  isLoggedIn = false;
+  // Ya no es un booleano local: es un computed que lee directo del
+  // signal de Auth. Se actualiza SOLO en cuanto Auth.usuarioActual
+  // cambia (login, logout, refresh de sesión) — sin carreras de tiempo,
+  // sin tener que "ir a preguntar" en ngOnInit.
+  isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
+
   enMesa = false;
 
   showReserva = false;
@@ -73,11 +83,10 @@ export class HomePage {
   // LOGIN / LOGOUT
   // ============================
 
-  onLoginClick() {
-    if (this.isLoggedIn) {
-      this.isLoggedIn = false;
+  async onLoginClick(): Promise<void> {
+    if (this.isLoggedIn()) {
+      await this.authService.logout();
       this.enMesa = false;
-      localStorage.removeItem('token');
       localStorage.removeItem('mesa');
     } else {
       this.router.navigate(['/login']);
@@ -132,13 +141,30 @@ export class HomePage {
   // RESERVA
   // ============================
 
-  solicitarReserva() {
+  async solicitarReserva(): Promise<void> {
     console.log('Reserva solicitada:', this.fecha, this.hora);
+
+    if (!this.fecha || !this.hora) {
+      const toastError = await this.toastController.create({
+        message: 'Por favor seleccioná fecha y hora para la reserva.',
+        duration: 3000,
+        position: 'top',
+        color: 'danger'
+      });
+      await toastError.present();
+      return;
+    }
 
     this.enMesa = true;
     localStorage.setItem('mesa', 'true');
 
-    alert('Reserva enviada correctamente');
+    const toastOk = await this.toastController.create({
+      message: 'Reserva enviada correctamente.',
+      duration: 3000,
+      position: 'top',
+      color: 'success'
+    });
+    await toastOk.present();
   }
 
   formatDate(value: string | string[] | null | undefined): string {

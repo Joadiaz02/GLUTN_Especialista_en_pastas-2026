@@ -5,7 +5,7 @@
     class="login-btn"
     (click)="onLoginClick()"
   >
-    {{ isLoggedIn ? 'Cerrar sesión' : 'Ingresar' }}
+    {{ isLoggedIn() ? 'Cerrar sesión' : 'Ingresar' }}
   </ion-button>
 
   <!-- LOGO -->
