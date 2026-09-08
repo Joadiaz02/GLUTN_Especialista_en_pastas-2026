@@ -1,0 +1,13 @@
+<div [class]="getStyleClass()">
+  @if (hasImageError) {
+  <span class="avatar__fallback">{{ fallback() }}</span>
+  } @else {
+  <img
+    [src]="image()"
+    alt=""
+    (load)="onLoad()"
+    (error)="onError()"
+    class="avatar__image"
+  />
+  }
+</div>
