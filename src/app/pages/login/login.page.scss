@@ -1,18 +1,20 @@
 .login {
   width: 100%;
-  min-height: 100%;
+  height: 100dvh; 
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;  
 
+  padding: 3vh 24px;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 .logo_container {
   width: 100%;
-  max-width: min(200px, 40vw);
+  max-width: clamp(80px, 20vh, 160px);
 }
 
 .logo {
@@ -25,19 +27,68 @@
   width: 100%;
   max-width: 327px;
   font-weight: 700;
-  font-size: 18px;
+  font-size: clamp(14px, 2.2vh, 18px);
   line-height: 150%;
   margin-bottom: 16px;
 }
 
-.boton_i,
-.boton_c,
+.texto-error {
+  color: var(--ion-color-danger);
+  font-size: 16px;
+  margin: 2px 0 0 4px;
+  min-height: 14px;
+  display: block;
+  line-height: 1.2;
+}
+
+.input {
+  --background: var(--color-surface-muted);
+  --border-radius: 50px;
+  --padding-start: 20px;
+  --padding-end: 13px;
+  --min-height: 46px;
+  
+
+  border-radius: 50px;
+  margin-bottom: 1px;
+
+  ion-input {
+    --color: var(--text-primary);
+    --placeholder-color: var(--text-primary);
+    --placeholder-opacity: 0.8;
+  }
+}
+
+.boton_i{
+   width: 100%;
+  max-width: 327px;
+  --border-radius: 50px;
+  margin-top: 5px;
+  display: flex;
+  --align-items: center;
+  --justify-content: center;
+   --padding-top: 22px;
+  --padding-bottom: 22px;
+  padding-bottom: 40px;
+}
+.boton_c{
+    margin-top: 5px;
+   width: 100%;
+  max-width: 327px;
+  --border-radius: 50px;
+  --padding-top: 22px;
+  --padding-bottom: 22px;
+}
+
 .boton_a {
   width: 100%;
   max-width: 327px;
   --border-radius: 50px;
-  margin-top: 16px;
+  margin-top: 15px;
+  --padding-top: 22px;
+  --padding-bottom: 22px;
 }
+
 
 .separador {
   width: 100%;
@@ -67,11 +118,17 @@
   text-align: center;
   font-weight: 500;
   font-size: 14px;
-  margin-top: 32px;
+  margin-top: 25px;
 }
 
 .registrate_spam {
   color: var(--ion-color-primary);
   font-weight: 500;
   font-size: 22px;
+}
+
+.campo {
+  width: 100%;
+  max-width: 327px;
+  margin-bottom: 5px;   // separación pareja entre cada bloque label+input+error
 }

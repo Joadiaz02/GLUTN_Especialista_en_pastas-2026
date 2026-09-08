@@ -1,37 +1,45 @@
-<link rel="stylesheet" href="./login.page.scss" />
-
 <ion-content class="ion-padding">
   <div class="login">
 
     <div class="logo_container">
       <img [src]="logo" alt="Logo GLUTN" class="logo">
     </div>
-
     <ion-text>
       <h2 class="textos">Iniciar sesión</h2>
     </ion-text>
-
     <ion-text>
       <p class="textos">Por favor inicie sesión primero para disfrutar del servicio</p>
     </ion-text>
 
-    <ion-item class="input">
-      <ion-label class="textos" position="stacked" [style.color]="credencialesinvalidas() ? 'var(--ion-color-danger)' : 'var(--text-primary)'">
-        Correo electrónico
-      </ion-label>
-      <ion-input [(ngModel)]="email" type="email" placeholder="jperez@ejemplo.com"></ion-input>
-    </ion-item>
+    <div class="campo">
+  <label class="textos" >
+    Correo electrónico
+  </label>
+  <ion-item class="input" lines="none">
+    <ion-input [(ngModel)]="email" #emailInput="ngModel" name="email" type="email" placeholder="jperez@ejemplo.com" required></ion-input>
+  </ion-item>
 
-    <ion-item class="input">
-      <ion-label class="textos" position="stacked" [style.color]="credencialesinvalidas() ? 'var(--ion-color-danger)' : 'var(--text-primary)'">
-        Contraseña
-      </ion-label>
-      <ion-input [(ngModel)]="contrasena" type="password" placeholder="Contraseña"></ion-input>
-    </ion-item>
+  <p class="texto-error">
+    {{ emailInput.touched && !email ? 'Correo electrónico requerido' : '' }}
+  </p>
+</div>
+
+<div class="campo">
+  <label class="textos" >
+    Contraseña
+  </label>
+  <ion-item class="input" lines="none">
+    <ion-input [(ngModel)]="contrasena" #contraInput="ngModel" name="contrasena" type="password" placeholder="Contraseña" required></ion-input>
+  </ion-item>
+
+   <p class="texto-error">
+    {{ contraInput.touched && !contrasena ? 'Contraseña requerida' : '' }}
+  </p>
+</div>
 
     <ion-button expand="block" class="boton_i" (click)="iniciarSesion()" [disabled]="cargando()">
       @if (cargando()) {
-        <ion-spinner name="dots"></ion-spinner>
+        <ion-spinner  name="dots"></ion-spinner>
       } @else {
         Iniciar sesión
       }
@@ -52,7 +60,7 @@
     </ion-button>
 
     <p class="registrate">
-      ¿No tenés cuenta? <a routerLink="/registro" class="registrate_spam">Registrate</a>
+      ¿No tenés cuenta? <a routerLink="/register" class="registrate_spam">Registrate</a>
     </p>
 
   </div>
