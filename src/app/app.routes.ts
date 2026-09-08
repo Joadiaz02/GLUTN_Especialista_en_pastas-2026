@@ -8,7 +8,7 @@ export const routes: Routes = [
 
     loadComponent: () =>
       import('./pages/splash-screen/splash-screen.page').then(
-        (m) => m.SplashScreenPage,
+        (m) => m.SplashScreenPage
       ),
   },
 
@@ -39,7 +39,7 @@ export const routes: Routes = [
 
     loadComponent: () =>
       import('./pages/access-selection/access-selection.page').then(
-        (m) => m.AccessSelectionPage,
+        (m) => m.AccessSelectionPage
       ),
   },
 
@@ -82,4 +82,8 @@ export const routes: Routes = [
         (m) => m.EditDrinkPage
       ),
   },
+  {
+    path: 'chat',
+      loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage)
+  }
 ];

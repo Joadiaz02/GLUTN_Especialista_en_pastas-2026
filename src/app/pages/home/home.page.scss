@@ -36,7 +36,7 @@ ion-content {
   top: 10px;
   right: 10px;
 
-  --background: var(--ion-color-primary); 
+  --background: var(--ion-background-color); 
   --border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
@@ -189,7 +189,7 @@ ion-label p {
 .chat-bubble__circle {
   width: 75px;
   height: 75px;
-  background: #ba1f27;
+  background: var(--ion-color-primary);
   border-radius: 50%;
   box-shadow: 0 4px 12px rgba(0,0,0,0.18);
 
