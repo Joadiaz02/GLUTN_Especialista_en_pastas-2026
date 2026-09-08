@@ -8,7 +8,7 @@ export const routes: Routes = [
 
     loadComponent: () =>
       import('./pages/splash-screen/splash-screen.page').then(
-        (m) => m.SplashScreenPage,
+        (m) => m.SplashScreenPage
       ),
   },
 
@@ -39,7 +39,7 @@ export const routes: Routes = [
 
     loadComponent: () =>
       import('./pages/access-selection/access-selection.page').then(
-        (m) => m.AccessSelectionPage,
+        (m) => m.AccessSelectionPage
       ),
   },
 
@@ -81,5 +81,10 @@ export const routes: Routes = [
       import('./pages/drinks/components/edit-drink/edit-drink.page').then(
         (m) => m.EditDrinkPage
       ),
+  },
+  {
+    path: 'carta',
+    loadComponent: () =>
+      import('./pages/carta/carta.page').then((m) => m.CartaPage),
   },
 ];

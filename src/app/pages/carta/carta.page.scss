@@ -1,0 +1,29 @@
+.lista-productos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tarjeta-producto {
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.fotos-producto {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.foto-individual {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.precio {
+  font-weight: bold;
+}
