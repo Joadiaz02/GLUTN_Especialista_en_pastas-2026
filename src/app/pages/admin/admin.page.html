@@ -2,13 +2,13 @@
   <ion-toolbar>
     <ion-title>Administración</ion-title>
 
-    <ion-buttons slot="end">
-      <ion-button (click)="cerrarSesion()">
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-      </ion-button>
+<ion-buttons slot="end">
+      <app-confirm-dialog></app-confirm-dialog>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
+
 
 <ion-content>
   <div class="admin-container">
