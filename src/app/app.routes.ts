@@ -83,7 +83,13 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'chat',
+    path: 'design-system',
+    loadComponent: () =>
+      import('./pages/design-system/design-system.page').then(
+        (m) => m.DesignSystemPage
+      ),
+  },
+  {path: 'chat',
       loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage)
-  }
+  },
 ];
