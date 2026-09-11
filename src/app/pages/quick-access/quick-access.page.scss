@@ -1,0 +1,352 @@
+:host {
+  display: block;
+}
+
+.quick-content {
+  --background: #657a4d;
+}
+
+.quick-page {
+  min-height: 100%;
+  box-sizing: border-box;
+
+  padding: 18px 18px 14px;
+
+  display: flex;
+  flex-direction: column;
+
+  color: #f2e8d0;
+}
+
+.quick-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-button {
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  border: 0;
+  border-radius: 14px;
+
+  display: grid;
+  place-items: center;
+
+  background: #3f5130;
+  color: #f2e8d0;
+
+  font-size: 21px;
+
+  cursor: pointer;
+}
+
+.brand {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.brand img {
+  width: 45px;
+  height: 45px;
+
+  object-fit: contain;
+
+  flex: 0 0 45px;
+}
+
+.brand span {
+  display: block;
+
+  color: #d9a441;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
+}
+
+.brand h1 {
+  margin: 2px 0 0;
+
+  font-size: 23px;
+  line-height: 1.05;
+
+  font-weight: 800;
+}
+
+.instruction {
+  margin: 12px 2px 14px;
+
+  color: #e4dcc8;
+
+  font-size: 13px;
+  line-height: 1.35;
+
+  text-align: center;
+}
+
+.users-grid {
+  flex: 1;
+
+  min-height: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  grid-template-rows:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.user-card {
+  min-width: 0;
+  min-height: 0;
+
+  border: 0;
+  border-radius: 20px;
+
+  padding: 10px 7px;
+
+  background: #a8b68a;
+  color: #2f3d24;
+
+  box-shadow:
+    0 9px 18px
+    rgba(35, 48, 24, 0.18);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  font: inherit;
+
+  cursor: pointer;
+
+  opacity: 0;
+
+  transform:
+    translateY(14px)
+    scale(0.94);
+
+  animation:
+    card-in 420ms
+    cubic-bezier(0.2, 0.8, 0.2, 1)
+    forwards;
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.user-card:nth-child(7) {
+  grid-column: 1 / -1;
+
+  width: calc(50% - 5px);
+
+  justify-self: center;
+}
+
+.user-card:active {
+  transform: scale(0.96);
+}
+
+.user-card.loading {
+  pointer-events: none;
+
+  opacity: 0.72;
+}
+
+.photo-wrapper {
+  position: relative;
+
+  width:
+    clamp(
+      58px,
+      18vw,
+      82px
+    );
+
+  aspect-ratio: 1;
+
+  flex: 0 0 auto;
+}
+
+.photo-wrapper img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  border: 3px solid #f2e8d0;
+
+  background: #657a4d;
+}
+
+.card-spinner {
+  position: absolute;
+
+  inset: 0;
+
+  margin: auto;
+
+  width: 25px;
+  height: 25px;
+
+  border:
+    3px solid
+    rgba(242, 232, 208, 0.45);
+
+  border-top-color: #e76f45;
+
+  border-radius: 50%;
+
+  animation:
+    spin 700ms linear infinite;
+}
+
+.user-info {
+  min-width: 0;
+
+  width: 100%;
+
+  text-align: center;
+}
+
+.user-info strong,
+.user-info span {
+  display: block;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.user-info strong {
+  font-size: 13px;
+
+  line-height: 1.15;
+}
+
+.user-info span {
+  margin-top: 3px;
+
+  color: #e76f45;
+
+  font-size: 11px;
+
+  font-weight: 800;
+}
+
+.quick-footer {
+  min-height: 28px;
+
+  padding-top: 8px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 6px;
+
+  color: #e4dcc8;
+
+  font-size: 10px;
+
+  text-align: center;
+}
+
+.quick-footer ion-icon {
+  font-size: 15px;
+}
+
+@keyframes card-in {
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+  }
+
+}
+
+@keyframes spin {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+@media (max-height: 680px) {
+
+  .quick-page {
+    padding-top: 12px;
+    padding-bottom: 8px;
+  }
+
+  .instruction {
+    margin: 7px 2px 9px;
+  }
+
+  .users-grid {
+    gap: 7px;
+  }
+
+  .user-card {
+    padding: 6px;
+
+    border-radius: 16px;
+
+    gap: 4px;
+  }
+
+  .photo-wrapper {
+    width:
+      clamp(
+        48px,
+        15vw,
+        65px
+      );
+  }
+
+  .user-info strong {
+    font-size: 11px;
+  }
+
+  .user-info span {
+    font-size: 9px;
+  }
+
+  .quick-footer {
+    min-height: 20px;
+    padding-top: 4px;
+  }
+
+}
