@@ -1,20 +1,20 @@
 .login {
   width: 100%;
   height: 100dvh; 
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;  
-
-  padding: 3vh 24px;
+  justify-content:flex-start;  
+  gap: 2px;
+  padding: 24px 20px 40px 20px;
   box-sizing: border-box;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 .logo_container {
   width: 100%;
-  max-width: clamp(80px, 20vh, 160px);
+  max-width: 120px;
+  margin-top: 10px;
 }
 
 .logo {
@@ -26,8 +26,9 @@
 .textos {
   width: 100%;
   max-width: 327px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: clamp(14px, 2.2vh, 18px);
+  text-align: center;
   line-height: 150%;
   margin-bottom: 16px;
 }
@@ -35,49 +36,34 @@
 .texto-error {
   color: var(--ion-color-danger);
   font-size: 16px;
+  font-weight: 600;
   margin: 2px 0 0 4px;
   min-height: 14px;
   display: block;
   line-height: 1.2;
 }
 
-.input {
-  --background: var(--color-surface-muted);
-  --border-radius: 50px;
-  --padding-start: 20px;
-  --padding-end: 13px;
-  --min-height: 46px;
-  
 
-  border-radius: 50px;
-  margin-bottom: 1px;
-
-  ion-input {
-    --color: var(--text-primary);
-    --placeholder-color: var(--text-primary);
-    --placeholder-opacity: 0.8;
-  }
-}
 
 .boton_i{
-   width: 100%;
+  width: 100%;
   max-width: 327px;
-  --border-radius: 50px;
-  margin-top: 5px;
-  display: flex;
+  --margin-top: 1px;
   --align-items: center;
   --justify-content: center;
-   --padding-top: 22px;
-  --padding-bottom: 22px;
-  padding-bottom: 40px;
-}
-.boton_c{
-    margin-top: 5px;
-   width: 100%;
-  max-width: 327px;
   --border-radius: 50px;
   --padding-top: 22px;
   --padding-bottom: 22px;
+  font-weight: 600;
+}
+.boton_c{
+    margin-top: 6px;
+   width: 100%;
+  max-width: 327px;
+  --border-radius: 50px;
+  --padding-top:22px;
+  --padding-bottom:22px;
+  font-weight: 600;
 }
 
 .boton_a {
@@ -87,16 +73,22 @@
   margin-top: 15px;
   --padding-top: 22px;
   --padding-bottom: 22px;
+  font-weight: 600;
 }
 
 
 .separador {
-  width: 100%;
-  max-width: 327px;
+  width: 100vw; /* Ocupa el 100% del ancho de la ventana/pantalla */
+  position: relative;
+  
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 10px 0;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 24px; 
+  box-sizing: border-box;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .linea_isq {
@@ -111,24 +103,21 @@
   border-radius: 50%;
   background-color: var(--text-secondary);
 }
-
-.registrate {
-  width: 100%;
-  max-width: 327px;
+.label-centrado {
   text-align: center;
-  font-weight: 500;
-  font-size: 14px;
-  margin-top: 25px;
+  display: block;   // asegura que el text-align tenga efecto completo en el ancho del label
+  width: 100%;
 }
+
 
 .registrate_spam {
   color: var(--ion-color-primary);
   font-weight: 500;
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .campo {
-  width: 100%;
+  width: 100vb;
   max-width: 327px;
   margin-bottom: 5px;   
 }
