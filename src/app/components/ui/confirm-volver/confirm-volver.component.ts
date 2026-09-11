@@ -59,5 +59,4 @@ export class ConfirmVolverComponent {
     await this.modalController.dismiss(null, 'cancel');
   }
 
-  
 }

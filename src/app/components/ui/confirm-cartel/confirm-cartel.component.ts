@@ -70,9 +70,7 @@ export class ConfirmDialogComponent {
   private async cerrarSesion() {
     localStorage.removeItem('token');
     localStorage.removeItem('mesa');
-
     await this.auth.logout();
-
     await this.router.navigate(['/login']);
   }
 }
