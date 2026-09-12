@@ -1,7 +1,7 @@
 @if (!esContenidoModal) {
 
   <ion-button expand="block" shape="round" fill="outline"  (click)="abrirConfirmacion()">
-   volver
+   Volver
   </ion-button>
 } @else {
 
@@ -10,7 +10,7 @@
     <div class="drag-handle"></div>
 
     <div class="icono-circulo">
-      <ion-icon >volver</ion-icon>
+      <ion-icon [src]="icono"></ion-icon>
     </div>
 
     <h2 class="heading-medium weight-bold">

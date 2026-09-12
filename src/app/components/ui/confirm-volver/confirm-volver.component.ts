@@ -14,7 +14,7 @@ export class ConfirmVolverComponent {
   @Input() textoCancelar = 'Cancelar';
   @Input() textoConfirmar = 'Confirmar';
   @Input() colorConfirmar: 'danger' | 'primary' = 'danger';
-  @Input() icono = 'Volver';
+  @Input() icono = 'assets/icons/arrow-left.svg';
   @Input() esContenidoModal = false;
 
   @Output() confirmadoVolver = new EventEmitter<void>();
