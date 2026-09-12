@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 
@@ -21,6 +21,7 @@ import { AdminModuleCardComponent } from '@app/components/admin-module-card/admi
 import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
 import { addIcons } from 'ionicons';
 import { logOutOutline } from 'ionicons/icons';
+import { ConfirmVolverComponent } from "@app/components/ui/confirm-volver/confirm-volver.component";
 
 @Component({
   selector: 'app-admin',
@@ -31,23 +32,23 @@ import { logOutOutline } from 'ionicons/icons';
     IonToolbar,
     IonTitle,
     IonButtons,
-    IonButton,
-    IonIcon,
     IonContent,
     AdminModuleCardComponent,
     RouterLink,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    ConfirmVolverComponent
 ],
   templateUrl: './admin.page.html',
   styleUrls: ['./admin.page.scss'],
 })
 export class AdminPage implements OnInit {
   modulosVisibles: AdminModule[] = [];
-
+  
   constructor(
     private auth: Auth,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    
     
   ) {
     addIcons({
@@ -97,8 +98,10 @@ export class AdminPage implements OnInit {
   }
 
   volver(): void {
+    
     void this.router.navigate(['/seleccion-acceso']);
   }
+
 
   async cerrarSesion(): Promise<void> {
     localStorage.removeItem('token');

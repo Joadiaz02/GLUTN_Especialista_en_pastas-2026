@@ -12,27 +12,21 @@
     </ion-text>
 
     <div class="campo">
-  <label class="textos" >
-    Correo electrónico
-  </label>
-  <ion-item class="input" lines="none">
-    <ion-input [(ngModel)]="email" #emailInput="ngModel" name="email" type="email" placeholder="jperez@ejemplo.com" required></ion-input>
+  <label class="field__label label-centrado">Correo electrónico</label>
+  <ion-item  lines="none">
+    <ion-input class="field__input" fill="outline" [(ngModel)]="email" #emailInput="ngModel" name="email" type="email" placeholder="jperez@ejemplo.com" required></ion-input>
   </ion-item>
-
-  <p class="texto-error">
+  <p class="texto-error label-centrado">
     {{ emailInput.touched && !email ? 'Correo electrónico requerido' : '' }}
   </p>
 </div>
 
 <div class="campo">
-  <label class="textos" >
-    Contraseña
-  </label>
-  <ion-item class="input" lines="none">
-    <ion-input [(ngModel)]="contrasena" #contraInput="ngModel" name="contrasena" type="password" placeholder="Contraseña" required></ion-input>
+  <label class="field__label label-centrado" >Contraseña</label>
+  <ion-item  lines="none">
+    <ion-input class="field__input" fill="outline" [(ngModel)]="contrasena" #contraInput="ngModel" name="contrasena" type="password" placeholder="Contraseña" required></ion-input>
   </ion-item>
-
-   <p class="texto-error">
+   <p class="texto-error label-centrado" >
     {{ contraInput.touched && !contrasena ? 'Contraseña requerida' : '' }}
   </p>
 </div>
@@ -51,15 +45,15 @@
       <span class="linea_isq"></span>
     </div>
 
-    <ion-button expand="block" fill="outline" class="boton_c">
+    <ion-button expand="block"  class="boton_c">
       Continuar como invitado
     </ion-button>
 
-    <ion-button expand="block" fill="outline" class="boton_a">
+    <ion-button expand="block"  class="boton_a">
       Acceso rápido
     </ion-button>
 
-    <p class="registrate">
+    <p class="textos">
       ¿No tenés cuenta? <a routerLink="/register" class="registrate_spam">Registrate</a>
     </p>
 

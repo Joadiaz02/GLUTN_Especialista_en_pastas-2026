@@ -1,10 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        text=""
-        icon="assets/icons/arrow-left.svg"
-      ></ion-back-button>
+      <app-confirm-dialog></app-confirm-dialog>
     </ion-buttons>
 
     <ion-title>{{ getStepTitle() }}</ion-title>
@@ -33,12 +30,7 @@
     <ion-button expand="block" shape="round" (click)="nextStep()"
       >Continuar</ion-button
     >
-    <ion-button
-      expand="block"
-      shape="round"
-      fill="outline"
-      (click)="previousStep()"
-      >Volver</ion-button
+    <app-confirm-volver (confirmadoVolver)="previousStep()"></app-confirm-volver>
     >
     } @else {
     <ion-button
@@ -50,12 +42,7 @@
       @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> } Crear
       cuenta
     </ion-button>
-    <ion-button
-      expand="block"
-      shape="round"
-      fill="outline"
-      (click)="previousStep()"
-      >Volver</ion-button
+     <app-confirm-volver (confirmadoVolver)="previousStep()"></app-confirm-volver>          
     >
     }
   </div>

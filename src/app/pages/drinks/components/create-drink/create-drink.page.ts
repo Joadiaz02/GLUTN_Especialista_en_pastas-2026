@@ -14,7 +14,6 @@ import {
   IonTitle,
   IonToolbar,
   IonButtons,
-  IonBackButton,
   IonButton,
   IonFooter,
   ToastController,
@@ -24,6 +23,7 @@ import {
 import { UploaderComponent } from './uploader/uploader.component';
 import { Storage, Drink } from '@app/services';
 import { Router } from '@angular/router';
+import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 
 @Component({
   selector: 'app-create-drink',
@@ -37,14 +37,14 @@ import { Router } from '@angular/router';
     CommonModule,
     FormsModule,
     IonButtons,
-    IonBackButton,
     IonButton,
     IonFooter,
     IonInput,
     ReactiveFormsModule,
     UploaderComponent,
     IonSpinner,
-  ],
+    ConfirmVolverComponent
+],
 })
 export class CreateDrinkPage {
   uploading = signal(false);
@@ -67,6 +67,11 @@ export class CreateDrinkPage {
       new FormControl<File | null>(null, Validators.required),
     ]),
   });
+
+  volver(): void {
+    
+    void this._router.navigate(['/admin/drinks']);
+  }
 
   getFormControl(controlName: string) {
     return this.form.get(controlName);

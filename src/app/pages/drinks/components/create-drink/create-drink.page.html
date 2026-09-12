@@ -1,10 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        text=""
-        icon="assets/icons/arrow-left.svg"
-      ></ion-back-button>
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
 
     <ion-title>Crear Bebida</ion-title>

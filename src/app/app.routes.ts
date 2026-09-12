@@ -28,10 +28,20 @@ export const routes: Routes = [
   },
 
   {
+  path: 'acceso_rapido',
+
+  loadComponent: () =>
+    import('./pages/quick-access/quick-access.page').then(
+      (m) => m.QuickAccessPage,
+    ),
+  },
+
+  {
     path: 'guest',
     loadComponent: () =>
       import('./pages/guest/guest.page').then((m) => m.GuestPage),
   },
+  
 
   {
     path: 'seleccion-acceso',

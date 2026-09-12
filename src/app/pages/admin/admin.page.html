@@ -18,11 +18,8 @@
 <ion-content>
   <div class="admin-container">
     <div class="header-section">
-      <ion-button class="back-button" fill="clear" (click)="volver()">
-        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
-
-        Volver
-      </ion-button>
+      
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
 
       <h1>Panel de administración</h1>
 
