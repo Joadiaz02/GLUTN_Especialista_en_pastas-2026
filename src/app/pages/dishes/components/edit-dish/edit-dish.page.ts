@@ -19,12 +19,12 @@ import {
   ToastController,
   IonInput,
   IonCheckbox,
-  IonIcon,
 } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UploaderComponent } from '../create-dish/uploader/uploader.component';
 import { Storage, Plato, Confirm, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 
 @Component({
   selector: 'app-edit-dish',
@@ -45,7 +45,7 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     UploaderComponent,
     SpinnerLogoComponent,
     IonCheckbox,
-    IonIcon,
+    ConfirmVolverComponent,
   ],
 })
 export class EditDishPage implements OnInit {
@@ -124,18 +124,8 @@ export class EditDishPage implements OnInit {
     this.photosArray.at(index).setValue(file);
   }
 
-  async volver(): Promise<void> {
-    const confirmado = await this._confirm.preguntar({
-      titulo: '¿Descartar los cambios?',
-      mensaje: 'Vas a perder los cambios que hiciste en este plato.',
-      textoConfirmar: 'Descartar',
-      colorConfirmar: 'danger',
-      icono: 'arrow-back-outline',
-    });
-
-    if (confirmado) {
-      this._router.navigate(['/admin/dishes']);
-    }
+  volver(): void {
+    this._router.navigate(['/admin/dishes']);
   }
 
   async confirmarYGuardar(): Promise<void> {

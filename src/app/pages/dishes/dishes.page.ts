@@ -15,6 +15,7 @@ import { DishCardComponent } from './components/dish-card/dish-card.component';
 import { Plato, Confirm, Vibracion } from '@app/services';
 import { CartaItem } from '@app/models/carta.model';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
+import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 
 @Component({
   selector: 'app-dishes',
@@ -32,6 +33,7 @@ import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.
     DishCardComponent,
     IonIcon,
     SkeletonCardComponent,
+    ConfirmVolverComponent,
   ],
 })
 export class DishesPage implements OnInit {
@@ -83,18 +85,8 @@ export class DishesPage implements OnInit {
     await toast.present();
   }
 
-  async volver(): Promise<void> {
-    const confirmado = await this._confirm.preguntar({
-      titulo: '¿Salir de Platos?',
-      mensaje: 'Vas a volver al panel de administración.',
-      textoConfirmar: 'Salir',
-      colorConfirmar: 'primary',
-      icono: 'arrow-back-outline',
-    });
-
-    if (confirmado) {
-      this._router.navigate(['/admin']);
-    }
+  volver(): void {
+    this._router.navigate(['/admin']);
   }
 
   editar(item: CartaItem): void {

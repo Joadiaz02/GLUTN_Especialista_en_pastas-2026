@@ -1,9 +1,13 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <button class="back-button" type="button" (click)="volver()">
-        <ion-icon src="assets/icons/arrow-left.svg"></ion-icon>
-      </button>
+      <app-confirm-volver
+        titulo="¿Descartar el plato?"
+        mensaje="Vas a perder los datos que cargaste hasta ahora."
+        textoConfirmar="Descartar"
+        colorConfirmar="danger"
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
     </ion-buttons>
 
     <ion-title>Crear Plato</ion-title>
