@@ -1,13 +1,13 @@
 import {Component,inject,signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Router,RouterLink} from '@angular/router';
-import { IonText, ToastController, IonItem, IonLabel, IonInput } from '@ionic/angular';
+import { IonText, ToastController, IonItem, IonInput } from '@ionic/angular';
 import {Haptics} from '@capacitor/haptics';
 import { Auth } from '../../services/auth/auth';
 import {IonContent,IonHeader,IonTitle,IonToolbar,IonButton,IonButtons,IonBackButton,IonSpinner,IonFooter,IonToast,} from '@ionic/angular';
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink, IonContent, IonItem, IonInput, IonButton, IonText, IonLabel, IonSpinner],
+  imports: [FormsModule, RouterLink, IonContent, IonItem, IonInput, IonButton, IonText, IonSpinner],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })

@@ -42,6 +42,7 @@ export class DishesPage implements OnInit {
   private _platoService = inject(Plato);
   private _confirm = inject(Confirm);
   private _toastController = inject(ToastController);
+  private _vibracion = inject(Vibracion);
   private _router = inject(Router);
 
   async ngOnInit() {
@@ -64,6 +65,19 @@ export class DishesPage implements OnInit {
       duration: 3000,
       position: 'top',
       color: 'success',
+    });
+
+    await toast.present();
+  }
+
+  private async mostrarError(): Promise<void> {
+    await this._vibracion.error();
+
+    const toast = await this._toastController.create({
+      message: 'No pudimos completar la acción. Intentá nuevamente más tarde.',
+      duration: 5000,
+      position: 'top',
+      color: 'danger',
     });
 
     await toast.present();
@@ -102,19 +116,25 @@ export class DishesPage implements OnInit {
 
     if (!confirmado) return;
 
-    await this._platoService.setSugerencia(item.id_carta, activar);
+    try {
+      await this._platoService.setSugerencia(item.id_carta, activar);
 
-    await this.mostrarAviso(
-      activar ? 'Plato destacado correctamente.' : 'Plato retirado de destacados.'
-    );
+      await this._vibracion.confirmacion();
 
-    await this.cargarPlatos();
+      await this.mostrarAviso(
+        activar ? 'Plato destacado correctamente.' : 'Plato retirado de destacados.'
+      );
+
+      await this.cargarPlatos();
+    } catch (error) {
+      await this.mostrarError();
+    }
   }
 
   async darDeBaja(item: CartaItem): Promise<void> {
     const confirmado = await this._confirm.preguntar({
       titulo: '¿Dar de baja el plato?',
-      mensaje: `"${item.nombre}" va a dejar de verse en la carta.`,
+      mensaje: `"${item.nombre}" va a dejar de verse en la carta. Vas a poder reactivarlo cuando quieras.`,
       textoConfirmar: 'Dar de baja',
       colorConfirmar: 'danger',
       icono: 'trash-outline',
@@ -122,10 +142,40 @@ export class DishesPage implements OnInit {
 
     if (!confirmado) return;
 
-    await this._platoService.darDeBaja(item.id_carta);
+    try {
+      await this._platoService.darDeBaja(item.id_carta);
 
-    await this.mostrarAviso('Plato dado de baja correctamente.');
+      await this._vibracion.confirmacion();
 
-    await this.cargarPlatos();
+      await this.mostrarAviso('Plato dado de baja correctamente.');
+
+      await this.cargarPlatos();
+    } catch (error) {
+      await this.mostrarError();
+    }
+  }
+
+  async reactivar(item: CartaItem): Promise<void> {
+    const confirmado = await this._confirm.preguntar({
+      titulo: '¿Reactivar el plato?',
+      mensaje: `"${item.nombre}" va a volver a verse en la carta.`,
+      textoConfirmar: 'Reactivar',
+      colorConfirmar: 'primary',
+      icono: 'refresh-outline',
+    });
+
+    if (!confirmado) return;
+
+    try {
+      await this._platoService.reactivar(item.id_carta);
+
+      await this._vibracion.confirmacion();
+
+      await this.mostrarAviso('Plato reactivado correctamente.');
+
+      await this.cargarPlatos();
+    } catch (error) {
+      await this.mostrarError();
+    }
   }
 }

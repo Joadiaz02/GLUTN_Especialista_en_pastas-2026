@@ -1,9 +1,12 @@
-<div class="dish-card">
+<div class="dish-card" [class.dish-card--baja]="bajaLogica()">
   <img class="dish-card__image" [src]="image()" />
 
   <div class="dish-card__info">
     <div class="dish-card__details">
       <h3 class="dish-card__name">{{ name() }}</h3>
+      @if (bajaLogica()) {
+        <span class="dish-card__badge">Baja</span>
+      }
       <p class="dish-card__description">{{ description() }}</p>
     </div>
 
@@ -11,21 +14,29 @@
   </div>
 
   <div class="dish-card__actions">
-    <button
-      type="button"
-      class="dish-card__action"
-      [class.dish-card__action--active]="sugerencia()"
-      (click)="destacar.emit()"
-    >
-      <ion-icon [name]="sugerencia() ? 'star' : 'star-outline'"></ion-icon>
-    </button>
+    @if (!bajaLogica()) {
+      <button
+        type="button"
+        class="dish-card__action"
+        [class.dish-card__action--active]="sugerencia()"
+        (click)="destacar.emit()"
+      >
+        <ion-icon [name]="sugerencia() ? 'star' : 'star-outline'"></ion-icon>
+      </button>
+    }
 
     <button type="button" class="dish-card__action" (click)="editar.emit()">
       <ion-icon name="create-outline"></ion-icon>
     </button>
 
-    <button type="button" class="dish-card__action dish-card__action--danger" (click)="baja.emit()">
-      <ion-icon name="trash-outline"></ion-icon>
-    </button>
+    @if (bajaLogica()) {
+      <button type="button" class="dish-card__action dish-card__action--active" (click)="reactivar.emit()">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </button>
+    } @else {
+      <button type="button" class="dish-card__action dish-card__action--danger" (click)="baja.emit()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </button>
+    }
   </div>
 </div>

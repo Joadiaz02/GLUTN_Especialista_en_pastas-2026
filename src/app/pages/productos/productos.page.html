@@ -17,7 +17,7 @@
 
   @if (isLoading()) {
     <div class="sin-resultados">
-      <p>Cargando...</p>
+      <app-spinner-logo />
     </div>
   } @else if (productos().length === 0) {
     <div class="sin-resultados">

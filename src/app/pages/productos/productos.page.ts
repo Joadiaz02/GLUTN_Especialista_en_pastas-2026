@@ -16,6 +16,7 @@ import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/
 import { CartaItem, TipoCarta } from '../../models/carta.model';
 import { Carta } from '@app/services';
 import { Carrito } from '../carrito/carrito';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 const TITULOS: Record<TipoCarta, string> = {
   plato: 'Platos',
@@ -36,7 +37,8 @@ const TITULOS: Record<TipoCarta, string> = {
     IonButtons,
     IonBackButton,
     IonSearchbar,
-    IonIcon
+    IonIcon,
+    SpinnerLogoComponent
   ],
 })
 export class ProductosPage implements OnInit {

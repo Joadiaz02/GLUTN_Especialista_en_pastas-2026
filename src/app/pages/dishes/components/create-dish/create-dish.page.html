@@ -125,7 +125,7 @@
       [disabled]="(form.statusChanges | async) !== 'VALID'"
       (click)="confirmarYGuardar()"
     >
-      @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> }
+      @if (isLoading()) { <app-spinner-logo size="sm" /> }
       Guardar</ion-button
     >
   </div>

@@ -18,13 +18,13 @@ import {
   IonFooter,
   ToastController,
   IonInput,
-  IonSpinner,
   IonCheckbox,
   IonIcon,
 } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UploaderComponent } from '../create-dish/uploader/uploader.component';
 import { Storage, Plato, Confirm, Vibracion } from '@app/services';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 @Component({
   selector: 'app-edit-dish',
@@ -43,7 +43,7 @@ import { Storage, Plato, Confirm, Vibracion } from '@app/services';
     IonInput,
     ReactiveFormsModule,
     UploaderComponent,
-    IonSpinner,
+    SpinnerLogoComponent,
     IonCheckbox,
     IonIcon,
   ],

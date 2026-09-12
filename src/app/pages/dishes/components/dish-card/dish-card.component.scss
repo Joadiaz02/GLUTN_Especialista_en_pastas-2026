@@ -73,4 +73,19 @@
   .dish-card__action--danger {
     color: var(--ion-color-danger);
   }
+
+  .dish-card__badge {
+    align-self: flex-start;
+    background: var(--ion-color-danger);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+}
+
+.dish-card--baja {
+  opacity: 0.6;
 }

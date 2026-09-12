@@ -11,7 +11,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  @if (!isLoadingPlato()) {
+  @if (isLoadingPlato()) {
+  <div class="carga-plato">
+    <app-spinner-logo />
+  </div>
+  } @else {
   <div class="upload-container">
     <app-uploader [initialPreview]="fotoActual1()" (fileSelected)="onPhotoSelected(0, $event)" />
     <app-uploader [initialPreview]="fotoActual2()" (fileSelected)="onPhotoSelected(1, $event)" />
@@ -127,7 +131,7 @@
       [disabled]="(form.statusChanges | async) !== 'VALID'"
       (click)="confirmarYGuardar()"
     >
-      @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> }
+      @if (isLoading()) { <app-spinner-logo size="sm" /> }
       Guardar cambios</ion-button
     >
   </div>

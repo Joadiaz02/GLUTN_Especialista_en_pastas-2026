@@ -23,9 +23,11 @@
       [price]="dish.precio"
       [image]="dish.foto_1"
       [sugerencia]="dish.sugerencia"
+      [bajaLogica]="dish.baja_logica"
       (editar)="editar(dish)"
       (destacar)="destacar(dish)"
       (baja)="darDeBaja(dish)"
+      (reactivar)="reactivar(dish)"
     ></app-dish-card>
     } } @else { @for (i of [1, 2, 3, 4, 5]; track $index) {
     <app-skeleton-card />

@@ -16,12 +16,14 @@ export class Plato {
   private _tipo = 'plato';
   private _db = inject(SupabaseService);
 
+  // El cocinero ve TODOS sus platos, incluidos los dados de baja
+  // (marcados en la UI, no ocultos) — a diferencia de Carta.getPorTipo,
+  // que sí los oculta de la vista del cliente.
   async getList(): Promise<CartaItem[]> {
     const { data } = await this._db.client
       .from(this._tableName)
       .select('*')
-      .eq('tipo', this._tipo)
-      .eq('baja_logica', false);
+      .eq('tipo', this._tipo);
 
     return data ?? [];
   }
@@ -71,6 +73,16 @@ export class Plato {
       .eq('tipo', this._tipo);
 
     if (error) throw new Error(`Failed to disable plato: ${error.message}`);
+  }
+
+  async reactivar(id: string): Promise<void> {
+    const { error } = await this._db.client
+      .from(this._tableName)
+      .update({ baja_logica: false })
+      .eq('id_carta', id)
+      .eq('tipo', this._tipo);
+
+    if (error) throw new Error(`Failed to reactivate plato: ${error.message}`);
   }
 
   async setSugerencia(id: string, sugerencia: boolean): Promise<void> {

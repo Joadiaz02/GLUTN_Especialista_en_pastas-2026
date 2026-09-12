@@ -12,7 +12,7 @@ import {
   Router
 } from '@angular/router';
 
-import { IonContent, IonIcon, IonButton, IonModal } from '@ionic/angular';
+import { IonContent, IonIcon } from '@ionic/angular';
 
 import {
   addIcons
@@ -42,8 +42,6 @@ import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confir
     CommonModule,
     IonContent,
     IonIcon,
-    IonButton,
-    IonModal,
     ConfirmDialogComponent
 ],
 

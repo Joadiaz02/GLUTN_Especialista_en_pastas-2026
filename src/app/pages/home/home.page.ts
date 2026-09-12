@@ -3,7 +3,6 @@ import { CurrencyPipe } from '@angular/common';
 import {
   IonContent,
   IonButton,
-  IonIcon,
   IonItem,
   IonLabel,
   IonDatetime,
@@ -25,7 +24,6 @@ import { Carrito } from '../carrito/carrito';
   imports: [
     IonContent,
     IonButton,
-    IonIcon,
     IonItem,
     IonLabel,
     IonDatetime,

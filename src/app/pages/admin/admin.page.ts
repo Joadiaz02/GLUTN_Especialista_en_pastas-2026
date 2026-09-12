@@ -11,8 +11,6 @@ import {
   IonButton,
   IonIcon,
   IonContent,
-  IonModal,
-  
 } from '@ionic/angular';
 
 import { Auth } from '../../services/auth/auth';
@@ -38,7 +36,6 @@ import { logOutOutline } from 'ionicons/icons';
     IonContent,
     AdminModuleCardComponent,
     RouterLink,
-    IonModal,
     ConfirmDialogComponent
 ],
   templateUrl: './admin.page.html',
