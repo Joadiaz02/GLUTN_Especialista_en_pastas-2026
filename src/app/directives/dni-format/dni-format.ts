@@ -9,7 +9,7 @@ import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[appDniFormat]',
+  selector: '[gtnDniFormat]',
 })
 export class DniFormat implements OnInit, OnDestroy {
   private subscription?: Subscription;

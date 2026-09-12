@@ -1,0 +1,44 @@
+.confirm-dialog {
+  padding: 24px;
+  text-align: center;
+  background: var(--ion-background-color);
+}
+
+.drag-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.icono-circulo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--ion-color-danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+
+  ion-icon {
+    font-size: 28px;
+    color: white;
+  }
+}
+
+.mensaje {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.botones {
+  display: flex;
+  gap: 12px;
+
+  ion-button {
+    flex: 1;
+    margin: 0;
+  }
+}

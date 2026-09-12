@@ -1,0 +1,44 @@
+@if (!esContenidoModal) {
+
+  <ion-button expand="block" shape="round" fill="outline"  (click)="abrirConfirmacion()">
+   Volver
+  </ion-button>
+} @else {
+
+  <div class="confirm-dialog">
+
+    <div class="drag-handle"></div>
+
+    <div class="icono-circulo">
+      <ion-icon [src]="icono"></ion-icon>
+    </div>
+
+    <h2 class="heading-medium weight-bold">
+      {{ titulo }}
+    </h2>
+
+    <p class="body-medium weight-regular mensaje">
+      {{ mensaje }}
+    </p>
+
+    <div class="botones">
+
+      <ion-button
+        shape="round"
+        fill="outline"
+        (click)="cancelar()">
+        {{ textoCancelar }}
+      </ion-button>
+
+      <ion-button
+        shape="round"
+        [color]="colorConfirmar"
+        (click)="confirmar()">
+        {{ textoConfirmar }}
+      </ion-button>
+
+    </div>
+
+  </div>
+
+}

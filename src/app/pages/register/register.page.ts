@@ -27,6 +27,8 @@ import { Router } from '@angular/router';
 import { Auth } from '@app/services';
 import { EPerfilUsuario } from '@app/enums';
 import { ProgressBarComponent } from '@app/components';
+import { ConfirmVolverComponent } from "@app/components/ui/confirm-volver/confirm-volver.component";
+import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confirm-cartel.component";
 
 const NAME_PATTERN =
   /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/;
@@ -48,15 +50,15 @@ const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
     IonToolbar,
     IonButton,
     IonButtons,
-    IonBackButton,
     PersonalStepPage,
     CredentialsStepPage,
     ProfileStepPage,
     ProgressBarComponent,
-    IonBackButton,
     IonSpinner,
     IonFooter,
-  ],
+    ConfirmVolverComponent,
+    ConfirmDialogComponent
+],
 })
 export class RegisterPage {
   form = new FormGroup({

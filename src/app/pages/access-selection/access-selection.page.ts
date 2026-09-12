@@ -1,6 +1,7 @@
 import {
   Component,
-  inject
+  inject,
+  ViewChild
 } from '@angular/core';
 
 import {
@@ -11,10 +12,7 @@ import {
   Router
 } from '@angular/router';
 
-import {
-  IonContent,
-  IonIcon
-} from '@ionic/angular';
+import { IonContent, IonIcon, IonButton, IonModal } from '@ionic/angular';
 
 import {
   addIcons
@@ -32,6 +30,7 @@ import { Auth } from '../../services/auth/auth';
 import type {
   PerfilUsuario
 } from '../../models/usuario.model';
+import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confirm-cartel.component";
 
 
 @Component({
@@ -42,8 +41,11 @@ import type {
   imports: [
     CommonModule,
     IonContent,
-    IonIcon
-  ],
+    IonIcon,
+    IonButton,
+    IonModal,
+    ConfirmDialogComponent
+],
 
   templateUrl:
     './access-selection.page.html',
@@ -119,12 +121,9 @@ export class AccessSelectionPage {
   async cerrarSesion(): Promise<void> {
 
     await this.auth.logout();
-
-    void this.router.navigate([
-      '/login'
-    ]);
-  }
-
+   
+    await this.router.navigate(['/login']);
+    }
 
   get perfilNombre(): string {
 

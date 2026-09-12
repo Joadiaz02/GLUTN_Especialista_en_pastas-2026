@@ -1,75 +1,61 @@
-<link rel="stylesheet" href="./login.page.scss" />
+<ion-content class="ion-padding">
+  <div class="login">
 
-<div class="login">
-  <div class="logo_container">
-    <img [src]="logo" class="logo" />
-  </div>
+    <div class="logo_container">
+      <img [src]="logo" alt="Logo GLUTN" class="logo">
+    </div>
+    <ion-text>
+      <h2 class="textos">Iniciar sesión</h2>
+    </ion-text>
+    <ion-text>
+      <p class="textos">Por favor inicie sesión primero para disfrutar del servicio</p>
+    </ion-text>
 
-  <div>
-    <h1 class="textos">Iniciar sesión</h1>
-    <p class="textos">
-      Por favor iniciar sesión primero para disfrutar del servicio.
-    </p>
-  </div>
-
-  <div>
-    <label
-      class="textos"
-      for="email"
-      [style.color]="emailInput.touched && !email ? '#E76F45 ' : '#D9A441 '"
-    >
-      {{ emailInput.touched && !email ? 'Correo electrónico requerido' : 'Correo
-      electrónico' }}
-    </label>
-    <input
-      [(ngModel)]="email"
-      class="input"
-      placeholder="jperez@ejemplo.com"
-      id="email"
-      #emailInput="ngModel"
-    />
-    <label
-      class="textos"
-      for="contrasena"
-      [style.color]="contraInput.touched && !contrasena ? '#E76F45 ' : '#D9A441 '"
-    >
-      {{ contraInput.touched && !contrasena ? 'Contraseña requerida' :
-      'Contraseña' }}
-    </label>
-    <input
-      [(ngModel)]="contrasena"
-      class="input"
-      placeholder="Contraseña"
-      type="password"
-      #contraInput="ngModel"
-    />
-  </div>
-
-  <button (click)="iniciarSesion()" [disabled]="cargando()" class="boton_i">
-    @if (cargando()) {
-    <div class="spinner"></div>
-    }@else{ Iniciar sesión }
-  </button>
-
-  <div class="separador">
-    <span class="linea_isq"></span>
-    <span class="punto"></span>
-    <span class="linea_isq"></span>
-  </div>
-
-  <div>
-    <button routerLink="/guest" class="boton_c">Continuar como invitado</button>
-  </div>
-
-  <div class="boton_container">
-    <button routerLink="/acceso_rapido" class="boton_a">Acceso rápido</button>
-  </div>
-
-  <div class="registrate">
-    <p class="textos">
-      ¿No tienes cuenta?<a routerLink="/register" class="registrate_spam"
-        >Registrarse</a
-      >
-    </p>
-  </div>
+    <div class="campo">
+  <label class="field__label label-centrado">Correo electrónico</label>
+  <ion-item  lines="none">
+    <ion-input class="field__input" fill="outline" [(ngModel)]="email" #emailInput="ngModel" name="email" type="email" placeholder="jperez@ejemplo.com" required></ion-input>
+  </ion-item>
+  <p class="texto-error label-centrado">
+    {{ emailInput.touched && !email ? 'Correo electrónico requerido' : '' }}
+  </p>
 </div>
+
+<div class="campo">
+  <label class="field__label label-centrado" >Contraseña</label>
+  <ion-item  lines="none">
+    <ion-input class="field__input" fill="outline" [(ngModel)]="contrasena" #contraInput="ngModel" name="contrasena" type="password" placeholder="Contraseña" required></ion-input>
+  </ion-item>
+   <p class="texto-error label-centrado" >
+    {{ contraInput.touched && !contrasena ? 'Contraseña requerida' : '' }}
+  </p>
+</div>
+
+    <ion-button expand="block" class="boton_i" (click)="iniciarSesion()" [disabled]="cargando()">
+      @if (cargando()) {
+        <ion-spinner  name="dots"></ion-spinner>
+      } @else {
+        Iniciar sesión
+      }
+    </ion-button>
+
+    <div class="separador">
+      <span class="linea_isq"></span>
+      <span class="punto"></span>
+      <span class="linea_isq"></span>
+    </div>
+
+    <ion-button expand="block"  class="boton_c">
+      Continuar como invitado
+    </ion-button>
+
+    <ion-button expand="block"  class="boton_a">
+      Acceso rápido
+    </ion-button>
+
+    <p class="textos">
+      ¿No tenés cuenta? <a routerLink="/register" class="registrate_spam">Registrate</a>
+    </p>
+
+  </div>
+</ion-content>

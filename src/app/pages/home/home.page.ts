@@ -10,6 +10,7 @@ import {
   IonDatetime
 } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confirm-cartel.component";
 
 @Component({
   selector: 'app-home',
@@ -24,8 +25,9 @@ import { Router } from '@angular/router';
     IonItem,
     IonThumbnail,
     IonLabel,
-    IonDatetime
-  ],
+    IonDatetime,
+    ConfirmDialogComponent
+],
 })
 export class HomePage {
 
@@ -57,6 +59,7 @@ export class HomePage {
     nextMonth.setMonth(now.getMonth() + 1);
 
     this.maxDate = nextMonth.toISOString().split('T')[0];
+    
   }
 
   // ============================
