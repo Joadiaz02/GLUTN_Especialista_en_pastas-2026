@@ -22,7 +22,7 @@ import {
   IonSpinner,
 } from '@ionic/angular';
 import { UploaderComponent } from './uploader/uploader.component';
-import { Storage, Table } from '@app/services';
+import { Storage, Drink } from '@app/services';
 import { Router } from '@angular/router';
 
 @Component({
@@ -52,7 +52,7 @@ export class CreateDrinkPage {
   isLoading = signal<boolean>(false);
 
   private _router = inject(Router);
-  private _tableService = inject(Table);
+  private _drinkService = inject(Drink);
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
 
@@ -100,7 +100,7 @@ export class CreateDrinkPage {
         data.images[2] as File
       );
 
-      await this._tableService.add({
+      await this._drinkService.add({
         titulo: data.title,
         descripcion: data.description,
         tiempo_estimado: data.preparation,

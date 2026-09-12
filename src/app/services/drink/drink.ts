@@ -1,9 +1,9 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 
-@Service()
-export class Table {
-  private _tableName = 'mesas';
+@Injectable({ providedIn: 'root' })
+export class Drink {
+  private _tableName = 'drinks';
   private _db = inject(SupabaseService);
 
   async getList(): Promise<any[]> {
@@ -12,14 +12,14 @@ export class Table {
     return data ?? [];
   }
 
-  async add(table: any): Promise<any> {
+  async add(drink: any): Promise<any> {
     const { data, error } = await this._db.client
       .from(this._tableName)
-      .insert(table)
+      .insert(drink)
       .select()
       .single();
 
-    if (error) throw new Error(`Failed to create table: ${error.message}`);
+    if (error) throw new Error(`Failed to create drink: ${error.message}`);
 
     return data;
   }

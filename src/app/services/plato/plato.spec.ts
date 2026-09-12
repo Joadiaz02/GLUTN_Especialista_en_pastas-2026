@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { Table } from './table';
+import { Plato } from './plato';
 
-describe('Table', () => {
-  let service: Table;
+describe('Plato', () => {
+  let service: Plato;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Table);
+    service = TestBed.inject(Plato);
   });
 
   it('should be created', () => {

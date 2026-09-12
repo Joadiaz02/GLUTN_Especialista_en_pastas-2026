@@ -1,0 +1,76 @@
+.dish-card {
+  display: flex;
+  padding: 12px;
+  border-radius: 12px;
+  gap: 12px;
+  background-color: #A8B68A;
+
+  .dish-card__image {
+    width: 75px;
+    height: 75px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .dish-card__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  .dish-card__details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .dish-card__name {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0;
+    color: #2F3D24
+  }
+
+  .dish-card__description {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+    color: #4D5C3E
+  }
+
+  .dish-card__price {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+  }
+
+  .dish-card__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .dish-card__action {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(0, 0, 0, 0.12);
+    color: #2F3D24;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dish-card__action--active {
+    background: var(--ion-color-primary);
+    color: #ffffff;
+  }
+
+  .dish-card__action--danger {
+    color: var(--ion-color-danger);
+  }
+}

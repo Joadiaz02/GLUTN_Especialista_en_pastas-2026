@@ -1,18 +1,20 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import {
   IonContent,
   IonButton,
-  IonList,
-  IonListHeader,
+  IonIcon,
   IonItem,
-  IonThumbnail,
   IonLabel,
   IonDatetime,
+  IonSkeletonText,
   ToastController
 } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confirm-cartel.component";
-import { Auth } from '@angular/fire/auth';
+import { Auth } from '../../services/auth/auth';
+import { Carta } from '@app/services';
+import { CartaItem } from '@app/models/carta.model';
+import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
 
 @Component({
   selector: 'app-home',
@@ -22,26 +24,52 @@ import { Auth } from '@angular/fire/auth';
   imports: [
     IonContent,
     IonButton,
-    IonList,
-    IonListHeader,
+    IonIcon,
     IonItem,
-    IonThumbnail,
     IonLabel,
     IonDatetime,
+    IonSkeletonText,
+    CurrencyPipe,
     ConfirmDialogComponent
   ],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
   private authService = inject(Auth);
   private toastController = inject(ToastController);
+  private cartaService = inject(Carta);
+
+  constructor(private router: Router) {
+    // Calcular fecha máxima (1 mes exacto)
+    const now = new Date();
+    const nextMonth = new Date(now);
+    nextMonth.setMonth(now.getMonth() + 1);
+
+    this.maxDate = nextMonth.toISOString().split('T')[0];
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.isLoadingDestacados.set(true);
+
+    const destacados = await this.cartaService.getSugeridos();
+
+    this.isLoadingDestacados.set(false);
+
+    this.destacados.set(destacados);
+  }
 
   // ============================
   // ESTADOS
   // ============================
+
+  // Ya no es un booleano local: es un computed que lee directo del
+  // signal de Auth. Se actualiza SOLO en cuanto Auth.usuarioActual
+  // cambia (login, logout, refresh de sesión) — sin carreras de tiempo,
+  // sin tener que "ir a preguntar" en ngOnInit.
   isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
 
   enMesa = false;
+
   showReserva = false;
   showDestacados = false;
   showQuienesSomos = false;
@@ -49,43 +77,49 @@ export class HomePage {
   // ============================
   // FECHA Y HORA
   // ============================
+
   today = new Date().toISOString().split('T')[0];
   maxDate: string;
+
   fecha = '';
   hora = '';
 
-  constructor(private router: Router) {
-    const now = new Date();
-    const nextMonth = new Date(now);
-    nextMonth.setMonth(now.getMonth() + 1);
-    this.maxDate = nextMonth.toISOString().split('T')[0];
-  }
+  // ============================
+  // PRODUCTOS DESTACADOS (sugerencias de la carta)
+  // ============================
 
-  // ============================
-  // PRODUCTOS (simulado)
-  // ============================
-  productos = [
-    { nombre: 'Ravioles', imagen: 'assets/icons/ravioles.png', detalle: 'Clásicos y especiales' },
-    { nombre: 'Sorrentinos', imagen: 'assets/icons/sorrentinos.png', detalle: 'Jamón y queso, calabaza' },
-    { nombre: 'Fideos', imagen: 'assets/icons/fideos.png', detalle: 'Spaghetti, tallarines' }
-  ];
+  destacados = signal<CartaItem[]>([]);
+  isLoadingDestacados = signal(false);
 
   // ============================
   // LOGIN / LOGOUT
   // ============================
-  async onLoginClick(): Promise<void> {
-    if (this.isLoggedIn()) {
-      await this.authService.logout();
-      this.enMesa = false;
-      localStorage.removeItem('mesa');
-    } else {
-      this.router.navigate(['/login']);
-    }
+
+  irALogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  async cerrarSesion(): Promise<void> {
+    await this.authService.logout();
+
+    this.enMesa = false;
+    localStorage.removeItem('mesa');
+
+    const toast = await this.toastController.create({
+      message: 'Sesión cerrada correctamente.',
+      duration: 3000,
+      position: 'top',
+      color: 'success'
+    });
+    await toast.present();
+
+    void this.router.navigate(['/login']);
   }
 
   // ============================
   // BOTONES PRINCIPALES
   // ============================
+
   toggleReserva() {
     this.showReserva = !this.showReserva;
     this.showDestacados = false;
@@ -107,6 +141,7 @@ export class HomePage {
   // ============================
   // NAVEGACIONES
   // ============================
+
   goToCarta() {
     this.router.navigate(['/carta']);
   }
@@ -128,6 +163,7 @@ export class HomePage {
   // ============================
   // RESERVA
   // ============================
+
   async solicitarReserva(): Promise<void> {
     console.log('Reserva solicitada:', this.fecha, this.hora);
 

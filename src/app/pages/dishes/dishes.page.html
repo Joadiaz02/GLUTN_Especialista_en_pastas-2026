@@ -1,0 +1,34 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="back-button" type="button" (click)="volver()">
+        <ion-icon src="assets/icons/arrow-left.svg"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-title>Platos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="dishes">
+    <button routerLink="create" class="dish-placeholder">
+      <ion-icon src="assets/icons/plus.svg"></ion-icon>
+    </button>
+
+    @if (!isLoading()) { @for (dish of dishes(); track dish.id_carta) {
+    <app-dish-card
+      [name]="dish.nombre"
+      [description]="dish.descripcion"
+      [price]="dish.precio"
+      [image]="dish.foto_1"
+      [sugerencia]="dish.sugerencia"
+      (editar)="editar(dish)"
+      (destacar)="destacar(dish)"
+      (baja)="darDeBaja(dish)"
+    ></app-dish-card>
+    } } @else { @for (i of [1, 2, 3, 4, 5]; track $index) {
+    <app-skeleton-card />
+    } }
+  </div>
+</ion-content>

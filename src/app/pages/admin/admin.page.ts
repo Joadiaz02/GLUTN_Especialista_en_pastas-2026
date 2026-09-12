@@ -104,8 +104,10 @@ export class AdminPage implements OnInit {
   }
 
   async cerrarSesion(): Promise<void> {
+    localStorage.removeItem('token');
+    localStorage.removeItem('mesa');
+
     await this.auth.logout();
     await this.router.navigate(['/login']);
-    
   }
 }

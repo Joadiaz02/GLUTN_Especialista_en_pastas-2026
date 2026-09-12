@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { authGuard, staffGuard } from './guards/auth.guard';
+import { authGuard, staffGuard, roleGuard } from './guards/auth.guard';
+import { EPerfilUsuario } from './enums';
 
 export const routes: Routes = [
   {
@@ -55,6 +56,8 @@ export const routes: Routes = [
   {
     path: 'home',
 
+    canActivate: [authGuard],
+
     loadComponent: () =>
       import('./pages/home/home.page').then((m) => m.HomePage),
   },
@@ -83,10 +86,46 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'admin/dishes',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/dishes/dishes.page').then((m) => m.DishesPage),
+  },
+  {
+    path: 'admin/dishes/create',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/dishes/components/create-dish/create-dish.page').then(
+        (m) => m.CreateDishPage
+      ),
+  },
+  {
+    path: 'admin/dishes/edit/:id',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/dishes/components/edit-dish/edit-dish.page').then(
+        (m) => m.EditDishPage
+      ),
+  },
+  {
     path: 'carta',
     loadComponent: () =>
       import('./pages/carta/carta.page').then((m) => m.CartaPage),
     },
+  {
+    path: 'carta/:tipo',
+    loadComponent: () =>
+      import('./pages/productos/productos.page').then((m) => m.ProductosPage),
+  },
     {
     path: 'design-system',
     loadComponent: () =>

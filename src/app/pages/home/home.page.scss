@@ -43,6 +43,13 @@ ion-content {
   padding: 6px 14px;
 }
 
+.logout-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
 /* =========================
    BOTONES HOME
 ========================= */
@@ -64,33 +71,87 @@ ion-content {
    PRODUCTOS DESTACADOS
 ========================= */
 
-ion-list {
+.destacados {
   margin-top: 25px;
-  background: transparent;
 }
 
-ion-list-header h2 {
+.destacados__titulo {
   font-size: 24px;
   font-weight: 700;
   color: var(--ion-text-color);
+  margin-bottom: 16px;
 }
+
+.destacados__vacio {
+  color: var(--ion-text-color);
+  opacity: 0.85;
+}
+
+.destacados__slide {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.destacado-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: 220px;
+  background: var(--ion-color-light);
+  border-radius: 16px;
+  border: 2px solid var(--ion-border-color);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.destacado-card__imagen {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.destacado-card__nombre {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+  margin: 0;
+}
+
+.destacado-card__precio {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+}
+
+.destacado-card__descripcion {
+  font-size: 13px;
+  color: var(--ion-background-color);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.destacado-card--skeleton {
+  gap: 8px;
+}
+
+/* =========================
+   ITEMS DE FORMULARIO (reserva)
+========================= */
 
 ion-item {
   --background: var(--ion-background-color);
   border-radius: 12px;
   margin: 10px 0;
   border: 2px solid var(--ion-border-color);
-}
-
-ion-label h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--ion-text-color);
-}
-
-ion-label p {
-  font-size: 15px;
-  color: var(--ion-text-color);
 }
 
  
@@ -156,6 +217,13 @@ ion-label p {
 }
 
 .scan-access__icon {
+  width: 75px;
+  height: 75px;
+  margin: 0 auto;
+  background: var(--ion-color-primary);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+
   display: flex;
   justify-content: center;
   align-items: center;

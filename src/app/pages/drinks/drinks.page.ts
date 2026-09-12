@@ -12,7 +12,7 @@ import {
 } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 import { DrinkCardComponent } from './components/drink-card/drink-card.component';
-import { Table } from '@app/services';
+import { Drink } from '@app/services';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 
 @Component({
@@ -39,12 +39,12 @@ export class DrinksPage implements OnInit {
 
   isLoading = signal<boolean>(false);
 
-  private _tableService = inject(Table);
+  private _drinkService = inject(Drink);
 
   async ngOnInit() {
     this.isLoading.set(true);
 
-    const drinks = await this._tableService.getList();
+    const drinks = await this._drinkService.getList();
 
     this.isLoading.set(false);
 
