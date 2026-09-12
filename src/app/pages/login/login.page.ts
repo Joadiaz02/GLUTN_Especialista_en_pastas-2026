@@ -1,13 +1,13 @@
 import {Component,inject,signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Router,RouterLink} from '@angular/router';
-import {ToastController} from '@ionic/angular';
+import { IonText, ToastController, IonItem, IonLabel, IonInput } from '@ionic/angular';
 import {Haptics} from '@capacitor/haptics';
 import { Auth } from '../../services/auth/auth';
-
+import {IonContent,IonHeader,IonTitle,IonToolbar,IonButton,IonButtons,IonBackButton,IonSpinner,IonFooter,IonToast,} from '@ionic/angular';
 @Component({
   selector: 'app-login',
-  imports: [FormsModule,RouterLink],
+  imports: [FormsModule, RouterLink, IonContent, IonItem, IonInput, IonButton, IonText, IonLabel, IonSpinner],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })
@@ -39,6 +39,7 @@ export class LoginPage {
       const usuario =
         await this.authService.iniciarsecion({email: this.email,password: this.contrasena});
       this.credencialesinvalidas.set(false);
+      
       if (this.authService.esPersonal(usuario)) {
         await this.router.navigate(['/seleccion-acceso']);
         return;

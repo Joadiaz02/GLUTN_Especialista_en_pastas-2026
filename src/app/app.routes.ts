@@ -83,6 +83,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'carta',
+    loadComponent: () =>
+      import('./pages/carta/carta.page').then((m) => m.CartaPage),
+    },
+    {
     path: 'design-system',
     loadComponent: () =>
       import('./pages/design-system/design-system.page').then(

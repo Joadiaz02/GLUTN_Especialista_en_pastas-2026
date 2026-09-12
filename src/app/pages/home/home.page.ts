@@ -11,7 +11,8 @@ import {
   ToastController
 } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Auth } from '../../services/auth/auth';
+import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confirm-cartel.component";
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-home',
@@ -26,7 +27,8 @@ import { Auth } from '../../services/auth/auth';
     IonItem,
     IonThumbnail,
     IonLabel,
-    IonDatetime
+    IonDatetime,
+    ConfirmDialogComponent
   ],
 })
 export class HomePage {
@@ -37,15 +39,9 @@ export class HomePage {
   // ============================
   // ESTADOS
   // ============================
-
-  // Ya no es un booleano local: es un computed que lee directo del
-  // signal de Auth. Se actualiza SOLO en cuanto Auth.usuarioActual
-  // cambia (login, logout, refresh de sesión) — sin carreras de tiempo,
-  // sin tener que "ir a preguntar" en ngOnInit.
   isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
 
   enMesa = false;
-
   showReserva = false;
   showDestacados = false;
   showQuienesSomos = false;
@@ -53,26 +49,21 @@ export class HomePage {
   // ============================
   // FECHA Y HORA
   // ============================
-
   today = new Date().toISOString().split('T')[0];
   maxDate: string;
-
   fecha = '';
   hora = '';
 
   constructor(private router: Router) {
-    // Calcular fecha máxima (1 mes exacto)
     const now = new Date();
     const nextMonth = new Date(now);
     nextMonth.setMonth(now.getMonth() + 1);
-
     this.maxDate = nextMonth.toISOString().split('T')[0];
   }
 
   // ============================
   // PRODUCTOS (simulado)
   // ============================
-
   productos = [
     { nombre: 'Ravioles', imagen: 'assets/icons/ravioles.png', detalle: 'Clásicos y especiales' },
     { nombre: 'Sorrentinos', imagen: 'assets/icons/sorrentinos.png', detalle: 'Jamón y queso, calabaza' },
@@ -82,7 +73,6 @@ export class HomePage {
   // ============================
   // LOGIN / LOGOUT
   // ============================
-
   async onLoginClick(): Promise<void> {
     if (this.isLoggedIn()) {
       await this.authService.logout();
@@ -96,7 +86,6 @@ export class HomePage {
   // ============================
   // BOTONES PRINCIPALES
   // ============================
-
   toggleReserva() {
     this.showReserva = !this.showReserva;
     this.showDestacados = false;
@@ -118,7 +107,6 @@ export class HomePage {
   // ============================
   // NAVEGACIONES
   // ============================
-
   goToCarta() {
     this.router.navigate(['/carta']);
   }
@@ -140,7 +128,6 @@ export class HomePage {
   // ============================
   // RESERVA
   // ============================
-
   async solicitarReserva(): Promise<void> {
     console.log('Reserva solicitada:', this.fecha, this.hora);
 

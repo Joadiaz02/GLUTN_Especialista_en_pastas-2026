@@ -1,191 +1,134 @@
 .login {
-    width: 100%;
-    min-height: 100vh;
-    background: #657A4D ;
+  width: 100%;
+  height: 100dvh; 
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;  
 
-    
-    box-sizing: border-box;
+  padding: 3vh 24px;
+  box-sizing: border-box;
+  overflow: auto;
 }
 
 .logo_container {
-    width: 100%;
-    max-width: min(200px, 40vw);
-    margin-top: 10%;
-  
+  width: 100%;
+  max-width: clamp(80px, 20vh, 160px);
 }
 
 .logo {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-
-.spinner {
-width: 40px;
-height: 40px;
-border: 4px solid rgba(0, 0, 0, 0.1);
-border-left-color: #657A4D; /* Color del borde que gira */
-border-radius: 50%;
-animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .textos {
-    width: 100%;
-    max-width: 327px;
+  width: 100%;
+  max-width: 327px;
+  font-weight: 700;
+  font-size: clamp(14px, 2.2vh, 18px);
+  line-height: 150%;
+  margin-bottom: 16px;
+}
 
-    font-family: 'Manrope';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 150%;
-
-    color: #D9A441 ;
-
-    margin-bottom: 16px;
+.texto-error {
+  color: var(--ion-color-danger);
+  font-size: 16px;
+  margin: 2px 0 0 4px;
+  min-height: 14px;
+  display: block;
+  line-height: 1.2;
 }
 
 .input {
-    box-sizing: border-box;
-    color: #A8B68A ;
-    width: 100vw;
-    max-width: 327px;
-    height: 28%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    
-    padding: 6px;
-    gap: 10px;
+  --background: var(--color-surface-muted);
+  --border-radius: 50px;
+  --padding-start: 20px;
+  --padding-end: 13px;
+  --min-height: 46px;
+  
 
-    background: rgba(186, 31, 39, 0.05);
-    border: 1px solid #ffffff;
-    border-radius: 12px;
+  border-radius: 50px;
+  margin-bottom: 1px;
 
-    margin-bottom: 10px;
-}
-input::placeholder{
-    color: #E76F45 ;
+  ion-input {
+    --color: var(--text-primary);
+    --placeholder-color: var(--text-primary);
+    --placeholder-opacity: 0.8;
+  }
 }
 
-.boton_i {
-    box-sizing: border-box;
-
-    width: 100%;
-    max-width: 327px;
-    height: 56px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 10px;
-    gap: 10px;
-
-    background: #E76F45 ;
-    border: none;
-    border-radius: 50px;
-
-    margin-top: 16px;
+.boton_i{
+   width: 100%;
+  max-width: 327px;
+  --border-radius: 50px;
+  margin-top: 5px;
+  display: flex;
+  --align-items: center;
+  --justify-content: center;
+   --padding-top: 22px;
+  --padding-bottom: 22px;
+  padding-bottom: 40px;
 }
-
-.boton_c {
-    box-sizing: border-box;
-
-    width: 100%;
-    max-width: 327px;
-    height: 56px;
-    background: #E76F45 ;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 10px;
-    gap: 10px;
-
-    border: 1px solid #E76F45 ;
-    border-radius: 50px;
-
-    margin-top: 15px;
+.boton_c{
+    margin-top: 5px;
+   width: 100%;
+  max-width: 327px;
+  --border-radius: 50px;
+  --padding-top: 22px;
+  --padding-bottom: 22px;
 }
-
-
 
 .boton_a {
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 320px;
-    height: 56px;
-    background: #E76F45 ;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    gap: 10px;
-    border: 1px solid #E76F45 ;
-    border-radius: 50px;
-    text-align: center;
-    margin-top: 10px;
+  width: 100%;
+  max-width: 327px;
+  --border-radius: 50px;
+  margin-top: 15px;
+  --padding-top: 22px;
+  --padding-bottom: 22px;
 }
 
+
 .separador {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 5px;
-    margin: 10px 0;
+  width: 100%;
+  max-width: 327px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
 }
 
 .linea_isq {
-    height: 1.5px;
-    background: #E76F45 ;
-    border: none;
-    flex: 1;
+  height: 1px;
+  background: var(--border);
+  flex: 1;
 }
 
 .punto {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: #D9A441 ;
-    flex: 0,1;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--text-secondary);
 }
 
 .registrate {
-    width: 100%;
-    max-width: 327px;
-
-    text-align: center;
-    
-    font-family: 'Manrope';
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 150%;
-
-    color: #D9A441  ;
-
-    margin-top: 5px;   
-    padding-bottom: 10px;
-
-
+  width: 100%;
+  max-width: 327px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  margin-top: 25px;
 }
 
 .registrate_spam {
-    color: #E76F45 ;
-    
-    font-family: 'Manrope';
-    font-weight: 500;
-    font-size: 22px;
-    line-height: 150%;
+  color: var(--ion-color-primary);
+  font-weight: 500;
+  font-size: 22px;
+}
+
+.campo {
+  width: 100%;
+  max-width: 327px;
+  margin-bottom: 5px;   
 }

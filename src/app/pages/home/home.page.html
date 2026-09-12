@@ -1,12 +1,10 @@
 <ion-content>
 
   <!-- LOGIN / LOGOUT -->
-  <ion-button
-    class="login-btn"
-    (click)="onLoginClick()"
-  >
-    {{ isLoggedIn() ? 'Cerrar sesión' : 'Ingresar' }}
+  <ion-button class="login-btn">
+    <app-confirm-dialog></app-confirm-dialog>
   </ion-button>
+  
 
   <!-- LOGO -->
   <div class="logo-container">
