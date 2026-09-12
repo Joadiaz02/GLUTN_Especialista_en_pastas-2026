@@ -15,7 +15,15 @@
     (ionInput)="onBuscar($event.detail.value ?? '')"
   ></ion-searchbar>
 
-  @if (productosFiltrados().length === 0) {
+  @if (isLoading()) {
+    <div class="sin-resultados">
+      <p>Cargando...</p>
+    </div>
+  } @else if (productos().length === 0) {
+    <div class="sin-resultados">
+      <p>Todavía no hay productos cargados en esta sección.</p>
+    </div>
+  } @else if (productosFiltrados().length === 0) {
     <div class="sin-resultados">
       <p>No encontramos nada que coincida con tu búsqueda.</p>
     </div>
@@ -41,7 +49,7 @@
         </button>
       }
 
-      <img class="producto-imagen" [src]="producto.fotos[0]" [alt]="producto.nombre" />
+      <img class="producto-imagen" [src]="producto.foto_1" [alt]="producto.nombre" />
 
       <div class="producto-info">
         <h2 class="producto-nombre">{{ producto.nombre }}</h2>

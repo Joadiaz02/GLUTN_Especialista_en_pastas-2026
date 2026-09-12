@@ -15,6 +15,7 @@ import { Auth } from '../../services/auth/auth';
 import { Carta } from '@app/services';
 import { CartaItem } from '@app/models/carta.model';
 import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
+import { Carrito } from '../carrito/carrito';
 
 @Component({
   selector: 'app-home',
@@ -38,6 +39,7 @@ export class HomePage implements OnInit {
   private authService = inject(Auth);
   private toastController = inject(ToastController);
   private cartaService = inject(Carta);
+  private carrito = inject(Carrito);
 
   constructor(private router: Router) {
     // Calcular fecha máxima (1 mes exacto)
@@ -158,6 +160,26 @@ export class HomePage implements OnInit {
 
   goToScanner() {
     this.router.navigate(['/scanner']);
+  }
+
+  // ============================
+  // SOLICITAR CUENTA (punto 21, Lucas)
+  // ============================
+
+  // Placeholder: solo controla cuándo se ve el botón. La lógica real
+  // de solicitud de cuenta/pago (punto 21) la arma Lucas.
+  mostrarSolicitarCuenta(): boolean {
+    return this.isLoggedIn() && this.enMesa && this.carrito.totalItems() > 0;
+  }
+
+  async solicitarCuenta(): Promise<void> {
+    const toast = await this.toastController.create({
+      message: 'Pronto vas a poder solicitar tu cuenta desde acá.',
+      duration: 3000,
+      position: 'top',
+      color: 'primary'
+    });
+    await toast.present();
   }
 
   // ============================

@@ -12,7 +12,7 @@ import {
 } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { DishCardComponent } from './components/dish-card/dish-card.component';
-import { Plato, Confirm } from '@app/services';
+import { Plato, Confirm, Vibracion } from '@app/services';
 import { CartaItem } from '@app/models/carta.model';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 

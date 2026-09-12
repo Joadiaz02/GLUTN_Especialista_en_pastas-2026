@@ -5,3 +5,4 @@ export * from './drink';
 export * from './plato';
 export * from './carta';
 export * from './confirm';
+export * from './vibracion';

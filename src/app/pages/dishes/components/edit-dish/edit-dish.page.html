@@ -70,9 +70,13 @@
 
         @if ( getFormControl('preparation')?.invalid &&
         (getFormControl('preparation')?.touched ||
-        getFormControl('preparation')?.dirty ) ) { @if (
-        getFormControl('preparation')?.hasError('required') ) {
+        getFormControl('preparation')?.dirty ) ) {
+        @if ( getFormControl('preparation')?.hasError('required') ) {
         <p class="field__error">El campo es obligatorio.</p>
+        } @else if ( getFormControl('preparation')?.hasError('pattern') ) {
+        <p class="field__error">Ingresá solo números, sin letras ni símbolos.</p>
+        } @else if ( getFormControl('preparation')?.hasError('min') ) {
+        <p class="field__error">Tiene que ser mayor a 0.</p>
         } }
       </div>
 
@@ -91,8 +95,13 @@
 
         @if ( getFormControl('price')?.invalid &&
         (getFormControl('price')?.touched || getFormControl('price')?.dirty ) )
-        { @if ( getFormControl('price')?.hasError('required') ) {
+        {
+        @if ( getFormControl('price')?.hasError('required') ) {
         <p class="field__error">El campo es obligatorio.</p>
+        } @else if ( getFormControl('price')?.hasError('pattern') ) {
+        <p class="field__error">Ingresá un precio válido (ej: 8500 o 8500.50).</p>
+        } @else if ( getFormControl('price')?.hasError('min') ) {
+        <p class="field__error">Tiene que ser mayor a 0.</p>
         } }
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -13,121 +13,12 @@ import {
 import { addIcons } from 'ionicons';
 import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 
-import { Producto } from '../../models/productos.model';
+import { CartaItem, TipoCarta } from '../../models/carta.model';
+import { Carta } from '@app/services';
 import { Carrito } from '../carrito/carrito';
 
-// TODO: esto es data simulada. Cuando exista la tabla "carta" en
-// Supabase (ver esquema del UML), reemplazar por un servicio propio
-// (ej. Carta.getList()) filtrado por tipo, en vez de este array hardcodeado.
-const PRODUCTOS_MOCK: Producto[] = [
-  {
-    id: 1,
-    nombre: 'Ravioles de ricota',
-    descripcion: 'Pasta rellena casera con salsa a elección, espolvoreados con queso parmesano.',
-    precio: 8500,
-    tiempoElaboracion: 20,
-    tipo: 'comida',
-    fotos: [
-      'assets/images/productos/ravioles-1.jpg',
-      'assets/images/productos/ravioles-2.jpg',
-      'assets/images/productos/ravioles-3.jpg'
-    ]
-  },
-  {
-    id: 2,
-    nombre: 'Fideos con salsa bolognesa',
-    descripcion: 'Fideos frescos con salsa de carne casera, cocidos a la manera tradicional italiana.',
-    precio: 7900,
-    tiempoElaboracion: 15,
-    tipo: 'comida',
-    fotos: [
-      'assets/images/productos/fideos-1.jpg',
-      'assets/images/productos/fideos-2.jpg',
-      'assets/images/productos/fideos-3.jpg'
-    ]
-  },
-  {
-    id: 3,
-    nombre: 'Sorrentinos de jamón y queso',
-    descripcion: 'Sorrentinos rellenos de jamón cocido y queso, con salsa fileto casera.',
-    precio: 9200,
-    tiempoElaboracion: 18,
-    tipo: 'comida',
-    fotos: [
-      'assets/images/productos/sorrentinos-1.jpg',
-      'assets/images/productos/sorrentinos-2.jpg',
-      'assets/images/productos/sorrentinos-3.jpg'
-    ]
-  },
-  {
-    id: 4,
-    nombre: 'Limonada',
-    descripcion: 'Limonada casera con menta fresca y hielo.',
-    precio: 2500,
-    tiempoElaboracion: 5,
-    tipo: 'bebida',
-    fotos: [
-      'assets/images/productos/limonada-1.jpg',
-      'assets/images/productos/limonada-2.jpg',
-      'assets/images/productos/limonada-3.jpg'
-    ]
-  },
-  {
-    id: 5,
-    nombre: 'Agua con gas',
-    descripcion: 'Botella de agua mineral con gas, 500ml.',
-    precio: 1800,
-    tiempoElaboracion: 1,
-    tipo: 'bebida',
-    fotos: [
-      'assets/images/productos/agua-1.jpg',
-      'assets/images/productos/agua-2.jpg',
-      'assets/images/productos/agua-3.jpg'
-    ]
-  },
-  {
-    id: 6,
-    nombre: 'Copa de vino tinto',
-    descripcion: 'Copa de vino tinto de la casa, malbec.',
-    precio: 3200,
-    tiempoElaboracion: 2,
-    tipo: 'bebida',
-    fotos: [
-      'assets/images/productos/vino-1.jpg',
-      'assets/images/productos/vino-2.jpg',
-      'assets/images/productos/vino-3.jpg'
-    ]
-  },
-  {
-    id: 7,
-    nombre: 'Tiramisú',
-    descripcion: 'Tiramisú casero con café, mascarpone y cacao.',
-    precio: 4500,
-    tiempoElaboracion: 10,
-    tipo: 'postre',
-    fotos: [
-      'assets/images/productos/tiramisu-1.jpg',
-      'assets/images/productos/tiramisu-2.jpg',
-      'assets/images/productos/tiramisu-3.jpg'
-    ]
-  },
-  {
-    id: 8,
-    nombre: 'Panna cotta',
-    descripcion: 'Panna cotta con salsa de frutos rojos.',
-    precio: 4200,
-    tiempoElaboracion: 8,
-    tipo: 'postre',
-    fotos: [
-      'assets/images/productos/pannacotta-1.jpg',
-      'assets/images/productos/pannacotta-2.jpg',
-      'assets/images/productos/pannacotta-3.jpg'
-    ]
-  }
-];
-
-const TITULOS: Record<Producto['tipo'], string> = {
-  comida: 'Platos',
+const TITULOS: Record<TipoCarta, string> = {
+  plato: 'Platos',
   bebida: 'Bebidas',
   postre: 'Postres'
 };
@@ -148,15 +39,16 @@ const TITULOS: Record<Producto['tipo'], string> = {
     IonIcon
   ],
 })
-export class ProductosPage {
+export class ProductosPage implements OnInit {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private carrito = inject(Carrito);
+  private cartaService = inject(Carta);
 
-  // El tipo viene de la URL: /carta/comida, /carta/bebida, /carta/postre
-  tipo = signal<Producto['tipo']>(
-    (this.route.snapshot.paramMap.get('tipo') as Producto['tipo']) ?? 'comida'
+  // El tipo viene de la URL: /carta/plato, /carta/bebida, /carta/postre
+  tipo = signal<TipoCarta>(
+    (this.route.snapshot.paramMap.get('tipo') as TipoCarta) ?? 'plato'
   );
 
   titulo = computed(() => TITULOS[this.tipo()]);
@@ -165,11 +57,14 @@ export class ProductosPage {
 
   indiceActual = signal(0);
 
+  isLoading = signal(false);
+
+  productos = signal<CartaItem[]>([]);
+
   productosFiltrados = computed(() => {
     const texto = this.textoBusqueda().trim().toLowerCase();
 
-    return PRODUCTOS_MOCK
-      .filter(p => p.tipo === this.tipo())
+    return this.productos()
       .filter(p => !texto || p.nombre.toLowerCase().includes(texto));
   });
 
@@ -184,6 +79,16 @@ export class ProductosPage {
 
   constructor() {
     addIcons({ addOutline, chevronBackOutline, chevronForwardOutline });
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.isLoading.set(true);
+
+    const productos = await this.cartaService.getPorTipo(this.tipo());
+
+    this.isLoading.set(false);
+
+    this.productos.set(productos);
   }
 
   onBuscar(texto: string): void {
@@ -203,12 +108,12 @@ export class ProductosPage {
     }
   }
 
-  agregarAlCarrito(producto: Producto): void {
-    this.carrito.agregar(producto.id);
+  agregarAlCarrito(producto: CartaItem): void {
+    this.carrito.agregar(producto.id_carta);
   }
 
-  cantidadEnCarrito(producto: Producto): number {
-    return this.carrito.cantidadDe(producto.id);
+  cantidadEnCarrito(producto: CartaItem): number {
+    return this.carrito.cantidadDe(producto.id_carta);
   }
 
   // ============================

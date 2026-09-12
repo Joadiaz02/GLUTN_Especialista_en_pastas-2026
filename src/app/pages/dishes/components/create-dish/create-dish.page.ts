@@ -23,7 +23,7 @@ import {
   IonIcon,
 } from '@ionic/angular';
 import { UploaderComponent } from './uploader/uploader.component';
-import { Storage, Plato, Confirm } from '@app/services';
+import { Storage, Plato, Confirm, Vibracion } from '@app/services';
 import { Router } from '@angular/router';
 
 @Component({
@@ -58,12 +58,21 @@ export class CreateDishPage {
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
   private _confirm = inject(Confirm);
+  private _vibracion = inject(Vibracion);
 
   form = new FormGroup({
     title: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
-    preparation: new FormControl('', Validators.required),
-    price: new FormControl('', Validators.required),
+    preparation: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^[0-9]+$/),
+      Validators.min(1),
+    ]),
+    price: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/),
+      Validators.min(1),
+    ]),
     sugerencia: new FormControl(false),
     images: new FormArray([
       new FormControl<File | null>(null, Validators.required),
@@ -143,6 +152,8 @@ export class CreateDishPage {
         sugerencia: data.sugerencia ?? false,
       });
 
+      await this._vibracion.confirmacion();
+
       const toastOk = await this._toastController.create({
         message: 'Plato creado correctamente.',
         duration: 3000,
@@ -154,6 +165,8 @@ export class CreateDishPage {
 
       this._router.navigateByUrl('/admin/dishes');
     } catch (error) {
+      await this._vibracion.error();
+
       const toast = await this._toastController.create({
         message:
           'No pudimos completar la acción. Intentá nuevamente más tarde.',

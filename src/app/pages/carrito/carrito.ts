@@ -6,20 +6,20 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class Carrito {
 
-  private _cantidades = signal<Record<number, number>>({});
+  private _cantidades = signal<Record<string, number>>({});
 
-  cantidadDe(idProducto: number): number {
+  cantidadDe(idProducto: string): number {
     return this._cantidades()[idProducto] ?? 0;
   }
 
-  agregar(idProducto: number): void {
+  agregar(idProducto: string): void {
     this._cantidades.update(actual => ({
       ...actual,
       [idProducto]: (actual[idProducto] ?? 0) + 1
     }));
   }
 
-  quitar(idProducto: number): void {
+  quitar(idProducto: string): void {
     this._cantidades.update(actual => {
       const cantidadActual = actual[idProducto] ?? 0;
 
