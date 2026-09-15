@@ -10,9 +10,9 @@
 
 <ion-content [fullscreen]="true">
   <div class="upload-container">
-    <app-uploader (fileSelected)="onPhotoSelected(0, $event)" />
-    <app-uploader (fileSelected)="onPhotoSelected(1, $event)" />
-    <app-uploader (fileSelected)="onPhotoSelected(2, $event)" />
+    <gtn-uploader (fileSelected)="onPhotoSelected(0, $event)" />
+    <gtn-uploader (fileSelected)="onPhotoSelected(1, $event)" />
+    <gtn-uploader (fileSelected)="onPhotoSelected(2, $event)" />
   </div>
 
   <form [formGroup]="form" class="fields">

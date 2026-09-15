@@ -1,12 +1,21 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonIcon } from '@ionic/angular';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonIcon,
+  IonButton,
+} from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { DrinkCardComponent } from './components/drink-card/drink-card.component';
-import { Drink } from '@app/services';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { Drink } from '@app/services/drink/drink';
 
 @Component({
   selector: 'app-drinks',
@@ -24,8 +33,9 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
     DrinkCardComponent,
     IonIcon,
     SkeletonCardComponent,
-    ConfirmVolverComponent
-],
+    ConfirmVolverComponent,
+    IonButton,
+  ],
 })
 export class DrinksPage implements OnInit {
   drinks = signal<any[]>([]);
@@ -45,7 +55,6 @@ export class DrinksPage implements OnInit {
     this.drinks.set(drinks);
   }
   volver(): void {
-    
     void this._router.navigate(['/admin']);
   }
 }
