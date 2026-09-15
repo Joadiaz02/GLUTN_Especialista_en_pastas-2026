@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
-import { CartaItem } from '../../models/carta.model';
+import { CartaItem, TipoCarta } from '../../models/carta.model';
 
 type NuevoPlato = Pick<
   CartaItem,
@@ -13,7 +13,7 @@ type NuevoPlato = Pick<
 @Injectable({ providedIn: 'root' })
 export class Plato {
   private _tableName = 'carta';
-  private _tipo = 'plato';
+  private _tipo: TipoCarta = 'plato';
   private _db = inject(SupabaseService);
 
   // El cocinero ve TODOS sus platos, incluidos los dados de baja
@@ -28,10 +28,12 @@ export class Plato {
     return data ?? [];
   }
 
-  async add(plato: NuevoPlato): Promise<CartaItem> {
+  // El cocinero carga platos y postres desde la misma pantalla; el
+  // checkbox "Es postre" del form solo cambia este tipo al guardar.
+  async add(plato: NuevoPlato, tipo: TipoCarta = this._tipo): Promise<CartaItem> {
     const { data, error } = await this._db.client
       .from(this._tableName)
-      .insert({ ...plato, tipo: this._tipo })
+      .insert({ ...plato, tipo })
       .select()
       .single();
 

@@ -74,6 +74,7 @@ export class CreateDishPage {
       Validators.min(1),
     ]),
     sugerencia: new FormControl(false),
+    esPostre: new FormControl(false),
     images: new FormArray([
       new FormControl<File | null>(null, Validators.required),
       new FormControl<File | null>(null, Validators.required),
@@ -131,16 +132,19 @@ export class CreateDishPage {
         data.images[2] as File
       );
 
-      await this._platoService.add({
-        nombre: data.title as string,
-        descripcion: data.description as string,
-        tiempo_elaboracion: Number(data.preparation),
-        precio: Number(data.price),
-        foto_1: foto1,
-        foto_2: foto2,
-        foto_3: foto3,
-        sugerencia: data.sugerencia ?? false,
-      });
+      await this._platoService.add(
+        {
+          nombre: data.title as string,
+          descripcion: data.description as string,
+          tiempo_elaboracion: Number(data.preparation),
+          precio: Number(data.price),
+          foto_1: foto1,
+          foto_2: foto2,
+          foto_3: foto3,
+          sugerencia: data.sugerencia ?? false,
+        },
+        data.esPostre ? 'postre' : 'plato'
+      );
 
       await this._vibracion.confirmacion();
 

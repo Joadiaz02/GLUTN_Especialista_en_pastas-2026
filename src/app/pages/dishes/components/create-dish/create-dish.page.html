@@ -2,6 +2,7 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <app-confirm-volver
+        variante="icono"
         titulo="¿Descartar el plato?"
         mensaje="Vas a perder los datos que cargaste hasta ahora."
         textoConfirmar="Descartar"
@@ -14,7 +15,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="create-dish-content">
+  <div class="create-dish-wrapper">
   <div class="upload-container">
     <app-uploader (fileSelected)="onPhotoSelected(0, $event)" />
     <app-uploader (fileSelected)="onPhotoSelected(1, $event)" />
@@ -118,7 +120,17 @@
         "Productos destacados" del inicio.
       </p>
     </div>
+
+    <div class="field field--checkbox">
+      <ion-checkbox formControlName="esPostre">
+        Es postre
+      </ion-checkbox>
+      <p class="field__hint">
+        Se va a guardar en la carta como postre en vez de como plato.
+      </p>
+    </div>
   </form>
+  </div>
 </ion-content>
 
 <ion-footer class="ion-no-border">

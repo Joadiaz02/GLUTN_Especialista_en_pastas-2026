@@ -1,20 +1,22 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import {
   IonContent,
   IonButton,
-  IonItem,
-  IonLabel,
-  IonDatetime,
   IonSkeletonText,
+  IonIcon,
   ToastController
 } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth/auth';
 import { Carta } from '@app/services';
 import { CartaItem } from '@app/models/carta.model';
 import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
 import { Carrito } from '../carrito/carrito';
+
+const DEMORA_FOTO_DESTACADO_MS = 3000;
 
 @Component({
   selector: 'app-home',
@@ -24,28 +26,23 @@ import { Carrito } from '../carrito/carrito';
   imports: [
     IonContent,
     IonButton,
-    IonItem,
-    IonLabel,
-    IonDatetime,
     IonSkeletonText,
+    IonIcon,
     CurrencyPipe,
     ConfirmDialogComponent
   ],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
 
   private authService = inject(Auth);
   private toastController = inject(ToastController);
   private cartaService = inject(Carta);
   private carrito = inject(Carrito);
 
-  constructor(private router: Router) {
-    // Calcular fecha máxima (1 mes exacto)
-    const now = new Date();
-    const nextMonth = new Date(now);
-    nextMonth.setMonth(now.getMonth() + 1);
+  private _fotoIntervalId: ReturnType<typeof setInterval> | null = null;
 
-    this.maxDate = nextMonth.toISOString().split('T')[0];
+  constructor(private router: Router) {
+    addIcons({ 'chevron-back-outline': chevronBackOutline, 'chevron-forward-outline': chevronForwardOutline });
   }
 
   async ngOnInit(): Promise<void> {
@@ -56,6 +53,10 @@ export class HomePage implements OnInit {
     this.isLoadingDestacados.set(false);
 
     this.destacados.set(destacados);
+  }
+
+  ngOnDestroy(): void {
+    this.detenerCicloFotos();
   }
 
   // ============================
@@ -70,19 +71,8 @@ export class HomePage implements OnInit {
 
   enMesa = false;
 
-  showReserva = false;
   showDestacados = false;
   showQuienesSomos = false;
-
-  // ============================
-  // FECHA Y HORA
-  // ============================
-
-  today = new Date().toISOString().split('T')[0];
-  maxDate: string;
-
-  fecha = '';
-  hora = '';
 
   // ============================
   // PRODUCTOS DESTACADOS (sugerencias de la carta)
@@ -90,6 +80,52 @@ export class HomePage implements OnInit {
 
   destacados = signal<CartaItem[]>([]);
   isLoadingDestacados = signal(false);
+
+  indiceDestacado = signal(0);
+  indiceFotoDestacado = signal(0);
+
+  productoDestacadoActual = computed<CartaItem | null>(
+    () => this.destacados()[this.indiceDestacado()] ?? null
+  );
+
+  fotoDestacadaActual = computed(() => {
+    const producto = this.productoDestacadoActual();
+    if (!producto) return '';
+
+    const fotos = [producto.foto_1, producto.foto_2, producto.foto_3];
+    return fotos[this.indiceFotoDestacado()];
+  });
+
+  siguienteDestacado(): void {
+    const total = this.destacados().length;
+    if (total < 2) return;
+
+    this.indiceDestacado.update((i) => (i + 1) % total);
+    this.indiceFotoDestacado.set(0);
+  }
+
+  anteriorDestacado(): void {
+    const total = this.destacados().length;
+    if (total < 2) return;
+
+    this.indiceDestacado.update((i) => (i - 1 + total) % total);
+    this.indiceFotoDestacado.set(0);
+  }
+
+  private iniciarCicloFotos(): void {
+    this.detenerCicloFotos();
+
+    this._fotoIntervalId = setInterval(() => {
+      this.indiceFotoDestacado.update((i) => (i + 1) % 3);
+    }, DEMORA_FOTO_DESTACADO_MS);
+  }
+
+  private detenerCicloFotos(): void {
+    if (this._fotoIntervalId !== null) {
+      clearInterval(this._fotoIntervalId);
+      this._fotoIntervalId = null;
+    }
+  }
 
   // ============================
   // LOGIN / LOGOUT
@@ -120,22 +156,21 @@ export class HomePage implements OnInit {
   // BOTONES PRINCIPALES
   // ============================
 
-  toggleReserva() {
-    this.showReserva = !this.showReserva;
-    this.showDestacados = false;
-    this.showQuienesSomos = false;
-  }
-
   toggleDestacados() {
     this.showDestacados = !this.showDestacados;
-    this.showReserva = false;
     this.showQuienesSomos = false;
+
+    if (this.showDestacados) {
+      this.iniciarCicloFotos();
+    } else {
+      this.detenerCicloFotos();
+    }
   }
 
   toggleQuienesSomos() {
     this.showQuienesSomos = !this.showQuienesSomos;
-    this.showReserva = false;
     this.showDestacados = false;
+    this.detenerCicloFotos();
   }
 
   // ============================
@@ -148,6 +183,10 @@ export class HomePage implements OnInit {
 
   goToJuegos() {
     this.router.navigate(['/juegos'], { state: { origenValido: true } });
+  }
+
+  goToReservas() {
+    this.router.navigate(['/reservas']);
   }
 
   goToChat() {
@@ -184,39 +223,4 @@ export class HomePage implements OnInit {
     await toast.present();
   }
 
-  // ============================
-  // RESERVA
-  // ============================
-
-  async solicitarReserva(): Promise<void> {
-    console.log('Reserva solicitada:', this.fecha, this.hora);
-
-    if (!this.fecha || !this.hora) {
-      const toastError = await this.toastController.create({
-        message: 'Por favor seleccioná fecha y hora para la reserva.',
-        duration: 3000,
-        position: 'top',
-        color: 'danger'
-      });
-      await toastError.present();
-      return;
-    }
-
-    this.enMesa = true;
-    localStorage.setItem('mesa', 'true');
-
-    const toastOk = await this.toastController.create({
-      message: 'Reserva enviada correctamente.',
-      duration: 3000,
-      position: 'top',
-      color: 'success'
-    });
-    await toastOk.present();
-  }
-
-  formatDate(value: string | string[] | null | undefined): string {
-    if (!value) return '';
-    if (Array.isArray(value)) return value[0] ?? '';
-    return value;
-  }
 }

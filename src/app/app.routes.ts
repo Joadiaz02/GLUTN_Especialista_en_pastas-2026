@@ -160,6 +160,30 @@ export const routes: Routes = [
       import('./pages/juegos/ta-te-ti/ta-te-ti.page').then((m) => m.TaTeTiPage),
   },
   {
+    path: 'reservas',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/reservas/reservas.page').then((m) => m.ReservasPage),
+  },
+  {
+    path: 'reservas/nueva',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/reservas/nueva-reserva/nueva-reserva.page').then((m) => m.NuevaReservaPage),
+  },
+  {
+    path: 'reservas/mis-reservas',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/reservas/mis-reservas/mis-reservas.page').then((m) => m.MisReservasPage),
+  },
+  {
     path: 'carta',
     loadComponent: () =>
       import('./pages/carta/carta.page').then((m) => m.CartaPage),

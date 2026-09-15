@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { ModalController, IonButton, IonIcon } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline } from 'ionicons/icons';
 import { ConfirmDialogComponent } from '../confirm-cartel/confirm-cartel.component';
 
 @Component({
@@ -16,11 +18,14 @@ export class ConfirmVolverComponent {
   @Input() colorConfirmar: 'danger' | 'primary' = 'danger';
   @Input() icono = 'assets/icons/arrow-left.svg';
   @Input() esContenidoModal = false;
+  @Input() variante: 'texto' | 'icono' = 'texto';
 
   @Output() confirmadoVolver = new EventEmitter<void>();
   constructor(
     private modalController: ModalController,
-  ) {}
+  ) {
+    addIcons({ 'arrow-back-outline': arrowBackOutline });
+  }
 
    async abrirConfirmacion() {
 
