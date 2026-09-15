@@ -1,0 +1,84 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        variante="icono"
+        titulo="¿Salir del ta-te-ti?"
+        [mensaje]="mensajeVolver()"
+        textoConfirmar="Salir"
+        colorConfirmar="danger"
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
+    </ion-buttons>
+    <ion-title>Ta-Te-Ti</ion-title>
+    <ion-buttons slot="end">
+      <app-confirm-dialog
+        titulo="¿Cerrar sesión?"
+        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+        textoConfirmar="Cerrar sesión"
+        icono="log-out-outline"
+        (confirmado)="cerrarSesion()"
+      ></app-confirm-dialog>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ta-te-ti-content">
+  <div class="ta-te-ti-wrapper">
+  <div class="logo-container">
+    <img
+      src="assets/images/LOGO-GLUTN.png"
+      alt="GLUTN - Especialista en Pastas"
+      class="logo"
+    />
+  </div>
+
+  <p class="ta-te-ti-subtitulo">
+    @if (estado() === 'jugando') {
+      {{ turnoPc() ? 'Le toca a la PC...' : mensajeEstado() }}
+    } @else {
+      @switch (resultadoTipo()) {
+        @case ('gana') {
+          @if (esClienteRegistrado()) {
+            🎉 ¡Ganaste 15% de descuento en tu cuenta!
+          } @else {
+            🎉 ¡Ganaste! Registrate para poder cobrar el descuento la próxima vez.
+          }
+        }
+        @case ('pierde') {
+          Esta vez ganó la PC. ¡Podés seguir jugando por diversión!
+        }
+        @case ('empate') {
+          Empataron — no gastaste tu oportunidad, ¡probá de nuevo!
+        }
+      }
+    }
+  </p>
+
+  <div class="ta-te-ti-tablero" [class.ta-te-ti-tablero--bloqueado]="estado() !== 'jugando' || turnoPc()">
+    @for (celda of celdas(); track $index) {
+      <button
+        type="button"
+        class="ta-te-ti-celda"
+        [class.ta-te-ti-celda--x]="celda === 'X'"
+        [class.ta-te-ti-celda--o]="celda === 'O'"
+        [disabled]="estado() !== 'jugando' || turnoPc() || celda !== null"
+        (click)="jugar($index)"
+      >
+        {{ celda }}
+      </button>
+    }
+  </div>
+
+  @if (estado() === 'resultado') {
+    <ion-button
+      class="ta-te-ti-boton"
+      expand="block"
+      shape="round"
+      (click)="jugarDeNuevo()"
+    >
+      {{ textoBoton() }}
+    </ion-button>
+  }
+  </div>
+</ion-content>

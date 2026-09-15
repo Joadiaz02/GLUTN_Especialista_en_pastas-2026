@@ -1,0 +1,37 @@
+<ion-content class="chat-bg">
+
+  <div class="chat-container">
+
+    <!-- LISTA DE MENSAJES -->
+    <div class="messages">
+      <div
+        *ngFor="let msg of mensajes"
+        [class.me]="msg.autorId === usuarioId"
+        class="message-bubble"
+      >
+        <div class="message-header">
+          <img [src]="msg.avatar" class="avatar" />
+          <span class="name">{{ msg.autor }}</span>
+          <span class="time">{{ msg.fecha | date:'shortTime' }}</span>
+        </div>
+
+        <div class="message-text">
+          {{ msg.texto }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INPUT ABAJO -->
+  <div class="chat-input">
+    <input
+      type="text"
+      [(ngModel)]="nuevoMensaje"
+      (keyup.enter)="enviarMensaje()"
+      placeholder="Escribí tu mensaje..."
+    />
+    <ion-button (click)="enviarMensaje()">Enviar</ion-button>
+  </div>
+
+</ion-content>

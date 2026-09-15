@@ -1,0 +1,95 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        variante="icono"
+        titulo="¿Salir de la sopa de letras?"
+        [mensaje]="mensajeVolver()"
+        textoConfirmar="Salir"
+        colorConfirmar="primary"
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
+    </ion-buttons>
+    <ion-title>Sopa de letras</ion-title>
+    <ion-buttons slot="end">
+      <app-confirm-dialog
+        titulo="¿Cerrar sesión?"
+        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+        textoConfirmar="Cerrar sesión"
+        icono="log-out-outline"
+        (confirmado)="cerrarSesion()"
+      ></app-confirm-dialog>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="sopa-content">
+  <div class="sopa-wrapper">
+    <div class="logo-container">
+      <img
+        src="assets/images/LOGO-GLUTN.png"
+        alt="GLUTN - Especialista en Pastas"
+        class="logo"
+      />
+    </div>
+
+    <p class="sopa-subtitulo">{{ mensajeEstado() }}</p>
+
+    <div class="sopa-info">
+      <p class="sopa-progreso">
+        {{ sopaLetras.palabrasEncontradas() }} / {{ sopaLetras.palabrasTotales() }} palabras
+      </p>
+      <p class="sopa-tiempo" [class.sopa-tiempo--urgente]="sopaLetras.tiempoRestante() <= 10 && !sopaLetras.juegoTerminado()">
+        ⏱ {{ tiempoFormateado() }}
+      </p>
+    </div>
+
+    <div
+      class="sopa-grilla"
+      [style.grid-template-columns]="'repeat(' + sopaLetras.tamanoGrilla + ', 1fr)'"
+    >
+      @for (fila of sopaLetras.grilla(); track $index; let f = $index) {
+        @for (letra of fila; track $index; let c = $index) {
+          <button
+            type="button"
+            class="sopa-celda"
+            [class.sopa-celda--seleccionada]="esCeldaInicio(f, c)"
+            [class.sopa-celda--iluminada]="sopaLetras.esCeldaIluminada(f, c)"
+            (click)="onCeldaClick(f, c)"
+          >
+            {{ letra }}
+          </button>
+        }
+      }
+    </div>
+
+    <div class="sopa-palabras">
+      @for (palabra of sopaLetras.palabras(); track palabra) {
+        <span class="sopa-palabra" [class.sopa-palabra--encontrada]="estaEncontrada(palabra)">
+          {{ palabra }}
+        </span>
+      }
+    </div>
+
+    @if (sopaLetras.juegoTerminado()) {
+      <p class="sopa-resultado" [class.sopa-resultado--pierde]="sopaLetras.perdioPorTiempo()">
+        @if (sopaLetras.perdioPorTiempo()) {
+          ⏱ ¡Se acabó el tiempo! Podés seguir jugando por diversión.
+        } @else if (esClienteRegistrado()) {
+          🎉 ¡Encontraste todas las palabras! Ganaste 10% de descuento en tu cuenta.
+        } @else {
+          🎉 ¡Encontraste todas las palabras! Registrate para poder cobrar el descuento la próxima vez.
+        }
+      </p>
+
+      <ion-button
+        class="sopa-boton"
+        expand="block"
+        shape="round"
+        (click)="jugarDeNuevo()"
+      >
+        Jugar de nuevo
+      </ion-button>
+    }
+  </div>
+</ion-content>

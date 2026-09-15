@@ -1,0 +1,40 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        titulo="¿Salir de Platos?"
+        mensaje="Vas a volver al panel de administración."
+        textoConfirmar="Salir"
+        colorConfirmar="primary"
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
+    </ion-buttons>
+
+    <ion-title>Platos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="dishes">
+    <button routerLink="create" class="dish-placeholder">
+      <ion-icon src="assets/icons/plus.svg"></ion-icon>
+    </button>
+
+    @if (!isLoading()) { @for (dish of dishes(); track dish.id_carta) {
+    <app-dish-card
+      [name]="dish.nombre"
+      [description]="dish.descripcion"
+      [price]="dish.precio"
+      [image]="dish.foto_1"
+      [sugerencia]="dish.sugerencia"
+      [bajaLogica]="dish.baja_logica"
+      (editar)="editar(dish)"
+      (destacar)="destacar(dish)"
+      (baja)="darDeBaja(dish)"
+      (reactivar)="reactivar(dish)"
+    ></app-dish-card>
+    } } @else { @for (i of [1, 2, 3, 4, 5]; track $index) {
+    <app-skeleton-card />
+    } }
+  </div>
+</ion-content>

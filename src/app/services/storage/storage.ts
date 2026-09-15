@@ -1,7 +1,7 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class Storage {
   private _supabaseService = inject(SupabaseService);
 

@@ -1,0 +1,159 @@
+.sopa-content {
+  --background: var(--ion-background-color);
+  --padding-top: 20px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-bottom: 24px;
+}
+
+.sopa-wrapper {
+  width: 100%;
+  // min-height: 100% (contra un contenedor de altura "auto" que scrollea)
+  // puede romper el cálculo de scroll de ion-content y cortar el final
+  // del contenido. 100vh es una referencia fija, así que nunca corta,
+  // como mucho deja un poco de aire de más abajo.
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logo-container {
+  width: 100px;
+  margin: 0 auto 12px auto;
+  background-color: var(--ion-color-primary);
+  padding: 12px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 100%;
+  display: block;
+}
+
+.sopa-subtitulo {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+.sopa-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 0 16px;
+}
+
+.sopa-progreso {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+  opacity: 0.85;
+  margin: 0;
+}
+
+.sopa-tiempo {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--ion-color-primary);
+  padding: 4px 10px;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.sopa-tiempo--urgente {
+  background: var(--ion-color-danger);
+  color: #ffffff;
+}
+
+.sopa-grilla {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  max-width: 230px;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 20px;
+}
+
+.sopa-celda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ion-color-light);
+  color: var(--ion-background-color);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.sopa-celda--seleccionada {
+  background: var(--ion-color-primary);
+  color: #ffffff;
+}
+
+.sopa-celda--iluminada {
+  background: var(--ion-color-primary);
+  color: #ffffff;
+}
+
+.sopa-palabras {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.sopa-palabra {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--ion-color-primary);
+  padding: 6px 12px;
+  border-radius: 10px;
+}
+
+.sopa-palabra--encontrada {
+  text-decoration: line-through;
+}
+
+.sopa-resultado {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ion-background-color);
+  background: var(--ion-color-primary);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0 0 16px;
+  line-height: 1.4;
+}
+
+.sopa-resultado--pierde {
+  color: #ffffff;
+  background: var(--ion-color-danger);
+}
+
+.sopa-boton {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 4px;
+  --background: var(--ion-color-primary);
+  --border-radius: 18px;
+  height: 52px;
+  font-size: 18px;
+  font-weight: 600;
+}

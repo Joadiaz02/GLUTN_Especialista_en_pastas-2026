@@ -1,59 +1,14 @@
-// .drink-card {
-//   display: flex;
-//   padding: 12px;
-//   border-radius: 12px;
-//   gap: 12px;
-//   background-color: #A8B68A;
-
-//   .drink-card__image {
-//     width: 75px;
-//     height: 75px;
-//     border-radius: 12px;
-//     object-fit: cover;
-//     background-color: rgba(0, 0, 0, 0.06);
-//   }
-
-//   .drink-card__info {
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: space-between;
-//     flex: 1;
-//   }
-
-//   .drink-card__details {
-//     display: flex;
-//     flex-direction: column;
-//     gap: 4px;
-//   }
-
-//   .drink-card__name {
-//     font-size: 14px;
-//     font-weight: 700;
-//     margin: 0;
-//     color: #2F3D24
-//   }
-  
-//   .drink-card__description {
-//     font-size: 14px;
-//     font-weight: 500;
-//     margin: 0;
-//     color: #4D5C3E
-//   }
-  
-//   .drink-card__price {
-//     font-size: 14px;
-//     font-weight: 700;
-//     color: var(--ion-color-primary);
-//   }
-// }
-
 .drink-card {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   padding: 12px;
   border-radius: 12px;
   background-color: #A8B68A;
   gap: 12px;
+
+  &--not-available {
+    opacity: 0.6;
+  }
 
   &__content {
     display: flex;
@@ -72,6 +27,21 @@
     border-radius: 12px;
     object-fit: cover;
     background-color: rgba(0, 0, 0, 0.06);
+
+    &--not-available {
+      filter: saturate(0);
+    }
+  }
+
+  .drink-card__badge {
+    align-self: flex-start;
+    background: var(--ion-color-danger);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 8px;
   }
 
   &__info {
@@ -116,7 +86,7 @@
 
   &__actions {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     gap: 12px;
   }
 

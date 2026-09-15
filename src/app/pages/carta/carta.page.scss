@@ -1,29 +1,20 @@
-.lista-productos {
+.carta-content {
+  --background: var(--ion-background-color);
+  --padding-top: 32px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+}
+
+.carta-titulo {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  margin-bottom: 32px;
+}
+
+.carta-botones {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.tarjeta-producto {
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 12px;
-}
-
-.fotos-producto {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-}
-
-.foto-individual {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
-}
-
-.precio {
-  font-weight: bold;
 }

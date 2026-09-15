@@ -14,7 +14,6 @@ import {
   IonTitle,
   IonToolbar,
   IonButtons,
-  IonBackButton,
   IonButton,
   IonFooter,
   ToastController,
@@ -22,7 +21,7 @@ import {
   IonSpinner,
 } from '@ionic/angular';
 import { UploaderComponent } from './uploader/uploader.component';
-import { Storage, Table } from '@app/services';
+import { Storage, Drink } from '@app/services';
 import { Router } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { GtnUploader } from '@app/components';
@@ -39,7 +38,6 @@ import { GtnUploader } from '@app/components';
     CommonModule,
     FormsModule,
     IonButtons,
-    IonBackButton,
     IonButton,
     IonFooter,
     IonInput,
@@ -55,7 +53,7 @@ export class CreateDrinkPage {
   isLoading = signal<boolean>(false);
 
   private _router = inject(Router);
-  private _tableService = inject(Table);
+  private _drinkService = inject(Drink);
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
 
@@ -107,7 +105,7 @@ export class CreateDrinkPage {
         data.images[2] as File
       );
 
-      await this._tableService.add({
+      await this._drinkService.add({
         nombre: data.title,
         descripcion: data.description,
         tiempo_elaboracion: data.preparation,

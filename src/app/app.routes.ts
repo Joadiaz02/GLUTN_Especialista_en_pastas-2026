@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 
-import { authGuard, staffGuard } from './guards/auth.guard';
+import { authGuard, staffGuard, roleGuard } from './guards/auth.guard';
+import { navegacionInternaGuard } from './guards/navegacion-interna.guard';
+import { EPerfilUsuario } from './enums';
 
 export const routes: Routes = [
   {
@@ -64,6 +66,8 @@ export const routes: Routes = [
   {
     path: 'home',
 
+    canActivate: [authGuard],
+
     loadComponent: () =>
       import('./pages/home/home.page').then((m) => m.HomePage),
   },
@@ -92,9 +96,107 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'admin/dishes',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/dishes/dishes.page').then((m) => m.DishesPage),
+  },
+  {
+    path: 'admin/dishes/create',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/dishes/components/create-dish/create-dish.page').then(
+        (m) => m.CreateDishPage
+      ),
+  },
+  {
+    path: 'admin/dishes/edit/:id',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/dishes/components/edit-dish/edit-dish.page').then(
+        (m) => m.EditDishPage
+      ),
+  },
+  {
+    path: 'juegos',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/juegos.page').then((m) => m.JuegosPage),
+  },
+  {
+    path: 'juegos/ruleta',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/ruleta/ruleta.page').then((m) => m.RuletaPage),
+  },
+  {
+    path: 'juegos/sopa-de-letras',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/sopa-letras/sopa-letras.page').then(
+        (m) => m.SopaLetrasPage
+      ),
+  },
+  {
+    path: 'juegos/ta-te-ti',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/ta-te-ti/ta-te-ti.page').then((m) => m.TaTeTiPage),
+  },
+  {
+    path: 'reservas',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/reservas/reservas.page').then((m) => m.ReservasPage),
+  },
+  {
+    path: 'reservas/nueva',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/reservas/nueva-reserva/nueva-reserva.page').then(
+        (m) => m.NuevaReservaPage
+      ),
+  },
+  {
+    path: 'reservas/mis-reservas',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/reservas/mis-reservas/mis-reservas.page').then(
+        (m) => m.MisReservasPage
+      ),
+  },
+  {
     path: 'carta',
     loadComponent: () =>
       import('./pages/carta/carta.page').then((m) => m.CartaPage),
+  },
+  {
+    path: 'carta/:tipo',
+    loadComponent: () =>
+      import('./pages/productos/productos.page').then((m) => m.ProductosPage),
   },
   {
     path: 'design-system',
@@ -102,5 +204,10 @@ export const routes: Routes = [
       import('./pages/design-system/design-system.page').then(
         (m) => m.DesignSystemPage
       ),
+  },
+  {
+    path: 'chat',
+    loadComponent: () =>
+      import('./pages/chat/chat.page').then((m) => m.ChatPage),
   },
 ];

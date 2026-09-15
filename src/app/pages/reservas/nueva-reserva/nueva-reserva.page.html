@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        variante="icono"
+        titulo="¿Descartar la reserva?"
+        mensaje="Vas a perder los datos que cargaste hasta ahora."
+        textoConfirmar="Descartar"
+        colorConfirmar="danger"
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
+    </ion-buttons>
+    <ion-title>{{ tituloPagina() }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="nueva-reserva-content">
+  <div class="nueva-reserva-wrapper">
+  <div class="logo-container">
+    <img
+      src="assets/images/LOGO-GLUTN.png"
+      alt="GLUTN - Especialista en Pastas"
+      class="logo"
+    />
+  </div>
+
+  <p class="nueva-reserva-subtitulo">Elegí el día y el horario para tu mesa</p>
+
+  <ion-item class="nueva-reserva-item">
+    <ion-label>Fecha</ion-label>
+    <ion-datetime
+      presentation="date"
+      [min]="today"
+      [max]="maxDate"
+      [value]="fecha"
+      (ionChange)="fecha = formatDate($event.detail.value)"
+    ></ion-datetime>
+  </ion-item>
+
+  <ion-item class="nueva-reserva-item">
+    <ion-label>Hora</ion-label>
+    <ion-datetime
+      presentation="time"
+      [minuteValues]="[0, 30]"
+      [value]="hora"
+      (ionChange)="hora = formatDate($event.detail.value)"
+    ></ion-datetime>
+  </ion-item>
+
+  <ion-button
+    class="nueva-reserva-boton"
+    expand="block"
+    shape="round"
+    (click)="confirmar()"
+  >
+    {{ textoBoton() }}
+  </ion-button>
+  </div>
+</ion-content>

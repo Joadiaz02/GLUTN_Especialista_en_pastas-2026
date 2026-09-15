@@ -1,23 +1,18 @@
-<!-- <div class="drink-card">
-  <img class="drink-card__image" [src]="image()" />
-
-  <div class="drink-card__info">
-    <div class="drink-card__details">
-      <h3 class="drink-card__name">{{ name() }}</h3>
-      <p class="drink-card__description">{{ description() }}</p>
-    </div>
-
-    <span class="drink-card__price">{{ price() | currency }}</span>
-  </div>
-</div> -->
-
-<div class="drink-card">
+<div class="drink-card" [class.drink-card--not-available]="available()">
   <div class="drink-card__content">
-    <img class="drink-card__image" [src]="image()" [alt]="name()" />
+    <img
+      class="drink-card__image"
+      [src]="image()"
+      [alt]="name()"
+      [class.drink-card__image--not-available]="available()"
+    />
 
     <div class="drink-card__info">
       <div class="drink-card__details">
         <h3 class="drink-card__name">{{ name() }}</h3>
+        @if (available()) {
+        <span class="drink-card__badge">Baja</span>
+        }
         <p class="drink-card__description">{{ description() }}</p>
       </div>
 
@@ -25,12 +20,11 @@
     </div>
   </div>
 
-  <hr class="drink-card__divider" />
-
   <div class="drink-card__actions">
+    @if (!available()) {
     <button
       class="drink-card__action-btn"
-      [class.drink-card__action-btn--active]="isFavorite()"
+      [class.drink-card__action-btn--active]="sugerencia()"
       (click)="onFavorite()"
     >
       <svg
@@ -106,6 +100,7 @@
         </g>
       </svg>
     </button>
+    }
 
     <button class="drink-card__action-btn" (click)="onDelete()">
       <svg

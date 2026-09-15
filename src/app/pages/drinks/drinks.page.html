@@ -15,13 +15,25 @@
     </button>
 
     @if (!isLoading()) { @for (drink of drinks(); track $index) {
-    <app-drink-card
+    <!-- <app-drink-card
       [id]="drink.id_carta"
       [name]="drink.nombre"
       [description]="drink.descripcion"
       [price]="drink.precio"
       [image]="drink.foto_1"
-    ></app-drink-card>
+      [sugerencia]="drink.sugerencia"
+      [available]="drink.baja_logica"
+    ></app-drink-card> -->
+    <app-menu-card
+      [id]="drink.id_carta"
+      [name]="drink.nombre"
+      [description]="drink.descripcion"
+      [price]="drink.precio"
+      [image]="drink.foto_1"
+      [suggested]="drink.sugerencia"
+      [disabled]="drink.baja_logica"
+      [editLink]="['edit', drink.id_carta]"
+    />
     } } @else { @for (i of [1, 2, 3, 4, 5]; track $index) {
     <app-skeleton-card />
     } }

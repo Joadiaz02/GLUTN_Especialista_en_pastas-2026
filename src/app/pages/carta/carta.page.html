@@ -1,23 +1,25 @@
-<div >
-  <h1>Carta</h1>
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <div class="lista-productos">
-    @for (producto of productos; track producto.id) {
-      <div class="tarjeta-producto">
+<ion-content class="carta-content">
+  <h1 class="carta-titulo">Nuestra Carta</h1>
 
-        <div class="fotos-producto">
-          @for (foto of producto.fotos; track foto) {
-            <img [src]="foto" [alt]="producto.nombre" class="foto-individual">
-          }
-        </div>
+  <div class="carta-botones">
+    <ion-button expand="block" shape="round" (click)="irA('plato')">
+      Platos
+    </ion-button>
 
-        <h3>{{ producto.nombre }}</h3>
-        <p class="descripcion">{{ producto.descripcion }}</p>
-        <p class="precio">${{ producto.precio }}</p>
-        <p class="tiempo">⏱ {{ producto.tiempoElaboracion }} min</p>
+    <ion-button expand="block" shape="round" (click)="irA('bebida')">
+      Bebidas
+    </ion-button>
 
-      </div>
-    }
+    <ion-button expand="block" shape="round" (click)="irA('postre')">
+      Postres
+    </ion-button>
   </div>
-
-</div>
+</ion-content>

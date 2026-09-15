@@ -13,10 +13,10 @@ import {
 } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { DrinkCardComponent } from './components/drink-card/drink-card.component';
-import { Table } from '@app/services';
+import { Drink } from '@app/services';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-import { Drink } from '@app/services/drink/drink';
+import { MenuCardComponent } from '@app/components';
 
 @Component({
   selector: 'app-drinks',
@@ -30,13 +30,13 @@ import { Drink } from '@app/services/drink/drink';
     CommonModule,
     FormsModule,
     IonButtons,
-    IonBackButton,
     RouterLink,
     DrinkCardComponent,
     IonIcon,
     SkeletonCardComponent,
     ConfirmVolverComponent,
     IonButton,
+    MenuCardComponent,
   ],
 })
 export class DrinksPage implements OnInit {

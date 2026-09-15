@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Confirm } from '@app/services';
 
 @Component({
   selector: 'app-drink-card',
@@ -14,6 +15,8 @@ export class DrinkCardComponent {
   description = input<string>();
   price = input<number>();
   image = input<string>();
+  sugerencia = input<boolean>();
+  available = input<boolean>();
 
   tagText = input<string>();
   sizeText = input<string>();
@@ -24,10 +27,22 @@ export class DrinkCardComponent {
   editClick = output<void>();
   deleteClick = output<void>();
 
-  // private _confirm = inject(Confirm);
+  private _confirm = inject(Confirm);
 
-  onFavorite() {
-    this.favoriteClick.emit();
+  async onFavorite() {
+    const activar = !this.sugerencia();
+
+    const confirmado = await this._confirm.preguntar({
+      titulo: activar ? '¿Marcar como destacado?' : '¿Quitar de destacados?',
+      mensaje: activar
+        ? `"${this.name()}" va a aparecer en el slide de productos destacados del inicio.`
+        : `"${this.name()}" va a dejar de aparecer en el slide de productos destacados del inicio.`,
+      textoConfirmar: activar ? 'Destacar' : 'Quitar',
+      colorConfirmar: 'primary',
+      icono: activar ? 'star' : 'star-outline',
+    });
+
+    console.log(confirmado);
   }
 
   onEdit() {
@@ -35,13 +50,15 @@ export class DrinkCardComponent {
   }
 
   async onDelete() {
-    // const confirmado = await this._confirm.preguntar({
-    //   titulo: '¿Dar de baja el plato?',
-    //   mensaje: `"${this.name()}" va a dejar de verse en la carta. Vas a poder reactivarlo cuando quieras.`,
-    //   textoConfirmar: 'Dar de baja',
-    //   colorConfirmar: 'danger',
-    //   icono: 'trash-outline',
-    // });
+    const confirm = await this._confirm.preguntar({
+      titulo: '¿Dar de baja la bebida?',
+      mensaje: `"${this.name()}" va a dejar de verse en la carta. Vas a poder reactivarlo cuando quieras.`,
+      textoConfirmar: 'Dar de baja',
+      colorConfirmar: 'danger',
+      icono: 'trash-outline',
+    });
+
+    console.log(confirm);
 
     // if (!confirmado) return;
 
