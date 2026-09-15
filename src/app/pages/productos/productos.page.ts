@@ -1,15 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  IonContent,
-  IonSearchbar,
-  IonIcon,
-  IonBackButton,
-  IonButtons,
-  IonToolbar,
-  IonHeader
-} from '@ionic/angular';
+import { IonContent, IonSearchbar, IonIcon, IonBackButton, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 
@@ -38,13 +30,14 @@ const TITULOS: Record<TipoCarta, string> = {
     IonBackButton,
     IonSearchbar,
     IonIcon,
-    SpinnerLogoComponent
-  ],
+    SpinnerLogoComponent,
+    IonRouterLink,
+    IonButton
+],
 })
 export class ProductosPage implements OnInit {
 
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
   private carrito = inject(Carrito);
   private cartaService = inject(Carta);
 
@@ -110,8 +103,13 @@ export class ProductosPage implements OnInit {
     }
   }
 
+
   agregarAlCarrito(producto: CartaItem): void {
     this.carrito.agregar(producto.id_carta);
+  }
+
+  quitarAlcarrito(producto: CartaItem):void{
+    this.carrito.quitar(producto.id_carta);
   }
 
   cantidadEnCarrito(producto: CartaItem): number {
