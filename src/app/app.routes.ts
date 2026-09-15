@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { authGuard, staffGuard, roleGuard } from './guards/auth.guard';
+import { navegacionInternaGuard } from './guards/navegacion-interna.guard';
 import { EPerfilUsuario } from './enums';
 
 export const routes: Routes = [
@@ -125,6 +126,30 @@ export const routes: Routes = [
       import('./pages/dishes/components/edit-dish/edit-dish.page').then(
         (m) => m.EditDishPage
       ),
+  },
+  {
+    path: 'juegos',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/juegos.page').then((m) => m.JuegosPage),
+  },
+  {
+    path: 'juegos/ruleta',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/ruleta/ruleta.page').then((m) => m.RuletaPage),
+  },
+  {
+    path: 'juegos/sopa-de-letras',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/sopa-letras/sopa-letras.page').then((m) => m.SopaLetrasPage),
   },
   {
     path: 'carta',

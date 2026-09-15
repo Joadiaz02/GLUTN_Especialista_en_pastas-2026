@@ -1,0 +1,109 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        titulo="¿Salir de la ruleta?"
+        [mensaje]="mensajeVolver()"
+        textoConfirmar="Salir"
+        colorConfirmar="danger"
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
+    </ion-buttons>
+    <ion-title>Ruleta</ion-title>
+    <ion-buttons slot="end">
+      <app-confirm-dialog
+        titulo="¿Cerrar sesión?"
+        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+        textoConfirmar="Cerrar sesión"
+        icono="log-out-outline"
+        (confirmado)="cerrarSesion()"
+      ></app-confirm-dialog>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ruleta-content">
+  <div class="ruleta-wrapper">
+  <div class="logo-container">
+    <img
+      src="assets/images/LOGO-GLUTN.png"
+      alt="GLUTN - Especialista en Pastas"
+      class="logo"
+    />
+  </div>
+
+  <p class="ruleta-subtitulo">{{ mensajeEstado() }}</p>
+
+  <div class="ruleta-contenedor">
+    <div class="ruleta-puntero"></div>
+
+    <div
+      class="ruleta-rueda"
+      [style.background]="'conic-gradient(' + gradienteRuleta + ')'"
+      [style.transform]="transformRueda()"
+      [style.transition]="transitionRueda()"
+      (transitionend)="onTransitionEnd($event)"
+    >
+      @for (sector of sectores; track sector.desde) {
+        <span
+          class="ruleta-etiqueta"
+          [style.transform]="'rotate(' + (sector.desde + 18) + 'deg)'"
+        >
+          <span class="ruleta-etiqueta__simbolo" [style.color]="sector.colorTexto">
+            {{ sector.simbolo }}
+          </span>
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="ruleta-leyenda">
+    <span class="ruleta-leyenda__item">
+      <span class="ruleta-leyenda__icono" style="background: #E76F45;">✓</span>
+      Ganaste
+    </span>
+    <span class="ruleta-leyenda__item">
+      <span class="ruleta-leyenda__icono" style="background: #8CA273;">✗</span>
+      Perdiste
+    </span>
+    <span class="ruleta-leyenda__item">
+      <span class="ruleta-leyenda__icono" style="background: #D5E0C9; color: #657A4D;">↻</span>
+      Reintentá
+    </span>
+  </div>
+
+  @if (estado() === 'resultado') {
+    <p
+      class="ruleta-resultado"
+      [class.ruleta-resultado--gana]="resultadoTipo() === 'gana'"
+      [class.ruleta-resultado--pierde]="resultadoTipo() === 'pierde'"
+    >
+      @switch (resultadoTipo()) {
+        @case ('gana') {
+          @if (esClienteRegistrado()) {
+            🎉 ¡Ganaste 20% de descuento en tu cuenta!
+          } @else {
+            🎉 ¡Ganaste! Registrate para poder cobrar el descuento la próxima vez.
+          }
+        }
+        @case ('pierde') {
+          Esta vez no ganaste. ¡Podés seguir jugando por diversión!
+        }
+        @case ('reintenta') {
+          Te tocó "Volvé a intentar" — no gastaste tu oportunidad, ¡probá de nuevo!
+        }
+      }
+    </p>
+  }
+
+  <ion-button
+    class="ruleta-boton"
+    expand="block"
+    shape="round"
+    [disabled]="estado() === 'frenando'"
+    (click)="onBotonClick()"
+  >
+    {{ textoBoton() }}
+  </ion-button>
+  </div>
+</ion-content>

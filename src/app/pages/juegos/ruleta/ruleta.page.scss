@@ -1,0 +1,156 @@
+.ruleta-content {
+  --background: var(--ion-background-color);
+  --padding-top: 20px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-bottom: 24px;
+}
+
+// El wrapper ocupa siempre el 100% del ancho/alto disponibles del
+// ion-content (sin importar el tamaño de pantalla) y centra todo el
+// juego, tanto horizontal como verticalmente.
+// Ojo: min-height: 100% (contra un contenedor de altura "auto" que
+// scrollea) puede romper el cálculo de scroll de ion-content y cortar
+// el final del contenido. 100vh es una referencia fija, nunca corta.
+.ruleta-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.logo-container {
+  width: 110px;
+  margin: 0 auto 16px auto;
+  background-color: var(--ion-color-primary);
+  padding: 14px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 100%;
+  display: block;
+}
+
+.ruleta-subtitulo {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+  margin: 0 0 24px;
+  line-height: 1.4;
+}
+
+.ruleta-contenedor {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin-bottom: 20px;
+}
+
+.ruleta-puntero {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 22px solid var(--ion-text-color);
+  z-index: 2;
+}
+
+.ruleta-rueda {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 6px solid var(--ion-color-light);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.ruleta-etiqueta {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  transform-origin: 50% 50%;
+}
+
+.ruleta-etiqueta__simbolo {
+  margin-top: 22px;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.ruleta-leyenda {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.ruleta-leyenda__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+.ruleta-leyenda__icono {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.ruleta-resultado {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  background: var(--ion-color-light);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0 0 20px;
+  line-height: 1.4;
+}
+
+.ruleta-resultado--gana {
+  color: var(--ion-background-color);
+  background: var(--ion-color-primary);
+}
+
+.ruleta-resultado--pierde {
+  color: #ffffff;
+  background: var(--ion-color-danger);
+}
+
+.ruleta-boton {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 12px;
+  --background: var(--ion-color-primary);
+  --border-radius: 18px;
+  height: 52px;
+  font-size: 18px;
+  font-weight: 600;
+}

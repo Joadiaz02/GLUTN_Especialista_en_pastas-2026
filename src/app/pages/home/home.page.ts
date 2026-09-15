@@ -146,6 +146,10 @@ export class HomePage implements OnInit {
     this.router.navigate(['/carta']);
   }
 
+  goToJuegos() {
+    this.router.navigate(['/juegos'], { state: { origenValido: true } });
+  }
+
   goToChat() {
     if (this.enMesa) {
       this.router.navigate(['/chat']);
