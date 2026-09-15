@@ -27,12 +27,12 @@ export const routes: Routes = [
   },
 
   {
-  path: 'acceso_rapido',
+    path: 'acceso_rapido',
 
-  loadComponent: () =>
-    import('./pages/quick-access/quick-access.page').then(
-      (m) => m.QuickAccessPage,
-    ),
+    loadComponent: () =>
+      import('./pages/quick-access/quick-access.page').then(
+        (m) => m.QuickAccessPage
+      ),
   },
 
   {
@@ -40,7 +40,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/guest/guest.page').then((m) => m.GuestPage),
   },
-  
 
   {
     path: 'seleccion-acceso',
@@ -86,7 +85,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'admin/drinks/edit',
+    path: 'admin/drinks/edit/:id',
     loadComponent: () =>
       import('./pages/drinks/components/edit-drink/edit-drink.page').then(
         (m) => m.EditDrinkPage
@@ -96,8 +95,8 @@ export const routes: Routes = [
     path: 'carta',
     loadComponent: () =>
       import('./pages/carta/carta.page').then((m) => m.CartaPage),
-    },
-    {
+  },
+  {
     path: 'design-system',
     loadComponent: () =>
       import('./pages/design-system/design-system.page').then(

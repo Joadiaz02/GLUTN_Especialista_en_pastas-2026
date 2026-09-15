@@ -1,1 +1,2 @@
-export * from './avatar/avatar.component';
+export * from './avatar';
+export * from './uploader';

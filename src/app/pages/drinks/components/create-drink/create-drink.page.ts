@@ -25,6 +25,7 @@ import { UploaderComponent } from './uploader/uploader.component';
 import { Storage, Table } from '@app/services';
 import { Router } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { GtnUploader } from '@app/components';
 
 @Component({
   selector: 'app-create-drink',
@@ -43,10 +44,10 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
     IonFooter,
     IonInput,
     ReactiveFormsModule,
-    UploaderComponent,
+    GtnUploader,
     IonSpinner,
-    ConfirmVolverComponent
-],
+    ConfirmVolverComponent,
+  ],
 })
 export class CreateDrinkPage {
   uploading = signal(false);
@@ -71,7 +72,6 @@ export class CreateDrinkPage {
   });
 
   volver(): void {
-    
     void this._router.navigate(['/admin/drinks']);
   }
 
