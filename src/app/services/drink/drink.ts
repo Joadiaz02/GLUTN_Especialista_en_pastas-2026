@@ -12,6 +12,16 @@ export class Drink {
     return data ?? [];
   }
 
+  async getById(id: string) {
+    const { data } = await this._db.client
+      .from(this._tableName)
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    return data ?? null;
+  }
+
   async add(table: any): Promise<any> {
     const { data, error } = await this._db.client
       .from(this._tableName)

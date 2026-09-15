@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { IonIcon, ModalController, ToastController } from '@ionic/angular';
 import { UploadOptionsComponent } from './upload-options/upload-options.component';
 import { Camera, MediaResult } from '@capacitor/camera';
@@ -14,9 +14,14 @@ export class UploaderComponent {
   photoPreview = signal<string | null>(null);
 
   fileSelected = output<File>();
+  image = input<string | null>(null);
 
   private _toastController = inject(ToastController);
   private _modalController = inject(ModalController);
+
+  ngOnInit() {
+    this.photoPreview.set(this.image());
+  }
 
   async open() {
     const modal = await this._modalController.create({

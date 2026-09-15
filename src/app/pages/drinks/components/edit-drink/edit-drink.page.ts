@@ -21,7 +21,7 @@ import {
   IonCheckbox,
 } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Storage } from '@app/services';
+import { Drink, Storage } from '@app/services';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { GtnUploader } from '@app/components';
 
@@ -48,17 +48,22 @@ import { GtnUploader } from '@app/components';
 })
 export class EditDrinkPage {
   isLoading = signal<boolean>(false);
-  isLoadingPlato = signal<boolean>(true);
+
+  isLoadingDrink = signal<boolean>(true);
 
   fotoActual1 = signal<string | null>(null);
   fotoActual2 = signal<string | null>(null);
   fotoActual3 = signal<string | null>(null);
+
+  drink = signal<any>(null);
 
   private _id = '';
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
+
+  private _drinkService = inject(Drink);
 
   form = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -82,8 +87,16 @@ export class EditDrinkPage {
   });
 
   async ngOnInit(): Promise<void> {
-    // this._id = this._route.snapshot.paramMap.get('id') ?? '';
-    // const plato = this._id ? await this._platoService.getById(this._id) : null;
+    const id = this._route.snapshot.paramMap.get('id') ?? '';
+
+    const drink = await this._drinkService.getById(id)!;
+
+    this.drink.set(drink);
+
+    this.isLoadingDrink.set(false);
+
+    console.log(drink);
+
     // if (!plato) {
     //   this._router.navigateByUrl('/admin/dishes');
     //   return;
