@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -24,6 +24,8 @@ const TITULOS: Record<TipoCarta, string> = {
   postre: 'Postres'
 };
 
+const DEMORA_FOTO_MS = 3000;
+
 @Component({
   selector: 'app-productos',
   standalone: true,
@@ -41,12 +43,14 @@ const TITULOS: Record<TipoCarta, string> = {
     SpinnerLogoComponent
   ],
 })
-export class ProductosPage implements OnInit {
+export class ProductosPage implements OnInit, OnDestroy {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private carrito = inject(Carrito);
   private cartaService = inject(Carta);
+
+  private _fotoIntervalId: ReturnType<typeof setInterval> | null = null;
 
   // El tipo viene de la URL: /carta/plato, /carta/bebida, /carta/postre
   tipo = signal<TipoCarta>(
@@ -76,6 +80,16 @@ export class ProductosPage implements OnInit {
     return lista[indice] ?? null;
   });
 
+  indiceFoto = signal(0);
+
+  fotoActual = computed(() => {
+    const producto = this.productoActual();
+    if (!producto) return '';
+
+    const fotos = [producto.foto_1, producto.foto_2, producto.foto_3];
+    return fotos[this.indiceFoto()];
+  });
+
   hayAnterior = computed(() => this.indiceActual() > 0);
   haySiguiente = computed(() => this.indiceActual() < this.productosFiltrados().length - 1);
 
@@ -91,22 +105,46 @@ export class ProductosPage implements OnInit {
     this.isLoading.set(false);
 
     this.productos.set(productos);
+
+    this.iniciarCicloFotos();
+  }
+
+  ngOnDestroy(): void {
+    this.detenerCicloFotos();
+  }
+
+  private iniciarCicloFotos(): void {
+    this.detenerCicloFotos();
+
+    this._fotoIntervalId = setInterval(() => {
+      this.indiceFoto.update(i => (i + 1) % 3);
+    }, DEMORA_FOTO_MS);
+  }
+
+  private detenerCicloFotos(): void {
+    if (this._fotoIntervalId !== null) {
+      clearInterval(this._fotoIntervalId);
+      this._fotoIntervalId = null;
+    }
   }
 
   onBuscar(texto: string): void {
     this.textoBusqueda.set(texto);
     this.indiceActual.set(0); // al buscar, siempre arrancamos desde el primer resultado
+    this.indiceFoto.set(0);
   }
 
   siguiente(): void {
     if (this.haySiguiente()) {
       this.indiceActual.update(i => i + 1);
+      this.indiceFoto.set(0);
     }
   }
 
   anterior(): void {
     if (this.hayAnterior()) {
       this.indiceActual.update(i => i - 1);
+      this.indiceFoto.set(0);
     }
   }
 

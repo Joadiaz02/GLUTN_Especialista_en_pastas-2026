@@ -21,6 +21,15 @@ export const ADMIN_MODULES: AdminModule[] = [
   },
 
   {
+    id: 'postres',
+    title: 'Postres',
+    description: 'Gestionar los postres del menú',
+    icon: 'ice-cream-outline',
+    roles: [EPerfilUsuario.Cocinero],
+    path: 'postres',
+  },
+
+  {
     id: 'bebidas',
     title: 'Bebidas',
     description: 'Gestionar las bebidas del menú',

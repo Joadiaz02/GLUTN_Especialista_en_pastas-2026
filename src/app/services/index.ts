@@ -4,6 +4,7 @@ export * from './drink';
 export * from './storage';
 export * from './drink';
 export * from './plato';
+export * from './postre';
 export * from './carta';
 export * from './confirm';
 export * from './vibracion';
