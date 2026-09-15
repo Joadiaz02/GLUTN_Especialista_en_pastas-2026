@@ -44,7 +44,7 @@ export class JuegosPage {
 
   juegos: JuegoDisponible[] = [
     { nombre: 'Ruleta', porcentaje: 20, ruta: '/juegos/ruleta', disponible: true },
-    { nombre: 'Ahorcado', porcentaje: 15, ruta: '/juegos/ahorcado', disponible: false },
+    { nombre: 'Ta-Te-Ti', porcentaje: 15, ruta: '/juegos/ta-te-ti', disponible: true },
     { nombre: 'Sopa de letras', porcentaje: 10, ruta: '/juegos/sopa-de-letras', disponible: true },
   ];
 

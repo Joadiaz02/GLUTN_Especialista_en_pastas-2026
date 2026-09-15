@@ -152,6 +152,14 @@ export const routes: Routes = [
       import('./pages/juegos/sopa-letras/sopa-letras.page').then((m) => m.SopaLetrasPage),
   },
   {
+    path: 'juegos/ta-te-ti',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/ta-te-ti/ta-te-ti.page').then((m) => m.TaTeTiPage),
+  },
+  {
     path: 'carta',
     loadComponent: () =>
       import('./pages/carta/carta.page').then((m) => m.CartaPage),
