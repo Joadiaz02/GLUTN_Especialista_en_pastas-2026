@@ -108,13 +108,13 @@ export class CreateDrinkPage {
       );
 
       await this._tableService.add({
-        titulo: data.title,
+        nombre: data.title,
         descripcion: data.description,
-        tiempo_estimado: data.preparation,
+        tiempo_elaboracion: data.preparation,
         precio: data.price,
-        imagen_1: image01,
-        imagen_2: image02,
-        imagen_3: image03,
+        foto_1: image01,
+        foto_2: image02,
+        foto_3: image03,
       });
 
       this._router.navigateByUrl('/admin/drinks');

@@ -9,22 +9,22 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  @if (isLoadingDrink()) {
+  @if (drink()) { @if (isLoadingDrink()) {
   <div class="carga-plato">
     <!-- <app-spinner-logo /> -->
   </div>
   } @else {
   <div class="upload-container">
     <gtn-uploader
-      [image]="drink().imagen_1"
+      [image]="drink().foto_1"
       (fileSelected)="onPhotoSelected(0, $event)"
     />
     <gtn-uploader
-      [image]="drink().imagen_2"
+      [image]="drink().foto_2"
       (fileSelected)="onPhotoSelected(1, $event)"
     />
     <gtn-uploader
-      [image]="drink().imagen_3"
+      [image]="drink().foto_3"
       (fileSelected)="onPhotoSelected(2, $event)"
     />
   </div>
@@ -38,6 +38,7 @@
         class="field__input"
         placeholder="Nombre"
         formControlName="title"
+        [value]="drink().titulo"
       />
 
       @if ( getFormControl('title')?.invalid &&
@@ -130,7 +131,7 @@
       </p>
     </div>
   </form>
-  }
+  } }
 </ion-content>
 
 <ion-footer class="ion-no-border">
@@ -142,7 +143,7 @@
       (click)="confirmarYGuardar()"
     >
       <!-- @if (isLoading()) { <app-spinner-logo size="sm" /> }  -->
-      Guardar cambios
+      Guardar
     </ion-button>
   </div>
 </ion-footer>

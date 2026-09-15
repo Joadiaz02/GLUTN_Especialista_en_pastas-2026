@@ -16,11 +16,11 @@
 
     @if (!isLoading()) { @for (drink of drinks(); track $index) {
     <app-drink-card
-      [name]="drink.titulo"
+      [id]="drink.id_carta"
+      [name]="drink.nombre"
       [description]="drink.descripcion"
       [price]="drink.precio"
-      [image]="drink.imagen_1"
-      [routerLink]="['edit', drink.id]"
+      [image]="drink.foto_1"
     ></app-drink-card>
     } } @else { @for (i of [1, 2, 3, 4, 5]; track $index) {
     <app-skeleton-card />

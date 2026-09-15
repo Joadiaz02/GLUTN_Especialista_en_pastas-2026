@@ -3,11 +3,14 @@ import { SupabaseService } from '../supabase.service';
 
 @Service()
 export class Drink {
-  private _tableName = 'bebidas';
+  private _tableName = 'carta';
   private _db = inject(SupabaseService);
 
   async getList(): Promise<any[]> {
-    const { data } = await this._db.client.from(this._tableName).select('*');
+    const { data } = await this._db.client
+      .from(this._tableName)
+      .select('*')
+      .eq('tipo', 'bebida');
 
     return data ?? [];
   }
@@ -16,7 +19,7 @@ export class Drink {
     const { data } = await this._db.client
       .from(this._tableName)
       .select('*')
-      .eq('id', id)
+      .eq('id_carta', id)
       .maybeSingle();
 
     return data ?? null;

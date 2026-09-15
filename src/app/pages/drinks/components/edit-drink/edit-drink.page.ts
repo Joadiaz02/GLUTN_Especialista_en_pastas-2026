@@ -49,7 +49,7 @@ import { GtnUploader } from '@app/components';
 export class EditDrinkPage {
   isLoading = signal<boolean>(false);
 
-  isLoadingDrink = signal<boolean>(true);
+  isLoadingDrink = signal<boolean>(false);
 
   fotoActual1 = signal<string | null>(null);
   fotoActual2 = signal<string | null>(null);
@@ -91,28 +91,18 @@ export class EditDrinkPage {
 
     const drink = await this._drinkService.getById(id)!;
 
-    this.drink.set(drink);
-
-    this.isLoadingDrink.set(false);
-
     console.log(drink);
 
-    // if (!plato) {
-    //   this._router.navigateByUrl('/admin/dishes');
-    //   return;
-    // }
-    // this.form.setValue({
-    //   title: plato.nombre,
-    //   description: plato.descripcion,
-    //   preparation: String(plato.tiempo_elaboracion),
-    //   price: String(plato.precio),
-    //   sugerencia: plato.sugerencia,
-    //   images: [null, null, null],
-    // });
-    // this.fotoActual1.set(plato.foto_1);
-    // this.fotoActual2.set(plato.foto_2);
-    // this.fotoActual3.set(plato.foto_3);
-    // this.isLoadingPlato.set(false);
+    this.drink.set(drink);
+
+    this.form.setValue({
+      title: drink.nombre,
+      description: drink.descripcion,
+      preparation: String(drink.tiempo_elaboracion),
+      price: String(drink.precio),
+      sugerencia: drink.sugerencia,
+      images: [null, null, null],
+    });
   }
 
   getFormControl(controlName: string) {
