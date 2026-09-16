@@ -8,6 +8,7 @@
 </ion-header>
 
 <ion-content class="productos-content">
+  <div class="productos-wrapper">
 
   <ion-searchbar
     placeholder="Buscar en {{ titulo() | lowercase }}"
@@ -49,7 +50,7 @@
         </button>
       }
 
-      <img class="producto-imagen" [src]="producto.foto_1" [alt]="producto.nombre" />
+      <img class="producto-imagen" [src]="fotoActual()" [alt]="producto.nombre" />
 
       <div class="producto-info">
         <h2 class="producto-nombre">{{ producto.nombre }}</h2>
@@ -76,4 +77,5 @@
     </div>
   }
 
+  </div>
 </ion-content>

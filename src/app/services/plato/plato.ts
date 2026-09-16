@@ -28,12 +28,10 @@ export class Plato {
     return data ?? [];
   }
 
-  // El cocinero carga platos y postres desde la misma pantalla; el
-  // checkbox "Es postre" del form solo cambia este tipo al guardar.
-  async add(plato: NuevoPlato, tipo: TipoCarta = this._tipo): Promise<CartaItem> {
+  async add(plato: NuevoPlato): Promise<CartaItem> {
     const { data, error } = await this._db.client
       .from(this._tableName)
-      .insert({ ...plato, tipo })
+      .insert({ ...plato, tipo: this._tipo })
       .select()
       .single();
 

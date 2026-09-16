@@ -9,4 +9,73 @@
 
 .fields {
   margin-top: 16px;
+
+  &__row {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.field {
+  margin-bottom: 16px;
+
+  &__label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  &__input {
+    width: 100%;
+  }
+
+  &__error {
+    color: var(--ion-color-danger);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  &--checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+.toggle-group {
+  margin-bottom: 20px;
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__row-label {
+    font-size: 16px;
+    color: #D5E0C9;
+  }
+
+  &__hint {
+    color: #D5E0C9;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+}
+
+.footer-actions {
+  padding: 12px 16px;
+}
+
+.carga-plato {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
 }

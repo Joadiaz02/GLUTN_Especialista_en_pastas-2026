@@ -2,7 +2,6 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <app-confirm-volver
-        variante="icono"
         titulo="¿Descartar el plato?"
         mensaje="Vas a perder los datos que cargaste hasta ahora."
         textoConfirmar="Descartar"
@@ -91,7 +90,7 @@
         <ion-input
           type="text"
           inputmode="numeric"
-          maxlength="6"
+          maxlength="9"
           fill="outline"
           class="field__input"
           placeholder="Precio"
@@ -118,15 +117,6 @@
       <p class="field__hint">
         Los platos marcados como sugerencia aparecen en el slide de
         "Productos destacados" del inicio.
-      </p>
-    </div>
-
-    <div class="field field--checkbox">
-      <ion-checkbox formControlName="esPostre">
-        Es postre
-      </ion-checkbox>
-      <p class="field__hint">
-        Se va a guardar en la carta como postre en vez de como plato.
       </p>
     </div>
   </form>

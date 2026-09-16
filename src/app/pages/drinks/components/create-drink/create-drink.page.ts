@@ -19,8 +19,8 @@ import {
   ToastController,
   IonInput,
   IonSpinner,
+  IonToggle,
 } from '@ionic/angular';
-import { UploaderComponent } from './uploader/uploader.component';
 import { Storage, Drink } from '@app/services';
 import { Router } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
@@ -44,6 +44,7 @@ import { GtnUploader } from '@app/components';
     ReactiveFormsModule,
     GtnUploader,
     IonSpinner,
+    IonToggle,
     ConfirmVolverComponent,
   ],
 })
@@ -62,6 +63,13 @@ export class CreateDrinkPage {
     description: new FormControl('', Validators.required),
     preparation: new FormControl('', Validators.required),
     price: new FormControl('', Validators.required),
+    ml: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^[0-9]+$/),
+      Validators.min(1),
+    ]),
+    contieneAlcohol: new FormControl(false),
+    sugerencia: new FormControl(false),
     images: new FormArray([
       new FormControl<File | null>(null, Validators.required),
       new FormControl<File | null>(null, Validators.required),
@@ -114,6 +122,14 @@ export class CreateDrinkPage {
         foto_2: image02,
         foto_3: image03,
       });
+
+      const toast = await this._toastController.create({
+        message: 'La bebida se creo correctamente',
+        duration: 5000,
+        position: 'bottom',
+      });
+
+      await toast.present();
 
       this._router.navigateByUrl('/admin/drinks');
     } catch (error) {

@@ -127,6 +127,37 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'admin/postres',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/postres/postres.page').then((m) => m.PostresPage),
+  },
+  {
+    path: 'admin/postres/create',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/postres/components/create-postre/create-postre.page').then(
+        (m) => m.CreatePostrePage
+      ),
+  },
+  {
+    path: 'admin/postres/edit/:id',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/postres/components/edit-postre/edit-postre.page').then(
+        (m) => m.EditPostrePage
+      ),
+  },
+  {
     path: 'juegos',
 
     canActivate: [authGuard, navegacionInternaGuard],

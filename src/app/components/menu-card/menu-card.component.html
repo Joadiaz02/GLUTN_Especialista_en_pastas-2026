@@ -1,30 +1,30 @@
-<div class="menu-card" [class.menu-card--disabled]="disabled()">
+<div class="menu-card" [class.menu-card--disabled]="menu().baja_logica">
   <div class="menu-card__content">
     <img
       class="menu-card__image"
-      [class.menu-card__image--disabled]="disabled()"
-      [src]="image()"
-      [alt]="name()"
+      [class.menu-card__image--disabled]="menu().baja_logica"
+      [src]="menu().foto_1"
+      [alt]="menu().nombre"
     />
 
     <div class="menu-card__info">
       <div class="menu-card__details">
-        <h3 class="menu-card__name">{{ name() }}</h3>
-        @if (disabled()) {
+        <h3 class="menu-card__name">{{ menu().nombre }}</h3>
+        @if (menu().baja_logica) {
         <span class="menu-card__badge">Baja</span>
         }
-        <p class="menu-card__description">{{ description() }}</p>
+        <p class="menu-card__description">{{ menu().descripcion }}</p>
       </div>
 
-      <span class="menu-card__price">{{ price() | currency }}</span>
+      <span class="menu-card__price">{{ menu().precio | currency }}</span>
     </div>
   </div>
 
   <div class="menu-card__actions">
-    @if (!disabled()) {
+    @if (!menu().baja_logica) {
     <button
       class="menu-card__action-btn"
-      [class.menu-card__action-btn--active]="suggested()"
+      [class.menu-card__action-btn--active]="menu().sugerencia"
       (click)="onToggleSuggested()"
     >
       <svg

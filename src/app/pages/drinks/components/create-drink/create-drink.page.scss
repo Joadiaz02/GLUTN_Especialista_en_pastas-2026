@@ -10,3 +10,30 @@
 .fields {
   margin-top: 16px;
 }
+
+.toggle-group {
+  margin-bottom: 20px;
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__row-label {
+    font-size: 16px;
+    color: #D5E0C9;
+  }
+
+  &__hint {
+    color: #D5E0C9;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+}

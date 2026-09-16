@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormArray,
@@ -18,12 +18,13 @@ import {
   IonFooter,
   ToastController,
   IonInput,
-  IonCheckbox,
+  IonToggle,
 } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Drink, Storage } from '@app/services';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { GtnUploader } from '@app/components';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 @Component({
   selector: 'app-edit-drink',
@@ -41,9 +42,10 @@ import { GtnUploader } from '@app/components';
     IonFooter,
     IonInput,
     ReactiveFormsModule,
-    IonCheckbox,
+    IonToggle,
     ConfirmVolverComponent,
     GtnUploader,
+    SpinnerLogoComponent,
   ],
 })
 export class EditDrinkPage {
@@ -55,9 +57,10 @@ export class EditDrinkPage {
   fotoActual2 = signal<string | null>(null);
   fotoActual3 = signal<string | null>(null);
 
+  idDrink = signal<string>('');
+
   drink = signal<any>(null);
 
-  private _id = '';
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
   private _storageService = inject(Storage);
@@ -78,6 +81,12 @@ export class EditDrinkPage {
       Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/),
       Validators.min(1),
     ]),
+    ml: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^[0-9]+$/),
+      Validators.min(1),
+    ]),
+    contieneAlcohol: new FormControl(false),
     sugerencia: new FormControl(false),
     images: new FormArray([
       new FormControl<File | null>(null),
@@ -89,20 +98,31 @@ export class EditDrinkPage {
   async ngOnInit(): Promise<void> {
     const id = this._route.snapshot.paramMap.get('id') ?? '';
 
-    const drink = await this._drinkService.getById(id)!;
+    this.idDrink.set(id);
+    this.isLoadingDrink.set(true);
 
-    console.log(drink);
+    try {
+      const drink = await this._drinkService.getById(id)!;
 
-    this.drink.set(drink);
+      this.drink.set(drink);
 
-    this.form.setValue({
-      title: drink.nombre,
-      description: drink.descripcion,
-      preparation: String(drink.tiempo_elaboracion),
-      price: String(drink.precio),
-      sugerencia: drink.sugerencia,
-      images: [null, null, null],
-    });
+      this.fotoActual1.set(drink.foto_1);
+      this.fotoActual2.set(drink.foto_2);
+      this.fotoActual3.set(drink.foto_3);
+
+      this.form.setValue({
+        title: drink.nombre,
+        description: drink.descripcion,
+        preparation: String(drink.tiempo_elaboracion),
+        price: String(drink.precio),
+        ml: String(drink.medida_ml),
+        contieneAlcohol: drink.tiene_alcohol ?? false,
+        sugerencia: drink.sugerencia,
+        images: [null, null, null],
+      });
+    } finally {
+      this.isLoadingDrink.set(false);
+    }
   }
 
   getFormControl(controlName: string) {
@@ -121,66 +141,63 @@ export class EditDrinkPage {
     await this._router.navigate(['/admin/drinks']);
   }
 
-  async confirmarYGuardar(): Promise<void> {
-    // const confirmado = await this._confirm.preguntar({
-    //   titulo: '¿Guardar los cambios?',
-    //   mensaje:
-    //     'Los cambios van a quedar visibles para los clientes de inmediato.',
-    //   textoConfirmar: 'Guardar',
-    //   colorConfirmar: 'primary',
-    //   icono: 'restaurant-outline',
-    // });
-    // if (!confirmado) return;
-    // await this.guardar();
+  private async resolverFoto(
+    nuevaImagen: File | null,
+    fotoActual: string | null
+  ): Promise<string> {
+    return nuevaImagen
+      ? await this._storageService.uploadImage(nuevaImagen)
+      : (fotoActual as string);
   }
 
-  private async guardar() {
-    // try {
-    //   const data = this.form.getRawValue();
-    //   this.isLoading.set(true);
-    //   const nuevoFoto1 = data.images[0];
-    //   const nuevoFoto2 = data.images[1];
-    //   const nuevoFoto3 = data.images[2];
-    //   const foto1 = nuevoFoto1
-    //     ? await this._storageService.uploadImage(nuevoFoto1)
-    //     : (this.fotoActual1() as string);
-    //   const foto2 = nuevoFoto2
-    //     ? await this._storageService.uploadImage(nuevoFoto2)
-    //     : (this.fotoActual2() as string);
-    //   const foto3 = nuevoFoto3
-    //     ? await this._storageService.uploadImage(nuevoFoto3)
-    //     : (this.fotoActual3() as string);
-    //   await this._platoService.update(this._id, {
-    //     nombre: data.title as string,
-    //     descripcion: data.description as string,
-    //     tiempo_elaboracion: Number(data.preparation),
-    //     precio: Number(data.price),
-    //     foto_1: foto1,
-    //     foto_2: foto2,
-    //     foto_3: foto3,
-    //     sugerencia: data.sugerencia ?? false,
-    //   });
-    //   await this._vibracion.confirmacion();
-    //   const toastOk = await this._toastController.create({
-    //     message: 'Plato actualizado correctamente.',
-    //     duration: 3000,
-    //     position: 'top',
-    //     color: 'success',
-    //   });
-    //   await toastOk.present();
-    //   this._router.navigateByUrl('/admin/dishes');
-    // } catch (error) {
-    //   await this._vibracion.error();
-    //   const toast = await this._toastController.create({
-    //     message:
-    //       'No pudimos completar la acción. Intentá nuevamente más tarde.',
-    //     duration: 5000,
-    //     position: 'top',
-    //     color: 'danger',
-    //   });
-    //   await toast.present();
-    // } finally {
-    //   this.isLoading.set(false);
-    // }
+  async update() {
+    try {
+      const data = this.form.getRawValue();
+
+      this.isLoading.set(true);
+
+      this.form.markAsPending();
+
+      const [foto1, foto2, foto3] = await Promise.all([
+        this.resolverFoto(data.images[0], this.fotoActual1()),
+        this.resolverFoto(data.images[1], this.fotoActual2()),
+        this.resolverFoto(data.images[2], this.fotoActual3()),
+      ]);
+
+      await this._drinkService.update(this.idDrink(), {
+        nombre: data.title,
+        descripcion: data.description,
+        tiempo_elaboracion: Number(data.preparation),
+        precio: Number(data.price),
+        medida_ml: Number(data.ml),
+        foto_1: foto1,
+        foto_2: foto2,
+        foto_3: foto3,
+        tiene_alcohol: data.contieneAlcohol ?? false,
+        sugerencia: data.sugerencia ?? false,
+      });
+
+      const toast = await this._toastController.create({
+        message: 'La bebida se actualizo correctamente',
+        duration: 5000,
+        position: 'bottom',
+      });
+
+      await toast.present();
+
+      this._router.navigateByUrl('/admin/drinks');
+    } catch (error) {
+      console.log(error);
+      const toast = await this._toastController.create({
+        message:
+          'No pudimos completar la acción. Intentá nuevamente más tarde.',
+        duration: 5000,
+        position: 'top',
+      });
+
+      await toast.present();
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 }
