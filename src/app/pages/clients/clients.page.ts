@@ -1,17 +1,12 @@
 import {
   Component,
-  OnDestroy,
   OnInit,
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   IonContent,
   IonHeader,
-  IonIcon,
-  IonSpinner,
-  IonTitle,
   IonToolbar,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -26,463 +21,350 @@ import { RejectClientModalComponent } from './components/reject-client-modal/rej
 @Component({
   selector: 'app-clients',
   standalone: true,
-  templateUrl: './clients.page.html',
-  styleUrls: ['./clients.page.scss'],
   imports: [
-    CommonModule,
     IonContent,
     IonHeader,
     IonToolbar,
-    IonTitle,
-    IonIcon,
-    IonSpinner,
     ClientCardComponent,
     ClientsNavigationComponent,
     RejectClientModalComponent,
   ],
+  templateUrl: './clients.page.html',
+  styleUrls: ['./clients.page.scss'],
 })
-export class ClientsPage
-  implements OnInit, OnDestroy {
-
-  clientesPendientes =
-    signal<Usuario[]>([]);
-
-  cargando =
-    signal<boolean>(false);
-
-  indiceActual =
-    signal<number>(0);
-
-  procesandoCliente =
-    signal<boolean>(false);
-
-  mostrarModalRechazo =
-    signal<boolean>(false);
-
-  motivoRechazo =
-    signal<string>('');
-
-  clienteARechazar =
-    signal<Usuario | null>(null);
-
-  tarjetaSaliendo =
-    signal<boolean>(false);
-
-  private intervaloActualizacion:
-    ReturnType<typeof setInterval> | null = null;
-
-  private touchStartX = 0;
-  private touchCurrentX = 0;
-  private isDragging = false;
-
+export class ClientsPage implements OnInit {
   private readonly clientsService =
     inject(ClientsService);
 
   private readonly router =
     inject(Router);
 
+  clientesPendientes =
+    signal<Usuario[]>([]);
 
-  async ngOnInit(): Promise<void> {
-    await this.cargarClientesPendientes(true);
+  cargando =
+    signal(false);
 
-    this.iniciarActualizacionAutomatica();
+  indiceActual =
+    signal(0);
+
+  procesandoCliente =
+    signal(false);
+
+  mostrarModalRechazo =
+    signal(false);
+
+  motivoRechazo =
+    signal('');
+
+  clienteARechazar =
+    signal<Usuario | null>(null);
+
+  tarjetaSaliendo =
+    signal(false);
+
+  private touchStartX = 0;
+  private touchEndX = 0;
+
+  ngOnInit(): void {
+    void this.cargarClientesPendientes();
   }
-
-
-  ngOnDestroy(): void {
-    this.detenerActualizacionAutomatica();
-  }
-
-
-  /* =====================================
-     CLIENTES
-     ===================================== */
-
-  async cargarClientesPendientes(
-    mostrarSpinner = true
-  ): Promise<void> {
-
-    if (mostrarSpinner) {
-      this.cargando.set(true);
-    }
-
-    try {
-
-      const clientesAntes =
-        this.clientesPendientes();
-
-      const clienteVisible =
-        clientesAntes[
-          this.indiceActual()
-        ];
-
-      const clientes =
-        await this.clientsService
-          .obtenerClientesPendientes();
-
-     this.clientesPendientes.set(clientes);
-
-      if (clientes.length === 0) {
-        this.indiceActual.set(0);
-        return;
-      }
-
-      if (clienteVisible) {
-
-        const nuevoIndice =
-          clientes.findIndex(
-            cliente =>
-              cliente.id ===
-              clienteVisible.id
-          );
-
-        if (nuevoIndice !== -1) {
-          this.indiceActual.set(
-            nuevoIndice
-          );
-
-          return;
-        }
-      }
-
-      if (
-        this.indiceActual() >=
-        clientes.length
-      ) {
-
-        this.indiceActual.set(
-          clientes.length - 1
-        );
-      }
-
-    } catch (error) {
-
-      console.error(
-        'Error al cargar clientes pendientes:',
-        error
-      );
-
-    } finally {
-
-      if (mostrarSpinner) {
-        this.cargando.set(false);
-      }
-
-    }
-  }
-
-
-  private iniciarActualizacionAutomatica(): void {
-
-    this.detenerActualizacionAutomatica();
-
-    this.intervaloActualizacion =
-      setInterval(() => {
-
-        if (
-          this.procesandoCliente() ||
-          this.mostrarModalRechazo()
-        ) {
-          return;
-        }
-
-        void this.cargarClientesPendientes(false);
-
-      }, 5000);
-  }
-
-
-  private detenerActualizacionAutomatica(): void {
-
-    if (
-      this.intervaloActualizacion !== null
-    ) {
-
-      clearInterval(
-        this.intervaloActualizacion
-      );
-
-      this.intervaloActualizacion = null;
-    }
-  }
-
 
   get totalClientes(): number {
     return this.clientesPendientes().length;
   }
 
-
   get posicionVisible(): number {
-
-    if (this.totalClientes === 0) {
-      return 0;
-    }
-
-    return this.indiceActual() + 1;
+    return this.totalClientes === 0
+      ? 0
+      : this.indiceActual() + 1;
   }
 
+  async cargarClientesPendientes(): Promise<void> {
+    if (this.cargando()) {
+      return;
+    }
+
+    this.cargando.set(true);
+
+    try {
+      const clientes =
+        await this.clientsService.obtenerClientesPendientes();
+
+      this.clientesPendientes.set(clientes);
+
+      if (clientes.length === 0) {
+        this.indiceActual.set(0);
+      } else if (
+        this.indiceActual() >= clientes.length
+      ) {
+        this.indiceActual.set(
+          clientes.length - 1
+        );
+      }
+    } catch (error) {
+      console.error(
+        'Error al cargar clientes pendientes:',
+        error
+      );
+
+      this.mostrarToast(
+        'No se pudieron cargar los clientes pendientes.'
+      );
+    } finally {
+      this.cargando.set(false);
+    }
+  }
 
   obtenerAvatarUrl(
     avatar: string | null | undefined
   ): string | null {
-
-    return this.clientsService
-      .obtenerAvatarUrl(avatar);
+    return this.clientsService.obtenerAvatarUrl(
+      avatar
+    );
   }
-
-
-  /* =====================================
-     CARRUSEL
-     ===================================== */
 
   obtenerPosicionCarta(
     indice: number
   ): number {
-
-    const actual =
-      this.indiceActual();
-
-    let diferencia =
-      indice - actual;
-
     const total =
-      this.totalClientes;
+      this.clientesPendientes().length;
 
-    if (total > 2) {
-
-      if (
-        diferencia >
-        total / 2
-      ) {
-        diferencia -= total;
-      }
-
-      if (
-        diferencia <
-        -total / 2
-      ) {
-        diferencia += total;
-      }
+    if (total === 0) {
+      return 0;
     }
 
-    return diferencia;
-  }
+    let posicion =
+      indice - this.indiceActual();
 
+    if (posicion > total / 2) {
+      posicion -= total;
+    }
+
+    if (posicion < -total / 2) {
+      posicion += total;
+    }
+
+    return posicion;
+  }
 
   obtenerPosicion(
     indice: number
-  ):
-    'activa'
-    | 'anterior'
-    | 'siguiente'
-    | 'oculta' {
-
-    const posicion =
-      this.obtenerPosicionCarta(indice);
-
-    if (posicion === 0) {
-      return 'activa';
-    }
-
-    if (posicion === -1) {
-      return 'anterior';
-    }
-
-    if (posicion === 1) {
-      return 'siguiente';
-    }
-
-    return 'oculta';
+  ): number {
+    return this.obtenerPosicionCarta(indice);
   }
 
+obtenerClaseCarta(
+  indice: number
+): 'activa' | 'anterior' | 'siguiente' | 'oculta' {
+  const posicion =
+    this.obtenerPosicionCarta(indice);
+
+  if (posicion === 0) {
+    return 'activa';
+  }
+
+  if (posicion === -1) {
+    return 'anterior';
+  }
+
+  if (posicion === 1) {
+    return 'siguiente';
+  }
+
+  return 'oculta';
+}
 
   irAnterior(): void {
-
-    if (
-      this.totalClientes <= 1 ||
-      this.procesandoCliente()
-    ) {
+    if (this.procesandoCliente()) {
       return;
     }
 
-    const actual =
-      this.indiceActual();
+    const total =
+      this.clientesPendientes().length;
+
+    if (total <= 1) {
+      return;
+    }
+
+    const nuevoIndice =
+      this.indiceActual() - 1;
+
+    if (nuevoIndice < 0) {
+      this.indiceActual.set(
+        total - 1
+      );
+      return;
+    }
 
     this.indiceActual.set(
-      actual === 0
-        ? this.totalClientes - 1
-        : actual - 1
+      nuevoIndice
     );
   }
-
 
   irSiguiente(): void {
-
-    if (
-      this.totalClientes <= 1 ||
-      this.procesandoCliente()
-    ) {
+    if (this.procesandoCliente()) {
       return;
     }
 
-    const actual =
-      this.indiceActual();
+    const total =
+      this.clientesPendientes().length;
+
+    if (total <= 1) {
+      return;
+    }
+
+    const nuevoIndice =
+      this.indiceActual() + 1;
+
+    if (nuevoIndice >= total) {
+      this.indiceActual.set(0);
+      return;
+    }
 
     this.indiceActual.set(
-      actual === this.totalClientes - 1
-        ? 0
-        : actual + 1
+      nuevoIndice
     );
   }
 
-
-  /* =====================================
-     SWIPE
-     ===================================== */
-
   onTouchStart(
-    event: TouchEvent
-  ): void {
-
-    if (
-      this.procesandoCliente()
-    ) {
-      return;
-    }
-
-    this.touchStartX =
-      event.touches[0].clientX;
-
-    this.touchCurrentX =
-      this.touchStartX;
-
-    this.isDragging = true;
+  event: TouchEvent
+): void {
+  if (this.procesandoCliente()) {
+    return;
   }
 
+  this.touchStartX =
+    event.changedTouches[0]?.screenX ?? 0;
 
-  onTouchMove(
-    event: TouchEvent
-  ): void {
+  this.touchEndX =
+    this.touchStartX;
+}
 
-    if (!this.isDragging) {
-      return;
-    }
-
-    this.touchCurrentX =
-      event.touches[0].clientX;
+onTouchMove(
+  event: TouchEvent
+): void {
+  if (this.procesandoCliente()) {
+    return;
   }
 
+  this.touchEndX =
+    event.changedTouches[0]?.screenX ??
+    this.touchEndX;
+}
 
-  onTouchEnd(): void {
+onTouchEnd(
+  event: TouchEvent
+): void {
+  if (this.procesandoCliente()) {
+    return;
+  }
 
-    if (!this.isDragging) {
-      return;
-    }
+  this.touchEndX =
+    event.changedTouches[0]?.screenX ??
+    this.touchEndX;
 
-    const diferencia =
-      this.touchCurrentX -
+  this.procesarSwipe();
+}
+
+  private procesarSwipe(): void {
+    const distancia =
+      this.touchEndX -
       this.touchStartX;
 
-    this.isDragging = false;
-
-    if (
-      Math.abs(diferencia) < 55
-    ) {
+    if (Math.abs(distancia) < 50) {
       return;
     }
 
-    if (diferencia < 0) {
-      this.irSiguiente();
-    } else {
+    if (distancia > 0) {
       this.irAnterior();
+    } else {
+      this.irSiguiente();
     }
   }
 
-
-  /* =====================================
-     APROBACIÓN
-     ===================================== */
-
-  aprobarCliente(
+  async aprobarCliente(
     cliente: Usuario
-  ): void {
-
-    if (
-      this.procesandoCliente()
-    ) {
+  ): Promise<void> {
+    if (this.procesandoCliente()) {
       return;
     }
 
     this.procesandoCliente.set(true);
 
-    /*
-     * TEMPORAL.
-     * Todavía no modifica Supabase.
-     */
-    this.animarSalida(cliente);
+    let emailEnviado = true;
+
+    try {
+      await this.clientsService.aprobarCliente(
+        cliente.id
+      );
+
+      try {
+        await this.clientsService.notificarEstadoCliente(
+          cliente.id,
+          'aprobado'
+        );
+      } catch (error) {
+        console.error(
+          'Cliente aprobado, pero no se pudo enviar el email:',
+          error
+        );
+
+        emailEnviado = false;
+      }
+
+      this.animarSalida(cliente);
+
+      if (!emailEnviado) {
+        this.mostrarToast(
+          'Cliente aprobado, pero no pudimos enviar el email.'
+        );
+      }
+    } catch (error) {
+      console.error(
+        'Error al aprobar cliente:',
+        error
+      );
+
+      this.procesandoCliente.set(false);
+
+      this.mostrarToast(
+        'No se pudo aprobar el cliente.'
+      );
+    }
   }
-
-
-  /* =====================================
-     RECHAZO
-     ===================================== */
 
   abrirRechazo(
     cliente: Usuario
   ): void {
-
-    if (
-      this.procesandoCliente()
-    ) {
+    if (this.procesandoCliente()) {
       return;
     }
 
-    this.clienteARechazar.set(
-      cliente
-    );
-
+    this.clienteARechazar.set(cliente);
     this.motivoRechazo.set('');
-
-    this.mostrarModalRechazo.set(
-      true
-    );
+    this.mostrarModalRechazo.set(true);
   }
-
 
   cerrarModalRechazo(): void {
-
-    if (
-      this.procesandoCliente()
-    ) {
+    if (this.procesandoCliente()) {
       return;
     }
 
-    this.mostrarModalRechazo.set(
-      false
-    );
-
-    this.clienteARechazar.set(
-      null
-    );
-
+    this.mostrarModalRechazo.set(false);
+    this.clienteARechazar.set(null);
     this.motivoRechazo.set('');
   }
-
 
   actualizarMotivo(
     motivo: string
   ): void {
-
-    this.motivoRechazo.set(
-      motivo
-    );
+    this.motivoRechazo.set(motivo);
   }
 
-
-  confirmarRechazo(
+  async confirmarRechazo(
     motivo: string
-  ): void {
-
+  ): Promise<void> {
     const cliente =
       this.clienteARechazar();
 
@@ -494,91 +376,138 @@ export class ClientsPage
       return;
     }
 
-    this.mostrarModalRechazo.set(
-      false
-    );
+    this.mostrarModalRechazo.set(false);
+    this.procesandoCliente.set(true);
 
-    this.procesandoCliente.set(
-      true
-    );
+    let emailEnviado = true;
 
-    /*
-     * TEMPORAL.
-     * Todavía no modifica Supabase.
-     */
-    this.animarSalida(cliente);
+    try {
+      await this.clientsService.rechazarCliente(
+        cliente.id,
+        motivo.trim()
+      );
+
+      try {
+        await this.clientsService.notificarEstadoCliente(
+          cliente.id,
+          'rechazado',
+          motivo.trim()
+        );
+      } catch (error) {
+        console.error(
+          'Cliente rechazado, pero no se pudo enviar el email:',
+          error
+        );
+
+        emailEnviado = false;
+      }
+
+      this.clienteARechazar.set(null);
+      this.motivoRechazo.set('');
+
+      this.animarSalida(cliente);
+
+      if (!emailEnviado) {
+        this.mostrarToast(
+          'Cliente rechazado, pero no pudimos enviar el email.'
+        );
+      }
+    } catch (error) {
+      console.error(
+        'Error al rechazar cliente:',
+        error
+      );
+
+      this.procesandoCliente.set(false);
+      this.mostrarModalRechazo.set(true);
+
+      this.mostrarToast(
+        'No se pudo rechazar el cliente.'
+      );
+    }
   }
-
-
-  /* =====================================
-     ANIMACIÓN
-     ===================================== */
 
   private animarSalida(
     cliente: Usuario
   ): void {
+    const clientes =
+      this.clientesPendientes();
 
-    this.tarjetaSaliendo.set(
-      true
-    );
-
-    setTimeout(() => {
-
-      this.eliminarClienteVisualmente(
-        cliente
+    const indice =
+      clientes.findIndex(
+        item => item.id === cliente.id
       );
 
-      this.tarjetaSaliendo.set(
-        false
-      );
-
-      this.procesandoCliente.set(
-        false
-      );
-
-    }, 500);
-  }
-
-
-  private eliminarClienteVisualmente(
-    cliente: Usuario
-  ): void {
-
-    const nuevosClientes =
-      this.clientesPendientes()
-        .filter(
-          item =>
-            item.id !== cliente.id
-        );
-
-    this.clientesPendientes.set(
-      nuevosClientes
-    );
-
-    if (
-      nuevosClientes.length === 0
-    ) {
-
-      this.indiceActual.set(0);
-
+    if (indice === -1) {
+      this.procesandoCliente.set(false);
       return;
     }
 
     if (
-      this.indiceActual() >=
-      nuevosClientes.length
+      indice === this.indiceActual()
     ) {
+      this.tarjetaSaliendo.set(true);
 
-      this.indiceActual.set(
-        nuevosClientes.length - 1
-      );
+      setTimeout(() => {
+        this.eliminarClienteVisualmente(
+          indice
+        );
+      }, 300);
+
+      return;
     }
+
+    this.eliminarClienteVisualmente(
+      indice
+    );
   }
 
+  private eliminarClienteVisualmente(
+    indice: number
+  ): void {
+    const clientes = [
+      ...this.clientesPendientes(),
+    ];
+
+    clientes.splice(indice, 1);
+
+    this.clientesPendientes.set(
+      clientes
+    );
+
+    this.tarjetaSaliendo.set(false);
+
+    if (clientes.length === 0) {
+      this.indiceActual.set(0);
+    } else if (
+      this.indiceActual() >= clientes.length
+    ) {
+      this.indiceActual.set(
+        clientes.length - 1
+      );
+    }
+
+    this.procesandoCliente.set(false);
+  }
 
   volver(): void {
-    void this.router.navigate([
-      '/admin',
-    ]);
+    void this.router.navigateByUrl(
+      '/admin'
+    );
+  }
+
+  private async mostrarToast(
+    mensaje: string
+  ): Promise<void> {
+    const toast =
+      document.createElement('ion-toast');
+
+    toast.message = mensaje;
+    toast.duration = 3000;
+    toast.position = 'bottom';
+
+    document.body.appendChild(toast);
+
+    await toast.present();
   }
 }

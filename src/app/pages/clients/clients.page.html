@@ -1,10 +1,6 @@
 <ion-header class="ion-no-border">
-
   <ion-toolbar>
-
     <div class="toolbar-content">
-
-      <!-- VOLVER -->
       <button
         type="button"
         class="toolbar-back-button"
@@ -14,127 +10,59 @@
         <span class="toolbar-chevron"></span>
       </button>
 
-
-      <!-- TÍTULO -->
       <div class="toolbar-title">
         Clientes
       </div>
 
-
-      <!-- ACTUALIZAR -->
       <button
         type="button"
         class="toolbar-refresh-button"
         (click)="cargarClientesPendientes()"
-        [disabled]="
-          cargando() ||
-          procesandoCliente()
-        "
+        [disabled]="cargando() || procesandoCliente()"
         aria-label="Actualizar clientes"
       >
-        <span class="refresh-icon">
-          ↻
-        </span>
+        <span class="refresh-icon">↻</span>
       </button>
-
     </div>
-
   </ion-toolbar>
-
 </ion-header>
 
-
 <ion-content
-  [fullscreen]="true"
   class="clients-content"
+  [fullscreen]="true"
 >
-
   <main class="clients-container">
 
+    @if (cargando()) {
 
-    <!-- ================================
-         ENCABEZADO
-         ================================= -->
-
-    <section class="header-section">
-
-      <h1>
-        Clientes pendientes
-      </h1>
-
-      <p>
-        Revisá los clientes registrados
-        que esperan aprobación.
-      </p>
-
-    </section>
-
-
-    <!-- ================================
-         CARGANDO
-         ================================= -->
-
-    @if (
-      cargando() &&
-      clientesPendientes().length === 0
-    ) {
-
-      <section class="loading-container">
-
-        <ion-spinner
-          name="crescent">
-        </ion-spinner>
-
-        <p>
-          Cargando clientes...
-        </p>
-
+      <section class="loading-section">
+        <div class="loading-spinner"></div>
+        <p>Cargando clientes...</p>
       </section>
 
-    }
+    } @else if (totalClientes === 0) {
 
-
-    <!-- ================================
-         SIN CLIENTES
-         ================================= -->
-
-    @else if (
-      clientesPendientes().length === 0
-    ) {
-
-      <section class="empty-container">
-
-        <div class="empty-icon">
-          👤
-        </div>
+      <section class="empty-section">
+        <div class="empty-icon">✓</div>
 
         <h2>
           No hay clientes pendientes
         </h2>
 
         <p>
-          Cuando un cliente se registre,
-          aparecerá acá para que puedas
-          aprobarlo o rechazarlo.
+          Todos los clientes registrados
+          fueron gestionados.
         </p>
-
       </section>
 
-    }
-
-
-    <!-- ================================
-         CLIENTES
-         ================================= -->
-
-    @else {
+    } @else {
 
       <section
         class="cards-section"
         (touchstart)="onTouchStart($event)"
         (touchmove)="onTouchMove($event)"
-        (touchend)="onTouchEnd()"
-        (touchcancel)="onTouchEnd()"
+        (touchend)="onTouchEnd($event)"
+        (touchcancel)="onTouchEnd($event)"
       >
 
         <div class="cards-track">
@@ -153,7 +81,7 @@
                 )
               "
               [posicion]="
-                obtenerPosicion(i)
+                obtenerClaseCarta(i)
               "
               [saliendo]="
                 tarjetaSaliendo() &&
@@ -177,68 +105,30 @@
 
       </section>
 
-
-      <!-- ================================
-           NAVEGACIÓN
-           ================================= -->
-
       <app-clients-navigation
-        [posicionActual]="
-          posicionVisible
-        "
-        [totalClientes]="
-          totalClientes
-        "
-        [deshabilitada]="
-          procesandoCliente()
-        "
-        (anterior)="
-          irAnterior()
-        "
-        (siguiente)="
-          irSiguiente()
-        "
+        [posicionActual]="posicionVisible"
+        [totalClientes]="totalClientes"
+        [deshabilitada]="procesandoCliente()"
+        (anterior)="irAnterior()"
+        (siguiente)="irSiguiente()"
       />
 
     }
 
   </main>
 
-
-  <!-- ================================
-       MODAL RECHAZO
-       ================================= -->
-
-  @if (
-    mostrarModalRechazo()
-  ) {
-
-    <app-reject-client-modal
-      [cliente]="
-        clienteARechazar()
-      "
-      [avatarUrl]="
-        obtenerAvatarUrl(
-          clienteARechazar()?.avatar
-        )
-      "
-      [motivo]="
-        motivoRechazo()
-      "
-      [procesando]="
-        procesandoCliente()
-      "
-      (cerrar)="
-        cerrarModalRechazo()
-      "
-      (motivoChange)="
-        actualizarMotivo($event)
-      "
-      (confirmar)="
-        confirmarRechazo($event)
-      "
-    />
-
-  }
+  <app-reject-client-modal
+    [cliente]="clienteARechazar()"
+    [avatarUrl]="
+      obtenerAvatarUrl(
+        clienteARechazar()?.avatar
+      )
+    "
+    [motivo]="motivoRechazo()"
+    [procesando]="procesandoCliente()"
+    (cerrar)="cerrarModalRechazo()"
+    (motivoChange)="actualizarMotivo($event)"
+    (confirmar)="confirmarRechazo($event)"
+  />
 
 </ion-content>

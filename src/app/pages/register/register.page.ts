@@ -17,7 +17,7 @@ import {
   IonSpinner,
   IonFooter,
   ToastController,
-  IonToast,
+  IonModal,
 } from '@ionic/angular';
 
 import { PersonalStepPage } from './steps/personal-step/personal-step.page';
@@ -33,7 +33,8 @@ const NAME_PATTERN =
 
 const DNI_PATTERN = /^\d{8}$/;
 
-const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
+const PASSWORD_PATTERN =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
 
 @Component({
   selector: 'app-register',
@@ -49,16 +50,17 @@ const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
     IonButton,
     IonButtons,
     IonBackButton,
+    IonSpinner,
+    IonFooter,
+    IonModal,
     PersonalStepPage,
     CredentialsStepPage,
     ProfileStepPage,
     ProgressBarComponent,
-    IonBackButton,
-    IonSpinner,
-    IonFooter,
   ],
 })
 export class RegisterPage {
+
   form = new FormGroup({
     personal: new FormGroup({
       name: new FormControl('', [
@@ -82,7 +84,10 @@ export class RegisterPage {
     }),
 
     credentials: new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+      ]),
 
       password: new FormControl('', [
         Validators.required,
@@ -92,18 +97,34 @@ export class RegisterPage {
     }),
 
     profile: new FormGroup({
-      file: new FormControl<File | null>(null, Validators.required),
+      file: new FormControl<File | null>(
+        null,
+        Validators.required
+      ),
     }),
   });
 
-  currentStep = signal<number>(1);
-  isLoading = signal<boolean>(false);
+  currentStep =
+    signal<number>(1);
 
-  private _authService = inject(Auth);
-  private _router = inject(Router);
-  private _toastController = inject(ToastController);
+  isLoading =
+    signal<boolean>(false);
 
-  getFormGroup(step: string): FormGroup {
+  mostrarRegistroExitoso =
+    signal<boolean>(false);
+
+  private readonly _authService =
+    inject(Auth);
+
+  private readonly _router =
+    inject(Router);
+
+  private readonly _toastController =
+    inject(ToastController);
+
+  getFormGroup(
+    step: string
+  ): FormGroup {
     return this.form.get(step) as FormGroup;
   }
 
@@ -124,10 +145,12 @@ export class RegisterPage {
   }
 
   nextStep(): void {
-    const step = this.currentStep();
+    const step =
+      this.currentStep();
 
     if (step === 1) {
-      const personalForm = this.getFormGroup('personal');
+      const personalForm =
+        this.getFormGroup('personal');
 
       if (personalForm.invalid) {
         personalForm.markAllAsTouched();
@@ -136,7 +159,8 @@ export class RegisterPage {
     }
 
     if (step === 2) {
-      const credentialsForm = this.getFormGroup('credentials');
+      const credentialsForm =
+        this.getFormGroup('credentials');
 
       if (credentialsForm.invalid) {
         credentialsForm.markAllAsTouched();
@@ -145,19 +169,28 @@ export class RegisterPage {
     }
 
     if (step < 3) {
-      this.currentStep.update((current) => current + 1);
+      this.currentStep.update(
+        current => current + 1
+      );
     }
   }
 
   previousStep(): void {
     if (this.currentStep() > 1) {
-      this.currentStep.update((current) => current - 1);
+      this.currentStep.update(
+        current => current - 1
+      );
     }
   }
 
   async register(): Promise<void> {
+    if (this.isLoading()) {
+      return;
+    }
+
     try {
-      const credentials = this.form.getRawValue();
+      const credentials =
+        this.form.getRawValue();
 
       this.isLoading.set(true);
 
@@ -168,19 +201,37 @@ export class RegisterPage {
         EPerfilUsuario.ClienteRegistrado
       );
 
-      this._router.navigateByUrl('/login', { replaceUrl: true });
+      this.mostrarRegistroExitoso.set(true);
+
     } catch (error) {
-      console.log(error);
-      const toast = await this._toastController.create({
-        message:
-          'No pudimos completar la acción. Intentá nuevamente más tarde.',
-        duration: 5000,
-        position: 'top',
-      });
+      console.error(
+        'Error durante el registro:',
+        error
+      );
+
+      const toast =
+        await this._toastController.create({
+          message:
+            'No pudimos completar el registro. Intentá nuevamente más tarde.',
+          duration: 5000,
+          position: 'top',
+        });
 
       await toast.present();
+
     } finally {
       this.isLoading.set(false);
     }
+  }
+
+  cerrarRegistroExitoso(): void {
+    this.mostrarRegistroExitoso.set(false);
+
+    void this._router.navigateByUrl(
+      '/login',
+      {
+        replaceUrl: true,
+      }
+    );
   }
 }
