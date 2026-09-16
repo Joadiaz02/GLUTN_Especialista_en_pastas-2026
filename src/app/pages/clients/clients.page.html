@@ -1,157 +1,244 @@
 <ion-header class="ion-no-border">
+
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button
-        text=""
-        icon="arrow-back-outline">
-      </ion-back-button>
-    </ion-buttons>
 
-    <ion-title>Clientes</ion-title>
+    <div class="toolbar-content">
 
-    <ion-buttons slot="end">
-      <ion-button
+      <!-- VOLVER -->
+      <button
+        type="button"
+        class="toolbar-back-button"
+        (click)="volver()"
+        aria-label="Volver al panel de administración"
+      >
+        <span class="toolbar-chevron"></span>
+      </button>
+
+
+      <!-- TÍTULO -->
+      <div class="toolbar-title">
+        Clientes
+      </div>
+
+
+      <!-- ACTUALIZAR -->
+      <button
+        type="button"
+        class="toolbar-refresh-button"
         (click)="cargarClientesPendientes()"
-        [disabled]="cargando()">
-        <ion-icon
-          slot="icon-only"
-          name="refresh-outline">
-        </ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+        [disabled]="
+          cargando() ||
+          procesandoCliente()
+        "
+        aria-label="Actualizar clientes"
+      >
+        <span class="refresh-icon">
+          ↻
+        </span>
+      </button>
 
-<ion-content [fullscreen]="true">
-
-  <div class="clients-container">
-
-    <div class="header-section">
-      <h1>Clientes pendientes</h1>
-
-      <p>
-        Revisá los clientes registrados que esperan aprobación.
-      </p>
     </div>
 
-    @if (cargando()) {
+  </ion-toolbar>
 
-      <div class="loading-container">
-        <ion-spinner name="crescent"></ion-spinner>
+</ion-header>
 
-        <p>Cargando clientes...</p>
-      </div>
 
-    } @else if (clientesPendientes().length === 0) {
+<ion-content
+  [fullscreen]="true"
+  class="clients-content"
+>
 
-      <div class="empty-container">
+  <main class="clients-container">
 
-        <ion-icon
-          name="people-outline"
-          class="empty-icon">
-        </ion-icon>
 
-        <h2>No hay clientes pendientes</h2>
+    <!-- ================================
+         ENCABEZADO
+         ================================= -->
+
+    <section class="header-section">
+
+      <h1>
+        Clientes pendientes
+      </h1>
+
+      <p>
+        Revisá los clientes registrados
+        que esperan aprobación.
+      </p>
+
+    </section>
+
+
+    <!-- ================================
+         CARGANDO
+         ================================= -->
+
+    @if (
+      cargando() &&
+      clientesPendientes().length === 0
+    ) {
+
+      <section class="loading-container">
+
+        <ion-spinner
+          name="crescent">
+        </ion-spinner>
 
         <p>
-          Cuando un cliente se registre, aparecerá acá para que puedas
-          aprobarlo o rechazarlo.
+          Cargando clientes...
         </p>
 
-      </div>
-
-    } @else {
-
-      <div class="clients-list">
-
-        @for (cliente of clientesPendientes(); track cliente.id) {
-
-          <article class="client-card">
-
-            <div class="client-header">
-
-              <div class="avatar-container">
-
-                @if (obtenerAvatarUrl(cliente.avatar); as avatarUrl) {
-
-                  <img
-                    [src]="avatarUrl"
-                    [alt]="'Foto de ' + cliente.nombre"
-                    class="client-avatar"
-                  />
-
-                } @else {
-
-                  <div class="avatar-placeholder">
-                    <ion-icon name="person-outline"></ion-icon>
-                  </div>
-
-                }
-
-              </div>
-
-              <div class="client-info">
-
-                <h2>
-                  {{ nombreCompleto(cliente) }}
-                </h2>
-
-                <span class="status">
-                  Pendiente de aprobación
-                </span>
-
-              </div>
-
-            </div>
-
-            <div class="client-data">
-
-              <div class="data-row">
-                <span class="label">DNI</span>
-                <span class="value">
-                  {{ cliente.documento }}
-                </span>
-              </div>
-
-            </div>
-
-            <div class="client-actions">
-
-              <ion-button
-                expand="block"
-                class="approve-button"
-                (click)="aprobarCliente(cliente)">
-                <ion-icon
-                  slot="start"
-                  name="checkmark-circle-outline">
-                </ion-icon>
-
-                Aprobar
-              </ion-button>
-
-              <ion-button
-                expand="block"
-                fill="outline"
-                class="reject-button"
-                (click)="rechazarCliente(cliente)">
-                <ion-icon
-                  slot="start"
-                  name="close-circle-outline">
-                </ion-icon>
-
-                Rechazar
-              </ion-button>
-
-            </div>
-
-          </article>
-
-        }
-
-      </div>
+      </section>
 
     }
 
-  </div>
+
+    <!-- ================================
+         SIN CLIENTES
+         ================================= -->
+
+    @else if (
+      clientesPendientes().length === 0
+    ) {
+
+      <section class="empty-container">
+
+        <div class="empty-icon">
+          👤
+        </div>
+
+        <h2>
+          No hay clientes pendientes
+        </h2>
+
+        <p>
+          Cuando un cliente se registre,
+          aparecerá acá para que puedas
+          aprobarlo o rechazarlo.
+        </p>
+
+      </section>
+
+    }
+
+
+    <!-- ================================
+         CLIENTES
+         ================================= -->
+
+    @else {
+
+      <section
+        class="cards-section"
+        (touchstart)="onTouchStart($event)"
+        (touchmove)="onTouchMove($event)"
+        (touchend)="onTouchEnd()"
+        (touchcancel)="onTouchEnd()"
+      >
+
+        <div class="cards-track">
+
+          @for (
+            cliente of clientesPendientes();
+            track cliente.id;
+            let i = $index
+          ) {
+
+            <app-client-card
+              [cliente]="cliente"
+              [avatarUrl]="
+                obtenerAvatarUrl(
+                  cliente.avatar
+                )
+              "
+              [posicion]="
+                obtenerPosicion(i)
+              "
+              [saliendo]="
+                tarjetaSaliendo() &&
+                i === indiceActual()
+              "
+              [deshabilitada]="
+                procesandoCliente() ||
+                i !== indiceActual()
+              "
+              (aprobar)="
+                aprobarCliente($event)
+              "
+              (rechazar)="
+                abrirRechazo($event)
+              "
+            />
+
+          }
+
+        </div>
+
+      </section>
+
+
+      <!-- ================================
+           NAVEGACIÓN
+           ================================= -->
+
+      <app-clients-navigation
+        [posicionActual]="
+          posicionVisible
+        "
+        [totalClientes]="
+          totalClientes
+        "
+        [deshabilitada]="
+          procesandoCliente()
+        "
+        (anterior)="
+          irAnterior()
+        "
+        (siguiente)="
+          irSiguiente()
+        "
+      />
+
+    }
+
+  </main>
+
+
+  <!-- ================================
+       MODAL RECHAZO
+       ================================= -->
+
+  @if (
+    mostrarModalRechazo()
+  ) {
+
+    <app-reject-client-modal
+      [cliente]="
+        clienteARechazar()
+      "
+      [avatarUrl]="
+        obtenerAvatarUrl(
+          clienteARechazar()?.avatar
+        )
+      "
+      [motivo]="
+        motivoRechazo()
+      "
+      [procesando]="
+        procesandoCliente()
+      "
+      (cerrar)="
+        cerrarModalRechazo()
+      "
+      (motivoChange)="
+        actualizarMotivo($event)
+      "
+      (confirmar)="
+        confirmarRechazo($event)
+      "
+    />
+
+  }
 
 </ion-content>

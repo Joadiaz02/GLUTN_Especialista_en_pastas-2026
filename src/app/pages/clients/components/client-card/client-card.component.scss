@@ -1,0 +1,422 @@
+:host {
+  display: block;
+}
+
+.client-card {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: min(410px, 80vw);
+
+  transform:
+    translate(-50%, -50%)
+    scale(0.8);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  z-index: 1;
+
+  transition:
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease;
+}
+
+
+/* =========================================
+   POSICIONES
+   ========================================= */
+
+.client-card.carta-activa {
+  transform:
+    translate(-50%, -50%)
+    scale(1);
+
+  opacity: 1;
+
+  pointer-events: auto;
+
+  z-index: 5;
+}
+
+.client-card.carta-anterior {
+  transform:
+    translate(
+      calc(-50% - 45%),
+      -50%
+    )
+    scale(0.82);
+
+  opacity: 0.32;
+
+  z-index: 2;
+}
+
+.client-card.carta-siguiente {
+  transform:
+    translate(
+      calc(-50% + 45%),
+      -50%
+    )
+    scale(0.82);
+
+  opacity: 0.32;
+
+  z-index: 2;
+}
+
+.client-card.carta-oculta {
+  opacity: 0;
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+
+/* =========================================
+   TARJETA
+   ========================================= */
+
+.client-card-inner {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 24px 24px 21px;
+
+  border-radius: 30px;
+
+  background: #8ca273;
+
+  border:
+    2px solid
+    rgba(255, 255, 255, 0.20);
+
+  box-shadow:
+    0 20px 45px
+    rgba(0, 0, 0, 0.20);
+
+  text-align: center;
+}
+
+
+/* =========================================
+   FOTO
+   ========================================= */
+
+.client-photo-container {
+  width: 128px;
+  height: 128px;
+
+  margin:
+    0
+    auto
+    13px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  border:
+    5px solid
+    #657a4d;
+
+  background:
+    #657a4d;
+
+  box-shadow:
+    0 8px 20px
+    rgba(0, 0, 0, 0.20);
+}
+
+.client-avatar {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #657a4d;
+
+  color: #ffffff;
+}
+
+.avatar-placeholder span {
+  font-size: 52px;
+}
+
+
+/* =========================================
+   ESTADO
+   ========================================= */
+
+.status {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    8px
+    15px;
+
+  margin-bottom: 10px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(231, 111, 69, 0.20);
+
+  color: #ffffff;
+
+  font-size: 14px;
+
+  font-weight: 800;
+}
+
+
+/* =========================================
+   NOMBRE
+   ========================================= */
+
+.client-card h2 {
+  margin:
+    0
+    0
+    16px;
+
+  color: #ffffff;
+
+  font-size: clamp(
+    24px,
+    5vw,
+    30px
+  );
+
+  font-weight: 800;
+
+  line-height: 1.15;
+}
+
+
+/* =========================================
+   DATOS
+   ========================================= */
+
+.client-data {
+  margin-bottom: 17px;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.18);
+}
+
+.data-row {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding:
+    11px
+    2px;
+
+  border-bottom:
+    1px solid
+    rgba(255, 255, 255, 0.18);
+}
+
+.label {
+  color:
+    rgba(255, 255, 255, 0.72);
+
+  font-size: 16px;
+
+  font-weight: 600;
+}
+
+.value {
+  color: #ffffff;
+
+  font-size: 18px;
+
+  font-weight: 800;
+}
+
+
+/* =========================================
+   BOTONES
+   ========================================= */
+
+.client-actions {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+}
+
+.client-actions button {
+  height: 52px;
+
+  border-radius: 15px;
+
+  font-family: inherit;
+
+  font-size: 16px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.client-actions button:active {
+  transform: scale(0.96);
+}
+
+.client-actions button:disabled {
+  opacity: 0.45;
+
+  cursor: default;
+}
+
+.approve-button {
+  border:
+    2px solid
+    #657a4d;
+
+  background:
+    #657a4d;
+
+  color: #ffffff;
+}
+
+.reject-button {
+  border:
+    2px solid
+    #e76f45;
+
+  background: transparent;
+
+  color: #e76f45;
+}
+
+.button-icon {
+  margin-right: 6px;
+
+  font-size: 20px;
+
+  font-weight: 900;
+}
+
+
+/* =========================================
+   ANIMACIÓN
+   ========================================= */
+
+.client-card.carta-saliendo {
+  animation:
+    carta-sale-arriba
+    0.5s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+}
+
+@keyframes carta-sale-arriba {
+  0% {
+    transform:
+      translate(-50%, -50%)
+      rotate(0deg)
+      scale(1);
+
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translate(-50%, -175%)
+      rotate(7deg)
+      scale(0.72);
+
+    opacity: 0;
+  }
+}
+
+
+/* =========================================
+   CELULAR
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .client-card {
+    width:
+      min(
+        365px,
+        89vw
+      );
+  }
+
+  .client-card-inner {
+    padding:
+      21px
+      18px
+      18px;
+
+    border-radius: 27px;
+  }
+
+  .client-photo-container {
+    width: 115px;
+    height: 115px;
+
+    margin-bottom: 11px;
+  }
+
+  .status {
+    font-size: 13px;
+
+    padding:
+      7px
+      13px;
+  }
+
+  .client-card h2 {
+    font-size: 24px;
+
+    margin-bottom: 13px;
+  }
+
+  .label {
+    font-size: 15px;
+  }
+
+  .value {
+    font-size: 17px;
+  }
+
+  .client-actions button {
+    height: 49px;
+
+    font-size: 15px;
+  }
+}
