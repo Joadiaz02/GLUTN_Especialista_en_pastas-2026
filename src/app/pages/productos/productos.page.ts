@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IonContent, IonSearchbar, IonIcon, IonBackButton, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
@@ -31,17 +31,22 @@ const TITULOS: Record<TipoCarta, string> = {
     IonSearchbar,
     IonIcon,
     SpinnerLogoComponent,
-    IonRouterLink,
     IonButton
 ],
 })
 export class ProductosPage implements OnInit {
 
   private route = inject(ActivatedRoute);
-  private carrito = inject(Carrito);
+  public carrito = inject(Carrito);
   private cartaService = inject(Carta);
 
-  // El tipo viene de la URL: /carta/plato, /carta/bebida, /carta/postre
+  // punto 12 :
+  //esta: el cliente pueden elegir los productos (con sus cantidades) para todos los comensales.
+  //erificar que en todo momento esté visible (y con buen tamaño) el importe acumulado
+  //Mostrar el tiempo total estimado de realización del pedido completo.
+  
+//casi echo
+  //hacer que la barra de producto se vea bien y llegue hasta el /carta 
   tipo = signal<TipoCarta>(
     (this.route.snapshot.paramMap.get('tipo') as TipoCarta) ?? 'plato'
   );
@@ -88,7 +93,7 @@ export class ProductosPage implements OnInit {
 
   onBuscar(texto: string): void {
     this.textoBusqueda.set(texto);
-    this.indiceActual.set(0); // al buscar, siempre arrancamos desde el primer resultado
+    this.indiceActual.set(0); 
   }
 
   siguiente(): void {
@@ -105,7 +110,7 @@ export class ProductosPage implements OnInit {
 
 
   agregarAlCarrito(producto: CartaItem): void {
-    this.carrito.agregar(producto.id_carta);
+    this.carrito.agregar(producto);
   }
 
   quitarAlcarrito(producto: CartaItem):void{
@@ -114,6 +119,21 @@ export class ProductosPage implements OnInit {
 
   cantidadEnCarrito(producto: CartaItem): number {
     return this.carrito.cantidadDe(producto.id_carta);
+  }
+
+  continuarPedido(): void {
+  const resumen = {
+    items: this.carrito.items(),
+    total: this.carrito.importeTotal(),
+    tiempoEstimado: this.carrito.tiempoTotalEstimado()
+  };
+
+    console.log('Pedido a guardar (todavía sin persistir):', resumen);
+
+    // TODO: cuando exista la tabla de pedidos en Supabase,
+    // acá va la llamada real: this.pedidosService.crearPedido(resumen)
+
+     // o la ruta que corresponda al siguiente paso
   }
 
   // ============================

@@ -38,31 +38,35 @@ ion-searchbar {
 }
 
 .producto-card {
+  
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
-  margin: 16px ;
+  margin: 0 auto;
   border-radius:20px;
   overflow: hidden;
   background: var(--ion-color-light, #f4ebdd);
   touch-action: pan-y;
-  height: 80%;
+  height: auto;
+  padding-bottom: 20px;
 }
 
 .producto-imagen {
   width: 100%;
-  height: 55%;
+  aspect-ratio: 1.5 / 1;
+  height: auto;
   object-fit: cover;
   display: block;
+  flex-shrink: 0;
 }
 
 .producto-info {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  padding: 20px;
-  gap: 8px;
+  flex: none;
+  padding: clamp(12px, 2vw, 20px);
+  gap: clamp(5px, 1vw, 10px);
   color: #3a2a1e;
 }
 
@@ -71,21 +75,20 @@ ion-searchbar {
   font-weight: 700;
   margin: 0;
   text-align: center;
+  line-height: 1.15;
 }
 
 .producto-descripcion {
   font-size: 22px;
-  line-height: 1.4;
+  line-height: 1.3;
   color: #6b5c4e;
   margin: 0;
-  flex: 0.5;
   text-align: center;
   font-weight: 700;
-
 }
 .producto-detalles {
   font-size: 22px;
-  line-height: 1;
+  line-height: 1.2;
   color: #6b5c4e;
   margin: 0;
   flex: 0.5;
@@ -100,11 +103,42 @@ ion-searchbar {
   width: 100%;             
 }
 
+.card-pedido {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  width: 100%;
+  min-height: 85px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  padding-bottom: calc(
+    10px + env(safe-area-inset-bottom)
+  );
+  background: #6b8150;
+  color: #ffffff;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.columna-datos {
+   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+
+
 .producto-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 12px;
+  margin-top: 100px;
+  gap: 10px;
 }
 
 .producto-precio {
@@ -116,7 +150,26 @@ ion-searchbar {
 .producto-agregar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+}
+
+.producto-pedido {
+  font-size: clamp(15px, 2.5vw, 19px);
+  color: #ffffff;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pedido-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pedido-precio{
+  font-size: 18px;
+  font-weight: bold;
+  color: #e76f45;
 }
 
 .producto-cantidad {
@@ -132,22 +185,25 @@ ion-searchbar {
   font-size: 14px;
 }
 
-.boton-agregar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 0;
-  background: var(--ion-color-primary, #e76f45);
-  color: #ffffff;
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.boton_pedido {
+ --background: #e76f45;
+  --color: #ffffff;
+  --border-radius: 50px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  height: 48px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  flex-shrink: 0;
 }
 
+.boton-agregar ,
 .boton-quitar {
   width: 44px;
   height: 44px;
+  min-width: 34px;
+  min-height: 34px;
   border-radius: 50%;
   border: 0;
   background: var(--ion-color-primary, #e76f45);
@@ -156,7 +212,8 @@ ion-searchbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  ;
+  flex-shrink: 0;
+
 }
 
 .boton_i{
