@@ -1,0 +1,186 @@
+:host {
+  display: block;
+
+  width: 100%;
+}
+
+
+/* =========================================
+   NAVEGACIÓN
+   ========================================= */
+
+.navigation-section {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 25px;
+}
+
+
+/* =========================================
+   BOTONES
+   ========================================= */
+
+.navigation-button {
+  width: 55px;
+  height: 55px;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #8ca273;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 17px
+    rgba(0, 0, 0, 0.17);
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.navigation-button:active {
+  transform: scale(0.90);
+}
+
+.navigation-button:disabled {
+  opacity: 0.40;
+
+  cursor: default;
+}
+
+
+/* =========================================
+   CHEVRON
+   ========================================= */
+
+.nav-chevron {
+  width: 14px;
+  height: 14px;
+
+  border-top:
+    3px solid
+    #ffffff;
+
+  border-right:
+    3px solid
+    #ffffff;
+}
+
+.nav-left {
+  transform: rotate(-135deg);
+
+  margin-left: 5px;
+}
+
+.nav-right {
+  transform: rotate(45deg);
+
+  margin-right: 5px;
+}
+
+
+/* =========================================
+   CONTADOR
+   ========================================= */
+
+.counter {
+  min-width: 110px;
+
+  display: flex;
+
+  align-items: baseline;
+  justify-content: center;
+
+  gap: 7px;
+
+  color: #ffffff;
+}
+
+.counter-current {
+  font-size: 31px;
+
+  font-weight: 900;
+}
+
+.counter-separator {
+  font-size: 16px;
+
+  opacity: 0.8;
+}
+
+.counter-total {
+  font-size: 21px;
+
+  font-weight: 800;
+}
+
+
+/* =========================================
+   AYUDA
+   ========================================= */
+
+.swipe-hint {
+  margin:
+    7px
+    0
+    0;
+
+  color:
+    rgba(255, 255, 255, 0.72);
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   CELULAR
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .navigation-section {
+    gap: 20px;
+  }
+
+  .navigation-button {
+    width: 51px;
+    height: 51px;
+  }
+
+  .counter {
+    min-width: 100px;
+  }
+
+  .counter-current {
+    font-size: 29px;
+  }
+
+  .counter-separator {
+    font-size: 15px;
+  }
+
+  .counter-total {
+    font-size: 20px;
+  }
+
+  .swipe-hint {
+    font-size: 12px;
+  }
+}

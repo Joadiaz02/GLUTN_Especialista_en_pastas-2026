@@ -64,6 +64,14 @@ export const routes: Routes = [
   },
 
   {
+  path: 'admin/clients',
+  loadComponent: () =>
+    import('./pages/clients/clients.page').then(
+      (m) => m.ClientsPage
+    ),
+  },
+
+  {
     path: 'home',
 
     canActivate: [authGuard],

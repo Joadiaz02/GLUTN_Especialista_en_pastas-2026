@@ -1,0 +1,99 @@
+<article
+  class="client-card"
+  [class]="clasePosicion"
+  [class.carta-saliendo]="saliendo"
+  [attr.aria-hidden]="posicion !== 'activa'"
+>
+  <div class="client-card-inner">
+
+    <!-- FOTO -->
+
+    <div class="client-photo-container">
+
+      @if (avatarUrl) {
+
+        <img
+          [src]="avatarUrl"
+          [alt]="'Foto de ' + cliente.nombre"
+          class="client-avatar"
+        />
+
+      } @else {
+
+        <div class="avatar-placeholder">
+          <span>👤</span>
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- ESTADO -->
+
+    <span class="status">
+      Pendiente de aprobación
+    </span>
+
+
+    <!-- NOMBRE -->
+
+    <h2>
+      {{ cliente.apellido }}, {{ cliente.nombre }}
+    </h2>
+
+
+    <!-- DNI -->
+
+    <div class="client-data">
+
+      <div class="data-row">
+
+        <span class="label">
+          DNI
+        </span>
+
+        <span class="value">
+          {{ cliente.documento }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ACCIONES -->
+
+    <div class="client-actions">
+
+      <button
+        type="button"
+        class="approve-button"
+        [disabled]="deshabilitada"
+        (click)="onAprobar()"
+      >
+        <span class="button-icon">
+          ✓
+        </span>
+
+        Aprobar
+      </button>
+
+
+      <button
+        type="button"
+        class="reject-button"
+        [disabled]="deshabilitada"
+        (click)="onRechazar()"
+      >
+        <span class="button-icon">
+          ×
+        </span>
+
+        Rechazar
+      </button>
+
+    </div>
+
+  </div>
+</article>

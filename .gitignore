@@ -72,3 +72,4 @@ Thumbs.db
 # Archivos y scripts locales
 .env
 /scripts/
+supabase/.env

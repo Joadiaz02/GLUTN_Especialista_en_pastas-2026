@@ -1,49 +1,224 @@
 <ion-header class="ion-no-border">
+
   <ion-toolbar>
+
     <ion-buttons slot="start">
-      <app-confirm-dialog></app-confirm-dialog>
+
+      <app-confirm-dialog
+        titulo="¿Salir del registro?"
+        mensaje="Si salís ahora, vas a perder los datos ingresados."
+        textoCancelar="Cancelar"
+        textoConfirmar="Salir"
+        icono="log-out-outline"
+        (confirmado)="cancelarRegistro()"
+      ></app-confirm-dialog>
+
     </ion-buttons>
 
-    <ion-title>{{ getStepTitle() }}</ion-title>
+
+    <ion-title>
+      {{ getStepTitle() }}
+    </ion-title>
+
   </ion-toolbar>
 
-  <app-progress-bar [currentStep]="currentStep()"></app-progress-bar>
+
+  <app-progress-bar
+    [currentStep]="currentStep()"
+  ></app-progress-bar>
+
 </ion-header>
 
+
 <ion-content [fullscreen]="true">
-  @switch (currentStep()) { @case (1) {
-  <app-personal-step [control]="getFormGroup('personal')" />
-  } @case (2) {
-  <app-credentials-step [control]="getFormGroup('credentials')" />
-  } @case (3) {
-  <app-profile-step [control]="getFormGroup('profile')" />
-  } }
+
+  @switch (currentStep()) {
+
+    @case (1) {
+
+      <app-personal-step
+        [control]="
+          getFormGroup('personal')
+        "
+      />
+
+    }
+
+    @case (2) {
+
+      <app-credentials-step
+        [control]="
+          getFormGroup('credentials')
+        "
+      />
+
+    }
+
+    @case (3) {
+
+      <app-profile-step
+        [control]="
+          getFormGroup('profile')
+        "
+      />
+
+    }
+
+  }
+
 </ion-content>
 
+
 <ion-footer class="ion-no-border">
+
   <div class="footer-actions">
+
     @if (currentStep() === 1) {
-    <ion-button expand="block" shape="round" (click)="nextStep()"
-      >Continuar</ion-button
-    >
-    } @else if (currentStep() === 2) {
-    <ion-button expand="block" shape="round" (click)="nextStep()"
-      >Continuar</ion-button
-    >
-    <app-confirm-volver (confirmadoVolver)="previousStep()"></app-confirm-volver>
-    >
-    } @else {
-    <ion-button
-      expand="block"
-      shape="round"
-      (click)="register()"
-      [disabled]="(form.statusChanges | async) !== 'VALID'"
-    >
-      @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> } Crear
-      cuenta
-    </ion-button>
-     <app-confirm-volver (confirmadoVolver)="previousStep()"></app-confirm-volver>          
-    >
+
+      <ion-button
+        expand="block"
+        shape="round"
+        (click)="nextStep()"
+      >
+        Continuar
+      </ion-button>
+
     }
+
+
+    @else if (currentStep() === 2) {
+
+      <ion-button
+        expand="block"
+        shape="round"
+        (click)="nextStep()"
+      >
+        Continuar
+      </ion-button>
+
+
+      <app-confirm-volver
+        (confirmadoVolver)="previousStep()"
+      ></app-confirm-volver>
+
+    }
+
+
+    @else {
+
+      <ion-button
+        expand="block"
+        shape="round"
+        (click)="register()"
+        [disabled]="
+          (form.statusChanges | async) !== 'VALID' ||
+          isLoading()
+        "
+      >
+
+        @if (isLoading()) {
+
+          <ion-spinner
+            name="crescent"
+          ></ion-spinner>
+
+        }
+        @else {
+
+          Crear cuenta
+
+        }
+
+      </ion-button>
+
+
+      <app-confirm-volver
+        (confirmadoVolver)="previousStep()"
+      ></app-confirm-volver>
+
+    }
+
   </div>
+
 </ion-footer>
+
+
+<!-- =========================================
+     REGISTRO COMPLETADO
+     ========================================= -->
+
+<ion-modal
+  [isOpen]="mostrarRegistroExitoso()"
+  [backdropDismiss]="false"
+  class="registration-success-modal"
+>
+
+  <ng-template>
+
+    <div class="registration-success">
+
+      <div class="registration-success-logo">
+
+        <img
+          src="assets/images/logo-glutn-v2.png"
+          alt="GLUTN - Especialista en Pastas"
+        />
+
+      </div>
+
+
+      <div class="registration-success-content">
+
+        <span class="registration-success-label">
+          REGISTRO COMPLETADO
+        </span>
+
+
+        <h2>
+          ¡Tu cuenta fue creada!
+        </h2>
+
+
+        <p>
+          Tu cuenta quedó
+          <strong>
+            pendiente de aprobación
+          </strong>
+          por parte de la administración.
+        </p>
+
+
+        <div class="registration-success-info">
+
+          <span class="registration-success-icon">
+            ✉
+          </span>
+
+          <p>
+            Revisá la bandeja de entrada de tu correo
+            para conocer el estado de tu solicitud.
+          </p>
+
+        </div>
+
+
+        <p class="registration-success-spam">
+          Si no encontrás el mensaje, revisá también
+          la carpeta de correo no deseado.
+        </p>
+
+
+        <ion-button
+          shape="round"
+          (click)="cerrarRegistroExitoso()"
+        >
+          Entendido
+        </ion-button>
+
+      </div>
+
+    </div>
+
+  </ng-template>
+
+</ion-modal>

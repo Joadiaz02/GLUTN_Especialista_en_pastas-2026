@@ -1,0 +1,51 @@
+<section class="navigation-section">
+
+  <button
+    type="button"
+    class="navigation-button"
+    [disabled]="
+      totalClientes <= 1 ||
+      deshabilitada
+    "
+    (click)="irAnterior()"
+    aria-label="Cliente anterior"
+  >
+    <span class="nav-chevron nav-left"></span>
+  </button>
+
+
+  <div class="counter">
+
+    <span class="counter-current">
+      {{ posicionActual }}
+    </span>
+
+    <span class="counter-separator">
+      de
+    </span>
+
+    <span class="counter-total">
+      {{ totalClientes }}
+    </span>
+
+  </div>
+
+
+  <button
+    type="button"
+    class="navigation-button"
+    [disabled]="
+      totalClientes <= 1 ||
+      deshabilitada
+    "
+    (click)="irSiguiente()"
+    aria-label="Cliente siguiente"
+  >
+    <span class="nav-chevron nav-right"></span>
+  </button>
+
+</section>
+
+<p class="swipe-hint">
+  Deslizá para cambiar de cliente
+</p>
