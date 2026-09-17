@@ -3,7 +3,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { SupabaseService } from '../../services/supabase.service';
+
 import {
   FormsModule,
 } from '@angular/forms';
@@ -14,7 +14,21 @@ import {
 } from '@angular/router';
 
 import {
+  IonText,
   ToastController,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButton,
+  IonButtons,
+  IonBackButton,
+  IonSpinner,
+  IonFooter,
+  IonToast,
 } from '@ionic/angular';
 
 import {
@@ -22,16 +36,14 @@ import {
 } from '@capacitor/haptics';
 
 import { Auth } from '../../services/auth/auth';
+
 import {
   PushNotificationService,
 } from '../../services/push-notification.service';
 
-@Component({
-  selector: 'app-login',
-  imports: [
-    FormsModule,
-    RouterLink,
-  ],
+import {
+  SupabaseService,
+} from '../../services/supabase.service';
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss',
 })

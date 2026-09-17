@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+
 
 import {
   IonHeader,
@@ -10,12 +11,19 @@ import {
   IonButton,
   IonIcon,
   IonContent,
+  IonModal,
+  
 } from '@ionic/angular';
 
 import { Auth } from '../../services/auth/auth';
 import { ADMIN_MODULES } from './data/admin.modules';
 import { AdminModule } from '@app/models/admin.model';
 import { AdminModuleCardComponent } from '@app/components/admin-module-card/admin-module-card.component';
+
+import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
+import { addIcons } from 'ionicons';
+import { logOutOutline } from 'ionicons/icons';
+import { ConfirmVolverComponent } from "@app/components/ui/confirm-volver/confirm-volver.component";
 
 @Component({
   selector: 'app-admin',
@@ -26,24 +34,30 @@ import { AdminModuleCardComponent } from '@app/components/admin-module-card/admi
     IonToolbar,
     IonTitle,
     IonButtons,
-    IonButton,
-    IonIcon,
     IonContent,
     AdminModuleCardComponent,
-
     RouterLink,
-  ],
+  
+    ConfirmDialogComponent,
+    ConfirmVolverComponent
+],
   templateUrl: './admin.page.html',
   styleUrls: ['./admin.page.scss'],
 })
 export class AdminPage implements OnInit {
   modulosVisibles: AdminModule[] = [];
-
+  
   constructor(
     private auth: Auth,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    
+    
+  ) {
+    addIcons({
+    'log-out-outline': logOutOutline
+  });
+  }
 
   ngOnInit(): void {
     void this.cargarModulos();
@@ -87,11 +101,14 @@ export class AdminPage implements OnInit {
   }
 
   volver(): void {
+    
     void this.router.navigate(['/seleccion-acceso']);
   }
+
 
   async cerrarSesion(): Promise<void> {
     await this.auth.logout();
     await this.router.navigate(['/login']);
+    
   }
 }
