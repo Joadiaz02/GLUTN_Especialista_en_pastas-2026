@@ -81,6 +81,7 @@ export class Auth {
     request: any,
     role: EPerfilUsuario
   ): Promise<void> {
+
     const avatarUrl =
       await this.storageService
         .uploadImage(
@@ -160,6 +161,45 @@ export class Auth {
         errorCorreo
       );
     }
+
+
+    if (
+      data.session?.access_token
+    ) {
+
+      const {
+        error: errorPush,
+      } =
+        await this.supabaseService.client
+          .functions
+          .invoke(
+            'notify-pending-client',
+            {
+              body: {
+                clienteId:
+                  data.user.id,
+              },
+
+              headers: {
+                Authorization:
+                  `Bearer ${data.session.access_token}`,
+              },
+            }
+          );
+
+      if (errorPush) {
+        console.error(
+          'La cuenta fue creada, pero no se pudo notificar a los gestores:',
+          errorPush
+        );
+      }
+
+    } else {
+
+      console.warn(
+        'La cuenta fue creada, pero no se obtuvo una sesión para enviar la notificación Push a los gestores.'
+      );
+    }
   }
 
   async iniciarsecion(
@@ -168,6 +208,7 @@ export class Auth {
       password: string;
     }
   ): Promise<any> {
+
     const {
       data,
       error,
@@ -216,6 +257,7 @@ export class Auth {
         );
 
     if (errorEstado) {
+
       await this.supabaseService.client.auth
         .signOut();
 
@@ -229,6 +271,7 @@ export class Auth {
     if (
       estado === 'pendiente'
     ) {
+
       await this.supabaseService.client.auth
         .signOut();
 
@@ -242,6 +285,7 @@ export class Auth {
     if (
       estado === 'rechazado'
     ) {
+
       await this.supabaseService.client.auth
         .signOut();
 
@@ -255,6 +299,7 @@ export class Auth {
     if (
       estado === 'aprobado'
     ) {
+
       this.usuarioActual =
         data.user;
 
@@ -272,6 +317,7 @@ export class Auth {
   }
 
   async logout(): Promise<void> {
+
     await this.supabaseService.client.auth
       .signOut();
 

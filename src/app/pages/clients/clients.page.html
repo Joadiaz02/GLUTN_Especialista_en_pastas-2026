@@ -1,6 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <div class="toolbar-content">
+
       <button
         type="button"
         class="toolbar-back-button"
@@ -23,9 +24,11 @@
       >
         <span class="refresh-icon">↻</span>
       </button>
+
     </div>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content
   class="clients-content"
@@ -36,14 +39,22 @@
     @if (cargando()) {
 
       <section class="loading-section">
+
         <div class="loading-spinner"></div>
-        <p>Cargando clientes...</p>
+
+        <p>
+          Cargando clientes...
+        </p>
+
       </section>
 
     } @else if (totalClientes === 0) {
 
       <section class="empty-section">
-        <div class="empty-icon">✓</div>
+
+        <div class="empty-icon">
+          ✓
+        </div>
 
         <h2>
           No hay clientes pendientes
@@ -53,6 +64,7 @@
           Todos los clientes registrados
           fueron gestionados.
         </p>
+
       </section>
 
     } @else {
@@ -105,6 +117,7 @@
 
       </section>
 
+
       <app-clients-navigation
         [posicionActual]="posicionVisible"
         [totalClientes]="totalClientes"
@@ -116,6 +129,7 @@
     }
 
   </main>
+
 
   <app-reject-client-modal
     [cliente]="clienteARechazar()"

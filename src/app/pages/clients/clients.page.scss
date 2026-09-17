@@ -13,15 +13,15 @@
    ========================================= */
 
 ion-content.clients-content {
-  --background: #657a4d;
+  --background: var(--glutn-green);
 }
 
 ion-header {
-  background: #657a4d;
+  background: var(--glutn-green);
 }
 
 ion-toolbar {
-  --background: #657a4d;
+  --background: var(--glutn-green);
   --border-width: 0;
 
   padding: 0;
@@ -117,7 +117,7 @@ ion-toolbar {
 
 
 /* =========================================
-   FLECHA VOLVER
+   FLECHA
    ========================================= */
 
 .toolbar-chevron {
@@ -169,9 +169,9 @@ ion-toolbar {
   box-sizing: border-box;
 
   padding:
-    20px
+    14px
     15px
-    25px;
+    20px;
 
   display: flex;
 
@@ -179,55 +179,7 @@ ion-toolbar {
 
   align-items: center;
 
-  gap: 10px;
-}
-
-
-/* =========================================
-   HEADER
-   ========================================= */
-
-.header-section {
-  width: 100%;
-  max-width: 700px;
-
-  text-align: center;
-}
-
-.header-section h1 {
-  margin:
-    4px
-    0
-    7px;
-
-  color: #ffffff;
-
-  font-size:
-    clamp(
-      30px,
-      6vw,
-      40px
-    );
-
-  font-weight: 800;
-
-  line-height: 1.1;
-}
-
-.header-section p {
-  margin: 0;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.88
-    );
-
-  font-size: 16px;
-
-  line-height: 1.4;
+  gap: 8px;
 }
 
 
@@ -235,7 +187,7 @@ ion-toolbar {
    LOADING
    ========================================= */
 
-.loading-container {
+.loading-section {
   width: 100%;
 
   min-height: 400px;
@@ -252,12 +204,7 @@ ion-toolbar {
   color: #ffffff;
 }
 
-.loading-container ion-spinner {
-  width: 45px;
-  height: 45px;
-}
-
-.loading-container p {
+.loading-section p {
   margin: 0;
 
   font-size: 16px;
@@ -267,10 +214,43 @@ ion-toolbar {
 
 
 /* =========================================
+   SPINNER
+   ========================================= */
+
+.loading-spinner {
+  width: 42px;
+  height: 42px;
+
+  border:
+    4px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.25
+    );
+
+  border-top-color:
+    #ffffff;
+
+  border-radius: 50%;
+
+  animation:
+    spinner 0.8s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================
    EMPTY
    ========================================= */
 
-.empty-container {
+.empty-section {
   width: 100%;
   max-width: 520px;
 
@@ -285,7 +265,7 @@ ion-toolbar {
   border-radius: 28px;
 
   background:
-    #8ca273;
+    var(--glutn-green-light);
 
   text-align: center;
 
@@ -300,12 +280,32 @@ ion-toolbar {
 }
 
 .empty-icon {
-  font-size: 58px;
+  width: 64px;
+  height: 64px;
 
-  margin-bottom: 12px;
+  margin:
+    0
+    auto
+    15px;
+
+  border-radius: 50%;
+
+  background:
+    var(--glutn-green);
+
+  color: #ffffff;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 36px;
+
+  font-weight: 800;
 }
 
-.empty-container h2 {
+.empty-section h2 {
   margin:
     0
     0
@@ -318,7 +318,7 @@ ion-toolbar {
   font-weight: 800;
 }
 
-.empty-container p {
+.empty-section p {
   margin: 0;
 
   color:
@@ -347,7 +347,7 @@ ion-toolbar {
 
   height:
     clamp(
-      410px,
+      390px,
       54vh,
       510px
     );
@@ -374,12 +374,12 @@ ion-toolbar {
 @media (max-width: 600px) {
 
   .toolbar-content {
-    height: 56px;
+    height: 54px;
 
     grid-template-columns:
-      54px
+      50px
       1fr
-      54px;
+      50px;
   }
 
   .toolbar-title {
@@ -388,28 +388,45 @@ ion-toolbar {
 
   .toolbar-back-button,
   .toolbar-refresh-button {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
   }
 
   .clients-container {
     padding:
-      14px
-      9px
-      20px;
+      7px
+      8px
+      14px;
 
-    gap: 8px;
-  }
-
-  .header-section h1 {
-    font-size: 29px;
-  }
-
-  .header-section p {
-    font-size: 14px;
+    gap: 4px;
   }
 
   .cards-section {
-    height: 455px;
+    height: 405px;
+  }
+}
+
+
+/* =========================================
+   CELULARES MUY CHICOS
+   ========================================= */
+
+@media (max-width: 380px) {
+
+  .toolbar-content {
+    height: 52px;
+  }
+
+  .toolbar-title {
+    font-size: 17px;
+  }
+
+  .cards-section {
+    height: 390px;
+  }
+
+  .clients-container {
+    padding-left: 6px;
+    padding-right: 6px;
   }
 }
