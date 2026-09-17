@@ -1,0 +1,122 @@
+.menu-card {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: #A8B68A;
+  gap: 12px;
+
+  &--disabled {
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: #A8B68A;
+      opacity: 0.4;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 1;
+    }
+  }
+
+  &__content {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    gap: 12px;
+  }
+
+  &__media {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  &__image {
+    width: 75px;
+    height: 75px;
+    border-radius: 12px;
+    object-fit: cover;
+    background-color: rgba(0, 0, 0, 0.06);
+
+    &--disabled {
+      filter: saturate(0);
+    }
+  }
+
+  &__badge {
+    align-self: flex-start;
+    background: var(--ion-color-danger);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0;
+    color: #2F3D24;
+  }
+
+  &__description {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+    color: #4D5C3E;
+  }
+
+  &__price {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+  }
+
+  &__divider {
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  &__actions {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: #94A07A;
+    color: #ffffff;
+
+    &--active {
+      background-color: var(--ion-color-primary);
+    }
+  }
+}

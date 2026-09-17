@@ -10,9 +10,9 @@
 
 <ion-content [fullscreen]="true">
   <div class="upload-container">
-    <app-uploader (fileSelected)="onPhotoSelected(0, $event)" />
-    <app-uploader (fileSelected)="onPhotoSelected(1, $event)" />
-    <app-uploader (fileSelected)="onPhotoSelected(2, $event)" />
+    <gtn-uploader (fileSelected)="onPhotoSelected(0, $event)" />
+    <gtn-uploader (fileSelected)="onPhotoSelected(1, $event)" />
+    <gtn-uploader (fileSelected)="onPhotoSelected(2, $event)" />
   </div>
 
   <form [formGroup]="form" class="fields">
@@ -91,6 +91,53 @@
         { @if ( getFormControl('price')?.hasError('required') ) {
         <p class="field__error">El campo es obligatorio.</p>
         } }
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field__label">Mililitros</label>
+
+      <ion-input
+        type="text"
+        inputmode="numeric"
+        maxlength="5"
+        fill="outline"
+        class="field__input"
+        placeholder="Mililitros"
+        formControlName="ml"
+      />
+
+      @if ( getFormControl('ml')?.invalid && (getFormControl('ml')?.touched ||
+      getFormControl('ml')?.dirty ) ) { @if (
+      getFormControl('ml')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } @else if ( getFormControl('ml')?.hasError('pattern') ) {
+      <p class="field__error">Ingresá solo números, sin letras ni símbolos.</p>
+      } @else if ( getFormControl('ml')?.hasError('min') ) {
+      <p class="field__error">Tiene que ser mayor a 0.</p>
+      } }
+    </div>
+
+    <div class="toggle-group">
+      <h3 class="toggle-group__title">Contiene alcohol</h3>
+
+      <div class="toggle-group__row">
+        <span class="toggle-group__row-label">Bebida con alcohol</span>
+
+        <ion-toggle
+          class="toggle-group__toggle"
+          formControlName="contieneAlcohol"
+        ></ion-toggle>
+      </div>
+    </div>
+
+    <div class="toggle-group">
+      <h3 class="toggle-group__title">Sugerencia de la casa</h3>
+
+      <div class="toggle-group__row">
+        <span class="toggle-group__row-label">Mostrar como recomendada</span>
+
+        <ion-toggle formControlName="sugerencia"></ion-toggle>
       </div>
     </div>
   </form>

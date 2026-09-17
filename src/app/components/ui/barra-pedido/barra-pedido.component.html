@@ -1,0 +1,19 @@
+@if (carrito.totalItems() > 0) {
+  <div class="barra-pedido">
+    <div class="barra-pedido__info">
+      <span class="barra-pedido__cantidad">
+        {{ carrito.totalItems() }} {{ carrito.totalItems() === 1 ? 'producto' : 'productos' }}
+      </span>
+      <span class="barra-pedido__meta">
+        <ion-icon name="time-outline"></ion-icon>
+        {{ carrito.tiempoTotalEstimado() }} min
+        <span class="barra-pedido__punto">•</span>
+        {{ carrito.importeTotal() | currency:'ARS':'symbol':'1.0-0' }}
+      </span>
+    </div>
+
+    <ion-button shape="round" (click)="continuar.emit()">
+      {{ textoBoton }}
+    </ion-button>
+  </div>
+}

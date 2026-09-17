@@ -32,40 +32,9 @@
   </div>
 
   <!-- BOTONES PRINCIPALES -->
-  <ion-button class="home-button" expand="block" shape="round" (click)="toggleReserva()">
-    Reservar mesa
+  <ion-button class="home-button" expand="block" shape="round" (click)="goToReservas()">
+    Reservas
   </ion-button>
-
-  @if (showReserva) {
-    <div class="historia">
-      <h2>Reservar mesa</h2>
-
-      <!-- FECHA -->
-      <ion-item>
-        <ion-label>Fecha</ion-label>
-        <ion-datetime
-          presentation="date"
-          [min]="today"
-          [max]="maxDate"
-          (ionChange)="fecha = formatDate($event.detail.value)"
-        ></ion-datetime>
-      </ion-item>
-
-      <!-- HORA -->
-      <ion-item>
-        <ion-label>Hora</ion-label>
-        <ion-datetime
-          presentation="time"
-          [minuteValues]="[0, 30]"
-          (ionChange)="hora = formatDate($event.detail.value)"
-        ></ion-datetime>
-      </ion-item>
-
-      <ion-button class="home-button" expand="block" shape="round" (click)="solicitarReserva()">
-        Solicitar reserva
-      </ion-button>
-    </div>
-  }
 
   <ion-button class="home-button" expand="block" shape="round" (click)="toggleDestacados()">
     Productos destacados
@@ -75,28 +44,55 @@
     <div class="destacados">
       <h2 class="destacados__titulo">Productos destacados</h2>
 
-      <div class="destacados__slide">
-        @if (isLoadingDestacados()) {
-          @for (i of [1, 2, 3]; track i) {
-            <div class="destacado-card destacado-card--skeleton">
-              <ion-skeleton-text [animated]="true" class="destacado-card__imagen"></ion-skeleton-text>
-              <ion-skeleton-text [animated]="true" style="width: 70%; height: 14px;"></ion-skeleton-text>
-              <ion-skeleton-text [animated]="true" style="width: 40%; height: 14px;"></ion-skeleton-text>
-            </div>
-          }
-        } @else if (destacados().length === 0) {
-          <p class="destacados__vacio">Todavía no hay sugerencias del chef.</p>
-        } @else {
-          @for (d of destacados(); track d.id_carta) {
-            <div class="destacado-card">
-              <img class="destacado-card__imagen" [src]="d.foto_1" [alt]="d.nombre">
-              <h3 class="destacado-card__nombre">{{ d.nombre }}</h3>
-              <span class="destacado-card__precio">{{ d.precio | currency:'ARS':'$' }}</span>
-              <p class="destacado-card__descripcion">{{ d.descripcion }}</p>
-            </div>
-          }
+      @if (isLoadingDestacados()) {
+        <div class="destacado-card destacado-card--skeleton">
+          <ion-skeleton-text [animated]="true" class="destacado-card__imagen"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" style="width: 70%; height: 14px;"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" style="width: 40%; height: 14px;"></ion-skeleton-text>
+        </div>
+      } @else if (destacados().length === 0) {
+        <p class="destacados__vacio">Todavía no hay sugerencias del chef.</p>
+      } @else if (productoDestacadoActual(); as producto) {
+        <div class="destacados__carrusel">
+          <button
+            type="button"
+            class="destacados__flecha"
+            [disabled]="destacados().length < 2"
+            (click)="anteriorDestacado()"
+            aria-label="Producto destacado anterior"
+          >
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </button>
+
+          <div class="destacado-card">
+            <img class="destacado-card__imagen" [src]="fotoDestacadaActual()" [alt]="producto.nombre">
+            <h3 class="destacado-card__nombre">{{ producto.nombre }}</h3>
+            <span class="destacado-card__precio">{{ producto.precio | currency:'ARS':'$' }}</span>
+            <p class="destacado-card__descripcion">{{ producto.descripcion }}</p>
+          </div>
+
+          <button
+            type="button"
+            class="destacados__flecha"
+            [disabled]="destacados().length < 2"
+            (click)="siguienteDestacado()"
+            aria-label="Siguiente producto destacado"
+          >
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </button>
+        </div>
+
+        @if (destacados().length > 1) {
+          <div class="destacados__paginacion">
+            @for (item of destacados(); track item.id_carta; let i = $index) {
+              <span
+                class="destacados__punto"
+                [class.destacados__punto--activo]="i === indiceDestacado()"
+              ></span>
+            }
+          </div>
         }
-      </div>
+      }
     </div>
   }
 

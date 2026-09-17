@@ -14,7 +14,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="create-dish-content">
+  <div class="create-dish-wrapper">
   <div class="upload-container">
     <app-uploader (fileSelected)="onPhotoSelected(0, $event)" />
     <app-uploader (fileSelected)="onPhotoSelected(1, $event)" />
@@ -89,7 +90,7 @@
         <ion-input
           type="text"
           inputmode="numeric"
-          maxlength="6"
+          maxlength="9"
           fill="outline"
           class="field__input"
           placeholder="Precio"
@@ -119,6 +120,7 @@
       </p>
     </div>
   </form>
+  </div>
 </ion-content>
 
 <ion-footer class="ion-no-border">

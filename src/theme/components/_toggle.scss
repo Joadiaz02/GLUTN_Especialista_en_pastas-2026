@@ -1,0 +1,18 @@
+ion-toggle {
+  --track-background: #8ca273;
+  --track-background-checked: #e76f45;
+  --border-radius: 50px;
+
+  --handle-background: #ffffff;
+  --handle-background-checked: #ffffff;
+  --handle-width: 20px;
+  --handle-height: 20px;
+  --handle-border-radius: 50%;
+  --handle-spacing: 4px;
+  --handle-box-shadow: none;
+}
+
+ion-toggle::part(track) {
+  width: 52px;
+  height: 28px;
+}

@@ -80,27 +80,66 @@ ion-content {
   font-weight: 700;
   color: var(--ion-text-color);
   margin-bottom: 16px;
+  text-align: center;
 }
 
 .destacados__vacio {
   color: var(--ion-text-color);
   opacity: 0.85;
+  text-align: center;
 }
 
-.destacados__slide {
+.destacados__carrusel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.destacados__flecha {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--ion-color-light);
+  color: var(--ion-color-primary);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.destacados__paginacion {
   display: flex;
   justify-content: center;
-  gap: 16px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 8px;
-  -webkit-overflow-scrolling: touch;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.destacados__punto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ion-border-color);
+}
+
+.destacados__punto--activo {
+  background: var(--ion-color-primary);
 }
 
 .destacado-card {
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-  width: 220px;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
   background: var(--ion-color-light);
   border-radius: 16px;
   border: 2px solid var(--ion-border-color);

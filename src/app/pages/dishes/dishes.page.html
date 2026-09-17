@@ -11,30 +11,72 @@
     </ion-buttons>
 
     <ion-title>Platos</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button routerLink="create">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <div class="dishes">
-    <button routerLink="create" class="dish-placeholder">
-      <ion-icon src="assets/icons/plus.svg"></ion-icon>
-    </button>
+<ion-content [fullscreen]="true" class="dishes-content">
+  <div class="dishes-wrapper">
+    <ion-searchbar
+      placeholder="Buscar plato"
+      [debounce]="200"
+      (ionInput)="onBuscar($event.detail.value ?? '')"
+    ></ion-searchbar>
 
-    @if (!isLoading()) { @for (dish of dishes(); track dish.id_carta) {
-    <app-dish-card
-      [name]="dish.nombre"
-      [description]="dish.descripcion"
-      [price]="dish.precio"
-      [image]="dish.foto_1"
-      [sugerencia]="dish.sugerencia"
-      [bajaLogica]="dish.baja_logica"
-      (editar)="editar(dish)"
-      (destacar)="destacar(dish)"
-      (baja)="darDeBaja(dish)"
-      (reactivar)="reactivar(dish)"
-    ></app-dish-card>
-    } } @else { @for (i of [1, 2, 3, 4, 5]; track $index) {
-    <app-skeleton-card />
-    } }
+    @if (isLoading()) {
+      <div class="dishes-lista">
+        @for (i of [1, 2]; track $index) {
+          <app-skeleton-card />
+        }
+      </div>
+    } @else if (dishesFiltrados().length === 0) {
+      <div class="dishes-vacio">
+        <p>{{ dishes().length === 0 ? 'Todavía no cargaste ningún plato.' : 'No encontramos nada que coincida con tu búsqueda.' }}</p>
+      </div>
+    } @else {
+      <div
+        class="dishes-pagina"
+        (touchstart)="onTouchStart($event)"
+        (touchend)="onTouchEnd($event)"
+      >
+        @if (hayAnterior()) {
+          <button class="flecha flecha-izq" type="button" (click)="anterior()">
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </button>
+        }
+
+        <div class="dishes-lista">
+          @for (dish of dishesPaginaActual(); track dish.id_carta) {
+            <app-dish-card
+              [name]="dish.nombre"
+              [description]="dish.descripcion"
+              [price]="dish.precio"
+              [image]="dish.foto_1"
+              [sugerencia]="dish.sugerencia"
+              [bajaLogica]="dish.baja_logica"
+              (editar)="editar(dish)"
+              (destacar)="destacar(dish)"
+              (baja)="darDeBaja(dish)"
+              (reactivar)="reactivar(dish)"
+            ></app-dish-card>
+          }
+        </div>
+
+        @if (haySiguiente()) {
+          <button class="flecha flecha-der" type="button" (click)="siguiente()">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </button>
+        }
+      </div>
+
+      @if (totalPaginas() > 1) {
+        <p class="dishes-indicador">{{ indicePagina() + 1 }} / {{ totalPaginas() }}</p>
+      }
+    }
   </div>
 </ion-content>

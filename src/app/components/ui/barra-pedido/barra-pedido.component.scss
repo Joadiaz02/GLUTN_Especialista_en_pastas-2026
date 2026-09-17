@@ -1,0 +1,55 @@
+.barra-pedido {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 20px;
+  background: #6b8150;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.25);
+
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.barra-pedido__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--text-primary);
+  min-width: 0;
+}
+
+.barra-pedido__cantidad {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.barra-pedido__meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+
+  ion-icon {
+    font-size: 14px;
+  }
+}
+
+.barra-pedido__punto {
+  margin: 0 2px;
+}
+
+ion-button {
+  flex-shrink: 0;
+  margin: 0;
+  --padding-start: 16px;
+  --padding-end: 16px;
+}

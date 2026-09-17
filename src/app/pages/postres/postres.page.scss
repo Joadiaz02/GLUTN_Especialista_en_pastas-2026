@@ -1,0 +1,81 @@
+.dishes-content {
+  --background: var(--ion-background-color);
+}
+
+.dishes-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  box-sizing: border-box;
+}
+
+ion-searchbar {
+  --background: var(--ion-color-light, #f4ebdd);
+  --color: #2F3D24;
+  --placeholder-color: #6b5c4e;
+  --border-radius: 12px;
+  padding: 0 0 12px;
+  flex-shrink: 0;
+}
+
+.dishes-vacio {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  color: var(--ion-text-color);
+  opacity: 0.85;
+}
+
+.dishes-pagina {
+  position: relative;
+  display: flex;
+  align-items: center;
+  touch-action: pan-y;
+}
+
+.dishes-lista {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.dishes-indicador {
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+  opacity: 0.75;
+  margin: 10px 0 0;
+}
+
+.flecha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flecha-izq {
+  left: -8px;
+}
+
+.flecha-der {
+  right: -8px;
+}

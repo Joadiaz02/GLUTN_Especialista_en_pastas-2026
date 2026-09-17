@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
-import { CartaItem } from '../../models/carta.model';
+import { CartaItem, TipoCarta } from '../../models/carta.model';
 
 type NuevoPlato = Pick<
   CartaItem,
@@ -13,7 +13,7 @@ type NuevoPlato = Pick<
 @Injectable({ providedIn: 'root' })
 export class Plato {
   private _tableName = 'carta';
-  private _tipo = 'plato';
+  private _tipo: TipoCarta = 'plato';
   private _db = inject(SupabaseService);
 
   // El cocinero ve TODOS sus platos, incluidos los dados de baja
