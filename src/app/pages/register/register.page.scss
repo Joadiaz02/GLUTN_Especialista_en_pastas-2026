@@ -1,0 +1,115 @@
+.registration-success-modal {
+  --width: calc(100% - 32px);
+  --max-width: 440px;
+  --height: auto;
+  --max-height: 90%;
+  --border-radius: 28px;
+  --background: transparent;
+}
+
+.registration-success {
+  width: 100%;
+  overflow: hidden;
+  background: #f3eedc;
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(38, 53, 29, 0.35);
+}
+
+.registration-success-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 28px 24px;
+  background: #657a4d;
+}
+
+.registration-success-logo img {
+  display: block;
+  width: 125px;
+  height: 125px;
+  object-fit: contain;
+  border-radius: 18px;
+}
+
+.registration-success-content {
+  padding: 30px 26px 26px;
+}
+
+.registration-success-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #e76f45;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.registration-success-content h2 {
+  margin: 0 0 18px;
+  color: #26351d;
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.registration-success-content > p {
+  margin: 0;
+  color: #46543a;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.registration-success-content strong {
+  color: #657a4d;
+  font-weight: 800;
+}
+
+.registration-success-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 24px 0 16px;
+  padding: 18px;
+  background: #a8b68a;
+  border-radius: 18px;
+}
+
+.registration-success-info p {
+  margin: 0;
+  color: #26351d;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.registration-success-icon {
+  display: flex;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e76f45;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.registration-success-spam {
+  margin-bottom: 24px !important;
+  color: #657a4d !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+.registration-success-content ion-button {
+  --background: #e76f45;
+  --background-activated: #d95f38;
+  --background-hover: #d95f38;
+  --color: #ffffff;
+  --box-shadow: none;
+  min-height: 48px;
+  margin: 0;
+  font-weight: 800;
+  text-transform: none;
+}

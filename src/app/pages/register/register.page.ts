@@ -1,11 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
 import {
   IonContent,
   IonHeader,
@@ -13,104 +15,178 @@ import {
   IonToolbar,
   IonButton,
   IonButtons,
-  IonBackButton,
   IonSpinner,
   IonFooter,
   ToastController,
-  IonToast,
+  IonModal,
 } from '@ionic/angular';
+
+import { Router } from '@angular/router';
 
 import { PersonalStepPage } from './steps/personal-step/personal-step.page';
 import { CredentialsStepPage } from './steps/credentials-step/credentials-step.page';
 import { ProfileStepPage } from './steps/profile-step/profile-step.page';
-import { Router } from '@angular/router';
+
 import { Auth } from '@app/services';
 import { EPerfilUsuario } from '@app/enums';
 import { ProgressBarComponent } from '@app/components';
-import { ConfirmVolverComponent } from "@app/components/ui/confirm-volver/confirm-volver.component";
-import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confirm-cartel.component";
+
+import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+
+import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
+
 
 const NAME_PATTERN =
   /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/;
 
-const DNI_PATTERN = /^\d{8}$/;
+const DNI_PATTERN =
+  /^\d{8}$/;
 
-const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
+const PASSWORD_PATTERN =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
+
 
 @Component({
   selector: 'app-register',
+
   templateUrl: './register.page.html',
+
   styleUrls: ['./register.page.scss'],
+
   imports: [
     CommonModule,
     ReactiveFormsModule,
+
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
     IonButton,
     IonButtons,
+    IonSpinner,
+    IonFooter,
+    IonModal,
+
     PersonalStepPage,
     CredentialsStepPage,
     ProfileStepPage,
+
     ProgressBarComponent,
-    IonSpinner,
-    IonFooter,
+
     ConfirmVolverComponent,
-    ConfirmDialogComponent
-],
+    ConfirmDialogComponent,
+  ],
 })
 export class RegisterPage {
-  form = new FormGroup({
-    personal: new FormGroup({
-      name: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-        Validators.pattern(NAME_PATTERN),
-      ]),
 
-      lastName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-        Validators.pattern(NAME_PATTERN),
-      ]),
+  form =
+    new FormGroup({
 
-      dni: new FormControl('', [
-        Validators.required,
-        Validators.pattern(DNI_PATTERN),
-      ]),
-    }),
+      personal:
+        new FormGroup({
 
-    credentials: new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+          name:
+            new FormControl('', [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(50),
+              Validators.pattern(
+                NAME_PATTERN
+              ),
+            ]),
 
-      password: new FormControl('', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.pattern(PASSWORD_PATTERN),
-      ]),
-    }),
+          lastName:
+            new FormControl('', [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(50),
+              Validators.pattern(
+                NAME_PATTERN
+              ),
+            ]),
 
-    profile: new FormGroup({
-      file: new FormControl<File | null>(null, Validators.required),
-    }),
-  });
+          dni:
+            new FormControl('', [
+              Validators.required,
+              Validators.pattern(
+                DNI_PATTERN
+              ),
+            ]),
+        }),
 
-  currentStep = signal<number>(1);
-  isLoading = signal<boolean>(false);
 
-  private _authService = inject(Auth);
-  private _router = inject(Router);
-  private _toastController = inject(ToastController);
+      credentials:
+        new FormGroup({
 
-  getFormGroup(step: string): FormGroup {
-    return this.form.get(step) as FormGroup;
+          email:
+            new FormControl('', [
+              Validators.required,
+              Validators.email,
+            ]),
+
+          password:
+            new FormControl('', [
+              Validators.required,
+              Validators.minLength(8),
+              Validators.pattern(
+                PASSWORD_PATTERN
+              ),
+            ]),
+        }),
+
+
+      profile:
+        new FormGroup({
+
+          file:
+            new FormControl<File | null>(
+              null,
+              Validators.required
+            ),
+        }),
+    });
+
+
+  currentStep =
+    signal<number>(1);
+
+
+  isLoading =
+    signal<boolean>(false);
+
+
+  mostrarRegistroExitoso =
+    signal<boolean>(false);
+
+
+  private readonly _authService =
+    inject(Auth);
+
+
+  private readonly _router =
+    inject(Router);
+
+
+  private readonly _toastController =
+    inject(ToastController);
+
+
+  getFormGroup(
+    step: string
+  ): FormGroup {
+
+    return this.form.get(
+      step
+    ) as FormGroup;
   }
 
+
   getStepTitle(): string {
-    switch (this.currentStep()) {
+
+    switch (
+      this.currentStep()
+    ) {
+
       case 1:
         return 'Datos personales';
 
@@ -125,64 +201,153 @@ export class RegisterPage {
     }
   }
 
+
   nextStep(): void {
-    const step = this.currentStep();
+
+    const step =
+      this.currentStep();
+
 
     if (step === 1) {
-      const personalForm = this.getFormGroup('personal');
 
-      if (personalForm.invalid) {
+      const personalForm =
+        this.getFormGroup(
+          'personal'
+        );
+
+
+      if (
+        personalForm.invalid
+      ) {
+
         personalForm.markAllAsTouched();
+
         return;
       }
     }
+
 
     if (step === 2) {
-      const credentialsForm = this.getFormGroup('credentials');
 
-      if (credentialsForm.invalid) {
+      const credentialsForm =
+        this.getFormGroup(
+          'credentials'
+        );
+
+
+      if (
+        credentialsForm.invalid
+      ) {
+
         credentialsForm.markAllAsTouched();
+
         return;
       }
     }
 
+
     if (step < 3) {
-      this.currentStep.update((current) => current + 1);
+
+      this.currentStep.update(
+        current =>
+          current + 1
+      );
     }
   }
+
 
   previousStep(): void {
-    if (this.currentStep() > 1) {
-      this.currentStep.update((current) => current - 1);
+
+    if (
+      this.currentStep() > 1
+    ) {
+
+      this.currentStep.update(
+        current =>
+          current - 1
+      );
     }
   }
 
-  async register(): Promise<void> {
-    try {
-      const credentials = this.form.getRawValue();
 
-      this.isLoading.set(true);
+  async register(): Promise<void> {
+
+    if (
+      this.isLoading()
+    ) {
+      return;
+    }
+
+
+    try {
+
+      const credentials =
+        this.form.getRawValue();
+
+
+      this.isLoading.set(
+        true
+      );
+
 
       this.form.markAsPending();
+
 
       await this._authService.register(
         credentials,
         EPerfilUsuario.ClienteRegistrado
       );
 
-      this._router.navigateByUrl('/login', { replaceUrl: true });
+
+      this.mostrarRegistroExitoso.set(
+        true
+      );
+
+
     } catch (error) {
-      console.log(error);
-      const toast = await this._toastController.create({
-        message:
-          'No pudimos completar la acción. Intentá nuevamente más tarde.',
-        duration: 5000,
-        position: 'top',
-      });
+
+      console.error(
+        'Error durante el registro:',
+        error
+      );
+
+
+      const toast =
+        await this._toastController
+          .create({
+            message:
+              'No pudimos completar el registro. Intentá nuevamente más tarde.',
+
+            duration: 5000,
+
+            position: 'top',
+          });
+
 
       await toast.present();
+
+
     } finally {
-      this.isLoading.set(false);
+
+      this.isLoading.set(
+        false
+      );
     }
+  }
+
+
+  cerrarRegistroExitoso(): void {
+
+    this.mostrarRegistroExitoso.set(
+      false
+    );
+
+
+    void this._router.navigateByUrl(
+      '/login',
+      {
+        replaceUrl: true,
+      }
+    );
   }
 }

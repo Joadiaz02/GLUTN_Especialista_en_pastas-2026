@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "667169560221",
+    "project_id": "glutn---especialista-en-pastas",
+    "storage_bucket": "glutn---especialista-en-pastas.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667169560221:android:cd00772786a66b803ca674",
+        "android_client_info": {
+          "package_name": "com.glutn.especialista"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAloAvZ3TMDt8Q32mgzMjRaz6gxSyRFN6k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
