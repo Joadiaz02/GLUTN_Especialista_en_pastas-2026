@@ -15,6 +15,7 @@ export class UploaderComponent {
 
   fileSelected = output<File>();
   image = input<string | null>(null);
+  onlyTake = input<boolean>(false);
 
   private _toastController = inject(ToastController);
   private _modalController = inject(ModalController);
@@ -24,20 +25,25 @@ export class UploaderComponent {
   }
 
   async open() {
-    const modal = await this._modalController.create({
-      component: UploadOptionsComponent,
-      cssClass: 'upload-options-modal',
-    });
-
-    await modal.present();
-
-    const { data, role } = await modal.onWillDismiss();
-
-    if (role === 'confirm' && data?.source === 'camera') {
+    if (this.onlyTake()) {
       this.takePhoto();
-    } else if (role === 'confirm' && data?.source === 'gallery') {
-      this.selectFromGallery();
+    } else {
+      const modal = await this._modalController.create({
+        component: UploadOptionsComponent,
+        cssClass: 'upload-options-modal',
+      });
+  
+      await modal.present();
+  
+      const { data, role } = await modal.onWillDismiss();
+  
+      if (role === 'confirm' && data?.source === 'camera') {
+        this.takePhoto();
+      } else if (role === 'confirm' && data?.source === 'gallery') {
+        this.selectFromGallery();
+      }
     }
+
   }
 
   async takePhoto() {

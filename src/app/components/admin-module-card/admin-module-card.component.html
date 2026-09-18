@@ -1,12 +1,15 @@
-<ion-card
-  class="module-card"
-  button
-  (click)="seleccionar()"
->
+<ion-card class="module-card" button (click)="seleccionar()">
   <ion-card-content>
+    <div class="top">
+      <div class="module-icon">
+        <!-- <ion-icon [name]="module.icon" ></ion-icon> -->
+        <ion-icon [src]="'assets/icons/' + icon + '.svg'"></ion-icon>
+      </div>
 
-    <div class="module-icon">
-      <ion-icon [name]="module.icon"></ion-icon>
+      <ion-icon
+        class="arrow-icon"
+        src="assets/icons/arrow-right-2.svg"
+      ></ion-icon>
     </div>
 
     <div class="module-info">
@@ -14,11 +17,5 @@
 
       <p>{{ module.description }}</p>
     </div>
-
-    <ion-icon
-      class="arrow-icon"
-      name="chevron-forward-outline"
-    ></ion-icon>
-
   </ion-card-content>
 </ion-card>

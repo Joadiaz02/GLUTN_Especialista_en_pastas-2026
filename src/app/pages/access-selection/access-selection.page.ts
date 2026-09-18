@@ -12,7 +12,7 @@ import {
   Router
 } from '@angular/router';
 
-import { IonContent, IonIcon } from '@ionic/angular';
+import { IonContent, IonIcon, IonHeader, IonToolbar, IonButtons, IonTitle } from '@ionic/angular';
 
 import {
   addIcons
@@ -42,7 +42,11 @@ import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confir
     CommonModule,
     IonContent,
     IonIcon,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonTitle
 ],
 
   templateUrl:
@@ -91,7 +95,6 @@ export class AccessSelectionPage {
       this.auth.obtenerPerfil(
         usuario
       );
-
 
     this.nombre =
       usuario?.user_metadata?.['nombre']

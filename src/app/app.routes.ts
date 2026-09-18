@@ -64,6 +64,12 @@ export const routes: Routes = [
   },
 
   {
+    path: 'admin/clients',
+    loadComponent: () =>
+      import('./pages/clients/clients.page').then((m) => m.ClientsPage),
+  },
+
+  {
     path: 'home',
 
     canActivate: [authGuard],
@@ -75,6 +81,20 @@ export const routes: Routes = [
     path: 'admin/tables',
     loadComponent: () =>
       import('./pages/tables/tables.page').then((m) => m.TablesPage),
+  },
+  {
+    path: 'admin/tables/create',
+    loadComponent: () =>
+      import('./pages/tables/components/create-table/create-table.page').then(
+        (m) => m.CreateTablePage
+      ),
+  },
+  {
+    path: 'admin/tables/edit/:id',
+    loadComponent: () =>
+      import('./pages/tables/components/edit-table/edit-table.page').then(
+        (m) => m.EditTablePage
+      ),
   },
   {
     path: 'admin/drinks',
@@ -142,9 +162,9 @@ export const routes: Routes = [
     data: { roles: [EPerfilUsuario.Cocinero] },
 
     loadComponent: () =>
-      import('./pages/postres/components/create-postre/create-postre.page').then(
-        (m) => m.CreatePostrePage
-      ),
+      import(
+        './pages/postres/components/create-postre/create-postre.page'
+      ).then((m) => m.CreatePostrePage),
   },
   {
     path: 'admin/postres/edit/:id',

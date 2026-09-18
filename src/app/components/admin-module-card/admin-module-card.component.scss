@@ -1,7 +1,7 @@
 .module-card {
   margin: 0;
-  border-radius: 18px;
-  background: #a8b68a;
+  border-radius: 12px;
+  background: #A8B68A;
   box-shadow: none;
   transition: transform 0.2s ease;
 }
@@ -12,20 +12,26 @@
 
 .module-card ion-card-content {
   display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px;
+}
+
+.top {
+  display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 18px;
+  justify-content: space-between;
 }
 
 .module-icon {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 14px;
+  border-radius: 50px;
 
   background: #657a4d;
 }
@@ -40,7 +46,7 @@
 }
 
 .module-info h2 {
-  margin: 0 0 5px;
+  margin: 0;
 
   font-size: 18px;
   font-weight: 700;
@@ -50,8 +56,10 @@
 
 .module-info p {
   margin: 0;
+  margin-top: 4px;
 
-  font-size: 13px;
+  font-size: 16px;
+  line-height: 24px;
 
   color: #50583d;
 }

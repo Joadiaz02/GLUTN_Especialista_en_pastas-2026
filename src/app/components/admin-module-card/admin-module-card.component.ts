@@ -14,6 +14,7 @@ import { iceCreamOutline, chevronForwardOutline } from 'ionicons/icons';
 })
 export class AdminModuleCardComponent {
   @Input() module!: AdminModule;
+  @Input() icon!: string;
 
   @Output() selected = new EventEmitter<AdminModule>();
 

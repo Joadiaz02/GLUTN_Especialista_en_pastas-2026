@@ -12,7 +12,6 @@ import {
   IonButton,
 } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
-import { DrinkCardComponent } from './components/drink-card/drink-card.component';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { MenuCardComponent } from '@app/components';
@@ -32,7 +31,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
     FormsModule,
     IonButtons,
     RouterLink,
-    DrinkCardComponent,
     IonIcon,
     SkeletonCardComponent,
     ConfirmVolverComponent,

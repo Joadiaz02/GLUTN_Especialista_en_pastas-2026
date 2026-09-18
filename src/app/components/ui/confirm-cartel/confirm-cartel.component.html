@@ -1,45 +1,47 @@
-
 @if (!esContenidoModal) {
 
-  <ion-button shape="round" fill="clear" color="danger" (click)="abrirConfirmacion()">
+<!-- <ion-button shape="round" fill="clear" color="danger" (click)="abrirConfirmacion()">
    <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-  </ion-button>
+  </ion-button> -->
+<ion-button
+  fill="outline"
+  shape="round"
+  size="small"
+  color="danger"
+  (click)="abrirConfirmacion()"
+>
+  <ion-icon
+    slot="icon-only"
+    color="danger"
+    src="assets/icons/logout.svg"
+  ></ion-icon>
+</ion-button>
 } @else {
 
-  <div class="confirm-dialog">
+<div class="confirm-dialog">
+  <div class="drag-handle"></div>
 
-    <div class="drag-handle"></div>
-
-    <div class="icono-circulo">
-      <ion-icon [name]="icono"></ion-icon>
-    </div>
-
-    <h2 class="heading-medium weight-bold">
-      {{ titulo }}
-    </h2>
-
-    <p class="body-medium weight-regular mensaje">
-      {{ mensaje }}
-    </p>
-
-    <div class="botones">
-
-      <ion-button
-        shape="round"
-        fill="outline"
-        (click)="cancelar()">
-        {{ textoCancelar }}
-      </ion-button>
-
-      <ion-button
-        shape="round"
-        [color]="colorConfirmar"
-        (click)="confirmar()">
-        {{ textoConfirmar }}
-      </ion-button>
-
-    </div>
-
+  <div class="icono-circulo">
+    <ion-icon [name]="icono"></ion-icon>
   </div>
+
+  <h2 class="heading-medium weight-bold">
+    {{ titulo }}
+  </h2>
+
+  <p class="body-medium weight-regular mensaje">
+    {{ mensaje }}
+  </p>
+
+  <div class="botones">
+    <ion-button shape="round" fill="outline" (click)="cancelar()">
+      {{ textoCancelar }}
+    </ion-button>
+
+    <ion-button shape="round" [color]="colorConfirmar" (click)="confirmar()">
+      {{ textoConfirmar }}
+    </ion-button>
+  </div>
+</div>
 
 }
