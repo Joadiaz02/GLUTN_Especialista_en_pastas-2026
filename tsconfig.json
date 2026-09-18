@@ -20,7 +20,7 @@
     "lib": ["es2022", "dom"],
     "paths": {
       "@*": [
-        ".\\src/*"
+        "./src/*"
       ]
     },
     "skipLibCheck": true,
