@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UploaderComponent } from './uploader.component';
+import { MenuCardComponent } from './menu-card.component';
 
-describe('UploaderComponent', () => {
-  let component: UploaderComponent;
-  let fixture: ComponentFixture<UploaderComponent>;
+describe('MenuCardComponent', () => {
+  let component: MenuCardComponent;
+  let fixture: ComponentFixture<MenuCardComponent>;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UploaderComponent);
+    fixture = TestBed.createComponent(MenuCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

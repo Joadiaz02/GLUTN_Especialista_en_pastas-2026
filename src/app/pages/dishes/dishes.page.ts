@@ -19,7 +19,11 @@ import { CartaItem } from '@app/models/carta.model';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { addIcons } from 'ionicons';
-import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
+import {
+  addOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
+} from 'ionicons/icons';
 
 const ITEMS_POR_PAGINA = 2;
 
@@ -188,7 +192,9 @@ export class DishesPage implements OnInit {
       await this._vibracion.confirmacion();
 
       await this.mostrarAviso(
-        activar ? 'Plato destacado correctamente.' : 'Plato retirado de destacados.'
+        activar
+          ? 'Plato destacado correctamente.'
+          : 'Plato retirado de destacados.'
       );
 
       await this.cargarPlatos();

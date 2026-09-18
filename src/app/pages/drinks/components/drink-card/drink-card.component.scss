@@ -1,48 +1,108 @@
 .drink-card {
   display: flex;
+  justify-content: space-between;
   padding: 12px;
   border-radius: 12px;
-  gap: 12px;
   background-color: #A8B68A;
+  gap: 12px;
 
-  .drink-card__image {
+  &--not-available {
+    opacity: 0.6;
+  }
+
+  &__content {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__media {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  &__image {
     width: 75px;
     height: 75px;
     border-radius: 12px;
     object-fit: cover;
     background-color: rgba(0, 0, 0, 0.06);
+
+    &--not-available {
+      filter: saturate(0);
+    }
   }
 
-  .drink-card__info {
+  .drink-card__badge {
+    align-self: flex-start;
+    background: var(--ion-color-danger);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+
+  &__info {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     flex: 1;
   }
 
-  .drink-card__details {
+  &__details {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .drink-card__name {
+  &__name {
     font-size: 14px;
     font-weight: 700;
     margin: 0;
-    color: #2F3D24
+    color: #2F3D24;
   }
   
-  .drink-card__description {
+  &__description {
     font-size: 14px;
     font-weight: 500;
     margin: 0;
-    color: #4D5C3E
+    color: #4D5C3E;
   }
   
-  .drink-card__price {
+  &__price {
     font-size: 14px;
     font-weight: 700;
     color: var(--ion-color-primary);
+  }
+
+  &__divider {
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: #94A07A;
+    color: #ffffff;
+
+    &--active {
+      background-color: var(--ion-color-primary);
+    }
   }
 }

@@ -187,7 +187,9 @@ export const routes: Routes = [
     canActivate: [authGuard, navegacionInternaGuard],
 
     loadComponent: () =>
-      import('./pages/juegos/sopa-letras/sopa-letras.page').then((m) => m.SopaLetrasPage),
+      import('./pages/juegos/sopa-letras/sopa-letras.page').then(
+        (m) => m.SopaLetrasPage
+      ),
   },
   {
     path: 'juegos/ta-te-ti',
@@ -211,7 +213,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
 
     loadComponent: () =>
-      import('./pages/reservas/nueva-reserva/nueva-reserva.page').then((m) => m.NuevaReservaPage),
+      import('./pages/reservas/nueva-reserva/nueva-reserva.page').then(
+        (m) => m.NuevaReservaPage
+      ),
   },
   {
     path: 'reservas/mis-reservas',
@@ -219,7 +223,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
 
     loadComponent: () =>
-      import('./pages/reservas/mis-reservas/mis-reservas.page').then((m) => m.MisReservasPage),
+      import('./pages/reservas/mis-reservas/mis-reservas.page').then(
+        (m) => m.MisReservasPage
+      ),
   },
   {
     path: 'carta',
@@ -238,7 +244,9 @@ export const routes: Routes = [
         (m) => m.DesignSystemPage
       ),
   },
-  {path: 'chat',
-      loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage)
+  {
+    path: 'chat',
+    loadComponent: () =>
+      import('./pages/chat/chat.page').then((m) => m.ChatPage),
   },
 ];

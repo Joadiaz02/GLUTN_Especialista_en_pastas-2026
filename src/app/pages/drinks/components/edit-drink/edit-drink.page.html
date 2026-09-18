@@ -11,20 +11,20 @@
 <ion-content [fullscreen]="true">
   @if (isLoadingDrink()) {
   <div class="carga-plato">
-    <!-- <app-spinner-logo /> -->
+    <app-spinner-logo />
   </div>
-  } @else {
+  } @else if (drink()) {
   <div class="upload-container">
     <gtn-uploader
-      [image]="drink().imagen_1"
+      [image]="drink().foto_1"
       (fileSelected)="onPhotoSelected(0, $event)"
     />
     <gtn-uploader
-      [image]="drink().imagen_2"
+      [image]="drink().foto_2"
       (fileSelected)="onPhotoSelected(1, $event)"
     />
     <gtn-uploader
-      [image]="drink().imagen_3"
+      [image]="drink().foto_3"
       (fileSelected)="onPhotoSelected(2, $event)"
     />
   </div>
@@ -38,6 +38,7 @@
         class="field__input"
         placeholder="Nombre"
         formControlName="title"
+        [value]="drink().titulo"
       />
 
       @if ( getFormControl('title')?.invalid &&
@@ -120,14 +121,56 @@
       </div>
     </div>
 
-    <div class="field field--checkbox">
-      <ion-checkbox formControlName="sugerencia">
-        Sugerencia del chef
-      </ion-checkbox>
-      <p class="field__hint">
-        Los platos marcados como sugerencia aparecen en el slide de "Productos
+    <div class="field">
+      <label class="field__label">Mililitros</label>
+
+      <ion-input
+        type="text"
+        inputmode="numeric"
+        maxlength="5"
+        fill="outline"
+        class="field__input"
+        placeholder="Mililitros"
+        formControlName="ml"
+      />
+
+      @if ( getFormControl('ml')?.invalid && (getFormControl('ml')?.touched ||
+      getFormControl('ml')?.dirty ) ) { @if (
+      getFormControl('ml')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } @else if ( getFormControl('ml')?.hasError('pattern') ) {
+      <p class="field__error">Ingresá solo números, sin letras ni símbolos.</p>
+      } @else if ( getFormControl('ml')?.hasError('min') ) {
+      <p class="field__error">Tiene que ser mayor a 0.</p>
+      } }
+    </div>
+
+    <div class="toggle-group">
+      <h3 class="toggle-group__title">Contiene alcohol</h3>
+
+      <div class="toggle-group__row">
+        <span class="toggle-group__row-label">Bebida con alcohol</span>
+
+        <ion-toggle
+          class="toggle-group__toggle"
+          formControlName="contieneAlcohol"
+        ></ion-toggle>
+      </div>
+    </div>
+
+    <div class="toggle-group">
+      <h3 class="toggle-group__title">Sugerencia de la casa</h3>
+
+      <div class="toggle-group__row">
+        <span class="toggle-group__row-label">Mostrar como recomendada</span>
+
+        <ion-toggle formControlName="sugerencia"></ion-toggle>
+      </div>
+
+      <!-- <p class="toggle-group__hint">
+        Las bebidas marcadas como sugerencia aparecen en el slide de "Productos
         destacados" del inicio.
-      </p>
+      </p> -->
     </div>
   </form>
   }
@@ -139,10 +182,10 @@
       expand="block"
       shape="round"
       [disabled]="(form.statusChanges | async) !== 'VALID'"
-      (click)="confirmarYGuardar()"
+      (click)="update()"
     >
-      <!-- @if (isLoading()) { <app-spinner-logo size="sm" /> }  -->
-      Guardar cambios
+      @if (isLoading()) { <app-spinner-logo size="sm" /> } @else { Guardar
+      cambios }
     </ion-button>
   </div>
 </ion-footer>
