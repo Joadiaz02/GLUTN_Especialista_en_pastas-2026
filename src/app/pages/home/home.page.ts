@@ -5,7 +5,8 @@ import {
   IonButton,
   IonSkeletonText,
   IonIcon,
-  ToastController
+  ToastController,
+  ModalController
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
@@ -15,6 +16,8 @@ import { Carta } from '@app/services';
 import { CartaItem } from '@app/models/carta.model';
 import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
 import { Carrito } from '../carrito/carrito';
+import { Pedido } from '@app/services/pedido/pedido';
+import { EstadoPedidoComponent } from '@app/components/ui/estado-pedido/estado-pedido.component';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
 
@@ -29,7 +32,7 @@ const DEMORA_FOTO_DESTACADO_MS = 3000;
     IonSkeletonText,
     IonIcon,
     CurrencyPipe,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
   ],
 })
 export class HomePage implements OnInit, OnDestroy {
@@ -38,8 +41,10 @@ export class HomePage implements OnInit, OnDestroy {
   private toastController = inject(ToastController);
   private cartaService = inject(Carta);
   private carrito = inject(Carrito);
-
+  protected pedido = inject(Pedido);
   private _fotoIntervalId: ReturnType<typeof setInterval> | null = null;
+  private modalController = inject(ModalController);
+
 
   constructor(private router: Router) {
     addIcons({ 'chevron-back-outline': chevronBackOutline, 'chevron-forward-outline': chevronForwardOutline });
@@ -222,5 +227,16 @@ export class HomePage implements OnInit, OnDestroy {
     });
     await toast.present();
   }
+//consultar estado del pedido
+async verEstadoPedido(idPedido: string) {
+  const modal = await this.modalController.create({
+    component: EstadoPedidoComponent,
+    componentProps: { idPedido },
+    breakpoints: [0, 0.4],
+    initialBreakpoint: 0.2
+  });
+
+  await modal.present();
+}
 
 }

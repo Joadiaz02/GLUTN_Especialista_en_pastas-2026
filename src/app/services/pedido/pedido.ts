@@ -1,4 +1,4 @@
-import {  inject, Injectable } from '@angular/core';
+import {  inject, Injectable, signal } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 import { Carrito } from '@app/pages/carrito/carrito';
 
@@ -8,6 +8,7 @@ import { Carrito } from '@app/pages/carrito/carrito';
 export class Pedido {
     private sup = inject(SupabaseService);
     private carrito = inject(Carrito);
+    public estado_pedido = signal<boolean>(false);
 
     async crear_pedido(id_mesa:string,id_usuario:string , detalles:string  ) : Promise<string> {
         const item = this.carrito.items();
@@ -42,7 +43,54 @@ export class Pedido {
         };
         this.carrito.vaciar();
 
+        this.estado_pedido.set(true);
+
         return pedido.id_pedido;
     }
+
+    async traer_pedido( ): Promise<any[]> {
+
+        const { data, error } = await this.sup.client.from('pedido').select('*').eq('estado_pedido', 'pendiente').order('fecha_emision_pedido', { ascending: true });
+
+        if (error) {
+            throw error;   
+        }
+        if (!data) {
+            throw new Error('Pedido no encontrado');
+        }    
+        
+        return data ?? [];
+    }
+
+    async obtenerPedidoConItems(idPedido: string): Promise<any> {
+    const { data: pedido, error: errorPedido } = await this.sup.client
+      .from('pedido')
+      .select('*')
+      .eq('id_pedido', idPedido)
+      .single();
+
+    if (errorPedido) throw errorPedido;
+
+    const { data: items, error: errorItems } = await this.sup.client
+      .from('pedido_item')
+      .select('*, carta(nombre, foto_1)')
+      .eq('id_pedido', idPedido);
+
+    if (errorItems) {
+        throw errorItems
+    };
+
+    return { ...pedido, items: items ?? [] };
+  }
+
+    async actualizarEstado(idPedido: string, nuevoEstado: string): Promise<void> {
+    const { error } = await this.sup.client
+      .from('pedido')
+      .update({ estado_pedido: nuevoEstado })
+      .eq('id_pedido', idPedido);
+
+    if (error) throw error;
+  }
+    
 }
     

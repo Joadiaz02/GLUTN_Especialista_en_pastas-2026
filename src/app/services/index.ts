@@ -7,6 +7,7 @@ export * from './plato';
 export * from './postre';
 export * from './carta';
 export * from './confirm';
+export * from './table';
 export * from './vibracion';
 export * from './juegos';
 export * from './sopa-letras';

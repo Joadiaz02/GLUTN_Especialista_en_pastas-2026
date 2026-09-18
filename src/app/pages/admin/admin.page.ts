@@ -32,6 +32,7 @@ import { ConfirmVolverComponent } from "@app/components/ui/confirm-volver/confir
     IonToolbar,
     IonTitle,
     IonButtons,
+    IonIcon,
     IonContent,
     AdminModuleCardComponent,
     RouterLink,
@@ -98,7 +99,7 @@ export class AdminPage implements OnInit {
   }
 
   volver(): void {
-    
+    console.log("qwe")
     void this.router.navigate(['/seleccion-acceso']);
   }
 

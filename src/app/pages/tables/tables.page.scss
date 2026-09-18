@@ -1,0 +1,164 @@
+// .drinks {
+//   display: flex;
+//   flex-direction: column;
+  
+//   gap: 16px;
+// }
+
+// .drink-placeholder {
+//   width: 100%;
+//   height: 99px;
+//   border-radius: 12px;
+//   border: 1px dashed hsla(0, 0%, 100%, 0.2);
+//   background-color: transparent;
+//   font-size: 24px;
+// }
+
+:host {
+  --bg: #657a4d;
+  --surface: rgba(255, 255, 255, 0.14);
+  --accent: #e76f45;
+}
+
+ion-toolbar {
+  --background: var(--bg);
+  --color: #fff;
+}
+
+.mesas-list {
+  --background: var(--bg);
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-top: 12px;
+  --padding-bottom: 24px;
+}
+
+.agregar-vacio {
+  width: 100%;
+  height: 96px;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 26px;
+    color: #fff;
+  }
+}
+
+.grid-mesas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mesa-card {
+  display: flex;
+  gap: 12px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.mesa-foto {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  ion-icon {
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.btn-toolbar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid hsla(0, 0%, 100%, 0.2);
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mesa-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mesa-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mesa-numero {
+  font-weight: 700;
+  color: #fff;
+  font-size: 16px;
+}
+
+.badge-disponibilidad {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.badge-vacia {
+  background: #a9c98f;
+  color: #2b3a1f;
+}
+
+.badge-ocupada {
+  background: #e76f45;
+  color: #fff;
+}
+
+.badge-reservada {
+  background: #e0c04a;
+  color: #3a3110;
+}
+
+.mesa-detalle {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 6px 0 12px;
+  font-size: 14px;
+}
+
+.mesa-card-acciones {
+  display: flex;
+  gap: 10px;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+
+    ion-icon {
+      font-size: 15px;
+    }
+  }
+}

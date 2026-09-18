@@ -4,7 +4,7 @@
       <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
     <h1 class="titulo-toolbar">{{ titulo() }}</h1>
-    <app-confirm-dialog slot="end"></app-confirm-dialog>
+    <app-confirm-dialog slot="end" (confirmado)="cerrarSesion()"></app-confirm-dialog>
   </ion-toolbar>
 </ion-header>
 

@@ -1,0 +1,71 @@
+:host {
+  --bg: #657a4d;
+  --input-bg: rgba(255, 255, 255, 0.22);
+  --input-placeholder: rgba(255, 255, 255, 0.75);
+  --accent: #e76f45;
+}
+
+gtn-uploader {
+  height: 180px;
+  margin-bottom: 16px;
+}
+
+ion-toolbar {
+  --background: var(--bg);
+  --color: #fff;
+}
+
+.crear-mesa {
+  --background: var(--bg);
+  --color: #fff;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-top: 12px;
+  --padding-bottom: 24px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  border-radius: 999px;
+  padding: 0 16px;
+  background-color: var(--color-surface-muted);
+  color: #fff;
+  font-size: 16px;
+  height: 48px;
+}
+
+.chip-activo {
+  background: var(--accent);
+  color: #fff;
+}
+
+.stepper {
+  display: block;
+  width: 100%;
+  height: 60px;
+  border-radius: 12px;
+  background-color: var(--color-surface-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .stepper__button {
+    width: 60px;
+    height: 60px;
+    background: transparent;
+  }
+
+  .stepper__value {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}

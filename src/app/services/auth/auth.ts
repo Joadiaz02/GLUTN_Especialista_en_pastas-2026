@@ -1,4 +1,8 @@
-import { inject, Injectable, signal } from '@angular/core';
+import {
+  inject,
+  Injectable,
+  signal,
+} from '@angular/core';
 
 import { SupabaseService } from '../supabase.service';
 import { EPerfilUsuario } from '@app/enums';
@@ -16,27 +20,26 @@ export class Auth {
   private readonly storageService =
     inject(Storage);
 
-  // Signal en vez de variable plana: cualquier componente que lo lea
-  // en su template (usuarioActual()) se actualiza SOLO cuando cambia.
-  usuarioActual = signal<any>(null);
+  usuarioActual =
+    signal<any>(null);
+
 
   constructor() {
-    void this.restaurarSesion();
+    this.supabaseService.client.auth
+      .onAuthStateChange(
+        (_event, session) => {
+
+          this.usuarioActual.set(
+            session?.user ?? null
+          );
+
+        }
+      );
   }
 
-  private async restaurarSesion(): Promise<void> {
-    const {
-      data,
-    } =
-      await this.supabaseService.client.auth
-        .getSession();
-
-    this.usuarioActual.set(
-      data.session?.user ?? null
-    );
-  }
 
   async obtenerUsuarioActual(): Promise<any> {
+
     const {
       data,
     } =
@@ -50,9 +53,12 @@ export class Auth {
     return this.usuarioActual();
   }
 
+
   obtenerPerfil(
-    usuario: any = this.usuarioActual
+    usuario: any =
+      this.usuarioActual()
   ): PerfilUsuario | null {
+
     const perfil =
       usuario?.user_metadata?.['perfil'];
 
@@ -63,11 +69,16 @@ export class Auth {
     return perfil as PerfilUsuario;
   }
 
+
   esPersonal(
-    usuario: any = this.usuarioActual()
+    usuario: any =
+      this.usuarioActual()
   ): boolean {
+
     const perfil =
-      this.obtenerPerfil(usuario);
+      this.obtenerPerfil(
+        usuario
+      );
 
     return [
       EPerfilUsuario.Dueno,
@@ -80,6 +91,7 @@ export class Auth {
       perfil as EPerfilUsuario
     );
   }
+
 
   async register(
     request: any,
@@ -98,6 +110,7 @@ export class Auth {
     } =
       await this.supabaseService.client.auth
         .signUp({
+
           email:
             request.credentials.email,
 
@@ -105,7 +118,9 @@ export class Auth {
             request.credentials.password,
 
           options: {
+
             data: {
+
               apellido:
                 request.personal.lastName,
 
@@ -124,9 +139,11 @@ export class Auth {
           },
         });
 
+
     if (error) {
       throw error;
     }
+
 
     if (!data.user) {
       throw new Error(
@@ -150,6 +167,7 @@ export class Auth {
           'send-client-status-email',
           {
             body: {
+
               clienteId:
                 data.user.id,
 
@@ -159,13 +177,14 @@ export class Auth {
           }
         );
 
+
     if (errorCorreo) {
+
       console.error(
         'La cuenta fue creada, pero no se pudo enviar el correo de pendiente:',
         errorCorreo
       );
     }
-
 
     if (
       data.session?.access_token
@@ -179,17 +198,23 @@ export class Auth {
           .invoke(
             'notify-pending-client',
             {
+
               body: {
+
                 clienteId:
                   data.user.id,
+
               },
 
               headers: {
+
                 Authorization:
                   `Bearer ${data.session.access_token}`,
+
               },
             }
           );
+
 
       if (errorPush) {
         console.error(
@@ -201,10 +226,11 @@ export class Auth {
     } else {
 
       console.warn(
-        'La cuenta fue creada, pero no se obtuvo una sesión para enviar la notificación Push a los gestores.'
+        'La cuenta fue creada, pero Supabase no devolvió una sesión para enviar la notificación Push.'
       );
     }
   }
+
 
   async iniciarsecion(
     request: {
@@ -219,27 +245,35 @@ export class Auth {
     } =
       await this.supabaseService.client.auth
         .signInWithPassword({
+
           email:
             request.email,
 
           password:
             request.password,
+
         });
 
+
     if (error) {
+
       throw new Error(
         `Login fallido: ${error.message}`
       );
     }
 
+
     if (!data.user) {
+
       throw new Error(
         'Login fallido: no se retorno un usuario'
       );
     }
 
+
     const perfil =
-      data.user.user_metadata?.['perfil'];
+      data.user
+        .user_metadata?.['perfil'];
 
     if (
       perfil !==
@@ -261,12 +295,15 @@ export class Auth {
           'obtener_estado_aprobacion'
         );
 
+
     if (errorEstado) {
 
       await this.supabaseService.client.auth
         .signOut();
 
-      this.usuarioActual.set(null);
+      this.usuarioActual.set(
+        null
+      );
 
       throw new Error(
         'No se pudo verificar el estado de la cuenta.'
@@ -280,7 +317,9 @@ export class Auth {
       await this.supabaseService.client.auth
         .signOut();
 
-      this.usuarioActual.set(null);
+      this.usuarioActual.set(
+        null
+      );
 
       throw new Error(
         'CUENTA_PENDIENTE'
@@ -294,7 +333,9 @@ export class Auth {
       await this.supabaseService.client.auth
         .signOut();
 
-      this.usuarioActual.set(null);
+      this.usuarioActual.set(
+        null
+      );
 
       throw new Error(
         'CUENTA_RECHAZADA'
@@ -315,22 +356,31 @@ export class Auth {
     await this.supabaseService.client.auth
       .signOut();
 
-    this.usuarioActual.set(null);
+    this.usuarioActual.set(
+      null
+    );
 
     throw new Error(
       'No se pudo verificar el estado de la cuenta.'
     );
   }
 
+
   async logout(): Promise<void> {
 
     await this.supabaseService.client.auth
       .signOut();
 
-    this.usuarioActual.set(null);
+    this.usuarioActual.set(
+      null
+    );
   }
 
+
   estaLogueado(): boolean {
-    return this.usuarioActual() !== null;
+
+    return (
+      this.usuarioActual() !== null
+    );
   }
 }

@@ -1,17 +1,18 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonContent, IonSearchbar, IonIcon, IonBackButton, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton } from '@ionic/angular';
+import { IonContent, IonSearchbar, IonIcon, IonBackButton, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 
 import { CartaItem, TipoCarta } from '../../models/carta.model';
-import { Carta } from '@app/services';
+import { Auth, Carta, SupabaseService } from '@app/services';
 import { Carrito } from '../carrito/carrito';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { BarraPedidoComponent } from '@app/components/ui/barra-pedido/barra-pedido.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 const TITULOS: Record<TipoCarta, string> = {
   plato: 'Platos',
@@ -47,6 +48,8 @@ export class ProductosPage implements OnInit, OnDestroy {
   public carrito = inject(Carrito);
   private cartaService = inject(Carta);
   private _fotoIntervalId: any = null;
+  private authService = inject(Auth);
+  private toastController = inject(ToastController);
   
   
  
@@ -160,6 +163,24 @@ export class ProductosPage implements OnInit, OnDestroy {
   volver(){
     this.ruta.navigate(["/carta"]);
   }
+
+  async cerrarSesion(): Promise<void> {
+    await this.authService.logout();
+
+    
+    localStorage.removeItem('mesa');
+
+    const toast = await this.toastController.create({
+      message: 'Sesión cerrada correctamente.',
+      duration: 3000,
+      position: 'top',
+      color: 'success'
+    });
+    await toast.present();
+
+    void this.ruta.navigate(['/login']);
+  }
+
 
 
 

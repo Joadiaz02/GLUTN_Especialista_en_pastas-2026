@@ -3,6 +3,7 @@
     <ion-buttons slot="start">
       <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
+    <app-confirm-dialog slot="end" (confirmado)="cerrarSesion()"></app-confirm-dialog>
   </ion-toolbar>
 </ion-header>
 
