@@ -52,8 +52,20 @@
 
       <img class="producto-imagen" [src]="fotoActual()" [alt]="producto.nombre" />
 
+      @if (producto.tiene_alcohol) {
+        <div class="producto-alcohol">
+          <ion-icon name="warning-outline"></ion-icon>
+          Bebida con alcohol
+        </div>
+      }
+
       <div class="producto-info">
-        <h2 class="producto-nombre">{{ producto.nombre }}</h2>
+        <div class="producto-titulo-fila">
+          <h2 class="producto-nombre">{{ producto.nombre }}</h2>
+          @if (producto.medida_ml) {
+            <span class="producto-medida">{{ producto.medida_ml }} ml</span>
+          }
+        </div>
         <p class="producto-descripcion">{{ producto.descripcion }}</p>
 
         <div class="producto-footer">

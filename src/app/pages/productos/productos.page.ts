@@ -11,7 +11,7 @@ import {
   IonHeader
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
+import { addOutline, chevronBackOutline, chevronForwardOutline, warningOutline } from 'ionicons/icons';
 
 import { CartaItem, TipoCarta } from '../../models/carta.model';
 import { Carta } from '@app/services';
@@ -94,7 +94,7 @@ export class ProductosPage implements OnInit, OnDestroy {
   haySiguiente = computed(() => this.indiceActual() < this.productosFiltrados().length - 1);
 
   constructor() {
-    addIcons({ addOutline, chevronBackOutline, chevronForwardOutline });
+    addIcons({ addOutline, chevronBackOutline, chevronForwardOutline, warningOutline });
   }
 
   async ngOnInit(): Promise<void> {

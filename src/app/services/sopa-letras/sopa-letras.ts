@@ -9,7 +9,7 @@ interface CeldaGrilla {
 const PORCENTAJE_SOPA_LETRAS = 10;
 const TAMANO_GRILLA = 5;
 const CANTIDAD_PALABRAS_POR_PARTIDA = 3;
-const DURACION_SEGUNDOS = 60;
+const DURACION_SEGUNDOS = 30;
 
 // Ninguna palabra puede superar TAMANO_GRILLA letras, si no queda sin
 // poder colocarse en la grilla (y el juego sería imposible de ganar).
