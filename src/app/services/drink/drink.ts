@@ -63,7 +63,6 @@ export class Drink {
   }
 
   private async _init(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     const initialData = await this.getList();
 
     this._list$.next(initialData);
