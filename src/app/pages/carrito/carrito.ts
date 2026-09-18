@@ -45,6 +45,10 @@ export class Carrito {
     });
   }
 
+  vaciar(): void {
+    this._items.set({});
+  }
+  
   totalItems = computed(() =>
     Object.values(this._items()).reduce((acc, item) => acc + item.cantidad, 0)
   );

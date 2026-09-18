@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent, IonSearchbar, IonIcon, IonBackButton, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
@@ -10,6 +10,8 @@ import { Carta } from '@app/services';
 import { Carrito } from '../carrito/carrito';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { BarraPedidoComponent } from '@app/components/ui/barra-pedido/barra-pedido.component';
+import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 
 const TITULOS: Record<TipoCarta, string> = {
   plato: 'Platos',
@@ -34,21 +36,19 @@ const DEMORA_FOTO_MS = 3000;
     IonSearchbar,
     IonIcon,
     SpinnerLogoComponent,
-    IonButton,
-    BarraPedidoComponent
+    BarraPedidoComponent,
+    ConfirmVolverComponent,
+    ConfirmDialogComponent
 ],
 })
 export class ProductosPage implements OnInit, OnDestroy {
-
+  private ruta = inject(Router);
   private route = inject(ActivatedRoute);
   public carrito = inject(Carrito);
   private cartaService = inject(Carta);
   private _fotoIntervalId: any = null;
-  // punto 12 :
-  //esta: el cliente pueden elegir los productos (con sus cantidades) para todos los comensales.
-  //erificar que en todo momento esté visible (y con buen tamaño) el importe acumulado
-  //Mostrar el tiempo total estimado de realización del pedido completo.
-    
+  
+  
  
   tipo = signal<TipoCarta>(
     (this.route.snapshot.paramMap.get('tipo') as TipoCarta) ?? 'plato'
@@ -157,20 +157,11 @@ export class ProductosPage implements OnInit, OnDestroy {
     return this.carrito.cantidadDe(producto.id_carta);
   }
 
-  continuarPedido(): void {
-  const resumen = {
-    items: this.carrito.items(),
-    total: this.carrito.importeTotal(),
-    tiempoEstimado: this.carrito.tiempoTotalEstimado()
-  };
-
-    console.log('Pedido a guardar (todavía sin persistir):', resumen);
-
-    // TODO: cuando exista la tabla de pedidos en Supabase,
-    // acá va la llamada real: this.pedidosService.crearPedido(resumen)
-
-     // o la ruta que corresponda al siguiente paso
+  volver(){
+    this.ruta.navigate(["/carta"]);
   }
+
+
 
   // ============================
   // SWIPE (touch)

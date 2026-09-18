@@ -64,6 +64,14 @@ export const routes: Routes = [
   },
 
   {
+  path: 'admin/clients',
+  loadComponent: () =>
+    import('./pages/clients/clients.page').then(
+      (m) => m.ClientsPage
+    ),
+  },
+
+  {
     path: 'home',
 
     canActivate: [authGuard],
@@ -241,4 +249,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/chat/chat.page').then((m) => m.ChatPage),
   },
+  {
+    path: 'pedido',
+    loadComponent:() =>
+      import('./pages/pedido/pedido.component').then((m) => m.PedidoComponent)
+  },
+
 ];

@@ -1,0 +1,136 @@
+@if (cliente) {
+
+  <div
+    class="modal-overlay"
+    (click)="cerrarModal()"
+  >
+
+    <section
+      class="reject-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="reject-title"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- HANDLE -->
+
+      <div class="modal-handle"></div>
+
+
+      <!-- HEADER -->
+
+      <header class="modal-header">
+
+        <h2 id="reject-title">
+          Rechazar cliente
+        </h2>
+
+        <p>
+          Indicá el motivo por el cual
+          se rechaza la solicitud.
+        </p>
+
+      </header>
+
+
+      <!-- CLIENTE -->
+
+      <div class="modal-client">
+
+        @if (avatarUrl) {
+
+          <img
+            [src]="avatarUrl"
+            [alt]="
+              'Foto de ' +
+              cliente.nombre
+            "
+            class="modal-avatar"
+          />
+
+        } @else {
+
+          <div
+            class="modal-avatar-placeholder"
+          >
+            👤
+          </div>
+
+        }
+
+
+        <div class="modal-client-info">
+
+          <strong>
+            {{ cliente.apellido }},
+            {{ cliente.nombre }}
+          </strong>
+
+          <span>
+            DNI {{ cliente.documento }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- MOTIVO -->
+
+      <div class="reason-container">
+
+        <label for="motivo-rechazo">
+          Motivo del rechazo
+        </label>
+
+        <textarea
+          id="motivo-rechazo"
+          maxlength="300"
+          rows="5"
+          placeholder="Escribí el motivo del rechazo..."
+          [value]="motivo"
+          [disabled]="procesando"
+          (input)="actualizarMotivo($event)"
+        ></textarea>
+
+        <span class="character-counter">
+          {{ motivo.length }} / 300
+        </span>
+
+      </div>
+
+
+      <!-- ACCIONES -->
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="modal-cancel-button"
+          [disabled]="procesando"
+          (click)="cerrarModal()"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="button"
+          class="modal-confirm-button"
+          [disabled]="
+            !motivo.trim() ||
+            procesando
+          "
+          (click)="confirmarRechazo()"
+        >
+          Rechazar
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+}

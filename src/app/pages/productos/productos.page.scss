@@ -20,6 +20,10 @@ ion-content {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+   transition: padding-bottom 0.2s ease;   
+
+  &.con-barra-pedido {
+    padding-bottom: 70px; }
 }
 
 ion-searchbar {
@@ -43,19 +47,19 @@ ion-searchbar {
 }
 
 .producto-card {
-  
+
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  margin: 16px;
+  margin: 10px;
   border-radius: 20px;
   overflow: hidden;
   background: var(--ion-color-light, #f4ebdd);
   touch-action: pan-y;
   height: auto;
-  padding-bottom: 10px;
+  padding-bottom: 0px;
 }
 
 .producto-imagen {
@@ -102,24 +106,6 @@ ion-searchbar {
   flex: 0.5;
   font-weight: 700;
 }
-
-.caja-texto {
-  display: flex;
-  align-items: center;    
-  justify-content: center;
-  text-align: center;     
-  width: 100%;             
-}
-
-.columna-datos {
-   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  min-width: 0;
-  gap: 2px;
-}
-
 
 .producto-footer {
   display: flex;

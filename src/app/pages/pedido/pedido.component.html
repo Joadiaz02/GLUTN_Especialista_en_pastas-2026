@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+    </ion-buttons>
+    <h1 class="titulo-toolbar">Pedido</h1>
+    <app-confirm-dialog slot="end"></app-confirm-dialog>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="productos-content">
+    @for (item of carrito.items(); track item.producto.id_carta) {
+        <div class="producto-card" >
+            <span class="producto-descripcion">{{item.producto.nombre}}</span>
+            <span class="producto-descripcion">
+          {{ item.cantidad }} x {{ item.producto.precio | currency:'ARS':'symbol':'1.0-0' }}
+        </span>
+            <span class="producto-descripcion">{{item.producto.descripcion}}</span>
+
+        </div>
+        
+        }
+        <div class="producto-card" >
+            <span class="producto-descripcion">tiempo total estimado:{{this.carrito.tiempoTotalEstimado()}}</span>
+            <span class="producto-descripcion">el total a pagar es:{{this.carrito.importeTotal() | currency:'ARS':'symbol':'1.0-0'}}</span>
+            <span class="producto-descripcion">total de productos:{{this.carrito.totalItems()}} </span>
+        </div>
+  
+    
+    <ion-button shape="round" (click)="solicitarPedido()">Confirmar pedido</ion-button>
+</ion-content>

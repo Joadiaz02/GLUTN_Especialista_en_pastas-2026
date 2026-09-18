@@ -27,11 +27,4 @@ export class CartaPage {
     this.router.navigate(["/home"])
   }
 
-    continuarPedido(): void {
-    const resumen = {
-      items: this.carrito.items(),
-      total: this.carrito.importeTotal(),
-      tiempoEstimado: this.carrito.tiempoTotalEstimado()
-    };
-  }
 }

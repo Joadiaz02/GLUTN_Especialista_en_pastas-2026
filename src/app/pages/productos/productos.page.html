@@ -1,14 +1,15 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/carta"></ion-back-button>
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
     <h1 class="titulo-toolbar">{{ titulo() }}</h1>
+    <app-confirm-dialog slot="end"></app-confirm-dialog>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="productos-content">
-  <div class="productos-wrapper">
+  <div class="productos-wrapper" [class.con-barra-pedido]="carrito.totalItems() > 0">
 
   <ion-searchbar
     placeholder="Buscar en {{ titulo() | lowercase }}"
@@ -87,7 +88,7 @@
       </div>
     </div>
 
-    <app-barra-pedido (continuar)="continuarPedido()"></app-barra-pedido>
+    <app-barra-pedido ></app-barra-pedido>
     
   }
 
