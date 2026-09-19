@@ -1,0 +1,29 @@
+.lista-pedidos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pedido-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: var(--ion-color-light, #f4ebdd);
+  color: #3a2a1e;
+  text-decoration: none;
+}
+
+.pedido-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sin-pedidos {
+  text-align: center;
+  opacity: 0.8;
+  margin-top: 40px;
+}

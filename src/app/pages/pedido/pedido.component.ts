@@ -13,7 +13,7 @@ import { Auth } from '@app/services';
   selector: 'app-pedido',
   templateUrl: './pedido.component.html',
   styleUrls: ['./pedido.component.scss'],
-  imports: [IonHeader, IonToolbar, IonButtons, IonContent, ConfirmVolverComponent, ConfirmDialogComponent, CurrencyPipe, IonButton, IonFooter, IonSpinner],
+  imports: [IonHeader, IonToolbar, IonButtons, IonContent, ConfirmVolverComponent, ConfirmDialogComponent, CurrencyPipe, IonButton, IonFooter],
 })
 export class PedidoComponent  {
  
@@ -22,15 +22,7 @@ export class PedidoComponent  {
   root = inject(Router);
   private authService = inject(Auth);
   private toastController = inject(ToastController);
-//mejorar el diseño 
-//hacer la parte del mozo 
-//poner la púsh para el moso 
-//ver requerimientos del p12
-//esta:
-// punto 12 :
-  //esta: el cliente pueden elegir los productos (con sus cantidades) para todos los comensales.
-  //erificar que en todo momento esté visible (y con buen tamaño) el importe acumulado
-  //Mostrar el tiempo total estimado de realización del pedido completo. 
+  
 
 
   continuarPedido(): void {
@@ -44,13 +36,13 @@ export class PedidoComponent  {
 
   async solicitarPedido(): Promise<void> {
     try {
-      // TODO: reemplazar por los ids reales cuando el compañero defina cómo se obtiene la mesa
+      
       const idMesaPrueba = 'b63469cd-404d-460c-a193-4eb153b9dec1';
       const idUsuarioPrueba = '4509335d-09e8-4ec5-984e-20b269a5493f';
       const detalles = ''
       const idPedido = await this.pedido.crear_pedido(idMesaPrueba, idUsuarioPrueba , detalles);
       console.log('Pedido creado con id:', idPedido);
-     
+      
       this.root.navigate(['/home']);
     } catch (error) {
       console.error('Error al crear el pedido:', error);
@@ -61,7 +53,6 @@ export class PedidoComponent  {
   volver(){
     this.root.navigate(["/carta"])
     
-
   }
 
   async cerrarSesion(): Promise<void> {

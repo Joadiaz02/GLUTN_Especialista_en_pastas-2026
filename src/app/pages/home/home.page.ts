@@ -227,7 +227,7 @@ export class HomePage implements OnInit, OnDestroy {
     });
     await toast.present();
   }
-//consultar estado del pedido
+
 async verEstadoPedido(idPedido: string) {
   const modal = await this.modalController.create({
     component: EstadoPedidoComponent,

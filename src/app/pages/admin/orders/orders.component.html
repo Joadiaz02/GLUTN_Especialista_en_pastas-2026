@@ -21,14 +21,27 @@
   @if (cargando()) {
     <p>Cargando...</p>
   } @else if (pedidos().length === 0) {
-    <p>No hay pedidos pendientes.</p>
+    <p class="sin-pedidos">No hay pedidos pendientes.</p>
   } @else {
-    @for (pedido of pedidos(); track pedido.id_pedido) {
-      <a href="/admin/{{ pedido.id_pedido }}" class="pedido-card">
-        <span class="body-medium weight-semibold">Mesa: {{ pedido.id_mesa }}</span>
-        <span class="body-small">Subtotal: ${{ pedido.subtotal }}</span>
-      </a>
-    }
+    <div class="lista-pedidos">
+      @for (pedido of pedidos(); track pedido.id_pedido) {
+        <div class="pedido-card">
+          <div class="pedido-card__info">
+            <span class="body-medium weight-bold">Mesa {{ pedido.id_mesa.slice(0, 8) }}</span>
+            <span class="body-small">Subtotal: {{ pedido.subtotal | currency:'ARS':'symbol':'1.0-0' }}</span>
+          </div>
+
+          <div class="pedido-card__acciones">
+            <ion-button shape="round" fill="outline" color="danger" size="small" [disabled]="estado() === pedido.id_pedido" (click)="rechazar(pedido.id_pedido)">
+              Rechazar
+            </ion-button>
+            <ion-button shape="round" size="small" [disabled]="estado() === pedido.id_pedido" (click)="confirmar(pedido.id_pedido)">
+              Aceptar
+            </ion-button>
+          </div>
+        </div>
+      }
+    </div>
   }
 </ion-content>
 

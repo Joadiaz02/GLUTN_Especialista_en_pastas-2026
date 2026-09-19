@@ -9,6 +9,7 @@ export class Pedido {
     private sup = inject(SupabaseService);
     private carrito = inject(Carrito);
     public estado_pedido = signal<boolean>(false);
+    public idUltimoPedido = signal<string | null>(null);
 
     async crear_pedido(id_mesa:string,id_usuario:string , detalles:string  ) : Promise<string> {
         const item = this.carrito.items();
@@ -44,7 +45,7 @@ export class Pedido {
         this.carrito.vaciar();
 
         this.estado_pedido.set(true);
-
+        this.idUltimoPedido.set(pedido.id_pedido)
         return pedido.id_pedido;
     }
 
