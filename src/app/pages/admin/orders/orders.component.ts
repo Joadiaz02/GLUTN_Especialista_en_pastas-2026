@@ -1,20 +1,20 @@
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
-import { IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, IonIcon, IonButton } from '@ionic/angular';
+import { IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, IonButton, IonRouterLink } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { Auth } from '@app/services';
-import { Router } from '@angular/router';
+import { Router, RouterLink,} from '@angular/router';
 import { logOutOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { Pedido } from '@app/services/pedido/pedido';
 import { Carrito } from '@app/pages/carrito/carrito';
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss'],
-  imports: [IonHeader, IonToolbar, IonButtons, ConfirmVolverComponent, ConfirmDialogComponent, IonTitle, IonContent, CurrencyPipe, IonButton],
+  imports: [IonHeader, IonToolbar, IonButtons, ConfirmVolverComponent, ConfirmDialogComponent, IonTitle, IonContent, CommonModule, IonButton, IonRouterLink , RouterLink],
 })
 export class OrdersComponent {
   pedido = inject(Pedido);
@@ -39,6 +39,7 @@ export class OrdersComponent {
   async cargarpedido(){
     this.cargando.set(true);
     const pedidos = await this.pedido.traer_pedido();
+    
     this.pedidos.set(pedidos);
     this.cargando.set(false);
   }

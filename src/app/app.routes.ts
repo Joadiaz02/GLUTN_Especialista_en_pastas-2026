@@ -184,6 +184,13 @@ export const routes: Routes = [
         (m) => m.OrdersComponent
       ),
   },
+  {
+    path: 'admin/orders/orders-detalles/:id',
+    loadComponent: () =>
+      import('./pages/admin/orders/orders-detalles/orders-detalles.component').then(
+        (m) => m.OrdersDetallesComponent
+      ),
+  },
 
   {
     path: 'juegos',

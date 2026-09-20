@@ -27,16 +27,23 @@
       @for (pedido of pedidos(); track pedido.id_pedido) {
         <div class="pedido-card">
           <div class="pedido-card__info">
-            <span class="body-medium weight-bold">Mesa {{ pedido.id_mesa.slice(0, 8) }}</span>
-            <span class="body-small">Subtotal: {{ pedido.subtotal | currency:'ARS':'symbol':'1.0-0' }}</span>
+            <span class="body-hight weight-bold">Mesa: {{ pedido.id_mesa.slice(0, 8) }}</span>
+            <span class="body-hight weight-bold">Usuario: {{ pedido.id_usuario.slice(0, 8) }}</span>
+            <span class="body-hight weight-bold">Pedido: {{ pedido.id_pedido.slice(0, 8) }}</span>
+            <span class="body-ultra-small">fecha:{{pedido.fecha_emision_pedido | date:'d/M/yy:h:mm' }}</span>
+            <span class="body-ultra-small">Estado:{{pedido.estado_pedido}}</span>
           </div>
+          
 
           <div class="pedido-card__acciones">
-            <ion-button shape="round" fill="outline" color="danger" size="small" [disabled]="estado() === pedido.id_pedido" (click)="rechazar(pedido.id_pedido)">
+            <ion-button class="boton_rechazar" shape="round" fill="outline" color="danger" size="small" [disabled]="estado() === pedido.id_pedido" (click)="rechazar(pedido.id_pedido)">
               Rechazar
             </ion-button>
-            <ion-button shape="round" size="small" [disabled]="estado() === pedido.id_pedido" (click)="confirmar(pedido.id_pedido)">
+            <ion-button class="boton_aceptar" shape="round" size="small" [disabled]="estado() === pedido.id_pedido" (click)="confirmar(pedido.id_pedido)">
               Aceptar
+            </ion-button>
+            <ion-button   [routerLink]="['/admin/orders/orders-detalles', pedido.id_pedido]" class="boton_aceptar" shape="round" size="small">
+              Detalles
             </ion-button>
           </div>
         </div>

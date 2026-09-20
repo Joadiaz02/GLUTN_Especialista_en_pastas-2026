@@ -1,26 +1,48 @@
 .lista-pedidos {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px; 
 }
 
 .pedido-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  padding: 16px 20px;
-  border-radius: 16px;
+  
+ 
+  padding: 10px 10px; 
+  border-radius: 20px;
   background: var(--ion-color-light, #f4ebdd);
   color: #3a2a1e;
   text-decoration: none;
+  
 }
 
 .pedido-card__info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px; 
 }
+
+
+.pedido-card__acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 110px; 
+}
+
+
+.boton_aceptar,
+.boton_rechazar {
+  width: 100%;
+  text-align: center;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  
+}
+
 
 .sin-pedidos {
   text-align: center;

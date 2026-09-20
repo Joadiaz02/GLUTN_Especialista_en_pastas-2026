@@ -1,0 +1,50 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+    </ion-buttons>
+
+    <ion-title class="titulo-toolbar">Detalle del Pedido </ion-title>
+
+    <ion-buttons slot="end">
+      <app-confirm-dialog
+        titulo="¿Cerrar sesión?"
+        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+        textoConfirmar="Cerrar sesión"
+        (confirmado)="cerrarSesion()"
+      ></app-confirm-dialog>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="productos-content">
+  <div class="pedido-container">
+
+  @if (pedido()) {
+    <div class="lista-productos">
+      @for (item of pedido().items; track item.id_item) {
+        <div class="producto-card">
+          <div class="card-header-item">
+            
+            <span class="item-nombre">{{ item.carta.nombre }}</span>
+            <span class="item-descripcion">{{ item.cantidad }} x {{ item.precio_unitario | currency:'ARS':'symbol':'1.0-0' }}</span>
+          </div>
+          <span class="item-precio">{{ item.subtotal | currency:'ARS':'symbol':'1.0-0' }}</span>
+          </div>
+        
+      }
+      </div>
+      <div class="producto-card ">
+        <div class="resumen-fila">
+          <span>Total a pagar:</span>
+        <span class="item-precio">{{ pedido().subtotal | currency:'ARS':'symbol':'1.0-0' }}</span>
+      </div>
+      </div>
+      
+    
+  } @else {
+    <p>Cargando...</p>
+  }
+  
+</div>
+</ion-content>

@@ -72,10 +72,7 @@ export class Pedido {
 
     if (errorPedido) throw errorPedido;
 
-    const { data: items, error: errorItems } = await this.sup.client
-      .from('pedido_item')
-      .select('*, carta(nombre, foto_1)')
-      .eq('id_pedido', idPedido);
+    const { data: items, error: errorItems } = await this.sup.client.from('pedido_item').select('*, carta(nombre, foto_1)').eq('id_pedido', idPedido );
 
     if (errorItems) {
         throw errorItems
