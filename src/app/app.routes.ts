@@ -178,6 +178,21 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'admin/orders',
+    loadComponent: () =>
+      import('./pages/admin/orders/orders.component').then(
+        (m) => m.OrdersComponent
+      ),
+  },
+  {
+    path: 'admin/orders/orders-detalles/:id',
+    loadComponent: () =>
+      import('./pages/admin/orders/orders-detalles/orders-detalles.component').then(
+        (m) => m.OrdersDetallesComponent
+      ),
+  },
+
+  {
     path: 'juegos',
 
     canActivate: [authGuard, navegacionInternaGuard],
@@ -261,4 +276,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/chat/chat.page').then((m) => m.ChatPage),
   },
+  {
+    path: 'pedido',
+    loadComponent:() =>
+      import('./pages/pedido/pedido.component').then((m) => m.PedidoComponent)
+  },
+
 ];

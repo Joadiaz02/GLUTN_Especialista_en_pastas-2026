@@ -1,20 +1,57 @@
-import { Component } from '@angular/core';
-import { IonContent, IonButton, IonHeader, IonToolbar, IonButtons, IonBackButton } from '@ionic/angular';
+import { Component, inject } from '@angular/core';
+import { IonContent, IonButton, IonHeader, IonToolbar, IonButtons, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TipoCarta } from '../../models/carta.model';
+import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { BarraPedidoComponent } from '@app/components/ui/barra-pedido/barra-pedido.component';
+import { Carrito } from '../carrito/carrito';
+import { Auth } from '@app/services';
+import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 
 @Component({
   selector: 'app-carta',
   standalone: true,
   templateUrl: './carta.page.html',
   styleUrls: ['./carta.page.scss'],
-  imports: [IonContent, IonButton, IonHeader, IonToolbar, IonButtons, IonBackButton],
+  imports: [IonContent, IonButton, IonHeader, IonToolbar, IonButtons, ConfirmVolverComponent, BarraPedidoComponent, ConfirmDialogComponent],
 })
 export class CartaPage {
+  public carrito = inject(Carrito);
+  private authService = inject(Auth);
+  private toastController = inject(ToastController);
 
-  constructor(private router: Router) {}
+  
+  constructor(private router: Router
+    
+  ) {}
 
   irA(tipo: TipoCarta): void {
     this.router.navigate(['/carta', tipo]);
   }
+
+   irALogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  volver(){
+    this.router.navigate(["/home"])
+  }
+
+  async cerrarSesion(): Promise<void> {
+    await this.authService.logout();
+
+    
+    localStorage.removeItem('mesa');
+
+    const toast = await this.toastController.create({
+      message: 'Sesión cerrada correctamente.',
+      duration: 3000,
+      position: 'top',
+      color: 'success'
+    });
+    await toast.present();
+
+    void this.router.navigate(['/login']);
+  }
+
 }

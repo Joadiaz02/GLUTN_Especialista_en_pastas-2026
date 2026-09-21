@@ -391,6 +391,7 @@ export class RegisterPage {
   }
 
 
+
   cancelarRegistro(): void {
 
     void this.router.navigateByUrl(

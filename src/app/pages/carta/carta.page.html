@@ -1,8 +1,9 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
+    <app-confirm-dialog slot="end" (confirmado)="cerrarSesion()"></app-confirm-dialog>
   </ion-toolbar>
 </ion-header>
 
@@ -29,4 +30,6 @@
       Postres
     </ion-button>
   </div>
+
+  <app-barra-pedido ></app-barra-pedido>
 </ion-content>

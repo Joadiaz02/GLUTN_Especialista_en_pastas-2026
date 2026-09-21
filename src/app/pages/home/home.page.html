@@ -174,5 +174,15 @@
 
     <p class="chat-bubble__subtitle">Chat</p>
   </div>
+  
+    @if (pedido.idUltimoPedido()) {
+      <div class="pedido-flotante-izq">
+        <p class="chat-bubble__title">Consulta</p>
+        <ion-button class="chat-bubble__circle" (click)="verEstadoPedido(pedido.idUltimoPedido()!)"><ion-icon name="time-outline" style="color: white; font-size: 100px;"></ion-icon></ion-button>
+        <p class="chat-bubble__subtitle">Pedido</p>
+      </div>
+    }
+    
+  
 
 </ion-content>

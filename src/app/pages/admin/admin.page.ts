@@ -32,7 +32,6 @@ import { ConfirmVolverComponent } from "@app/components/ui/confirm-volver/confir
     IonToolbar,
     IonTitle,
     IonButtons,
-    IonIcon,
     IonContent,
     AdminModuleCardComponent,
     RouterLink,

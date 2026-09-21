@@ -297,3 +297,17 @@ ion-item {
   color: var(--ion-text-color);
   margin-top: 6px;
 }
+
+//boton de consulta de estado del pedido
+.pedido-flotante-izq {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  cursor: pointer;
+  z-index: 9999;
+}

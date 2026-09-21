@@ -1,14 +1,15 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/carta"></ion-back-button>
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
     <h1 class="titulo-toolbar">{{ titulo() }}</h1>
+    <app-confirm-dialog slot="end" (confirmado)="cerrarSesion()"></app-confirm-dialog>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="productos-content">
-  <div class="productos-wrapper">
+  <div class="productos-wrapper" [class.con-barra-pedido]="carrito.totalItems() > 0">
 
   <ion-searchbar
     placeholder="Buscar en {{ titulo() | lowercase }}"
@@ -36,18 +37,21 @@
       (touchstart)="onTouchStart($event)"
       (touchend)="onTouchEnd($event)"
     >
-
+    
       <!-- flechas para desktop/mouse; en mobile se usa el swipe -->
       @if (hayAnterior()) {
         <button class="flecha flecha-izq" type="button" (click)="anterior()">
           <ion-icon name="chevron-back-outline"></ion-icon>
         </button>
+        
       }
+
 
       @if (haySiguiente()) {
         <button class="flecha flecha-der" type="button" (click)="siguiente()">
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </button>
+                
       }
 
       <img class="producto-imagen" [src]="fotoActual()" [alt]="producto.nombre" />
@@ -66,14 +70,22 @@
             <span class="producto-medida">{{ producto.medida_ml }} ml</span>
           }
         </div>
-        <p class="producto-descripcion">{{ producto.descripcion }}</p>
+        <p class="producto-descripcion caja-texto">{{ producto.descripcion }}</p>
+
+        <label id="tiempo" class="producto-detalles  caja-texto">Tiempo de elaboración:</label>
+        <p id="tiempo" class="producto-descripcion caja-texto">{{producto.tiempo_elaboracion}} minutos</p>
+
 
         <div class="producto-footer">
-          <span class="producto-precio">{{ producto.precio | currency:'ARS':'$' }}</span>
+          <span class="producto-precio">{{ producto.precio | currency:'ARS':'$':'1.0-0'}}</span>
 
           <div class="producto-agregar">
             @if (cantidadEnCarrito(producto) > 0) {
+              <button class="boton-quitar" type="button" (click)="quitarAlcarrito(producto)">
+                <ion-icon>-</ion-icon>
+              </button>
               <span class="producto-cantidad">{{ cantidadEnCarrito(producto) }}</span>
+              
             }
 
             <button class="boton-agregar" type="button" (click)="agregarAlCarrito(producto)">
@@ -87,6 +99,9 @@
         {{ indiceActual() + 1 }} / {{ productosFiltrados().length }}
       </div>
     </div>
+
+    <app-barra-pedido ></app-barra-pedido>
+    
   }
 
   </div>
