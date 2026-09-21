@@ -28,6 +28,26 @@
   line-height: 1.4;
 }
 
+.sopa-inicio {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  // Deja el bloque centrado en la pantalla, sin un vacío grande abajo.
+  padding-bottom: 96px;
+}
+
+.sopa-inicio__texto {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  margin: 0;
+  line-height: 1.4;
+}
+
 .sopa-info {
   display: flex;
   align-items: center;

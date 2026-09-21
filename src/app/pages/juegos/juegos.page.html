@@ -40,23 +40,58 @@
   </p>
 
   <div class="juegos-lista">
-    @for (juego of juegos; track juego.nombre) {
-      @if (juego.disponible) {
-        <a class="juego-card" [routerLink]="juego.ruta" [state]="{ origenValido: true }">
+    @for (juego of juegos; track juego.id) {
+      <div class="juego-card">
+        <a class="juego-card__enlace" [routerLink]="juego.ruta" [state]="{ origenValido: true }">
           <span class="juego-card__nombre">{{ juego.nombre }}</span>
-          <span class="juego-card__porcentaje">{{ juego.porcentaje }}% de descuento</span>
+          <span class="juego-card__porcentaje">
+            @if (puedeJugarPorPrimeraVez()) {
+              {{ juego.porcentaje }}% de descuento
+            } @else {
+              Jugá por diversión
+            }
+          </span>
         </a>
-      } @else {
+
         <button
           type="button"
-          class="juego-card juego-card--proximamente"
-          (click)="avisarProximamente(juego.nombre)"
+          class="juego-card__ayuda"
+          (click)="abrirAyuda(juego)"
         >
-          <span class="juego-card__nombre">{{ juego.nombre }}</span>
-          <span class="juego-card__porcentaje">{{ juego.porcentaje }}% de descuento</span>
-          <span class="juego-card__badge">Próximamente</span>
+          Cómo jugar
         </button>
-      }
+      </div>
     }
   </div>
+
+  <ion-modal
+    class="como-jugar-modal"
+    [isOpen]="ayudaAbierta()"
+    (didDismiss)="cerrarAyuda()"
+  >
+    <ng-template>
+      @if (juegoAyuda(); as juego) {
+        <div class="como-jugar">
+          <h2 class="como-jugar__titulo">Cómo jugar: {{ juego.nombre }}</h2>
+
+          <ol class="como-jugar__pasos">
+            @for (paso of juego.comoJugar; track $index) {
+              <li>{{ paso }}</li>
+            }
+          </ol>
+
+          <p class="como-jugar__regla">{{ reglaDescuento }}</p>
+
+          <ion-button
+            class="como-jugar__cerrar"
+            expand="block"
+            shape="round"
+            (click)="cerrarAyuda()"
+          >
+            Cerrar
+          </ion-button>
+        </div>
+      }
+    </ng-template>
+  </ion-modal>
 </ion-content>

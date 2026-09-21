@@ -39,7 +39,7 @@
       @switch (resultadoTipo()) {
         @case ('gana') {
           @if (esClienteRegistrado()) {
-            🎉 ¡Ganaste 15% de descuento en tu cuenta!
+            🎉 ¡Ganaste {{ porcentaje }}% de descuento en tu cuenta!
           } @else {
             🎉 ¡Ganaste! Registrate para poder cobrar el descuento la próxima vez.
           }
