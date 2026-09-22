@@ -1,6 +1,6 @@
 import { Component, inject, input, output, signal } from '@angular/core';
 import { IonIcon, ModalController, ToastController } from '@ionic/angular';
-import { UploadOptionsComponent } from './upload-options/upload-options.component';
+import { UploadOptionsComponent } from '@app/components/ui/uploader/upload-options/upload-options.component';
 import { Camera, MediaResult } from '@capacitor/camera';
 
 @Component({
