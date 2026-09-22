@@ -1,73 +1,212 @@
 .chat-bg {
-  --background: #5f7046; /* verde institucional */
+  --background: var(--ion-background-color);
+  --padding-top: 16px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-bottom: 16px;
 }
 
-.chat-container {
-  padding: 16px;
+.logo {
+  width: 100%;
+  display: block;
 }
 
-.messages {
+.chat-titulo {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  margin: 0 0 20px;
+}
+
+.chat-estado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.chat-estado__texto {
+  margin: 0;
+  padding: 0 24px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--ion-text-color);
+}
+
+.mensajes {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.message-bubble {
-  max-width: 75%;
-  background: rgba(255, 122, 0, 0.3); /* naranja blurreado */
+// Mensajes de los demás: verde oscuro con texto blanco (contraste alto).
+.mensaje {
+  max-width: 82%;
+  align-self: flex-start;
   padding: 10px 14px;
   border-radius: 14px;
-  color: #fff;
+  background: rgba(0, 0, 0, 0.28);
+  color: #ffffff;
 }
 
-.message-bubble.me {
-  background: #ff7a00; /* naranja sólido */
-  margin-left: auto;
+// Mensajes propios: naranja de la marca, a la derecha.
+.mensaje--propio {
+  align-self: flex-end;
+  background: var(--ion-color-primary);
 }
 
-.message-header {
+.mensaje__encabezado {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 4px 8px;
   margin-bottom: 4px;
 }
 
-.avatar {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
+.mensaje__nombre {
+  font-size: 14px;
+  font-weight: 700;
 }
 
-.name {
-  font-weight: 600;
+.mensaje__etiqueta {
+  padding: 1px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.25);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mensaje__hora {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.mensaje__cita {
+  margin-bottom: 6px;
+  padding: 6px 10px;
+  border-left: 3px solid #ffffff;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
   font-size: 13px;
-}
-
-.time {
-  font-size: 11px;
-  opacity: 0.8;
-}
-
-.message-text {
-  font-size: 15px;
   line-height: 1.3;
 }
 
-.chat-input {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #5f7046;
-  padding: 10px;
-  display: flex;
-  gap: 10px;
+.mensaje__texto {
+  font-size: 16px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
-.chat-input input {
-  flex: 1;
-  padding: 10px;
+.mensaje__responder {
+  margin-top: 8px;
+  min-height: 36px;
+  padding: 4px 16px;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chat-pie {
+  padding: 8px 12px 4px;
+  background: var(--ion-background-color);
+}
+
+.chat-aviso,
+.chat-error {
+  margin: 0 0 8px;
+  padding: 8px 12px;
   border-radius: 10px;
-  border: none;
-  outline: none;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.chat-aviso {
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.chat-error {
+  background: var(--ion-color-danger);
+}
+
+.chat-respondiendo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-left: 4px solid var(--ion-color-primary);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.chat-respondiendo__texto {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.chat-respondiendo__cerrar {
+  min-width: 36px;
+  min-height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  input {
+    flex: 1;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0 16px;
+    border: 2px solid #ffffff;
+    border-radius: 24px;
+    outline: none;
+    background: rgba(0, 0, 0, 0.28);
+    color: #ffffff;
+    font-size: 16px;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+
+  ion-button {
+    margin: 0;
+    min-width: 96px;
+    height: 48px;
+    --background: var(--ion-color-primary);
+    font-size: 16px;
+    font-weight: 700;
+  }
+}
+
+.chat-contador {
+  margin: 4px 8px 0;
+  text-align: right;
+  font-size: 12px;
+  color: var(--text-secondary);
 }
