@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonIcon, IonFooter, IonButton, IonInput, IonSpinner, ToastController } from '@ionic/angular';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonFooter, IonButton, IonInput, IonSpinner, ToastController } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Router } from '@angular/router';
 import { GtnUploader } from '@app/components';
@@ -19,7 +19,6 @@ type TipoMesa = 'vip' | 'estandar' | 'movilidad_reducida';
     IonTitle,
     IonToolbar,
     IonButtons,
-    IonIcon,
     CommonModule,
     ReactiveFormsModule,
     ConfirmVolverComponent,

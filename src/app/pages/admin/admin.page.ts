@@ -1,7 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ViewChild,
+  signal,
+  inject,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-
 
 import {
   IonHeader,
@@ -21,13 +26,12 @@ import { AdminModuleCardComponent } from '@app/components/admin-module-card/admi
 import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
 import { addIcons } from 'ionicons';
 import { logOutOutline } from 'ionicons/icons';
-import { ConfirmVolverComponent } from "@app/components/ui/confirm-volver/confirm-volver.component";
+import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
   imports: [
-    CommonModule,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -36,24 +40,22 @@ import { ConfirmVolverComponent } from "@app/components/ui/confirm-volver/confir
     AdminModuleCardComponent,
     RouterLink,
     ConfirmDialogComponent,
-    ConfirmVolverComponent
-],
+    ConfirmVolverComponent,
+  ],
   templateUrl: './admin.page.html',
   styleUrls: ['./admin.page.scss'],
 })
 export class AdminPage implements OnInit {
+  private auth = inject(Auth);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+
   modulosVisibles: AdminModule[] = [];
-  
-  constructor(
-    private auth: Auth,
-    private router: Router,
-    private cdr: ChangeDetectorRef,
-    
-    
-  ) {
+
+  constructor() {
     addIcons({
-    'log-out-outline': logOutOutline
-  });
+      'log-out-outline': logOutOutline,
+    });
   }
 
   ngOnInit(): void {
@@ -98,10 +100,9 @@ export class AdminPage implements OnInit {
   }
 
   volver(): void {
-    console.log("qwe")
+    console.log('qwe');
     void this.router.navigate(['/seleccion-acceso']);
   }
-
 
   async cerrarSesion(): Promise<void> {
     localStorage.removeItem('token');

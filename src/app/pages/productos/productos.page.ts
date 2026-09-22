@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonContent, IonSearchbar, IonIcon, IonBackButton, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton, ToastController } from '@ionic/angular';
+import { IonContent, IonSearchbar, IonIcon, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addOutline, chevronBackOutline, chevronForwardOutline, warningOutline } from 'ionicons/icons';
 
@@ -33,7 +33,6 @@ const DEMORA_FOTO_MS = 3000;
     IonHeader,
     IonToolbar,
     IonButtons,
-    IonBackButton,
     IonSearchbar,
     IonIcon,
     SpinnerLogoComponent,

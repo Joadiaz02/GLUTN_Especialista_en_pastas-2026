@@ -9,7 +9,6 @@ import {
   IonButtons,
   IonBackButton,
   IonIcon,
-  IonButton,
 } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
@@ -34,7 +33,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
     IonIcon,
     SkeletonCardComponent,
     ConfirmVolverComponent,
-    IonButton,
     MenuCardComponent,
   ],
 })

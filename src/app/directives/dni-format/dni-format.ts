@@ -4,20 +4,19 @@ import {
   HostListener,
   OnInit,
   OnDestroy,
+  inject,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[gtnDniFormat]',
+  selector: '[appDniFormat]',
 })
 export class DniFormat implements OnInit, OnDestroy {
-  private subscription?: Subscription;
+  private el = inject<ElementRef<HTMLIonInputElement>>(ElementRef);
+  private ngControl = inject(NgControl);
 
-  constructor(
-    private el: ElementRef<HTMLIonInputElement>,
-    private ngControl: NgControl
-  ) {}
+  private subscription?: Subscription;
 
   ngOnInit(): void {
     this.updateDisplayValue(this.ngControl.control?.value);

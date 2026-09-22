@@ -5,7 +5,7 @@ import { Auth } from '@app/services';
 import { Pedido } from '@app/services/pedido/pedido';
 import { addIcons } from 'ionicons';
 import { logOutOutline } from 'ionicons/icons';
-import { IonButton, IonButtons, IonTitle, IonToolbar, IonHeader, IonContent } from '@ionic/angular';
+import { IonButtons, IonTitle, IonToolbar, IonHeader, IonContent } from '@ionic/angular';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 
@@ -13,7 +13,7 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
   selector: 'app-orders-detalles',
   templateUrl: './orders-detalles.component.html',
   styleUrls: ['./orders-detalles.component.scss'],
-  imports: [CurrencyPipe, IonButton, IonButtons, ConfirmDialogComponent, IonTitle, ConfirmVolverComponent, IonToolbar, IonHeader, IonContent],
+  imports: [CurrencyPipe, IonButtons, ConfirmDialogComponent, IonTitle, ConfirmVolverComponent, IonToolbar, IonHeader, IonContent],
 })
 export class OrdersDetallesComponent implements OnInit {
   private pedidoService = inject(Pedido);

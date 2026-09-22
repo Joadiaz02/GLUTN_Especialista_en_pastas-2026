@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormArray,
@@ -48,7 +48,7 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     SpinnerLogoComponent,
   ],
 })
-export class EditDrinkPage {
+export class EditDrinkPage implements OnInit {
   isLoading = signal<boolean>(false);
 
   isLoadingDrink = signal<boolean>(false);

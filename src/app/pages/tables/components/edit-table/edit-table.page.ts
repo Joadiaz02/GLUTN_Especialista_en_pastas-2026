@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons } from '@ionic/angular';
+import { IonHeader, IonTitle, IonToolbar, IonButtons } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 
@@ -10,7 +10,6 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
   templateUrl: './edit-table.page.html',
   styleUrls: ['./edit-table.page.scss'],
   imports: [
-    IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,

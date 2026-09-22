@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
+
 import { IdentityStepPage } from './identity-step.page';
 
 describe('IdentityStepPage', () => {
@@ -7,6 +9,10 @@ describe('IdentityStepPage', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(IdentityStepPage);
+    fixture.componentRef.setInput(
+      'control',
+      new FormGroup({ fullName: new FormControl('') })
+    );
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

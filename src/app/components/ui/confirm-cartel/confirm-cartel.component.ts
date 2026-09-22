@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { IonButton, IonIcon, ModalController } from "@ionic/angular";
-import { addIcons } from "ionicons";
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { IonButton, IonIcon, ModalController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
 import {
   logOutOutline,
   arrowBackOutline,
@@ -9,15 +9,16 @@ import {
   star,
   starOutline,
   helpCircleOutline,
-} from "ionicons/icons";
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-confirm-dialog',
-  imports: [IonButton, IonIcon ],
+  imports: [IonButton, IonIcon],
   templateUrl: './confirm-cartel.component.html',
-  styleUrl: './confirm-cartel.component.scss' })
-
+  styleUrl: './confirm-cartel.component.scss',
+})
 export class ConfirmDialogComponent {
+  private modalController = inject(ModalController);
 
   @Input() titulo = '¿Estás seguro?';
   @Input() mensaje = '';
@@ -32,7 +33,7 @@ export class ConfirmDialogComponent {
   // borrar, guardar, etc.) — este componente solo pregunta.
   @Output() confirmado = new EventEmitter<void>();
 
-  constructor(private modalController: ModalController) {
+  constructor() {
     addIcons({
       'log-out-outline': logOutOutline,
       'arrow-back-outline': arrowBackOutline,
@@ -45,7 +46,6 @@ export class ConfirmDialogComponent {
   }
 
   async abrirConfirmacion() {
-
     const modal = await this.modalController.create({
       component: ConfirmDialogComponent,
 
@@ -57,11 +57,11 @@ export class ConfirmDialogComponent {
         colorConfirmar: this.colorConfirmar,
         icono: this.icono,
 
-        esContenidoModal: true
+        esContenidoModal: true,
       },
 
       breakpoints: [0, 0.4],
-      initialBreakpoint: 0.4
+      initialBreakpoint: 0.4,
     });
 
     await modal.present();
