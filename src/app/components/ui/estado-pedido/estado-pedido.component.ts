@@ -2,8 +2,11 @@ import { Component, Input, OnInit, OnDestroy, inject, signal } from '@angular/co
 import { ModalController, IonButton } from '@ionic/angular';
 import { SupabaseService } from '../../../services/supabase.service';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { Pedido } from '@app/services/pedido/pedido';
+import { Router } from '@angular/router';
+import { Carrito } from '@app/pages/carrito/carrito';
 
-const ESTADOS_LEGIBLES: Record<string, string> = {
+const estados_posibles: Record<string, string> = {
   pendiente: 'Esperando confirmación del mozo',
   confirmado: 'Confirmado',
   rechazado: 'Rechazado, revisá tu pedido',
@@ -24,18 +27,17 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
   private supabaseService = inject(SupabaseService);
   private modalController = inject(ModalController);
   private canal!: RealtimeChannel;
+  public pedidoService = inject(Pedido);
+  private router = inject(Router);
+  private carrito = inject(Carrito);
 
   estado = signal<string>('pendiente');
 
-  estadoLegible = () => ESTADOS_LEGIBLES[this.estado()] ?? this.estado();
+  estadoLegible = () => estados_posibles[this.estado()] ?? this.estado();
 
   async ngOnInit(): Promise<void> {
    
-    const { data } = await this.supabaseService.client
-      .from('pedido')
-      .select('estado_pedido')
-      .eq('id_pedido', this.idPedido)
-      .single();
+    const { data } = await this.supabaseService.client.from('pedido').select('estado_pedido').eq('id_pedido', this.idPedido).single();
 
     if (data) {
       this.estado.set(data.estado_pedido);
@@ -57,7 +59,23 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
         }
       )
       .subscribe();
+
   }
+
+  async modificar(): Promise<void>{
+        const pedidoCompleto = await this.pedidoService.obtenerPedidoConItems(this.idPedido);
+
+        const itemsParaCarrito = pedidoCompleto.items.map((item: any) => ({
+          producto: item.carta,
+          cantidad: item.cantidad
+        }));
+
+        this.carrito.cargar(itemsParaCarrito);
+        this.pedidoService.idPedidoEnEdicion.set(this.idPedido);
+
+        this.modalController.dismiss();
+        this.router.navigate(['/carta']);
+      }
 
   ngOnDestroy(): void {
   

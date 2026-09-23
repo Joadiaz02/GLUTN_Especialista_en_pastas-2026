@@ -4,6 +4,12 @@
   <h2 class="heading-medium weight-bold">Estado de tu pedido:</h2>
   <p class="body-medium">{{ estadoLegible() }}</p>
 
+  @if (estado() === 'rechazado') {
+    <ion-button shape="round" expand="block" (click)="modificar()">
+      Modificar pedido
+    </ion-button>
+  }
+
   <ion-button shape="round" expand="block" (click)="volver()">
     Volver
   </ion-button>

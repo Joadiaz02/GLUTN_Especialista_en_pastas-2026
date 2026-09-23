@@ -66,4 +66,14 @@ export class Carrito {
   );
 
   items = computed(() => Object.values(this._items()));
+
+  cargar(items:{producto:CartaItem; cantidad:number} []):void{
+    const nuevo_carrito: Record<string, ItemCarrito> = {};
+    for (const item of items) {
+       nuevo_carrito[item.producto.id_carta] = {
+        producto:item.producto,cantidad:item.cantidad
+       };
+      this._items.set(nuevo_carrito);
+    }
+  }
 }

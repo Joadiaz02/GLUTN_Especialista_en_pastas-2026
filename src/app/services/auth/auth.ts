@@ -20,8 +20,7 @@ export class Auth {
   private readonly storageService =
     inject(Storage);
 
-  usuarioActual =
-    signal<any>(null);
+  usuarioActual = signal<any>(null);
 
 
   constructor() {

@@ -10,6 +10,7 @@ export class Pedido {
     private carrito = inject(Carrito);
     public estado_pedido = signal<boolean>(false);
     public idUltimoPedido = signal<string | null>(null);
+    public idPedidoEnEdicion = signal<string | null>(null);
 
     async crear_pedido(id_mesa:string,id_usuario:string , detalles:string  ) : Promise<string> {
         const item = this.carrito.items();
@@ -64,15 +65,11 @@ export class Pedido {
     }
 
     async obtenerPedidoConItems(idPedido: string): Promise<any> {
-    const { data: pedido, error: errorPedido } = await this.sup.client
-      .from('pedido')
-      .select('*')
-      .eq('id_pedido', idPedido)
-      .single();
+    const { data: pedido, error: errorPedido } = await this.sup.client.from('pedido').select('*').eq('id_pedido', idPedido).single();
 
     if (errorPedido) throw errorPedido;
 
-    const { data: items, error: errorItems } = await this.sup.client.from('pedido_item').select('*, carta(nombre, foto_1)').eq('id_pedido', idPedido );
+    const { data: items, error: errorItems } = await this.sup.client.from('pedido_item').select('*, carta(*)').eq('id_pedido', idPedido );
 
     if (errorItems) {
         throw errorItems
@@ -89,6 +86,42 @@ export class Pedido {
 
     if (error) throw error;
   }
-    
+
+  async actualizar_pedido(id_pedido:string):Promise<void>{
+    const items = this.carrito.items();
+
+        if (items.length === 0) {
+        throw new Error('El carrito está vacío');
+    }
+
+    const { error: errorBorrar } = await this.sup.client.from('pedido_item').delete().eq('id_pedido', id_pedido);
+
+    if (errorBorrar) throw errorBorrar;
+
+        const itemsAInsertar = items.map(item => ({
+        id_pedido: id_pedido,
+        id_carta: item.producto.id_carta,
+        cantidad: item.cantidad,
+        precio_unitario: item.producto.precio,
+        subtotal: item.producto.precio * item.cantidad
+        }));
+
+        const {error: error_items} = await this.sup.client.from('pedido_item').insert(itemsAInsertar)
+
+        if(error_items){
+            throw error_items;
+        };
+
+        const {error:error_modificacion} = await this.sup.client.from('pedido').update({subtotal:this.carrito.importeTotal(),estado_pedido:'pendiente'}).eq('id_pedido',id_pedido)
+        
+        if (error_modificacion) throw error_modificacion;
+        this.carrito.vaciar();
+        this.idPedidoEnEdicion.set(null);
+    }
+
 }
-    
+
+
+       
+
+  
