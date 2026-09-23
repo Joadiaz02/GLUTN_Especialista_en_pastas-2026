@@ -11,3 +11,4 @@ export * from './table';
 export * from './vibracion';
 export * from './juegos';
 export * from './sopa-letras';
+export * from './chat';

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+  inject,
+} from '@angular/core';
 import { ModalController, IonButton, IonIcon } from '@ionic/angular';
 import { ConfirmDialogComponent } from '../confirm-cartel/confirm-cartel.component';
 
@@ -9,6 +16,8 @@ import { ConfirmDialogComponent } from '../confirm-cartel/confirm-cartel.compone
   imports: [IonButton, IonIcon],
 })
 export class ConfirmVolverComponent {
+  private modalController = inject(ModalController);
+
   @Input() titulo = '¿Quieres volver?';
   @Input() mensaje = '';
   @Input() textoCancelar = 'Cancelar';
@@ -18,12 +27,8 @@ export class ConfirmVolverComponent {
   @Input() esContenidoModal = false;
 
   @Output() confirmadoVolver = new EventEmitter<void>();
-  constructor(
-    private modalController: ModalController,
-  ) {}
 
-   async abrirConfirmacion() {
-
+  async abrirConfirmacion() {
     const modal = await this.modalController.create({
       component: ConfirmDialogComponent,
 
@@ -35,11 +40,11 @@ export class ConfirmVolverComponent {
         colorConfirmar: this.colorConfirmar,
         msj: this.icono,
 
-        esContenidoModal: true
+        esContenidoModal: true,
       },
 
       breakpoints: [0, 0.4],
-      initialBreakpoint: 0.4
+      initialBreakpoint: 0.4,
     });
 
     await modal.present();
@@ -51,12 +56,11 @@ export class ConfirmVolverComponent {
     }
   }
 
-    async confirmar() {
+  async confirmar() {
     await this.modalController.dismiss(null, 'confirm');
   }
 
   async cancelar() {
     await this.modalController.dismiss(null, 'cancel');
   }
-
 }

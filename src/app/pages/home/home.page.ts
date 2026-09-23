@@ -1,4 +1,11 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import {
   IonContent,
@@ -6,7 +13,7 @@ import {
   IonSkeletonText,
   IonIcon,
   ToastController,
-  ModalController
+  ModalController,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
@@ -36,6 +43,7 @@ const DEMORA_FOTO_DESTACADO_MS = 3000;
   ],
 })
 export class HomePage implements OnInit, OnDestroy {
+  private router = inject(Router);
 
   private authService = inject(Auth);
   private toastController = inject(ToastController);
@@ -45,9 +53,19 @@ export class HomePage implements OnInit, OnDestroy {
   private _fotoIntervalId: ReturnType<typeof setInterval> | null = null;
   private modalController = inject(ModalController);
 
+  constructor() {
+    addIcons({
+      'chevron-back-outline': chevronBackOutline,
+      'chevron-forward-outline': chevronForwardOutline,
+    });
+  }
 
-  constructor(private router: Router) {
-    addIcons({ 'chevron-back-outline': chevronBackOutline, 'chevron-forward-outline': chevronForwardOutline });
+  private mesaDePrueba(): string | null {
+    if (!localStorage.getItem('mesa')) {
+      localStorage.setItem('mesa', '4');
+    }
+
+    return localStorage.getItem('mesa');
   }
 
   async ngOnInit(): Promise<void> {
@@ -74,7 +92,14 @@ export class HomePage implements OnInit, OnDestroy {
   // sin tener que "ir a preguntar" en ngOnInit.
   isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
 
-  enMesa = false;
+  // Provisorio hasta que la asignación de mesas (punto 10) deje la mesa
+  // del cliente guardada: hoy se lee de la clave "mesa" del almacenamiento
+  // local, la misma que la app borra al cerrar sesión.
+  //
+  // TEMPORAL: si todavía no hay mesa asignada, se hardcodea una para poder
+  // probar el chat y "pedir la cuenta" como cliente. Sacar cuando el punto
+  // 10 esté listo.
+  enMesa = !!this.mesaDePrueba();
 
   showDestacados = false;
   showQuienesSomos = false;
@@ -150,7 +175,7 @@ export class HomePage implements OnInit, OnDestroy {
       message: 'Sesión cerrada correctamente.',
       duration: 3000,
       position: 'top',
-      color: 'success'
+      color: 'success',
     });
     await toast.present();
 
@@ -223,20 +248,19 @@ export class HomePage implements OnInit, OnDestroy {
       message: 'Pronto vas a poder solicitar tu cuenta desde acá.',
       duration: 3000,
       position: 'top',
-      color: 'primary'
+      color: 'primary',
     });
     await toast.present();
   }
 
-async verEstadoPedido(idPedido: string) {
-  const modal = await this.modalController.create({
-    component: EstadoPedidoComponent,
-    componentProps: { idPedido },
-    breakpoints: [0, 0.4],
-    initialBreakpoint: 0.2
-  });
+  async verEstadoPedido(idPedido: string) {
+    const modal = await this.modalController.create({
+      component: EstadoPedidoComponent,
+      componentProps: { idPedido },
+      breakpoints: [0, 0.4],
+      initialBreakpoint: 0.2,
+    });
 
-  await modal.present();
-}
-
+    await modal.present();
+  }
 }

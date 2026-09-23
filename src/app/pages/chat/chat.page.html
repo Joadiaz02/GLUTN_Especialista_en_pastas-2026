@@ -1,37 +1,141 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        mensaje="Vas a salir de la consulta al mozo."
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <app-confirm-dialog
+        titulo="¿Cerrar sesión?"
+        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+        textoConfirmar="Cerrar sesión"
+        icono="log-out-outline"
+        (confirmado)="cerrarSesion()"
+      ></app-confirm-dialog>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="chat-bg">
-
-  <div class="chat-container">
-
-    <!-- LISTA DE MENSAJES -->
-    <div class="messages">
-      <div
-        *ngFor="let msg of mensajes"
-        [class.me]="msg.autorId === usuarioId"
-        class="message-bubble"
-      >
-        <div class="message-header">
-          <img [src]="msg.avatar" class="avatar" />
-          <span class="name">{{ msg.autor }}</span>
-          <span class="time">{{ msg.fecha | date:'shortTime' }}</span>
-        </div>
-
-        <div class="message-text">
-          {{ msg.texto }}
-        </div>
-      </div>
-    </div>
-
+  <div class="logo-container">
+    <img
+      src="assets/images/LOGO-GLUTN.png"
+      alt="GLUTN - Especialista en Pastas"
+      class="logo"
+    />
   </div>
 
-  <!-- INPUT ABAJO -->
-  <div class="chat-input">
+  <h1 class="chat-titulo">{{ titulo() }}</h1>
+
+  @if (chat.cargando() && chat.mensajes().length === 0) {
+    <div class="chat-estado">
+      <app-spinner-logo />
+    </div>
+  } @else if (chat.mensajes().length === 0) {
+    <div class="chat-estado">
+      <p class="chat-estado__texto">
+        @if (chat.esMozo()) {
+          Todavía no hay consultas de los clientes.
+        } @else {
+          Todavía no hay mensajes. ¡Hacé tu consulta al mozo!
+        }
+      </p>
+    </div>
+  } @else {
+    <div class="mensajes">
+      @for (mensaje of chat.mensajes(); track mensaje.id) {
+        <div
+          class="mensaje"
+          [class.mensaje--propio]="esPropio(mensaje)"
+          [class.mensaje--mozo]="esDeMozo(mensaje)"
+        >
+          <div class="mensaje__encabezado">
+            <app-avatar
+              class="mensaje__avatar"
+              [image]="avatarUrl(mensaje)"
+              [fallback]="iniciales(mensaje.nombre)"
+              size="sm"
+            />
+
+            <span class="mensaje__nombre">{{ mensaje.nombre }}</span>
+
+            @if (esDeMozo(mensaje)) {
+              <span class="mensaje__etiqueta">Mozo</span>
+            } @else if (mensaje.numero_mesa) {
+              <span class="mensaje__etiqueta">Mesa {{ mensaje.numero_mesa }}</span>
+            }
+
+            <span class="mensaje__hora">{{ mensaje.created_at | date: 'dd/MM HH:mm' }}</span>
+          </div>
+
+          @if (citado(mensaje); as cita) {
+            <div class="mensaje__cita">
+              <strong>{{ cita.nombre }}:</strong> {{ resumen(cita.texto) }}
+            </div>
+          }
+
+          <div class="mensaje__texto">{{ mensaje.texto }}</div>
+
+          @if (puedeResponder(mensaje)) {
+            <button type="button" class="mensaje__responder" (click)="responder(mensaje)">
+              Responder
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+</ion-content>
+
+<ion-footer class="chat-pie">
+  @if (sinMesa()) {
+    <p class="chat-aviso">
+      Todavía no tenés una mesa asignada, por eso no podés enviar consultas.
+    </p>
+  }
+
+  @if (respondiendoA(); as destino) {
+    <div class="chat-respondiendo">
+      <span class="chat-respondiendo__texto">
+        Respondiendo a <strong>{{ destino.nombre }}</strong>: {{ resumen(destino.texto) }}
+      </span>
+      <button
+        type="button"
+        class="chat-respondiendo__cerrar"
+        aria-label="Cancelar respuesta"
+        (click)="cancelarRespuesta()"
+      >
+        ✕
+      </button>
+    </div>
+  }
+
+  @if (error()) {
+    <p class="chat-error">{{ error() }}</p>
+  }
+
+  <form class="chat-input" (ngSubmit)="enviar()">
     <input
       type="text"
-      [(ngModel)]="nuevoMensaje"
-      (keyup.enter)="enviarMensaje()"
+      name="texto"
+      [(ngModel)]="texto"
+      (ngModelChange)="alEscribir()"
+      [maxlength]="largoMaximo"
+      [disabled]="sinMesa() || enviando()"
+      autocomplete="off"
       placeholder="Escribí tu mensaje..."
     />
-    <ion-button (click)="enviarMensaje()">Enviar</ion-button>
-  </div>
 
-</ion-content>
+    <ion-button type="submit" shape="round" [disabled]="sinMesa() || enviando()">
+      @if (enviando()) {
+        <app-spinner-logo size="sm" />
+      } @else {
+        Enviar
+      }
+    </ion-button>
+  </form>
+
+  <p class="chat-contador">{{ texto.length }} / {{ largoMaximo }}</p>
+</ion-footer>

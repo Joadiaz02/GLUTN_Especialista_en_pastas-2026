@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonIcon, IonFooter, IonButton, IonInput } from '@ionic/angular';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonFooter, IonButton, IonInput, IonSpinner, ToastController } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Router } from '@angular/router';
 import { GtnUploader } from '@app/components';
+import { Storage, Table } from '@app/services';
 
 type TipoMesa = 'vip' | 'estandar' | 'movilidad_reducida';
 
@@ -19,19 +19,30 @@ type TipoMesa = 'vip' | 'estandar' | 'movilidad_reducida';
     IonTitle,
     IonToolbar,
     IonButtons,
-    IonIcon,
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     ConfirmVolverComponent,
     IonFooter,
     IonButton,
     IonInput,
-    GtnUploader
+    GtnUploader,
+    IonSpinner
 ],
 })
 export class CreateTablePage {
   private _router = inject(Router);
-  // private _mesasService = inject(MesasService); // TODO: conectar con Supabase
+  private _tableService = inject(Table);
+  private _storageService = inject(Storage);
+  private _toastController = inject(ToastController);
+
+  isLoading = signal<boolean>(false);
+
+  form = new FormGroup({
+    number: new FormControl('', Validators.required),
+    diners: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(20)]),
+    type: new FormControl<any | null>(null, Validators.required),
+    file: new FormControl<File | null>(null, Validators.required)
+  });
 
   readonly types: any[] = [
     { type: 'estandar', value: 'Estándar', },
@@ -40,83 +51,73 @@ export class CreateTablePage {
     { type: 'movilidad_reducida', value: 'Movilidad reducida' },
   ];
 
-  numero = signal<number | null>(this._proximoNumeroSugerido());
-  comensales = signal(2);
-  tipo = signal<TipoMesa | null>(null);
-  fotoPreview = signal<string | null>(null);
-  guardando = signal(false);
-  errores = signal<Record<string, string>>({});
-
-  private _fotoBase64: string | null = null;
-
-  private _proximoNumeroSugerido(): number {
-    // TODO: reemplazar por SELECT max(numero) + 1 de la tabla `mesas` en Supabase
-    return 1;
+  getFormControl(controlName: string) {
+    return this.form.get(controlName);
   }
 
-  incrementarComensales(): void {
-    this.comensales.update((c) => Math.min(c + 1, 20));
+  incrementDiners(): void {
+    const current = this.form.get('diners')?.value || 2;
+    const newValue = Math.min(current + 1, 20);
+
+    this.form.patchValue({ diners: newValue });
   }
 
-  decrementarComensales(): void {
-    this.comensales.update((c) => Math.max(c - 1, 1));
+  decrementDiners(): void {
+    const current = this.form.get('diners')?.value || 2;
+
+    const newValue = Math.max(current - 1, 1);
+    this.form.patchValue({ diners: newValue });
   }
 
-  seleccionarTipo(valor: TipoMesa): void {
-    this.tipo.set(valor);
+  selectType(value: any): void {
+    this.form.patchValue({ type: value });
   }
 
   onPhotoSelected(index: number, file: File) {
-    // this.photosArray.at(index).setValue(file);
+    this.form.patchValue({ file: file })
   }
 
-  async tomarFoto(): Promise<void> {
+  async create(): Promise<void> {
     try {
-      const foto = await Camera.getPhoto({
-        quality: 80,
-        resultType: CameraResultType.Base64,
-        source: CameraSource.Camera, // solo cámara, sin opción de galería
+      const data = this.form.getRawValue();
+
+      this.isLoading.set(true)
+
+      this.form.markAsPending();
+
+      const image = await this._storageService.uploadImage(
+        data.file as File
+      );
+
+      await this._tableService.add({
+        numero: data.number,
+        capacidad: data.diners,
+        foto: image,
+        tipo: data.type,
+        disponibilidad: true
+      })
+
+      const toast = await this._toastController.create({
+        message:
+          'La mesa se creo correctamente',
+        duration: 5000,
+        position: 'bottom',
       });
-      this._fotoBase64 = foto.base64String ?? null;
-      this.fotoPreview.set(`data:image/${foto.format};base64,${foto.base64String}`);
+
+      await toast.present();
+
+      await this._router.navigate(['/admin/tables']);
     } catch {
-      // el usuario canceló la captura, no hacemos nada
-    }
-  }
+      const toast = await this._toastController.create({
+        message:
+          'No pudimos completar la acción. Intentá nuevamente más tarde.',
+        duration: 5000,
+        position: 'top',
+      });
 
-  private _validar(): boolean {
-    const errores: Record<string, string> = {};
-
-    if (!this.numero() || this.numero()! <= 0) {
-      errores['numero'] = 'Ingresá un número de mesa válido.';
-    }
-    if (!this.tipo()) {
-      errores['tipo'] = 'Seleccioná un tipo de mesa.';
-    }
-    if (!this._fotoBase64) {
-      errores['foto'] = 'Sacá una foto de la mesa.';
-    }
-
-    this.errores.set(errores);
-    return Object.keys(errores).length === 0;
-  }
-
-  async guardar(): Promise<void> {
-    if (!this._validar()) {
-      return;
-    }
-
-    this.guardando.set(true);
-    try {
-      // TODO: subir this._fotoBase64 a Supabase Storage → obtener foto_url
-      // TODO: insert en `mesas`:
-      // { numero: this.numero(), comensales: this.comensales(), tipo: this.tipo(),
-      //   disponibilidad: 'vacia', foto_url }
-      // El QR se genera al vuelo con el id devuelto (no se guarda en la tabla).
-
-      await this._router.navigate(['/admin']);
+      await toast.present();
     } finally {
-      this.guardando.set(false);
+      this.isLoading.set(false)
     }
   }
 

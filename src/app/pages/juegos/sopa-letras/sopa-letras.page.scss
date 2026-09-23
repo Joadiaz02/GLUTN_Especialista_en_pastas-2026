@@ -20,28 +20,31 @@
   text-align: center;
 }
 
-.logo-container {
-  width: 100px;
-  margin: 0 auto 12px auto;
-  background-color: var(--ion-color-primary);
-  padding: 12px;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.logo {
-  width: 100%;
-  display: block;
-}
-
 .sopa-subtitulo {
   font-size: 16px;
   font-weight: 600;
   color: var(--ion-text-color);
   margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+.sopa-inicio {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  // Deja el bloque centrado en la pantalla, sin un vacío grande abajo.
+  padding-bottom: 96px;
+}
+
+.sopa-inicio__texto {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  margin: 0;
   line-height: 1.4;
 }
 

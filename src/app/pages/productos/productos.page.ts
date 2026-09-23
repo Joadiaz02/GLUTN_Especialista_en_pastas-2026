@@ -1,9 +1,9 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonContent, IonSearchbar, IonIcon, IonBackButton, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton, ToastController } from '@ionic/angular';
+import { IonContent, IonSearchbar, IonIcon, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
+import { addOutline, chevronBackOutline, chevronForwardOutline, warningOutline } from 'ionicons/icons';
 
 import { CartaItem, TipoCarta } from '../../models/carta.model';
 import { Auth, Carta, SupabaseService } from '@app/services';
@@ -33,7 +33,6 @@ const DEMORA_FOTO_MS = 3000;
     IonHeader,
     IonToolbar,
     IonButtons,
-    IonBackButton,
     IonSearchbar,
     IonIcon,
     SpinnerLogoComponent,
@@ -94,7 +93,7 @@ export class ProductosPage implements OnInit, OnDestroy {
   haySiguiente = computed(() => this.indiceActual() < this.productosFiltrados().length - 1);
 
   constructor() {
-    addIcons({ addOutline, chevronBackOutline, chevronForwardOutline });
+    addIcons({ addOutline, chevronBackOutline, chevronForwardOutline, warningOutline });
   }
 
   async ngOnInit(): Promise<void> {

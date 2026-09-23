@@ -11,6 +11,7 @@ export class Drink {
 
   private _channel?: RealtimeChannel;
   private _list$ = new BehaviorSubject<any[] | null>(null);
+  private _destroyRegistrado = false;
 
   async getList(): Promise<any[]> {
     const { data } = await this._db.client
@@ -63,7 +64,21 @@ export class Drink {
   }
 
   private async _init(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Se registra antes que cualquier await: si no, y el injector se
+    // destruye mientras getList() todavía está en vuelo (por ejemplo en un
+    // test que termina rápido), onDestroy() explota porque el injector ya
+    // no existe cuando se intenta registrar.
+    if (!this._destroyRegistrado) {
+      this._destroyRegistrado = true;
+
+      this._destroyRef.onDestroy(() => {
+        if (this._channel) {
+          this._db.client.removeChannel(this._channel);
+          this._channel = undefined;
+        }
+      });
+    }
+
     const initialData = await this.getList();
 
     this._list$.next(initialData);
@@ -101,12 +116,5 @@ export class Drink {
         }
       )
       .subscribe();
-
-    this._destroyRef.onDestroy(() => {
-      if (this._channel) {
-        this._db.client.removeChannel(this._channel);
-        this._channel = undefined;
-      }
-    });
   }
 }

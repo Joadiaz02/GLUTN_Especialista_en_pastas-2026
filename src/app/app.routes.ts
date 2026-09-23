@@ -273,6 +273,18 @@ export const routes: Routes = [
   },
   {
     path: 'chat',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/chat/chat.page').then((m) => m.ChatPage),
+  },
+  {
+    path: 'admin/queries',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
+
     loadComponent: () =>
       import('./pages/chat/chat.page').then((m) => m.ChatPage),
   },

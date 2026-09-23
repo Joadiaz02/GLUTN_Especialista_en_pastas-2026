@@ -8,7 +8,7 @@ import {
   IonButton,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Juegos, Vibracion } from '@app/services';
+import { CONFIG_JUEGOS, Juegos, Vibracion } from '@app/services';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { Auth } from '../../../services/auth/auth';
@@ -17,7 +17,7 @@ type EstadoTaTeTi = 'jugando' | 'resultado';
 type Celda = 'X' | 'O' | null;
 type ResultadoTaTeTi = 'gana' | 'pierde' | 'empate';
 
-const PORCENTAJE_TATETI = 15;
+const PORCENTAJE_TATETI = CONFIG_JUEGOS['ta-te-ti'].porcentaje;
 const DEMORA_PC_MS = 500;
 
 const LINEAS_GANADORAS = [
@@ -50,15 +50,47 @@ export class TaTeTiPage implements OnDestroy {
 
   private _timeoutPc: ReturnType<typeof setTimeout> | null = null;
 
+  readonly porcentaje = PORCENTAJE_TATETI;
+
   estado = signal<EstadoTaTeTi>('jugando');
   celdas = signal<Celda[]>(Array(9).fill(null));
   turnoPc = signal(false);
   resultadoTipo = signal<ResultadoTaTeTi | null>(null);
 
+  // Salir de la página, por el botón "volver", el botón atrás del celular
+  // o cualquier otra navegación, con una partida en curso cuenta como
+  // perder. Ionic mantiene las páginas en pila y no siempre las destruye,
+  // por eso se cubren los dos ganchos; abandonar es idempotente.
+  ionViewWillLeave(): void {
+    this.abandonar();
+  }
+
   ngOnDestroy(): void {
+    this.abandonar();
+  }
+
+  // Un tablero sin ninguna marca todavía no es una partida: se puede
+  // salir sin gastar el intento.
+  private enCurso(): boolean {
+    return this.estado() === 'jugando' && this.celdas().some((c) => c !== null);
+  }
+
+  private detenerTurnoPc(): void {
     if (this._timeoutPc !== null) {
       clearTimeout(this._timeoutPc);
+      this._timeoutPc = null;
     }
+  }
+
+  private abandonar(): void {
+    this.detenerTurnoPc();
+
+    if (!this.enCurso()) return;
+
+    this._juegosService.registrarIntento(false, PORCENTAJE_TATETI);
+
+    this.celdas.set(Array(9).fill(null));
+    this.turnoPc.set(false);
   }
 
   puedeJugarPorPrimeraVez(): boolean {
@@ -80,8 +112,8 @@ export class TaTeTiPage implements OnDestroy {
   }
 
   mensajeVolver(): string {
-    return this.estado() === 'jugando' && this.celdas().some((c) => c !== null)
-      ? 'La partida está en curso. Si salís ahora, perdés este intento.'
+    return this.enCurso()
+      ? `La partida está en curso. ${this._juegosService.avisoAbandono()}`
       : 'Vas a salir del juego de ta-te-ti.';
   }
 
@@ -170,10 +202,7 @@ export class TaTeTiPage implements OnDestroy {
   }
 
   volver(): void {
-    if (this._timeoutPc !== null) {
-      clearTimeout(this._timeoutPc);
-      this._timeoutPc = null;
-    }
+    this.abandonar();
     this._router.navigate(['/juegos'], { state: { origenValido: true } });
   }
 

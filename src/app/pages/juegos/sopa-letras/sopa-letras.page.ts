@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -8,7 +8,14 @@ import {
   IonButton,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Juegos, SopaLetras, Vibracion } from '@app/services';
+import {
+  CONFIG_JUEGOS,
+  Juegos,
+  SOPA_LETRAS_DURACION_SEGUNDOS,
+  SOPA_LETRAS_PALABRAS_POR_PARTIDA,
+  SopaLetras,
+  Vibracion,
+} from '@app/services';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { Auth } from '../../../services/auth/auth';
@@ -34,13 +41,17 @@ interface CeldaSeleccionada {
     ConfirmDialogComponent,
   ],
 })
-export class SopaLetrasPage implements OnInit {
+export class SopaLetrasPage implements OnInit, OnDestroy {
   sopaLetras = inject(SopaLetras);
 
   private _juegosService = inject(Juegos);
   private _vibracion = inject(Vibracion);
   private _authService = inject(Auth);
   private _router = inject(Router);
+
+  readonly porcentaje = CONFIG_JUEGOS['sopa-de-letras'].porcentaje;
+  readonly palabrasPorPartida = SOPA_LETRAS_PALABRAS_POR_PARTIDA;
+  readonly duracionSegundos = SOPA_LETRAS_DURACION_SEGUNDOS;
 
   celdaInicio: CeldaSeleccionada | null = null;
   private _yaVibroFinal = false;
@@ -66,7 +77,25 @@ export class SopaLetrasPage implements OnInit {
 
   ngOnInit(): void {
     this._yaVibroFinal = false;
-    this.sopaLetras.iniciarPartida();
+    this.celdaInicio = null;
+    this.sopaLetras.prepararPartida();
+  }
+
+  // Salir de la página, por el botón "volver", el botón atrás del celular
+  // o cualquier otra navegación, en medio de una partida cuenta como
+  // perder. Ionic mantiene las páginas en pila y no siempre las destruye,
+  // por eso se cubren los dos ganchos; abandonarPartida es idempotente.
+  ionViewWillLeave(): void {
+    this.abandonar();
+  }
+
+  ngOnDestroy(): void {
+    this.abandonar();
+  }
+
+  private abandonar(): void {
+    this.celdaInicio = null;
+    this.sopaLetras.abandonarPartida();
   }
 
   puedeJugarPorPrimeraVez(): boolean {
@@ -88,7 +117,13 @@ export class SopaLetrasPage implements OnInit {
   }
 
   mensajeVolver(): string {
-    return 'El cronómetro sigue corriendo aunque salgas — podrías perder por tiempo.';
+    const enCurso = this.sopaLetras.iniciada() && !this.sopaLetras.juegoTerminado();
+
+    if (!enCurso) {
+      return 'Vas a salir de la sopa de letras.';
+    }
+
+    return `La partida está en curso. ${this._juegosService.avisoAbandono()}`;
   }
 
   tiempoFormateado(): string {
@@ -120,12 +155,20 @@ export class SopaLetrasPage implements OnInit {
     this.sopaLetras.verificarSeleccion(inicio.fila, inicio.col, fila, col);
   }
 
-  jugarDeNuevo(): void {
+  comenzar(): void {
     this._yaVibroFinal = false;
+    this.celdaInicio = null;
     this.sopaLetras.iniciarPartida();
   }
 
+  jugarDeNuevo(): void {
+    this._yaVibroFinal = false;
+    this.celdaInicio = null;
+    this.sopaLetras.prepararPartida();
+  }
+
   volver(): void {
+    this.abandonar();
     this._router.navigate(['/juegos'], { state: { origenValido: true } });
   }
 
