@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonSkeletonText } from "@ionic/angular";
 
 @Component({
@@ -7,8 +7,4 @@ import { IonSkeletonText } from "@ionic/angular";
   styleUrls: ['./skeleton-card.component.scss'],
   imports: [IonSkeletonText],
 })
-export class SkeletonCardComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit() {}
-}
+export class SkeletonCardComponent {}

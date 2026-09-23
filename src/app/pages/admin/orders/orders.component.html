@@ -1,0 +1,54 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+    </ion-buttons>
+
+    <ion-title>Pedidos</ion-title>
+
+    <ion-buttons slot="end">
+      <app-confirm-dialog
+        titulo="¿Cerrar sesión?"
+        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+        textoConfirmar="Cerrar sesión"
+        (confirmado)="cerrarSesion()"
+      ></app-confirm-dialog>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (cargando()) {
+    <p>Cargando...</p>
+  } @else if (pedidos().length === 0) {
+    <p class="sin-pedidos">No hay pedidos pendientes.</p>
+  } @else {
+    <div class="lista-pedidos">
+      @for (pedido of pedidos(); track pedido.id_pedido) {
+        <div class="pedido-card">
+          <div class="pedido-card__info">
+            <span class="body-hight weight-bold">Mesa: {{ pedido.id_mesa.slice(0, 8) }}</span>
+            <span class="body-hight weight-bold">Usuario: {{ pedido.id_usuario.slice(0, 8) }}</span>
+            <span class="body-hight weight-bold">Pedido: {{ pedido.id_pedido.slice(0, 8) }}</span>
+            <span class="body-ultra-small">fecha:{{pedido.fecha_emision_pedido | date:'d/M/yy:h:mm' }}</span>
+            <span class="body-ultra-small">Estado:{{pedido.estado_pedido}}</span>
+          </div>
+          
+
+          <div class="pedido-card__acciones">
+            <ion-button class="boton_rechazar" shape="round" fill="outline" color="danger" size="small" [disabled]="estado() === pedido.id_pedido" (click)="rechazar(pedido.id_pedido)">
+              Rechazar
+            </ion-button>
+            <ion-button class="boton_aceptar" shape="round" size="small" [disabled]="estado() === pedido.id_pedido" (click)="confirmar(pedido.id_pedido)">
+              Aceptar
+            </ion-button>
+            <ion-button   [routerLink]="['/admin/orders/orders-detalles', pedido.id_pedido]" class="boton_aceptar" shape="round" size="small">
+              Detalles
+            </ion-button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</ion-content>
+

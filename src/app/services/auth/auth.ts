@@ -284,7 +284,6 @@ export class Auth {
       perfil !==
       EPerfilUsuario.ClienteRegistrado
     ) {
-
       this.usuarioActual.set(
         data.user
       );

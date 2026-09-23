@@ -13,6 +13,16 @@
     border-radius: 50%;
   }
 
+  &.avatar--sm {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  &.avatar--sm .avatar__fallback {
+    font-size: 11px;
+  }
+
   &.avatar--md {
     width: 48px;
     height: 48px;

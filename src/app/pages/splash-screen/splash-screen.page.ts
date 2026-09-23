@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,9 +7,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./splash-screen.page.scss'],
 })
 export class SplashScreenPage implements OnInit {
-  isFadingOut = false;
+  private router = inject(Router);
 
-  constructor(private router: Router) {}
+  isFadingOut = false;
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -17,7 +17,7 @@ export class SplashScreenPage implements OnInit {
     }, 4000);
 
     setTimeout(() => {
-      this.router.navigate(['/login'],{replaceUrl: true});
+      this.router.navigate(['/login'], { replaceUrl: true });
     }, 4500);
   }
 }

@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+    </ion-buttons>
+    <h1 class="titulo-toolbar">Pedido</h1>
+    <app-confirm-dialog slot="end" (confirmado)="cerrarSesion()"></app-confirm-dialog>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="productos-content">
+  <div class="pedido-container">
+    
+  
+    <div class="lista-productos">
+      @for (item of carrito.items(); track item.producto.id_carta) {
+        <div class="producto-card">
+          <div class="card-header-item">
+            <span class="item-nombre">{{item.producto.nombre}}</span>
+            <span class="item-precio">{{ item.cantidad }} x {{ item.producto.precio | currency:'ARS':'symbol':'1.0-0' }}</span>
+          </div>
+          <p class="item-descripcion">{{item.producto.descripcion}}</p>
+        </div>
+      }
+    </div>
+
+    <div class="producto-card resumen-card">
+        <span class="resumen-fila">
+       Tiempo estimado: 
+          @if (carrito.tiempoTotalEstimado() > 60) {
+            <strong class="resumen-fila" >
+              {{ (carrito.tiempoTotalEstimado() - (carrito.tiempoTotalEstimado() % 60)) / 60 }}h:
+              @if (carrito.tiempoTotalEstimado() % 60 > 0) {
+                {{ carrito.tiempoTotalEstimado() % 60 }}min
+              }
+            </strong>
+          } @else {
+            <strong class="resumen-fila">{{ carrito.tiempoTotalEstimado() }} min</strong>
+          }
+       </span>
+      
+      <div class="resumen-fila">
+        <span>Total productos:</span>
+        <strong>{{this.carrito.totalItems()}}</strong>
+      </div>
+      <div class="resumen-fila total-pagar">
+        <span>Total a pagar:</span>
+        <strong >{{this.carrito.importeTotal() | currency:'ARS':'symbol':'1.0-0'}}</strong>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+
+
+<ion-footer class="ion-no-border footer-pedido">
+  <ion-toolbar>
+    <ion-button expand="block" shape="round" class="btn-confirmar" (click)="solicitarPedido()">
+        Confirmar pedido
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

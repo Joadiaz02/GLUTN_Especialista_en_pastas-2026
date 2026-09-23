@@ -1,20 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { AfterContentInit, Component, input } from '@angular/core';
 
 @Component({
-  selector: 'gtn-avatar',
+  selector: 'app-avatar',
   templateUrl: './avatar.component.html',
   styleUrls: ['./avatar.component.scss'],
   imports: [CommonModule],
 })
-export class AvatarComponent {
+export class AvatarComponent implements AfterContentInit {
   image = input<string | null>('');
 
   fallback = input<string | undefined>(undefined);
 
   shape = input<'circle' | 'square'>('circle');
 
-  size = input<'md' | 'lg'>('md');
+  size = input<'sm' | 'md' | 'lg'>('md');
 
   hasImageError = false;
 

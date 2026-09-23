@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -6,19 +6,14 @@ import {
   IonTitle,
   IonButtons,
   IonBackButton,
+  IonButton,
+  IonModal,
   ToastController,
 } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
-import { Juegos } from '@app/services';
+import { ConfigJuego, Juegos, LISTA_JUEGOS, REGLA_DESCUENTO } from '@app/services';
 import { Auth } from '../../services/auth/auth';
 import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
-
-interface JuegoDisponible {
-  nombre: string;
-  porcentaje: number;
-  ruta: string;
-  disponible: boolean;
-}
 
 @Component({
   selector: 'app-juegos',
@@ -32,6 +27,8 @@ interface JuegoDisponible {
     IonTitle,
     IonButtons,
     IonBackButton,
+    IonButton,
+    IonModal,
     RouterLink,
     ConfirmDialogComponent,
   ],
@@ -42,11 +39,13 @@ export class JuegosPage {
   private _authService = inject(Auth);
   private _router = inject(Router);
 
-  juegos: JuegoDisponible[] = [
-    { nombre: 'Ruleta', porcentaje: 20, ruta: '/juegos/ruleta', disponible: true },
-    { nombre: 'Ta-Te-Ti', porcentaje: 15, ruta: '/juegos/ta-te-ti', disponible: true },
-    { nombre: 'Sopa de letras', porcentaje: 10, ruta: '/juegos/sopa-de-letras', disponible: true },
-  ];
+  readonly juegos: ConfigJuego[] = LISTA_JUEGOS;
+  readonly reglaDescuento = REGLA_DESCUENTO;
+
+  // El juego se conserva al cerrar la ventana para que el texto no
+  // desaparezca en medio de la animación de cierre.
+  juegoAyuda = signal<ConfigJuego | null>(null);
+  ayudaAbierta = signal(false);
 
   puedeJugarPorPrimeraVez(): boolean {
     return this._juegosService.puedeJugarPorPrimeraVez();
@@ -60,15 +59,13 @@ export class JuegosPage {
     return this._juegosService.descuentoActual();
   }
 
-  async avisarProximamente(nombre: string): Promise<void> {
-    const toast = await this._toastController.create({
-      message: `${nombre} está en construcción. ¡Pronto vas a poder jugarlo!`,
-      duration: 3000,
-      position: 'top',
-      color: 'primary',
-    });
+  abrirAyuda(juego: ConfigJuego): void {
+    this.juegoAyuda.set(juego);
+    this.ayudaAbierta.set(true);
+  }
 
-    await toast.present();
+  cerrarAyuda(): void {
+    this.ayudaAbierta.set(false);
   }
 
   async cerrarSesion(): Promise<void> {

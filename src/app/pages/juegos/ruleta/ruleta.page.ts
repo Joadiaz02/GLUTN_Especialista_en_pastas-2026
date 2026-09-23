@@ -8,7 +8,7 @@ import {
   IonButton,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Juegos, Vibracion } from '@app/services';
+import { CONFIG_JUEGOS, Juegos, Vibracion } from '@app/services';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { Auth } from '../../../services/auth/auth';
@@ -25,7 +25,7 @@ interface SectorRuleta {
   simbolo: string;
 }
 
-const PORCENTAJE_RULETA = 20;
+const PORCENTAJE_RULETA = CONFIG_JUEGOS.ruleta.porcentaje;
 
 // 10 sectores de 36° cada uno, intercalados (no agrupados) para que
 // se vea como una ruleta real: 4 "gana" / 3 "pierde" / 3 "reintenta".
@@ -81,6 +81,8 @@ export class RuletaPage implements OnDestroy {
     .map((s) => `${s.color} ${s.desde}deg ${s.hasta}deg`)
     .join(', ');
 
+  readonly porcentaje = PORCENTAJE_RULETA;
+
   estado = signal<EstadoRuleta>('quieta');
   resultadoTipo = signal<ResultadoSector | null>(null);
   rotacion = signal(0);
@@ -91,10 +93,39 @@ export class RuletaPage implements OnDestroy {
     this.transicionActiva() ? 'transform 2.6s cubic-bezier(0.12, 0.67, 0.14, 1)' : 'none'
   );
 
+  // Salir de la página, por el botón "volver", el botón atrás del celular
+  // o cualquier otra navegación, con la ruleta girando cuenta como perder.
+  // Ionic mantiene las páginas en pila y no siempre las destruye, por eso
+  // se cubren los dos ganchos; abandonar es idempotente.
+  ionViewWillLeave(): void {
+    this.abandonar();
+  }
+
   ngOnDestroy(): void {
+    this.abandonar();
+  }
+
+  private enCurso(): boolean {
+    return this.estado() === 'girando' || this.estado() === 'frenando';
+  }
+
+  private detenerGiro(): void {
     if (this._rafId !== null) {
       cancelAnimationFrame(this._rafId);
+      this._rafId = null;
     }
+  }
+
+  private abandonar(): void {
+    this.detenerGiro();
+
+    if (!this.enCurso()) return;
+
+    this._juegosService.registrarIntento(false, PORCENTAJE_RULETA);
+
+    this.transicionActiva.set(false);
+    this.resultadoTipo.set(null);
+    this.estado.set('quieta');
   }
 
   puedeJugarPorPrimeraVez(): boolean {
@@ -116,8 +147,8 @@ export class RuletaPage implements OnDestroy {
   }
 
   mensajeVolver(): string {
-    return this.estado() === 'girando' || this.estado() === 'frenando'
-      ? 'La ruleta está girando. Si salís ahora, perdés este intento.'
+    return this.enCurso()
+      ? `La ruleta está girando. ${this._juegosService.avisoAbandono()}`
       : 'Vas a salir del juego de la ruleta.';
   }
 
@@ -207,10 +238,7 @@ export class RuletaPage implements OnDestroy {
   }
 
   volver(): void {
-    if (this._rafId !== null) {
-      cancelAnimationFrame(this._rafId);
-      this._rafId = null;
-    }
+    this.abandonar();
     this._router.navigate(['/juegos'], { state: { origenValido: true } });
   }
 
