@@ -25,28 +25,32 @@ export class PedidoComponent  {
   
 
 
-  continuarPedido(): void {
-  const resumen = {
-    items: this.carrito.items(),
-    total: this.carrito.importeTotal(),
-    tiempoEstimado: this.carrito.tiempoTotalEstimado()
-  };
+  continuarPedido() {
+    return {
+      items: this.carrito.items(),
+      total: this.carrito.importeTotal(),
+      tiempoEstimado: this.carrito.tiempoTotalEstimado(),
+    };
   }
 
 
   async solicitarPedido(): Promise<void> {
-    try {
-      
-      const idMesaPrueba = 'b63469cd-404d-460c-a193-4eb153b9dec1';
-      const idUsuarioPrueba = '4509335d-09e8-4ec5-984e-20b269a5493f';
-      const detalles = ''
-      const idPedido = await this.pedido.crear_pedido(idMesaPrueba, idUsuarioPrueba , detalles);
-      console.log('Pedido creado con id:', idPedido);
-      
+    
+     try {
+      const idEnEdicion = this.pedido.idPedidoEnEdicion();
+      const idMesaPrueba = 'b63469cd-404d-460c-a193-4eb153b9dec1'
+      if (idEnEdicion) {
+        await this.pedido.actualizar_pedido(idEnEdicion);
+        console.log('Pedido modificado y reenviado');
+      } else {
+        const usuario = this.authService.usuarioActual();
+        const idPedido = await this.pedido.crear_pedido(idMesaPrueba, usuario.id, '');
+        console.log('Pedido creado:', idPedido);
+      }
+
       this.root.navigate(['/home']);
     } catch (error) {
-      console.error('Error al crear el pedido:', error);
-     
+      console.error('Error al confirmar el pedido:', error);
     }
   }
 
