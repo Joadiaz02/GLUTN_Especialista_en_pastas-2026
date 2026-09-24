@@ -15,15 +15,15 @@
   </div>
   } @else if (drink()) {
   <div class="upload-container">
-    <gtn-uploader
+    <app-uploader
       [image]="drink().foto_1"
       (fileSelected)="onPhotoSelected(0, $event)"
     />
-    <gtn-uploader
+    <app-uploader
       [image]="drink().foto_2"
       (fileSelected)="onPhotoSelected(1, $event)"
     />
-    <gtn-uploader
+    <app-uploader
       [image]="drink().foto_3"
       (fileSelected)="onPhotoSelected(2, $event)"
     />

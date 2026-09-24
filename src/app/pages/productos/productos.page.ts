@@ -1,22 +1,18 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  IonContent,
-  IonSearchbar,
-  IonIcon,
-  IonBackButton,
-  IonButtons,
-  IonToolbar,
-  IonHeader
-} from '@ionic/angular';
+import { IonContent, IonSearchbar, IonIcon, IonButtons, IonToolbar, IonHeader, IonRouterLink, IonButton, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { addOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
+import { addOutline, chevronBackOutline, chevronForwardOutline, warningOutline } from 'ionicons/icons';
 
 import { CartaItem, TipoCarta } from '../../models/carta.model';
-import { Carta } from '@app/services';
+import { Auth, Carta, SupabaseService } from '@app/services';
 import { Carrito } from '../carrito/carrito';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { BarraPedidoComponent } from '@app/components/ui/barra-pedido/barra-pedido.component';
+import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 const TITULOS: Record<TipoCarta, string> = {
   plato: 'Platos',
@@ -37,22 +33,25 @@ const DEMORA_FOTO_MS = 3000;
     IonHeader,
     IonToolbar,
     IonButtons,
-    IonBackButton,
     IonSearchbar,
     IonIcon,
-    SpinnerLogoComponent
-  ],
+    SpinnerLogoComponent,
+    BarraPedidoComponent,
+    ConfirmVolverComponent,
+    ConfirmDialogComponent
+],
 })
 export class ProductosPage implements OnInit, OnDestroy {
-
+  private ruta = inject(Router);
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private carrito = inject(Carrito);
+  public carrito = inject(Carrito);
   private cartaService = inject(Carta);
-
-  private _fotoIntervalId: ReturnType<typeof setInterval> | null = null;
-
-  // El tipo viene de la URL: /carta/plato, /carta/bebida, /carta/postre
+  private _fotoIntervalId: any = null;
+  private authService = inject(Auth);
+  private toastController = inject(ToastController);
+  
+  
+ 
   tipo = signal<TipoCarta>(
     (this.route.snapshot.paramMap.get('tipo') as TipoCarta) ?? 'plato'
   );
@@ -94,7 +93,7 @@ export class ProductosPage implements OnInit, OnDestroy {
   haySiguiente = computed(() => this.indiceActual() < this.productosFiltrados().length - 1);
 
   constructor() {
-    addIcons({ addOutline, chevronBackOutline, chevronForwardOutline });
+    addIcons({ addOutline, chevronBackOutline, chevronForwardOutline, warningOutline });
   }
 
   async ngOnInit(): Promise<void> {
@@ -130,7 +129,7 @@ export class ProductosPage implements OnInit, OnDestroy {
 
   onBuscar(texto: string): void {
     this.textoBusqueda.set(texto);
-    this.indiceActual.set(0); // al buscar, siempre arrancamos desde el primer resultado
+    this.indiceActual.set(0); 
     this.indiceFoto.set(0);
   }
 
@@ -149,12 +148,40 @@ export class ProductosPage implements OnInit, OnDestroy {
   }
 
   agregarAlCarrito(producto: CartaItem): void {
-    this.carrito.agregar(producto.id_carta);
+    this.carrito.agregar(producto);
+  }
+
+  quitarAlcarrito(producto: CartaItem):void{
+    this.carrito.quitar(producto.id_carta);
   }
 
   cantidadEnCarrito(producto: CartaItem): number {
     return this.carrito.cantidadDe(producto.id_carta);
   }
+
+  volver(){
+    this.ruta.navigate(["/carta"]);
+  }
+
+  async cerrarSesion(): Promise<void> {
+    await this.authService.logout();
+
+    
+    localStorage.removeItem('mesa');
+
+    const toast = await this.toastController.create({
+      message: 'Sesión cerrada correctamente.',
+      duration: 3000,
+      position: 'top',
+      color: 'success'
+    });
+    await toast.present();
+
+    void this.ruta.navigate(['/login']);
+  }
+
+
+
 
   // ============================
   // SWIPE (touch)

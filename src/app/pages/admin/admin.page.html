@@ -28,14 +28,15 @@
     </div>
 
     <div class="modules-container">
-      <app-admin-module-card
-        *ngFor="let modulo of modulosVisibles"
-        [module]="modulo"
-        (selected)="seleccionarModulo($event)"
-        [routerLink]="modulo.path"
-        [icon]="modulo.icon"
-      >
-      </app-admin-module-card>
+      @for (modulo of modulosVisibles; track modulo.id) {
+        <app-admin-module-card
+          [module]="modulo"
+          (selected)="seleccionarModulo($event)"
+          [routerLink]="modulo.path"
+          [icon]="modulo.icon"
+        >
+        </app-admin-module-card>
+      }
     </div>
   </div>
 </ion-content>

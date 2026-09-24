@@ -7,27 +7,6 @@ ion-content {
 }
 
 /* =========================
-   LOGO
-========================= */
-
-.logo-container {
-  width: 160px;
-  margin: 40px auto 30px auto;
-  background-color: var(--ion-color-primary);
-  padding: 20px;
-  border-radius: 18px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.logo {
-  width: 100%;
-  display: block;
-}
-
-/* =========================
   BOTON LOGIN
 ========================= */
 
@@ -317,4 +296,18 @@ ion-item {
   font-weight: 500;
   color: var(--ion-text-color);
   margin-top: 6px;
+}
+
+//boton de consulta de estado del pedido
+.pedido-flotante-izq {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  cursor: pointer;
+  z-index: 9999;
 }

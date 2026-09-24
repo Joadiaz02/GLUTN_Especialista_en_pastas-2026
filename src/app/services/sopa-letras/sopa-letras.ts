@@ -1,15 +1,20 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed, effect, untracked } from '@angular/core';
 import { Juegos } from '../juegos/juegos';
+import {
+  CONFIG_JUEGOS,
+  SOPA_LETRAS_DURACION_SEGUNDOS,
+  SOPA_LETRAS_PALABRAS_POR_PARTIDA,
+} from '../juegos/juegos.config';
 
 interface CeldaGrilla {
   fila: number;
   col: number;
 }
 
-const PORCENTAJE_SOPA_LETRAS = 10;
+const PORCENTAJE_SOPA_LETRAS = CONFIG_JUEGOS['sopa-de-letras'].porcentaje;
 const TAMANO_GRILLA = 5;
-const CANTIDAD_PALABRAS_POR_PARTIDA = 3;
-const DURACION_SEGUNDOS = 60;
+const CANTIDAD_PALABRAS_POR_PARTIDA = SOPA_LETRAS_PALABRAS_POR_PARTIDA;
+const DURACION_SEGUNDOS = SOPA_LETRAS_DURACION_SEGUNDOS;
 
 // Ninguna palabra puede superar TAMANO_GRILLA letras, si no queda sin
 // poder colocarse en la grilla (y el juego sería imposible de ganar).
@@ -18,15 +23,19 @@ const BANCO_PALABRAS = [
   'PASTA', 'CREMA', 'PESTO', 'PAN', 'SAL',
 ];
 
-// Sopa de letras temática de pastas, a contrarreloj: 3 palabras en
-// 60 segundos. Si encuentra las 3 a tiempo, gana; si se acaba el
-// tiempo antes, pierde (ambos casos consumen el intento de la estadía).
+// Sopa de letras temática de pastas, a contrarreloj: hay que encontrar
+// todas las palabras antes de que se acabe el tiempo (ver juegos.config).
+// Si las encuentra a tiempo, gana; si no, pierde (ambos casos consumen
+// el intento de la estadía). La sopa y las palabras no se generan hasta
+// que el jugador aprieta "Comenzar". Salir en medio de una partida cuenta
+// como perder (ver abandonarPartida).
 @Injectable({ providedIn: 'root' })
 export class SopaLetras {
   private juegos = inject(Juegos);
 
   readonly tamanoGrilla = TAMANO_GRILLA;
 
+  iniciada = signal(false);
   grilla = signal<string[][]>([]);
   palabras = signal<string[]>([]);
   encontradas = signal<string[]>([]);
@@ -39,6 +48,41 @@ export class SopaLetras {
 
   private _intervaloId: ReturnType<typeof setInterval> | null = null;
   private _posicionesPorPalabra = new Map<string, CeldaGrilla[]>();
+
+  constructor() {
+    // Si cambia el usuario (logout o login de otra persona) se corta la
+    // partida: el cronómetro no puede seguir corriendo y cargarle una
+    // derrota al usuario siguiente.
+    effect(() => {
+      this.juegos.idUsuario();
+      untracked(() => this.prepararPartida());
+    });
+  }
+
+  // Deja el juego en su estado inicial: sin sopa, sin palabras y con el
+  // cronómetro detenido, esperando a que el jugador toque "Comenzar".
+  prepararPartida(): void {
+    this.detenerTemporizador();
+
+    this.iniciada.set(false);
+    this.grilla.set([]);
+    this.palabras.set([]);
+    this.encontradas.set([]);
+    this.juegoTerminado.set(false);
+    this.perdioPorTiempo.set(false);
+    this.tiempoRestante.set(DURACION_SEGUNDOS);
+  }
+
+  // Salir en medio de una partida cuenta como perder: si era el primer
+  // intento de la estadía, se pierde el descuento; si ya estaba gastado,
+  // registrarIntento no hace nada y se juega solo por diversión. En los dos
+  // casos la sopa queda reiniciada (palabras y cronómetro nuevos al volver).
+  abandonarPartida(): void {
+    if (!this.iniciada() || this.juegoTerminado()) return;
+
+    this.juegos.registrarIntento(false, PORCENTAJE_SOPA_LETRAS);
+    this.prepararPartida();
+  }
 
   iniciarPartida(): void {
     this.detenerTemporizador();
@@ -53,6 +97,7 @@ export class SopaLetras {
     this.palabras.set(palabrasBase);
     this.generarGrilla(palabrasBase);
 
+    this.iniciada.set(true);
     this.iniciarTemporizador();
   }
 

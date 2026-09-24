@@ -5,10 +5,18 @@ import {
   PushNotifications,
   Token,
 } from '@capacitor/push-notifications';
-import { Platform } from '@ionic/angular';
+import { Platform, ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 import { SupabaseService } from './supabase.service';
 import { Auth } from './auth/auth';
+
+// Adónde navegar al tocar la notificación, según el "tipo" que manda cada
+// función (ver supabase/functions/notify-chat-message).
+const RUTA_POR_TIPO: Record<string, string> = {
+  consulta_mozo: '/admin/queries',
+  respuesta_mozo: '/chat',
+};
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +30,12 @@ export class PushNotificationService {
 
   private readonly platform =
     inject(Platform);
+
+  private readonly toastController =
+    inject(ToastController);
+
+  private readonly router =
+    inject(Router);
 
   private inicializado = false;
 
@@ -91,23 +105,60 @@ export class PushNotificationService {
 
     await PushNotifications.addListener(
       'pushNotificationReceived',
-      (notification: PushNotificationSchema) => {
-        console.log(
-          'NOTIFICACIÓN RECIBIDA:',
-          notification
-        );
+      async (notification: PushNotificationSchema) => {
+        // Con la app abierta el sistema operativo no muestra el aviso solo:
+        // hay que mostrarlo nosotros para que la notificación se vea tanto
+        // con la app abierta como cerrada.
+        await this.mostrarAviso(notification);
       }
     );
 
     await PushNotifications.addListener(
       'pushNotificationActionPerformed',
       (action: ActionPerformed) => {
-        console.log(
-          'ACCIÓN SOBRE NOTIFICACIÓN:',
-          action
+        this.irALaPantalla(
+          action.notification.data
         );
       }
     );
+  }
+
+  private async mostrarAviso(
+    notification: PushNotificationSchema
+  ): Promise<void> {
+    const toast =
+      await this.toastController.create({
+        header: notification.title,
+        message: notification.body,
+        duration: 5000,
+        position: 'top',
+        color: 'primary',
+        buttons: [
+          {
+            text: 'Ver',
+            handler: () =>
+              this.irALaPantalla(notification.data),
+          },
+        ],
+      });
+
+    await toast.present();
+  }
+
+  private irALaPantalla(
+    datos: Record<string, unknown> | undefined
+  ): void {
+    const tipo =
+      typeof datos?.['tipo'] === 'string'
+        ? (datos['tipo'] as string)
+        : null;
+
+    const ruta =
+      tipo ? RUTA_POR_TIPO[tipo] : undefined;
+
+    if (ruta) {
+      void this.router.navigate([ruta]);
+    }
   }
 
   private async guardarToken(

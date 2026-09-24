@@ -1,15 +1,15 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { IonIcon, ModalController, ToastController } from '@ionic/angular';
 import { UploadOptionsComponent } from './upload-options/upload-options.component';
 import { Camera, MediaResult } from '@capacitor/camera';
 
 @Component({
-  selector: 'gtn-uploader',
+  selector: 'app-uploader',
   templateUrl: './uploader.component.html',
   styleUrls: ['./uploader.component.scss'],
   imports: [IonIcon],
 })
-export class UploaderComponent {
+export class UploaderComponent implements OnInit {
   uploading = signal<boolean>(false);
   photoPreview = signal<string | null>(null);
 
