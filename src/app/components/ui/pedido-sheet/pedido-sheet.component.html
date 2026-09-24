@@ -1,0 +1,447 @@
+@if (sheet.abierto()) {
+
+  <div
+    class="pedido-overlay"
+
+    [class.pedido-overlay--cerrando]="
+      cerrando()
+    "
+  >
+
+
+    <!-- ====================================
+         FONDO
+    ===================================== -->
+
+    <button
+      type="button"
+
+      class="
+        pedido-backdrop
+      "
+
+      [class.pedido-backdrop--cerrando]="
+        cerrando()
+      "
+
+      aria-label="
+        Cerrar pedido
+      "
+
+      (click)="cerrar()"
+    ></button>
+
+
+    <!-- ====================================
+         SHEET
+    ===================================== -->
+
+    <section
+      class="
+        pedido-sheet
+      "
+
+      [class.pedido-sheet--arrastrando]="
+        !animacionCierre()
+      "
+
+      [class.pedido-sheet--cerrando]="
+        cerrando()
+      "
+
+      [style.transform]="
+        'translateY(' +
+        desplazamientoY() +
+        'px)'
+      "
+
+      (touchstart)="
+        touchStart($event)
+      "
+
+      (touchmove)="
+        touchMove($event)
+      "
+
+      (touchend)="
+        touchEnd($event)
+      "
+    >
+
+
+      <!-- MANIJA -->
+
+      <div
+        class="
+          pedido-handle
+        "
+      >
+
+        <span></span>
+
+      </div>
+
+
+      <!-- HEADER -->
+
+      <header
+        class="
+          pedido-header
+        "
+      >
+
+        <h2>
+          Tu pedido
+        </h2>
+
+
+        <button
+          type="button"
+
+          class="
+            pedido-cerrar
+          "
+
+          (click)="cerrar()"
+
+          aria-label="
+            Cerrar pedido
+          "
+        >
+
+          <ion-icon
+            name="
+              close-outline
+            "
+          ></ion-icon>
+
+        </button>
+
+      </header>
+
+
+      <!-- ==================================
+           PRODUCTOS
+      =================================== -->
+
+      <div
+        class="
+          pedido-items
+        "
+      >
+
+        @if (
+          carrito.items().length === 0
+        ) {
+
+          <div
+            class="
+              pedido-vacio
+            "
+          >
+
+            <p>
+              Todavía no agregaste productos.
+            </p>
+
+          </div>
+
+        }
+
+
+        @for (
+          item of carrito.items();
+          track item.producto.id_carta
+        ) {
+
+          <article
+            class="
+              pedido-item
+            "
+          >
+
+
+            <!-- FOTO -->
+
+            <img
+              class="
+                pedido-item__imagen
+              "
+
+              [src]="
+                item.producto.foto_1
+              "
+
+              [alt]="
+                item.producto.nombre
+              "
+            />
+
+
+            <!-- INFO -->
+
+            <div
+              class="
+                pedido-item__info
+              "
+            >
+
+              <h3>
+                {{
+                  item.producto.nombre
+                }}
+              </h3>
+
+
+              <strong>
+
+                {{
+                  item.producto.precio
+                    | currency:
+                      'ARS':
+                      '$':
+                      '1.0-0'
+                }}
+
+              </strong>
+
+
+              <!-- CONTROLES -->
+
+              <div
+                class="
+                  pedido-item__controles
+                "
+              >
+
+
+                <!-- ELIMINAR -->
+
+                <button
+                  type="button"
+
+                  class="
+                    control
+                    eliminar
+                  "
+
+                  (click)="
+                    eliminar(
+                      item.producto.id_carta
+                    )
+                  "
+
+                  aria-label="
+                    Eliminar producto
+                  "
+                >
+
+                  <ion-icon
+                    name="
+                      trash-outline
+                    "
+                  ></ion-icon>
+
+                </button>
+
+
+                <!-- MENOS -->
+
+                <button
+                  type="button"
+
+                  class="
+                    control
+                  "
+
+                  (click)="
+                    disminuir(
+                      item.producto.id_carta
+                    )
+                  "
+
+                  aria-label="
+                    Disminuir cantidad
+                  "
+                >
+
+                  <ion-icon
+                    name="
+                      remove-outline
+                    "
+                  ></ion-icon>
+
+                </button>
+
+
+                <span
+                  class="
+                    cantidad-item
+                  "
+                >
+
+                  {{
+                    item.cantidad
+                  }}
+
+                </span>
+
+
+                <!-- MÁS -->
+
+                <button
+                  type="button"
+
+                  class="
+                    control
+                    control--mas
+                  "
+
+                  (click)="
+                    aumentar(
+                      item.producto.id_carta
+                    )
+                  "
+
+                  aria-label="
+                    Aumentar cantidad
+                  "
+                >
+
+                  <ion-icon
+                    name="
+                      add-outline
+                    "
+                  ></ion-icon>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+
+      <!-- ==================================
+           RESUMEN
+      =================================== -->
+
+      @if (
+        carrito.totalItems() > 0
+      ) {
+
+        <div
+          class="
+            pedido-resumen
+          "
+        >
+
+
+          <!-- TOTAL -->
+
+          <div
+            class="
+              pedido-total
+            "
+          >
+
+            <span>
+              Total
+            </span>
+
+
+            <strong>
+
+              {{
+                carrito.importeTotal()
+                  | currency:
+                    'ARS':
+                    '$':
+                    '1.0-0'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <!-- TIEMPO -->
+
+          <div
+            class="
+              pedido-tiempo
+            "
+          >
+
+            <ion-icon
+              name="
+                time-outline
+              "
+            ></ion-icon>
+
+
+            <div>
+
+              <span>
+                Tiempo estimado de preparación
+                (máximo)
+              </span>
+
+
+              <strong>
+
+                {{
+                  carrito
+                    .tiempoTotalEstimado()
+                }}
+
+                minutos
+
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- CONTINUAR -->
+
+          <button
+            type="button"
+
+            class="
+              continuar-pedido
+            "
+
+            (click)="
+              continuarPedido()
+            "
+          >
+
+            <span>
+              Continuar pedido
+            </span>
+
+
+            <ion-icon
+              name="
+                chevron-forward-outline
+              "
+            ></ion-icon>
+
+          </button>
+
+        </div>
+
+      }
+
+    </section>
+
+  </div>
+
+}

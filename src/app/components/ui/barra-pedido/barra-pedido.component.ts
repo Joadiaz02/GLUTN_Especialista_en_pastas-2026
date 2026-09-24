@@ -1,35 +1,84 @@
-import { Component, inject, Output, EventEmitter, Input } from '@angular/core';
-import { IonButton, IonIcon } from '@ionic/angular';
-import { CurrencyPipe } from '@angular/common';
-import { addIcons } from 'ionicons';
-import { timeOutline } from 'ionicons/icons';
-import { Carrito } from '../../../pages/carrito/carrito';
-import { Router } from '@angular/router';
+import {
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
+
+import {
+  CurrencyPipe,
+} from '@angular/common';
+
+import {
+  IonButton,
+} from '@ionic/angular';
+
+import {
+  PedidoSheetService,
+} from '@app/services/pedido-sheet/pedido-sheet';
+
+import {
+  Carrito,
+} from '@app/pages/carrito/carrito';
+
 
 @Component({
   selector: 'app-barra-pedido',
-  imports: [IonButton, CurrencyPipe],
-  templateUrl: './barra-pedido.component.html',
-  styleUrl: './barra-pedido.component.scss'
+
+  standalone: true,
+
+  imports: [
+    IonButton,
+    CurrencyPipe,
+  ],
+
+  templateUrl:
+    './barra-pedido.component.html',
+
+  styleUrl:
+    './barra-pedido.component.scss',
 })
 export class BarraPedidoComponent {
+
   carrito = inject(Carrito);
-  rout = inject(Router)
 
-  @Input() textoBoton = 'Completar pedido';
-  @Output() continuar = new EventEmitter<void>();
+  private pedidoSheet =
+    inject(PedidoSheetService);
 
-  constructor() {
-    addIcons({ timeOutline });
+
+  @Input()
+  textoBoton = 'Ver pedido';
+
+
+  abrirPedido(): void {
+
+    this.pedidoSheet.abrir();
+
   }
 
-  continuarPedido(): void {
-  const resumen = {
-    items: this.carrito.items(),
-    total: this.carrito.importeTotal(),
-    tiempoEstimado: this.carrito.tiempoTotalEstimado()
-  };
-    console.log(resumen)
-    this.rout.navigate(["/pedido"])
+
+  tiempoTexto(): string {
+
+    const minutos =
+      this.carrito.tiempoTotalEstimado();
+
+    if (minutos <= 0) {
+      return '0 min';
+    }
+
+    if (minutos < 60) {
+      return `${minutos} min`;
+    }
+
+    const horas =Math.floor(minutos / 60);
+
+    const resto =minutos % 60;
+
+    if (resto === 0) {
+      return `${horas} h`;
+    }
+
+    return `${horas}h ${resto} min`;
+
   }
+
 }
