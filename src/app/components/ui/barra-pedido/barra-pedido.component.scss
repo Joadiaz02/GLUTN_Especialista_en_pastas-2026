@@ -1,59 +1,379 @@
 .barra-pedido {
   position: fixed;
-  bottom: 0;
+
   left: 0;
   right: 0;
-  z-index: 10;
+  bottom: 0;
+
+  z-index: 999;
+
+  min-height: 72px;
+
+  padding:
+    8px
+    max(
+      10px,
+      env(
+        safe-area-inset-left
+      )
+    )
+    calc(
+      8px +
+      env(
+        safe-area-inset-bottom
+      )
+    )
+    max(
+      10px,
+      env(
+        safe-area-inset-right
+      )
+    );
+
   display: flex;
-  justify-content: space-between;
+
   align-items: center;
-  gap: 12px;
-  padding: 6px 8px;
-  background: #6b8150;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.25);
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+
+  gap: 10px;
+
+  background: #536b40;
+
+  border-radius:
+    20px
+    20px
+    0
+    0;
+
+  box-shadow:
+    0 -5px 18px
+    rgba(
+      0,
+      0,
+      0,
+      0.18
+    );
 }
+
+
+/* ==========================================
+   ICONO CARRITO
+========================================== */
+
+.barra-carrito-icono {
+  position: relative;
+
+  width: 42px;
+
+  height: 42px;
+
+  min-width: 42px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background:
+    rgba(
+      40,
+      55,
+      30,
+      0.35
+    );
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.barra-carrito-icono > img {
+  width: 23px;
+
+  height: 23px;
+
+  display: block;
+}
+
+
+/* ==========================================
+   CONTADOR
+========================================== */
+
+.contador {
+  position: absolute;
+
+  top: -3px;
+
+  right: -2px;
+
+  min-width: 18px;
+
+  height: 18px;
+
+  padding:
+    0
+    4px;
+
+  border-radius: 10px;
+
+  background: #e76f45;
+
+  color: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   INFO
+========================================== */
 
 .barra-pedido__info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  color: var(--text-primary);
   min-width: 0;
-  justify-content: center;
-  text-align: center;
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
 }
 
-.barra-pedido__cantidad {
-  font-size: 16px;
-   gap: 4px;
-   color: var(--text-secondary);
-   color: aliceblue;
+.barra-cantidad {
+  color: white;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
 }
 
-.barra-pedido__meta {
-  flex-direction: row;
-  gap: 4px;
-  font-size: 18px;
-  color: var(--text-secondary);
-  color: aliceblue;
-  flex-wrap: nowrap;
-}
-.barra-pedido__meta span {
-  display: inline-flex; /* Evita que el span interno rompa la línea */
-  gap: 1px;
+.barra-total {
+  color: white;
+
+  font-size: 12px;
+
+  white-space: nowrap;
 }
 
-.presio{
-  font-size: 20px;
-  color: #e76f45;
+.barra-total strong {
+  color: #ff8a61;
+
+  font-size: 14px;
 }
 
-ion-button {
+
+/* ==========================================
+   TIEMPO
+========================================== */
+
+.barra-tiempo {
   flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color: white;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  padding:
+    0
+    8px;
+
+  border-left:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.3
+    );
+}
+
+
+/*
+ * Imagen del reloj.
+ */
+.barra-tiempo__icon {
+  width: 18px;
+
+  height: 18px;
+
+  display: block;
+
+  flex-shrink: 0;
+}
+
+
+/* ==========================================
+   BOTÓN
+========================================== */
+
+.barra-boton {
+  flex-shrink: 0;
+
+  --background: #ef7045;
+
+  --background-activated: #d95f37;
+
+  --color: white;
+
+  --border-radius: 25px;
+
+  --padding-start: 15px;
+
+  --padding-end: 12px;
+
+  min-height: 48px;
+
   margin: 0;
-  --padding-start: 5px;
-  --padding-end: 5px;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  text-transform: none;
+}
+
+
+/*
+ * Flecha SVG.
+ */
+.barra-boton__flecha {
+  width: 19px;
+
+  height: 19px;
+
+  margin-left: 4px;
+
+  display: block;
+
+  flex-shrink: 0;
+}
+
+
+/* ==========================================
+   CELULAR CHICO
+========================================== */
+
+@media (max-width: 390px) {
+
+  .barra-pedido {
+    gap: 6px;
+  }
+
+  .barra-carrito-icono {
+    width: 36px;
+
+    height: 36px;
+
+    min-width: 36px;
+  }
+
+  .barra-carrito-icono > img {
+    width: 20px;
+
+    height: 20px;
+  }
+
+  .barra-tiempo {
+    padding:
+      0
+      5px;
+
+    font-size: 11px;
+  }
+
+  .barra-tiempo__icon {
+    width: 16px;
+
+    height: 16px;
+  }
+
+  .barra-boton {
+    --padding-start: 11px;
+
+    --padding-end: 9px;
+
+    font-size: 12px;
+  }
+
+  .barra-boton__flecha {
+    width: 17px;
+
+    height: 17px;
+  }
+
+}
+
+
+/* ==========================================
+   CELULAR MUY CHICO
+========================================== */
+
+@media (max-width: 350px) {
+
+  .barra-tiempo {
+    display: none;
+  }
+
+  .barra-boton {
+    min-width: 105px;
+  }
+
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (min-width: 700px) {
+
+  .barra-pedido {
+    left: 50%;
+
+    right: auto;
+
+    width:
+      min(
+        680px,
+        calc(100% - 30px)
+      );
+
+    transform:
+      translateX(-50%);
+
+    border-radius:
+      22px
+      22px
+      0
+      0;
+  }
 
 }

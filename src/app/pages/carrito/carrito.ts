@@ -1,79 +1,269 @@
-import { Injectable, signal, computed } from '@angular/core';
+import {
+  Injectable,
+  signal,
+  computed,
+} from '@angular/core';
+
 import { CartaItem } from '../../models/carta.model';
 
-interface ItemCarrito {
+
+export interface ItemCarrito {
   producto: CartaItem;
   cantidad: number;
 }
 
-@Injectable({ providedIn: 'root' })
+
+@Injectable({
+  providedIn: 'root',
+})
 export class Carrito {
 
-  private _items = signal<Record<string, ItemCarrito>>({});
+  private _items =
+    signal<Record<string, ItemCarrito>>({});
 
-  cantidadDe(idProducto: string): number {
-    return this._items()[idProducto]?.cantidad ?? 0;
+
+  /* ==========================================
+     CANTIDAD
+  ========================================== */
+
+  cantidadDe(
+    idProducto: string
+  ): number {
+
+    return (
+      this._items()[idProducto]?.cantidad
+      ?? 0
+    );
+
   }
 
-  agregar(producto: CartaItem): void {
+
+  /* ==========================================
+     AGREGAR
+  ========================================== */
+
+  agregar(
+    producto: CartaItem
+  ): void {
+
     this._items.update(actual => {
-      const existente = actual[producto.id_carta];
+
+      const existente =
+        actual[producto.id_carta];
+
       return {
+
         ...actual,
+
         [producto.id_carta]: {
+
           producto,
-          cantidad: (existente?.cantidad ?? 0) + 1
-        }
+
+          cantidad:
+            (existente?.cantidad ?? 0) + 1,
+
+        },
+
       };
+
     });
+
   }
 
-  quitar(idProducto: string): void {
-    this._items.update(actual => {
-      const existente = actual[idProducto];
-      if (!existente) return actual;
 
-      if (existente.cantidad <= 1) {
-        const { [idProducto]: _, ...resto } = actual;
-        return resto;
+  /* ==========================================
+     QUITAR UNA UNIDAD
+  ========================================== */
+
+  quitar(
+    idProducto: string
+  ): void {
+
+    this._items.update(actual => {
+
+      const existente =
+        actual[idProducto];
+
+      if (!existente) {
+        return actual;
       }
 
+
+      if (existente.cantidad <= 1) {
+
+        const {
+          [idProducto]: _,
+          ...resto
+        } = actual;
+
+        return resto;
+
+      }
+
+
       return {
+
         ...actual,
-        [idProducto]: { ...existente, cantidad: existente.cantidad - 1 }
+
+        [idProducto]: {
+
+          ...existente,
+
+          cantidad:
+            existente.cantidad - 1,
+
+        },
+
       };
+
     });
+
   }
+
+
+  /* ==========================================
+     ELIMINAR PRODUCTO COMPLETO
+  ========================================== */
+
+  eliminar(
+    idProducto: string
+  ): void {
+
+    this._items.update(actual => {
+
+      const {
+        [idProducto]: _,
+        ...resto
+      } = actual;
+
+      return resto;
+
+    });
+
+  }
+
+
+  /* ==========================================
+     VACIAR
+  ========================================== */
 
   vaciar(): void {
+
     this._items.set({});
+
   }
-  
+
+
+  /* ==========================================
+     TOTAL DE UNIDADES
+  ========================================== */
+
   totalItems = computed(() =>
-    Object.values(this._items()).reduce((acc, item) => acc + item.cantidad, 0)
+
+    Object.values(this._items())
+      .reduce(
+        (total, item) =>
+          total + item.cantidad,
+        0
+      )
+
   );
+
+
+  /* ==========================================
+     TOTAL DINERO
+  ========================================== */
 
   importeTotal = computed(() =>
-    Object.values(this._items()).reduce(
-      (acc, item) => acc + item.producto.precio * item.cantidad, 0
-    )
+
+    Object.values(this._items())
+      .reduce(
+        (total, item) =>
+          total +
+          item.producto.precio *
+          item.cantidad,
+
+        0
+      )
+
   );
 
-  tiempoTotalEstimado = computed(() =>
-    Object.values(this._items()).reduce(
-      (acc, item) => acc + item.producto.tiempo_elaboracion * item.cantidad, 0
-    )
-  );
 
-  items = computed(() => Object.values(this._items()));
+  /* ==========================================
+     TIEMPO MÁXIMO
+     
+     NO SUMA LOS TIEMPOS.
+     
+     Ej:
+     25 + 40 + 15
 
-  cargar(items:{producto:CartaItem; cantidad:number} []):void{
-    const nuevo_carrito: Record<string, ItemCarrito> = {};
-    for (const item of items) {
-       nuevo_carrito[item.producto.id_carta] = {
-        producto:item.producto,cantidad:item.cantidad
-       };
-      this._items.set(nuevo_carrito);
+     Resultado:
+     40
+  ========================================== */
+
+  tiempoTotalEstimado = computed(() => {
+
+    const items =
+      Object.values(this._items());
+
+    if (items.length === 0) {
+      return 0;
     }
+
+    return Math.max(
+      ...items.map(
+        item =>
+          item.producto
+            .tiempo_elaboracion
+      )
+    );
+
+  });
+
+
+  /* ==========================================
+     ITEMS
+  ========================================== */
+
+  items = computed(() =>
+    Object.values(this._items())
+  );
+
+
+  /* ==========================================
+     CARGAR CARRITO
+  ========================================== */
+
+  cargar(
+    items: {
+      producto: CartaItem;
+      cantidad: number;
+    }[]
+  ): void {
+
+    const nuevoCarrito:
+      Record<string, ItemCarrito> = {};
+
+
+    for (const item of items) {
+
+      nuevoCarrito[
+        item.producto.id_carta
+      ] = {
+
+        producto:
+          item.producto,
+
+        cantidad:
+          item.cantidad,
+
+      };
+
+    }
+
+
+    this._items.set(nuevoCarrito);
+
   }
+
 }
