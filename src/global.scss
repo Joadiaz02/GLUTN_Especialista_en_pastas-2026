@@ -56,7 +56,7 @@
 
 ion-content {
   --padding-top: 0px;
-  --padding-bottom: 24px;
+  --padding-bottom: calc(24px + env(safe-area-inset-bottom));
   --padding-start: 24px;
   --padding-end: 24px;
 }
