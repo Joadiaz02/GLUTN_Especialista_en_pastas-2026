@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 
-import { authGuard, staffGuard } from './guards/auth.guard';
+import { authGuard, staffGuard, roleGuard } from './guards/auth.guard';
+import { navegacionInternaGuard } from './guards/navegacion-interna.guard';
+import { EPerfilUsuario } from './enums';
 
 export const routes: Routes = [
   {
@@ -27,12 +29,12 @@ export const routes: Routes = [
   },
 
   {
-  path: 'acceso_rapido',
+    path: 'acceso_rapido',
 
-  loadComponent: () =>
-    import('./pages/quick-access/quick-access.page').then(
-      (m) => m.QuickAccessPage,
-    ),
+    loadComponent: () =>
+      import('./pages/quick-access/quick-access.page').then(
+        (m) => m.QuickAccessPage
+      ),
   },
 
   {
@@ -40,7 +42,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/guest/guest.page').then((m) => m.GuestPage),
   },
-  
 
   {
     path: 'seleccion-acceso',
@@ -63,15 +64,15 @@ export const routes: Routes = [
   },
 
   {
-  path: 'admin/clients',
-  loadComponent: () =>
-    import('./pages/clients/clients.page').then(
-      (m) => m.ClientsPage
-    ),
+    path: 'admin/clients',
+    loadComponent: () =>
+      import('./pages/clients/clients.page').then((m) => m.ClientsPage),
   },
 
   {
     path: 'home',
+
+    canActivate: [authGuard],
 
     loadComponent: () =>
       import('./pages/home/home.page').then((m) => m.HomePage),
@@ -80,6 +81,20 @@ export const routes: Routes = [
     path: 'admin/tables',
     loadComponent: () =>
       import('./pages/tables/tables.page').then((m) => m.TablesPage),
+  },
+  {
+    path: 'admin/tables/create',
+    loadComponent: () =>
+      import('./pages/tables/components/create-table/create-table.page').then(
+        (m) => m.CreateTablePage
+      ),
+  },
+  {
+    path: 'admin/tables/edit/:id',
+    loadComponent: () =>
+      import('./pages/tables/components/edit-table/edit-table.page').then(
+        (m) => m.EditTablePage
+      ),
   },
   {
     path: 'admin/drinks',
@@ -94,22 +109,156 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'admin/drinks/edit',
+    path: 'admin/drinks/edit/:id',
     loadComponent: () =>
       import('./pages/drinks/components/edit-drink/edit-drink.page').then(
         (m) => m.EditDrinkPage
       ),
   },
   {
+    path: 'admin/dishes',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/dishes/dishes.page').then((m) => m.DishesPage),
+  },
+  {
+    path: 'admin/dishes/create',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/dishes/components/create-dish/create-dish.page').then(
+        (m) => m.CreateDishPage
+      ),
+  },
+  {
+    path: 'admin/dishes/edit/:id',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/dishes/components/edit-dish/edit-dish.page').then(
+        (m) => m.EditDishPage
+      ),
+  },
+  {
+    path: 'admin/postres',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/postres/postres.page').then((m) => m.PostresPage),
+  },
+  {
+    path: 'admin/postres/create',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import(
+        './pages/postres/components/create-postre/create-postre.page'
+      ).then((m) => m.CreatePostrePage),
+  },
+  {
+    path: 'admin/postres/edit/:id',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/postres/components/edit-postre/edit-postre.page').then(
+        (m) => m.EditPostrePage
+      ),
+  },
+  {
+    path: 'juegos',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/juegos.page').then((m) => m.JuegosPage),
+  },
+  {
+    path: 'juegos/ruleta',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/ruleta/ruleta.page').then((m) => m.RuletaPage),
+  },
+  {
+    path: 'juegos/sopa-de-letras',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/sopa-letras/sopa-letras.page').then(
+        (m) => m.SopaLetrasPage
+      ),
+  },
+  {
+    path: 'juegos/ta-te-ti',
+
+    canActivate: [authGuard, navegacionInternaGuard],
+
+    loadComponent: () =>
+      import('./pages/juegos/ta-te-ti/ta-te-ti.page').then((m) => m.TaTeTiPage),
+  },
+  {
+    path: 'reservas',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/reservas/reservas.page').then((m) => m.ReservasPage),
+  },
+  {
+    path: 'reservas/nueva',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/reservas/nueva-reserva/nueva-reserva.page').then(
+        (m) => m.NuevaReservaPage
+      ),
+  },
+  {
+    path: 'reservas/mis-reservas',
+
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/reservas/mis-reservas/mis-reservas.page').then(
+        (m) => m.MisReservasPage
+      ),
+  },
+  {
     path: 'carta',
     loadComponent: () =>
       import('./pages/carta/carta.page').then((m) => m.CartaPage),
-    },
-    {
+  },
+  {
+    path: 'carta/:tipo',
+    loadComponent: () =>
+      import('./pages/productos/productos.page').then((m) => m.ProductosPage),
+  },
+  {
     path: 'design-system',
     loadComponent: () =>
       import('./pages/design-system/design-system.page').then(
         (m) => m.DesignSystemPage
       ),
+  },
+  {
+    path: 'chat',
+    loadComponent: () =>
+      import('./pages/chat/chat.page').then((m) => m.ChatPage),
   },
 ];

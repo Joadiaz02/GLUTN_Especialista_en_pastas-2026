@@ -1,0 +1,142 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        titulo="¿Descartar los cambios?"
+        mensaje="Vas a perder los cambios que hiciste en este plato."
+        textoConfirmar="Descartar"
+        colorConfirmar="danger"
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
+    </ion-buttons>
+
+    <ion-title>Editar Plato</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (isLoadingPlato()) {
+  <div class="carga-plato">
+    <app-spinner-logo />
+  </div>
+  } @else {
+  <div class="upload-container">
+    <app-uploader [initialPreview]="fotoActual1()" (fileSelected)="onPhotoSelected(0, $event)" />
+    <app-uploader [initialPreview]="fotoActual2()" (fileSelected)="onPhotoSelected(1, $event)" />
+    <app-uploader [initialPreview]="fotoActual3()" (fileSelected)="onPhotoSelected(2, $event)" />
+  </div>
+
+  <form [formGroup]="form" class="fields">
+    <div class="field">
+      <label class="field__label">Nombre</label>
+
+      <ion-input
+        fill="outline"
+        class="field__input"
+        placeholder="Nombre"
+        formControlName="title"
+      />
+
+      @if ( getFormControl('title')?.invalid &&
+      (getFormControl('title')?.touched || getFormControl('title')?.dirty ) ) {
+      @if ( getFormControl('title')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
+    </div>
+
+    <div class="field">
+      <label class="field__label">Descripción</label>
+
+      <ion-input
+        fill="outline"
+        class="field__input"
+        placeholder="Descripción"
+        formControlName="description"
+      />
+
+      @if ( getFormControl('description')?.invalid &&
+      (getFormControl('description')?.touched ||
+      getFormControl('description')?.dirty ) ) { @if (
+      getFormControl('description')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
+    </div>
+
+    <div class="fields__row">
+      <div class="field">
+        <label class="field__label">Elaboración</label>
+
+        <ion-input
+          type="text"
+          inputmode="numeric"
+          maxlength="3"
+          fill="outline"
+          class="field__input"
+          placeholder="Elaboración"
+          formControlName="preparation"
+        />
+
+        @if ( getFormControl('preparation')?.invalid &&
+        (getFormControl('preparation')?.touched ||
+        getFormControl('preparation')?.dirty ) ) {
+        @if ( getFormControl('preparation')?.hasError('required') ) {
+        <p class="field__error">El campo es obligatorio.</p>
+        } @else if ( getFormControl('preparation')?.hasError('pattern') ) {
+        <p class="field__error">Ingresá solo números, sin letras ni símbolos.</p>
+        } @else if ( getFormControl('preparation')?.hasError('min') ) {
+        <p class="field__error">Tiene que ser mayor a 0.</p>
+        } }
+      </div>
+
+      <div class="field">
+        <label class="field__label">Precio</label>
+
+        <ion-input
+          type="text"
+          inputmode="numeric"
+          maxlength="9"
+          fill="outline"
+          class="field__input"
+          placeholder="Precio"
+          formControlName="price"
+        />
+
+        @if ( getFormControl('price')?.invalid &&
+        (getFormControl('price')?.touched || getFormControl('price')?.dirty ) )
+        {
+        @if ( getFormControl('price')?.hasError('required') ) {
+        <p class="field__error">El campo es obligatorio.</p>
+        } @else if ( getFormControl('price')?.hasError('pattern') ) {
+        <p class="field__error">Ingresá un precio válido (ej: 8500 o 8500.50).</p>
+        } @else if ( getFormControl('price')?.hasError('min') ) {
+        <p class="field__error">Tiene que ser mayor a 0.</p>
+        } }
+      </div>
+    </div>
+
+    <div class="field field--checkbox">
+      <ion-checkbox formControlName="sugerencia">
+        Sugerencia del chef
+      </ion-checkbox>
+      <p class="field__hint">
+        Los platos marcados como sugerencia aparecen en el slide de
+        "Productos destacados" del inicio.
+      </p>
+    </div>
+  </form>
+  }
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="footer-actions">
+    <ion-button
+      expand="block"
+      shape="round"
+      [disabled]="(form.statusChanges | async) !== 'VALID'"
+      (click)="confirmarYGuardar()"
+    >
+      @if (isLoading()) { <app-spinner-logo size="sm" /> }
+      Guardar cambios</ion-button
+    >
+  </div>
+</ion-footer>

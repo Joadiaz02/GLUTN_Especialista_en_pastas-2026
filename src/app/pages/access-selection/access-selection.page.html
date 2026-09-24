@@ -1,144 +1,92 @@
-<ion-content
-  [fullscreen]="true"
-  class="access-content"
->
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <!-- <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver> -->
+    </ion-buttons>
 
+    <ion-buttons slot="end">
+      <app-confirm-dialog
+        titulo="¿Cerrar sesión?"
+        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+        textoConfirmar="Cerrar sesión"
+        (confirmado)="cerrarSesion()"
+      ></app-confirm-dialog>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="access-content">
   <main class="access-page">
-
     <section class="brand-block">
-
       <div class="brand-mark">
-
-        <img
-          src="assets/images/LOGO-GLUTN.png"
-          alt="GLUTN"
-        />
-
+        <img src="assets/images/LOGO-GLUTN.png" alt="GLUTN" />
       </div>
 
-      <span class="eyebrow">
-        ACCESO DE PERSONAL
-      </span>
+      <span class="eyebrow"> ACCESO DE PERSONAL </span>
 
-      <h1>
-        ¿A dónde querés ingresar?
-      </h1>
+      <h1>¿A dónde querés ingresar?</h1>
 
       <p>
         Hola,
-        <strong>{{ nombre }}</strong>.
-        Elegí cómo continuar en la aplicación.
+        <strong>{{ nombre }}</strong>. Elegí cómo continuar en la aplicación.
       </p>
-
     </section>
 
-
     <section class="profile-card">
-
       <div class="profile-icon">
-
-        <ion-icon
-          name="person-circle-outline"
-        ></ion-icon>
-
+        <ion-icon name="person-circle-outline"></ion-icon>
       </div>
 
       <div>
+        <span> Perfil actual </span>
 
-        <span>
-          Perfil actual
-        </span>
-
-        <strong>
-          {{ perfilNombre }}
-        </strong>
-
+        <strong> {{ perfilNombre }} </strong>
       </div>
-
     </section>
 
-
     <section class="access-options">
-
-
       <button
         class="access-option main-option"
         type="button"
         (click)="irAlMenuPrincipal()"
       >
-
         <span class="option-icon">
-
-          <ion-icon
-            name="restaurant-outline"
-          ></ion-icon>
-
+          <ion-icon name="restaurant-outline"></ion-icon>
         </span>
-
 
         <span class="option-copy">
+          <strong> Menú principal </strong>
 
-          <strong>
-            Menú principal
-          </strong>
-
-          <small>
-            Accedé a las funciones generales
-            de la aplicación.
-          </small>
-
+          <small> Accedé a las funciones generales de la aplicación. </small>
         </span>
 
-
-        <span class="arrow">
-          ›
-        </span>
-
+        <span class="arrow"> › </span>
       </button>
-
-
 
       <button
         class="access-option admin-option"
         type="button"
         (click)="irAlPanelAdministrativo()"
       >
-
         <span class="option-icon">
-
-          <ion-icon
-            name="settings-outline"
-          ></ion-icon>
-
+          <ion-icon name="settings-outline"></ion-icon>
         </span>
-
 
         <span class="option-copy">
+          <strong> Panel administrativo </strong>
 
-          <strong>
-            Panel administrativo
-          </strong>
-
-          <small>
-            Gestioná las tareas disponibles
-            para tu perfil.
-          </small>
-
+          <small> Gestioná las tareas disponibles para tu perfil. </small>
         </span>
 
-
-        <span class="arrow">
-          ›
-        </span>
-
+        <span class="arrow"> › </span>
       </button>
-
     </section>
 
-    <app-confirm-dialog></app-confirm-dialog>
-
-
-
+    <!-- <app-confirm-dialog
+      titulo="¿Cerrar sesión?"
+      mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+      textoConfirmar="Cerrar sesión"
+      (confirmado)="cerrarSesion()"
+    ></app-confirm-dialog> -->
   </main>
-
 </ion-content>

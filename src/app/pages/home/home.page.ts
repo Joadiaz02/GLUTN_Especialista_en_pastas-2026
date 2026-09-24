@@ -1,16 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import {
   IonContent,
   IonButton,
-  IonList,
-  IonListHeader,
-  IonItem,
-  IonThumbnail,
-  IonLabel,
-  IonDatetime
+  IonSkeletonText,
+  IonIcon,
+  ToastController
 } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
-import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confirm-cartel.component";
+import { Auth } from '../../services/auth/auth';
+import { Carta } from '@app/services';
+import { CartaItem } from '@app/models/carta.model';
+import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
+import { Carrito } from '../carrito/carrito';
+
+const DEMORA_FOTO_DESTACADO_MS = 3000;
 
 @Component({
   selector: 'app-home',
@@ -20,93 +26,151 @@ import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confir
   imports: [
     IonContent,
     IonButton,
-    IonList,
-    IonListHeader,
-    IonItem,
-    IonThumbnail,
-    IonLabel,
-    IonDatetime,
+    IonSkeletonText,
+    IonIcon,
+    CurrencyPipe,
     ConfirmDialogComponent
-],
+  ],
 })
-export class HomePage {
+export class HomePage implements OnInit, OnDestroy {
+
+  private authService = inject(Auth);
+  private toastController = inject(ToastController);
+  private cartaService = inject(Carta);
+  private carrito = inject(Carrito);
+
+  private _fotoIntervalId: ReturnType<typeof setInterval> | null = null;
+
+  constructor(private router: Router) {
+    addIcons({ 'chevron-back-outline': chevronBackOutline, 'chevron-forward-outline': chevronForwardOutline });
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.isLoadingDestacados.set(true);
+
+    const destacados = await this.cartaService.getSugeridos();
+
+    this.isLoadingDestacados.set(false);
+
+    this.destacados.set(destacados);
+  }
+
+  ngOnDestroy(): void {
+    this.detenerCicloFotos();
+  }
 
   // ============================
   // ESTADOS
   // ============================
 
-  isLoggedIn = false;
+  // Ya no es un booleano local: es un computed que lee directo del
+  // signal de Auth. Se actualiza SOLO en cuanto Auth.usuarioActual
+  // cambia (login, logout, refresh de sesión) — sin carreras de tiempo,
+  // sin tener que "ir a preguntar" en ngOnInit.
+  isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
+
   enMesa = false;
 
-  showReserva = false;
   showDestacados = false;
   showQuienesSomos = false;
 
   // ============================
-  // FECHA Y HORA
+  // PRODUCTOS DESTACADOS (sugerencias de la carta)
   // ============================
 
-  today = new Date().toISOString().split('T')[0];
-  maxDate: string;
+  destacados = signal<CartaItem[]>([]);
+  isLoadingDestacados = signal(false);
 
-  fecha = '';
-  hora = '';
+  indiceDestacado = signal(0);
+  indiceFotoDestacado = signal(0);
 
-  constructor(private router: Router) {
-    // Calcular fecha máxima (1 mes exacto)
-    const now = new Date();
-    const nextMonth = new Date(now);
-    nextMonth.setMonth(now.getMonth() + 1);
+  productoDestacadoActual = computed<CartaItem | null>(
+    () => this.destacados()[this.indiceDestacado()] ?? null
+  );
 
-    this.maxDate = nextMonth.toISOString().split('T')[0];
-    
+  fotoDestacadaActual = computed(() => {
+    const producto = this.productoDestacadoActual();
+    if (!producto) return '';
+
+    const fotos = [producto.foto_1, producto.foto_2, producto.foto_3];
+    return fotos[this.indiceFotoDestacado()];
+  });
+
+  siguienteDestacado(): void {
+    const total = this.destacados().length;
+    if (total < 2) return;
+
+    this.indiceDestacado.update((i) => (i + 1) % total);
+    this.indiceFotoDestacado.set(0);
   }
 
-  // ============================
-  // PRODUCTOS (simulado)
-  // ============================
+  anteriorDestacado(): void {
+    const total = this.destacados().length;
+    if (total < 2) return;
 
-  productos = [
-    { nombre: 'Ravioles', imagen: 'assets/icons/ravioles.png', detalle: 'Clásicos y especiales' },
-    { nombre: 'Sorrentinos', imagen: 'assets/icons/sorrentinos.png', detalle: 'Jamón y queso, calabaza' },
-    { nombre: 'Fideos', imagen: 'assets/icons/fideos.png', detalle: 'Spaghetti, tallarines' }
-  ];
+    this.indiceDestacado.update((i) => (i - 1 + total) % total);
+    this.indiceFotoDestacado.set(0);
+  }
+
+  private iniciarCicloFotos(): void {
+    this.detenerCicloFotos();
+
+    this._fotoIntervalId = setInterval(() => {
+      this.indiceFotoDestacado.update((i) => (i + 1) % 3);
+    }, DEMORA_FOTO_DESTACADO_MS);
+  }
+
+  private detenerCicloFotos(): void {
+    if (this._fotoIntervalId !== null) {
+      clearInterval(this._fotoIntervalId);
+      this._fotoIntervalId = null;
+    }
+  }
 
   // ============================
   // LOGIN / LOGOUT
   // ============================
 
-  onLoginClick() {
-    if (this.isLoggedIn) {
-      this.isLoggedIn = false;
-      this.enMesa = false;
-      localStorage.removeItem('token');
-      localStorage.removeItem('mesa');
-    } else {
-      this.router.navigate(['/login']);
-    }
+  irALogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  async cerrarSesion(): Promise<void> {
+    await this.authService.logout();
+
+    this.enMesa = false;
+    localStorage.removeItem('mesa');
+
+    const toast = await this.toastController.create({
+      message: 'Sesión cerrada correctamente.',
+      duration: 3000,
+      position: 'top',
+      color: 'success'
+    });
+    await toast.present();
+
+    void this.router.navigate(['/login']);
   }
 
   // ============================
   // BOTONES PRINCIPALES
   // ============================
 
-  toggleReserva() {
-    this.showReserva = !this.showReserva;
-    this.showDestacados = false;
-    this.showQuienesSomos = false;
-  }
-
   toggleDestacados() {
     this.showDestacados = !this.showDestacados;
-    this.showReserva = false;
     this.showQuienesSomos = false;
+
+    if (this.showDestacados) {
+      this.iniciarCicloFotos();
+    } else {
+      this.detenerCicloFotos();
+    }
   }
 
   toggleQuienesSomos() {
     this.showQuienesSomos = !this.showQuienesSomos;
-    this.showReserva = false;
     this.showDestacados = false;
+    this.detenerCicloFotos();
   }
 
   // ============================
@@ -115,6 +179,14 @@ export class HomePage {
 
   goToCarta() {
     this.router.navigate(['/carta']);
+  }
+
+  goToJuegos() {
+    this.router.navigate(['/juegos'], { state: { origenValido: true } });
+  }
+
+  goToReservas() {
+    this.router.navigate(['/reservas']);
   }
 
   goToChat() {
@@ -132,21 +204,23 @@ export class HomePage {
   }
 
   // ============================
-  // RESERVA
+  // SOLICITAR CUENTA (punto 21, Lucas)
   // ============================
 
-  solicitarReserva() {
-    console.log('Reserva solicitada:', this.fecha, this.hora);
-
-    this.enMesa = true;
-    localStorage.setItem('mesa', 'true');
-
-    alert('Reserva enviada correctamente');
+  // Placeholder: solo controla cuándo se ve el botón. La lógica real
+  // de solicitud de cuenta/pago (punto 21) la arma Lucas.
+  mostrarSolicitarCuenta(): boolean {
+    return this.isLoggedIn() && this.enMesa && this.carrito.totalItems() > 0;
   }
 
-  formatDate(value: string | string[] | null | undefined): string {
-    if (!value) return '';
-    if (Array.isArray(value)) return value[0] ?? '';
-    return value;
+  async solicitarCuenta(): Promise<void> {
+    const toast = await this.toastController.create({
+      message: 'Pronto vas a poder solicitar tu cuenta desde acá.',
+      duration: 3000,
+      position: 'top',
+      color: 'primary'
+    });
+    await toast.present();
   }
+
 }

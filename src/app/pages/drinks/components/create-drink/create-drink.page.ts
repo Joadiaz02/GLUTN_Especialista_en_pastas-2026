@@ -14,17 +14,17 @@ import {
   IonTitle,
   IonToolbar,
   IonButtons,
-  IonBackButton,
   IonButton,
   IonFooter,
   ToastController,
   IonInput,
   IonSpinner,
+  IonToggle,
 } from '@ionic/angular';
-import { UploaderComponent } from './uploader/uploader.component';
-import { Storage, Table } from '@app/services';
+import { Storage, Drink } from '@app/services';
 import { Router } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { GtnUploader } from '@app/components';
 
 @Component({
   selector: 'app-create-drink',
@@ -38,15 +38,15 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
     CommonModule,
     FormsModule,
     IonButtons,
-    IonBackButton,
     IonButton,
     IonFooter,
     IonInput,
     ReactiveFormsModule,
-    UploaderComponent,
+    GtnUploader,
     IonSpinner,
-    ConfirmVolverComponent
-],
+    IonToggle,
+    ConfirmVolverComponent,
+  ],
 })
 export class CreateDrinkPage {
   uploading = signal(false);
@@ -54,7 +54,7 @@ export class CreateDrinkPage {
   isLoading = signal<boolean>(false);
 
   private _router = inject(Router);
-  private _tableService = inject(Table);
+  private _drinkService = inject(Drink);
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
 
@@ -63,6 +63,13 @@ export class CreateDrinkPage {
     description: new FormControl('', Validators.required),
     preparation: new FormControl('', Validators.required),
     price: new FormControl('', Validators.required),
+    ml: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^[0-9]+$/),
+      Validators.min(1),
+    ]),
+    contieneAlcohol: new FormControl(false),
+    sugerencia: new FormControl(false),
     images: new FormArray([
       new FormControl<File | null>(null, Validators.required),
       new FormControl<File | null>(null, Validators.required),
@@ -71,7 +78,6 @@ export class CreateDrinkPage {
   });
 
   volver(): void {
-    
     void this._router.navigate(['/admin/drinks']);
   }
 
@@ -107,15 +113,23 @@ export class CreateDrinkPage {
         data.images[2] as File
       );
 
-      await this._tableService.add({
-        titulo: data.title,
+      await this._drinkService.add({
+        nombre: data.title,
         descripcion: data.description,
-        tiempo_estimado: data.preparation,
+        tiempo_elaboracion: data.preparation,
         precio: data.price,
-        imagen_1: image01,
-        imagen_2: image02,
-        imagen_3: image03,
+        foto_1: image01,
+        foto_2: image02,
+        foto_3: image03,
       });
+
+      const toast = await this._toastController.create({
+        message: 'La bebida se creo correctamente',
+        duration: 5000,
+        position: 'bottom',
+      });
+
+      await toast.present();
 
       this._router.navigateByUrl('/admin/drinks');
     } catch (error) {

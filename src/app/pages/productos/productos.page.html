@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/carta"></ion-back-button>
+    </ion-buttons>
+    <h1 class="titulo-toolbar">{{ titulo() }}</h1>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="productos-content">
+  <div class="productos-wrapper">
+
+  <ion-searchbar
+    placeholder="Buscar en {{ titulo() | lowercase }}"
+    [debounce]="200"
+    (ionInput)="onBuscar($event.detail.value ?? '')"
+  ></ion-searchbar>
+
+  @if (isLoading()) {
+    <div class="sin-resultados">
+      <app-spinner-logo />
+    </div>
+  } @else if (productos().length === 0) {
+    <div class="sin-resultados">
+      <p>Todavía no hay productos cargados en esta sección.</p>
+    </div>
+  } @else if (productosFiltrados().length === 0) {
+    <div class="sin-resultados">
+      <p>No encontramos nada que coincida con tu búsqueda.</p>
+    </div>
+  }
+
+  @if (productoActual(); as producto) {
+    <div
+      class="producto-card"
+      (touchstart)="onTouchStart($event)"
+      (touchend)="onTouchEnd($event)"
+    >
+
+      <!-- flechas para desktop/mouse; en mobile se usa el swipe -->
+      @if (hayAnterior()) {
+        <button class="flecha flecha-izq" type="button" (click)="anterior()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </button>
+      }
+
+      @if (haySiguiente()) {
+        <button class="flecha flecha-der" type="button" (click)="siguiente()">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+      }
+
+      <img class="producto-imagen" [src]="fotoActual()" [alt]="producto.nombre" />
+
+      <div class="producto-info">
+        <h2 class="producto-nombre">{{ producto.nombre }}</h2>
+        <p class="producto-descripcion">{{ producto.descripcion }}</p>
+
+        <div class="producto-footer">
+          <span class="producto-precio">{{ producto.precio | currency:'ARS':'$' }}</span>
+
+          <div class="producto-agregar">
+            @if (cantidadEnCarrito(producto) > 0) {
+              <span class="producto-cantidad">{{ cantidadEnCarrito(producto) }}</span>
+            }
+
+            <button class="boton-agregar" type="button" (click)="agregarAlCarrito(producto)">
+              <ion-icon name="add-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="producto-indicador">
+        {{ indiceActual() + 1 }} / {{ productosFiltrados().length }}
+      </div>
+    </div>
+  }
+
+  </div>
+</ion-content>

@@ -12,7 +12,7 @@ import {
   Router
 } from '@angular/router';
 
-import { IonContent, IonIcon, IonButton, IonModal } from '@ionic/angular';
+import { IonContent, IonIcon, IonHeader, IonToolbar, IonButtons, IonTitle } from '@ionic/angular';
 
 import {
   addIcons
@@ -42,9 +42,11 @@ import { ConfirmDialogComponent } from "@app/components/ui/confirm-cartel/confir
     CommonModule,
     IonContent,
     IonIcon,
-    IonButton,
-    IonModal,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonTitle
 ],
 
   templateUrl:
@@ -86,14 +88,13 @@ export class AccessSelectionPage {
 
 
     const usuario =
-      this.auth.usuarioActual;
+      this.auth.usuarioActual();
 
 
     this.perfil =
       this.auth.obtenerPerfil(
         usuario
       );
-
 
     this.nombre =
       usuario?.user_metadata?.['nombre']
@@ -120,8 +121,11 @@ export class AccessSelectionPage {
 
   async cerrarSesion(): Promise<void> {
 
+    localStorage.removeItem('token');
+    localStorage.removeItem('mesa');
+
     await this.auth.logout();
-   
+
     await this.router.navigate(['/login']);
     }
 

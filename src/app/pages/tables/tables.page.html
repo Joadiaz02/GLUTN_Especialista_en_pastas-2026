@@ -1,13 +1,108 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>tables</ion-title>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+    </ion-buttons>
+
+    <ion-title>Mesas</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="outline" shape="round" size="small" routerLink="create">
+        <ion-icon slot="icon-only" src="assets/icons/add.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">tables</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="container-full-center">
+    @if (isLoading()) {
+    <app-spinner-logo />
+    } @else {
+    <div class="table__list">
+      @for (table of tables(); track table.id) {
+      <article class="table-card">
+        <div class="table-card__media">
+          @if (table.foto) {
+          <img class="table-card__img" [src]="table.foto" />
+          } @else {
+          <ion-icon
+            class="table-card__placeholder"
+            name="image-outline"
+          ></ion-icon>
+          }
+
+          <span class="table-card__number">M-{{ table.numero }}</span>
+
+          @if (table.disponibilidad) {
+          <span class="table-card__badge"> Disponible </span>
+          }
+        </div>
+
+        <div class="table-card__info">
+          <div class="table-card__details">
+            <h2 class="table-card__type">{{ tipoLabel[table.tipo] }}</h2>
+            <p class="table-card__capacity">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clip-path="url(#clip0_3393_1750)">
+                  <mask
+                    id="mask0_3393_1750"
+                    style="mask-type: luminance"
+                    maskUnits="userSpaceOnUse"
+                    x="0"
+                    y="0"
+                    width="20"
+                    height="20"
+                  >
+                    <path d="M20 0H0V20H20V0Z" fill="white" />
+                  </mask>
+                  <g mask="url(#mask0_3393_1750)">
+                    <path
+                      d="M7.63411 9.05817C7.55078 9.04984 7.45078 9.04984 7.35911 9.05817C5.37578 8.9915 3.80078 7.3665 3.80078 5.3665C3.80078 3.32484 5.45078 1.6665 7.50078 1.6665C9.54248 1.6665 11.2008 3.32484 11.2008 5.3665C11.1925 7.3665 9.61748 8.9915 7.63411 9.05817Z"
+                      stroke="white"
+                      stroke-width="1.25"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M13.6767 3.3335C15.2934 3.3335 16.5934 4.64183 16.5934 6.25016C16.5934 7.82516 15.3434 9.1085 13.785 9.16683C13.7184 9.1585 13.6434 9.1585 13.5684 9.16683"
+                      stroke="white"
+                      stroke-width="1.25"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M3.46758 12.1335C1.45091 13.4835 1.45091 15.6835 3.46758 17.0252C5.75924 18.5585 9.51757 18.5585 11.8092 17.0252C13.8259 15.6752 13.8259 13.4752 11.8092 12.1335C9.5259 10.6085 5.76758 10.6085 3.46758 12.1335Z"
+                      stroke="white"
+                      stroke-width="1.25"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.2832 16.6665C15.8832 16.5415 16.4499 16.2998 16.9165 15.9415C18.2165 14.9665 18.2165 13.3582 16.9165 12.3832C16.4582 12.0332 15.8999 11.7998 15.3082 11.6665"
+                      stroke="white"
+                      stroke-width="1.25"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </g>
+                </g>
+              </svg>
+
+              {{ table.capacidad }} {{ table.capacidad === 1 ? 'Persona' :
+              'Personas' }}
+            </p>
+          </div>
+        </div>
+      </article>
+      }
+    </div>
+    }
+  </div>
 </ion-content>

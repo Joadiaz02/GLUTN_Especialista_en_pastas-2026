@@ -11,8 +11,6 @@ import {
   IonButton,
   IonIcon,
   IonContent,
-  IonModal,
-  
 } from '@ionic/angular';
 
 import { Auth } from '../../services/auth/auth';
@@ -34,10 +32,10 @@ import { ConfirmVolverComponent } from "@app/components/ui/confirm-volver/confir
     IonToolbar,
     IonTitle,
     IonButtons,
+    IonIcon,
     IonContent,
     AdminModuleCardComponent,
     RouterLink,
-  
     ConfirmDialogComponent,
     ConfirmVolverComponent
 ],
@@ -101,14 +99,16 @@ export class AdminPage implements OnInit {
   }
 
   volver(): void {
-    
+    console.log("qwe")
     void this.router.navigate(['/seleccion-acceso']);
   }
 
 
   async cerrarSesion(): Promise<void> {
+    localStorage.removeItem('token');
+    localStorage.removeItem('mesa');
+
     await this.auth.logout();
     await this.router.navigate(['/login']);
-    
   }
 }

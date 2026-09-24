@@ -1,0 +1,71 @@
+.mis-reservas-content {
+  --background: var(--ion-background-color);
+  --padding-top: 20px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-bottom: 24px;
+}
+
+.mis-reservas-vacio {
+  text-align: center;
+  color: var(--ion-text-color);
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 40px;
+}
+
+.mis-reservas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.reserva-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--ion-color-light);
+}
+
+.reserva-item--vencida {
+  opacity: 0.65;
+}
+
+.reserva-item__datos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reserva-item__fecha {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+}
+
+.reserva-item__personas {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ion-background-color);
+}
+
+.reserva-item__badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ion-background-color);
+  background: var(--ion-border-color);
+  padding: 4px 10px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.reserva-item__boton {
+  --border-radius: 14px;
+  --border-color: var(--ion-color-primary);
+  --color: var(--ion-color-primary);
+  flex-shrink: 0;
+}

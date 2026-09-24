@@ -1,8 +1,8 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-  <ion-buttons slot="start">
-    <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
-  </ion-buttons>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+    </ion-buttons>
 
     <ion-title>Bebidas</ion-title>
   </ion-toolbar>
@@ -15,12 +15,13 @@
     </button>
 
     @if (!isLoading()) { @for (drink of drinks(); track $index) {
-    <app-drink-card
-      [name]="drink.titulo"
-      [description]="drink.descripcion"
-      [price]="drink.precio"
-      [image]="drink.imagen_1"
-    ></app-drink-card>
+    <app-menu-card
+      [menu]="drink"
+      (deleted)="onDeleted($event, drink.id_carta)"
+      (suggested)="onSuggested($event, drink.id_carta)"
+      (reactivated)="onReactivated($event, drink.id_carta)"
+      [editLink]="['edit', drink.id_carta]"
+    />
     } } @else { @for (i of [1, 2, 3, 4, 5]; track $index) {
     <app-skeleton-card />
     } }

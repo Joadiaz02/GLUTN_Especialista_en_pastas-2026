@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { IonIcon, ModalController, ToastController } from '@ionic/angular';
 import { UploadOptionsComponent } from './upload-options/upload-options.component';
 import { Camera, MediaResult } from '@capacitor/camera';
@@ -10,6 +10,9 @@ import { Camera, MediaResult } from '@capacitor/camera';
   imports: [IonIcon],
 })
 export class UploaderComponent {
+  // Foto ya existente (edición), se muestra hasta que se elija una nueva.
+  initialPreview = input<string | null>(null);
+
   uploading = signal<boolean>(false);
   photoPreview = signal<string | null>(null);
 

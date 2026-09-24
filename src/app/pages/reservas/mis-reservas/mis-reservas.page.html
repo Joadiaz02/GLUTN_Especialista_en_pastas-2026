@@ -1,0 +1,39 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/reservas" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mis reservas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="mis-reservas-content">
+  @if (reservas.length === 0) {
+    <p class="mis-reservas-vacio">Todavía no tenés reservas.</p>
+  } @else {
+    <div class="mis-reservas-lista">
+      @for (reserva of reservas; track reserva.id) {
+        <div class="reserva-item" [class.reserva-item--vencida]="esVencida(reserva)">
+          <div class="reserva-item__datos">
+            <span class="reserva-item__fecha">{{ formatearFecha(reserva.fecha) }} - {{ reserva.hora }}</span>
+            <span class="reserva-item__personas">{{ reserva.personas }} personas</span>
+          </div>
+
+          @if (esVencida(reserva)) {
+            <span class="reserva-item__badge">Vencida</span>
+          } @else {
+            <ion-button
+              class="reserva-item__boton"
+              size="small"
+              fill="outline"
+              shape="round"
+              (click)="editar(reserva)"
+            >
+              Editar
+            </ion-button>
+          }
+        </div>
+      }
+    </div>
+  }
+</ion-content>

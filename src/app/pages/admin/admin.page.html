@@ -1,20 +1,26 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+    </ion-buttons>
+
     <ion-title>Administración</ion-title>
 
-<ion-buttons slot="end">
-      <app-confirm-dialog></app-confirm-dialog>
+    <ion-buttons slot="end">
+      <app-confirm-dialog
+        titulo="¿Cerrar sesión?"
+        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+        textoConfirmar="Cerrar sesión"
+        (confirmado)="cerrarSesion()"
+      ></app-confirm-dialog>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-
-
 <ion-content>
   <div class="admin-container">
     <div class="header-section">
-      
-      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+      <!-- <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver> -->
 
       <h1>Panel de administración</h1>
 
@@ -27,6 +33,7 @@
         [module]="modulo"
         (selected)="seleccionarModulo($event)"
         [routerLink]="modulo.path"
+        [icon]="modulo.icon"
       >
       </app-admin-module-card>
     </div>

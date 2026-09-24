@@ -1,13 +1,19 @@
-import { Component, Input } from "@angular/core";
-import { Router } from "@angular/router";
-import { Auth } from "@app/services";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IonButton, IonIcon, ModalController } from "@ionic/angular";
 import { addIcons } from "ionicons";
-import { logOutOutline } from "ionicons/icons";
+import {
+  logOutOutline,
+  arrowBackOutline,
+  trashOutline,
+  restaurantOutline,
+  star,
+  starOutline,
+  helpCircleOutline,
+} from "ionicons/icons";
 
-@Component({ 
-  selector: 'app-confirm-dialog', 
-  imports: [IonButton, IonIcon ], 
+@Component({
+  selector: 'app-confirm-dialog',
+  imports: [IonButton, IonIcon ],
   templateUrl: './confirm-cartel.component.html',
   styleUrl: './confirm-cartel.component.scss' })
 
@@ -20,13 +26,21 @@ export class ConfirmDialogComponent {
   @Input() colorConfirmar: 'danger' | 'primary' = 'danger';
   @Input() icono = 'log-out-outline';
   @Input() esContenidoModal = false;
-  constructor(
-    private modalController: ModalController,
-    private router: Router,
-    private auth: Auth
-  ) {
+
+  // Se emite cuando el usuario confirma la acción en el modal.
+  // Quien use este botón decide qué hacer al confirmar (logout,
+  // borrar, guardar, etc.) — este componente solo pregunta.
+  @Output() confirmado = new EventEmitter<void>();
+
+  constructor(private modalController: ModalController) {
     addIcons({
-      'log-out-outline': logOutOutline
+      'log-out-outline': logOutOutline,
+      'arrow-back-outline': arrowBackOutline,
+      'trash-outline': trashOutline,
+      'restaurant-outline': restaurantOutline,
+      star,
+      'star-outline': starOutline,
+      'help-circle-outline': helpCircleOutline,
     });
   }
 
@@ -55,7 +69,7 @@ export class ConfirmDialogComponent {
     const { role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      await this.cerrarSesion();
+      this.confirmado.emit();
     }
   }
 
@@ -65,12 +79,5 @@ export class ConfirmDialogComponent {
 
   async cancelar() {
     await this.modalController.dismiss(null, 'cancel');
-  }
-
-  private async cerrarSesion() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('mesa');
-    await this.auth.logout();
-    await this.router.navigate(['/login']);
   }
 }

@@ -1,5 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
+
+import {
+  CommonModule,
+} from '@angular/common';
 
 import {
   FormControl,
@@ -21,19 +28,41 @@ import {
   IonModal,
 } from '@ionic/angular';
 
-import { Router } from '@angular/router';
+import {
+  Router,
+} from '@angular/router';
 
-import { PersonalStepPage } from './steps/personal-step/personal-step.page';
-import { CredentialsStepPage } from './steps/credentials-step/credentials-step.page';
-import { ProfileStepPage } from './steps/profile-step/profile-step.page';
+import {
+  PersonalStepPage,
+} from './steps/personal-step/personal-step.page';
 
-import { Auth } from '@app/services';
-import { EPerfilUsuario } from '@app/enums';
-import { ProgressBarComponent } from '@app/components';
+import {
+  CredentialsStepPage,
+} from './steps/credentials-step/credentials-step.page';
 
-import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import {
+  ProfileStepPage,
+} from './steps/profile-step/profile-step.page';
 
-import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
+import {
+  Auth,
+} from '@app/services';
+
+import {
+  EPerfilUsuario,
+} from '@app/enums';
+
+import {
+  ProgressBarComponent,
+} from '@app/components';
+
+import {
+  ConfirmVolverComponent,
+} from '@app/components/ui/confirm-volver/confirm-volver.component';
+
+import {
+  ConfirmDialogComponent,
+} from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 
 
 const NAME_PATTERN =
@@ -49,12 +78,17 @@ const PASSWORD_PATTERN =
 @Component({
   selector: 'app-register',
 
-  templateUrl: './register.page.html',
+  templateUrl:
+    './register.page.html',
 
-  styleUrls: ['./register.page.scss'],
+  styleUrls: [
+    './register.page.scss',
+  ],
 
   imports: [
+
     CommonModule,
+
     ReactiveFormsModule,
 
     IonContent,
@@ -75,6 +109,7 @@ const PASSWORD_PATTERN =
 
     ConfirmVolverComponent,
     ConfirmDialogComponent,
+
   ],
 })
 export class RegisterPage {
@@ -86,32 +121,42 @@ export class RegisterPage {
         new FormGroup({
 
           name:
-            new FormControl('', [
-              Validators.required,
-              Validators.minLength(2),
-              Validators.maxLength(50),
-              Validators.pattern(
-                NAME_PATTERN
-              ),
-            ]),
+            new FormControl(
+              '',
+              [
+                Validators.required,
+                Validators.minLength(2),
+                Validators.maxLength(50),
+                Validators.pattern(
+                  NAME_PATTERN
+                ),
+              ]
+            ),
 
           lastName:
-            new FormControl('', [
-              Validators.required,
-              Validators.minLength(2),
-              Validators.maxLength(50),
-              Validators.pattern(
-                NAME_PATTERN
-              ),
-            ]),
+            new FormControl(
+              '',
+              [
+                Validators.required,
+                Validators.minLength(2),
+                Validators.maxLength(50),
+                Validators.pattern(
+                  NAME_PATTERN
+                ),
+              ]
+            ),
 
           dni:
-            new FormControl('', [
-              Validators.required,
-              Validators.pattern(
-                DNI_PATTERN
-              ),
-            ]),
+            new FormControl(
+              '',
+              [
+                Validators.required,
+                Validators.pattern(
+                  DNI_PATTERN
+                ),
+              ]
+            ),
+
         }),
 
 
@@ -119,19 +164,26 @@ export class RegisterPage {
         new FormGroup({
 
           email:
-            new FormControl('', [
-              Validators.required,
-              Validators.email,
-            ]),
+            new FormControl(
+              '',
+              [
+                Validators.required,
+                Validators.email,
+              ]
+            ),
 
           password:
-            new FormControl('', [
-              Validators.required,
-              Validators.minLength(8),
-              Validators.pattern(
-                PASSWORD_PATTERN
-              ),
-            ]),
+            new FormControl(
+              '',
+              [
+                Validators.required,
+                Validators.minLength(8),
+                Validators.pattern(
+                  PASSWORD_PATTERN
+                ),
+              ]
+            ),
+
         }),
 
 
@@ -143,7 +195,9 @@ export class RegisterPage {
               null,
               Validators.required
             ),
+
         }),
+
     });
 
 
@@ -159,15 +213,15 @@ export class RegisterPage {
     signal<boolean>(false);
 
 
-  private readonly _authService =
+  private readonly authService =
     inject(Auth);
 
 
-  private readonly _router =
+  private readonly router =
     inject(Router);
 
 
-  private readonly _toastController =
+  private readonly toastController =
     inject(ToastController);
 
 
@@ -293,7 +347,7 @@ export class RegisterPage {
       this.form.markAsPending();
 
 
-      await this._authService.register(
+      await this.authService.register(
         credentials,
         EPerfilUsuario.ClienteRegistrado
       );
@@ -313,19 +367,20 @@ export class RegisterPage {
 
 
       const toast =
-        await this._toastController
+        await this.toastController
           .create({
             message:
               'No pudimos completar el registro. Intentá nuevamente más tarde.',
 
-            duration: 5000,
+            duration:
+              5000,
 
-            position: 'top',
+            position:
+              'top',
+
           });
 
-
       await toast.present();
-
 
     } finally {
 
@@ -336,6 +391,17 @@ export class RegisterPage {
   }
 
 
+  cancelarRegistro(): void {
+
+    void this.router.navigateByUrl(
+      '/login',
+      {
+        replaceUrl: true,
+      }
+    );
+  }
+
+
   cerrarRegistroExitoso(): void {
 
     this.mostrarRegistroExitoso.set(
@@ -343,11 +409,12 @@ export class RegisterPage {
     );
 
 
-    void this._router.navigateByUrl(
+    void this.router.navigateByUrl(
       '/login',
       {
         replaceUrl: true,
       }
     );
   }
+
 }
