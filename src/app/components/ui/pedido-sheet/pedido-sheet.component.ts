@@ -9,23 +9,6 @@ import {
   CurrencyPipe,
 } from '@angular/common';
 
-import {
-  IonIcon,
-} from '@ionic/angular';
-
-import {
-  addIcons,
-} from 'ionicons';
-
-import {
-  addOutline,
-  removeOutline,
-  trashOutline,
-  closeOutline,
-  timeOutline,
-  chevronForwardOutline,
-} from 'ionicons/icons';
-
 import { Router } from '@angular/router';
 
 import { Carrito } from '@app/pages/carrito/carrito';
@@ -34,18 +17,14 @@ import {
   PedidoSheetService,
 } from '@app/services/pedido-sheet/pedido-sheet';
 
-
 @Component({
-  selector:
-    'app-pedido-sheet',
+  selector: 'app-pedido-sheet',
 
-  standalone:
-    true,
+  standalone: true,
 
   imports: [
     CommonModule,
     CurrencyPipe,
-    IonIcon,
   ],
 
   templateUrl:
@@ -59,14 +38,11 @@ export class PedidoSheetComponent {
   carrito =
     inject(Carrito);
 
-
   sheet =
     inject(PedidoSheetService);
 
-
   private router =
     inject(Router);
-
 
   /*
    * ==========================================
@@ -77,43 +53,17 @@ export class PedidoSheetComponent {
   cerrando =
     signal(false);
 
-
   desplazamientoY =
     signal(0);
-
 
   animacionCierre =
     signal(false);
 
-
   private inicioY = 0;
-
 
   private readonly UMBRAL_CIERRE = 90;
 
-
   private readonly DURACION_CIERRE = 280;
-
-
-  constructor() {
-
-    addIcons({
-
-      addOutline,
-
-      removeOutline,
-
-      trashOutline,
-
-      closeOutline,
-
-      timeOutline,
-
-      chevronForwardOutline,
-
-    });
-
-  }
 
 
   /*
@@ -128,9 +78,7 @@ export class PedidoSheetComponent {
       return;
     }
 
-
     this.iniciarCierre();
-
   }
 
 
@@ -146,7 +94,6 @@ export class PedidoSheetComponent {
 
     this.animacionCierre.set(true);
 
-
     /*
      * La transición CSS hace que el sheet
      * termine de salir hacia abajo.
@@ -155,7 +102,6 @@ export class PedidoSheetComponent {
       window.innerHeight
     );
 
-
     /*
      * Esperamos exactamente la duración
      * de la animación antes de ocultarlo.
@@ -163,7 +109,6 @@ export class PedidoSheetComponent {
     setTimeout(() => {
 
       this.sheet.cerrar();
-
 
       /*
        * Volvemos a dejar todo preparado
@@ -176,7 +121,6 @@ export class PedidoSheetComponent {
       this.cerrando.set(false);
 
     }, this.DURACION_CIERRE);
-
   }
 
 
@@ -199,16 +143,13 @@ export class PedidoSheetComponent {
             idProducto
         );
 
-
     if (!item) {
       return;
     }
 
-
     this.carrito.agregar(
       item.producto
     );
-
   }
 
 
@@ -225,7 +166,6 @@ export class PedidoSheetComponent {
     this.carrito.quitar(
       idProducto
     );
-
   }
 
 
@@ -242,7 +182,6 @@ export class PedidoSheetComponent {
     this.carrito.eliminar(
       idProducto
     );
-
   }
 
 
@@ -260,7 +199,6 @@ export class PedidoSheetComponent {
      */
     this.iniciarCierre();
 
-
     setTimeout(() => {
 
       void this.router.navigate([
@@ -268,7 +206,6 @@ export class PedidoSheetComponent {
       ]);
 
     }, this.DURACION_CIERRE);
-
   }
 
 
@@ -286,20 +223,16 @@ export class PedidoSheetComponent {
       return;
     }
 
-
     this.inicioY =
       evento.touches[0]?.clientY ?? 0;
 
-
     this.desplazamientoY.set(0);
-
 
     /*
      * Durante el arrastre NO queremos
      * transición CSS.
      */
     this.animacionCierre.set(false);
-
   }
 
 
@@ -317,14 +250,11 @@ export class PedidoSheetComponent {
       return;
     }
 
-
     const actualY =
       evento.touches[0]?.clientY ?? 0;
 
-
     const delta =
       actualY - this.inicioY;
-
 
     /*
      * Solamente permitimos arrastrar
@@ -335,9 +265,7 @@ export class PedidoSheetComponent {
       this.desplazamientoY.set(0);
 
       return;
-
     }
-
 
     /*
      * Quitamos la resistencia a partir
@@ -346,16 +274,15 @@ export class PedidoSheetComponent {
      */
     const desplazamiento =
       delta > 180
-        ? 180 + (
+        ? 180 +
+          (
             delta - 180
           ) * 0.35
         : delta;
 
-
     this.desplazamientoY.set(
       desplazamiento
     );
-
   }
 
 
@@ -373,14 +300,11 @@ export class PedidoSheetComponent {
       return;
     }
 
-
     const finY =
       evento.changedTouches[0]?.clientY ?? 0;
 
-
     const delta =
       finY - this.inicioY;
-
 
     /*
      * Superó el umbral:
@@ -394,9 +318,7 @@ export class PedidoSheetComponent {
       this.iniciarCierre();
 
       return;
-
     }
-
 
     /*
      * No llegó al umbral:
@@ -405,7 +327,5 @@ export class PedidoSheetComponent {
     this.animacionCierre.set(true);
 
     this.desplazamientoY.set(0);
-
   }
-
 }

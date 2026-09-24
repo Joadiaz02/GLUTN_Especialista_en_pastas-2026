@@ -8,7 +8,6 @@
     "
   >
 
-
     <!-- ====================================
          FONDO
     ===================================== -->
@@ -16,17 +15,13 @@
     <button
       type="button"
 
-      class="
-        pedido-backdrop
-      "
+      class="pedido-backdrop"
 
       [class.pedido-backdrop--cerrando]="
         cerrando()
       "
 
-      aria-label="
-        Cerrar pedido
-      "
+      aria-label="Cerrar pedido"
 
       (click)="cerrar()"
     ></button>
@@ -37,9 +32,7 @@
     ===================================== -->
 
     <section
-      class="
-        pedido-sheet
-      "
+      class="pedido-sheet"
 
       [class.pedido-sheet--arrastrando]="
         !animacionCierre()
@@ -68,13 +61,12 @@
       "
     >
 
-
-      <!-- MANIJA -->
+      <!-- ==================================
+           MANIJA
+      =================================== -->
 
       <div
-        class="
-          pedido-handle
-        "
+        class="pedido-handle"
       >
 
         <span></span>
@@ -82,38 +74,33 @@
       </div>
 
 
-      <!-- HEADER -->
+      <!-- ==================================
+           HEADER
+      =================================== -->
 
       <header
-        class="
-          pedido-header
-        "
+        class="pedido-header"
       >
 
         <h2>
           Tu pedido
         </h2>
 
-
         <button
           type="button"
 
-          class="
-            pedido-cerrar
-          "
+          class="pedido-cerrar"
 
           (click)="cerrar()"
 
-          aria-label="
-            Cerrar pedido
-          "
+          aria-label="Cerrar pedido"
         >
 
-          <ion-icon
-            name="
-              close-outline
-            "
-          ></ion-icon>
+          <img
+            src="assets/icons/close.svg"
+
+            alt=""
+          />
 
         </button>
 
@@ -125,9 +112,7 @@
       =================================== -->
 
       <div
-        class="
-          pedido-items
-        "
+        class="pedido-items"
       >
 
         @if (
@@ -135,9 +120,7 @@
         ) {
 
           <div
-            class="
-              pedido-vacio
-            "
+            class="pedido-vacio"
           >
 
             <p>
@@ -155,18 +138,13 @@
         ) {
 
           <article
-            class="
-              pedido-item
-            "
+            class="pedido-item"
           >
-
 
             <!-- FOTO -->
 
             <img
-              class="
-                pedido-item__imagen
-              "
+              class="pedido-item__imagen"
 
               [src]="
                 item.producto.foto_1
@@ -181,9 +159,7 @@
             <!-- INFO -->
 
             <div
-              class="
-                pedido-item__info
-              "
+              class="pedido-item__info"
             >
 
               <h3>
@@ -209,11 +185,8 @@
               <!-- CONTROLES -->
 
               <div
-                class="
-                  pedido-item__controles
-                "
+                class="pedido-item__controles"
               >
-
 
                 <!-- ELIMINAR -->
 
@@ -236,11 +209,11 @@
                   "
                 >
 
-                  <ion-icon
-                    name="
-                      trash-outline
-                    "
-                  ></ion-icon>
+                  <img
+                    src="assets/icons/trash.svg"
+
+                    alt=""
+                  />
 
                 </button>
 
@@ -250,9 +223,7 @@
                 <button
                   type="button"
 
-                  class="
-                    control
-                  "
+                  class="control"
 
                   (click)="
                     disminuir(
@@ -265,19 +236,19 @@
                   "
                 >
 
-                  <ion-icon
-                    name="
-                      remove-outline
-                    "
-                  ></ion-icon>
+                  <img
+                    src="assets/icons/minus.svg"
+
+                    alt=""
+                  />
 
                 </button>
 
 
+                <!-- CANTIDAD -->
+
                 <span
-                  class="
-                    cantidad-item
-                  "
+                  class="cantidad-item"
                 >
 
                   {{
@@ -308,11 +279,11 @@
                   "
                 >
 
-                  <ion-icon
-                    name="
-                      add-outline
-                    "
-                  ></ion-icon>
+                  <img
+                    src="assets/icons/add.svg"
+
+                    alt=""
+                  />
 
                 </button>
 
@@ -336,24 +307,18 @@
       ) {
 
         <div
-          class="
-            pedido-resumen
-          "
+          class="pedido-resumen"
         >
-
 
           <!-- TOTAL -->
 
           <div
-            class="
-              pedido-total
-            "
+            class="pedido-total"
           >
 
             <span>
               Total
             </span>
-
 
             <strong>
 
@@ -373,17 +338,14 @@
           <!-- TIEMPO -->
 
           <div
-            class="
-              pedido-tiempo
-            "
+            class="pedido-tiempo"
           >
 
-            <ion-icon
-              name="
-                time-outline
-              "
-            ></ion-icon>
+            <img
+              src="assets/icons/clock.svg"
 
+              alt=""
+            />
 
             <div>
 
@@ -391,7 +353,6 @@
                 Tiempo estimado de preparación
                 (máximo)
               </span>
-
 
               <strong>
 
@@ -414,9 +375,7 @@
           <button
             type="button"
 
-            class="
-              continuar-pedido
-            "
+            class="continuar-pedido"
 
             (click)="
               continuarPedido()
@@ -427,12 +386,11 @@
               Continuar pedido
             </span>
 
+            <img
+              src="assets/icons/chevron-right.svg"
 
-            <ion-icon
-              name="
-                chevron-forward-outline
-              "
-            ></ion-icon>
+              alt=""
+            />
 
           </button>
 

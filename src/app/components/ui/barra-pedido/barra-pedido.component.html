@@ -2,21 +2,27 @@
 
   <div class="barra-pedido">
 
-
-    <!-- CARRITO -->
+    <!-- ==================================
+         CARRITO
+    =================================== -->
 
     <div class="barra-carrito-icono">
+
+      <img
+        src="assets/icons/cart.svg"
+        alt=""
+      />
 
       <span class="contador">
         {{ carrito.totalItems() }}
       </span>
 
-      🛒
-
     </div>
 
 
-    <!-- INFORMACIÓN -->
+    <!-- ==================================
+         INFORMACIÓN
+    =================================== -->
 
     <div class="barra-pedido__info">
 
@@ -36,10 +42,15 @@
         Total:
 
         <strong>
+
           {{
             carrito.importeTotal()
-              | currency:'ARS':'$':'1.0-0'
+              | currency:
+                'ARS':
+                '$':
+                '1.0-0'
           }}
+
         </strong>
 
       </span>
@@ -47,13 +58,17 @@
     </div>
 
 
-    <!-- TIEMPO -->
+    <!-- ==================================
+         TIEMPO
+    =================================== -->
 
     <div class="barra-tiempo">
 
-      <span class="barra-tiempo__icon">
-        🕐
-      </span>
+      <img
+        class="barra-tiempo__icon"
+        src="assets/icons/clock.svg"
+        alt=""
+      />
 
       <span>
         {{ tiempoTexto() }}
@@ -62,7 +77,9 @@
     </div>
 
 
-    <!-- BOTÓN -->
+    <!-- ==================================
+         BOTÓN
+    ================================== -->
 
     <ion-button
       shape="round"
@@ -72,9 +89,11 @@
 
       {{ textoBoton }}
 
-      <span class="flecha">
-        ›
-      </span>
+      <img
+        class="barra-boton__flecha"
+        src="assets/icons/chevron-right.svg"
+        alt=""
+      />
 
     </ion-button>
 
