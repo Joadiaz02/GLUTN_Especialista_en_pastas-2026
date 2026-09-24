@@ -20,15 +20,10 @@ export class Auth {
   private readonly storageService =
     inject(Storage);
 
-<<<<<<< HEAD
-  usuarioActual = signal<any>(null);
-=======
   // Signal en vez de variable plana: cualquier componente que lo lea
   // en su template (usuarioActual()) se actualiza SOLO cuando cambia.
   usuarioActual =
     signal<any>(null);
->>>>>>> origin/Mariano-Pastor
-
 
   constructor() {
     // onAuthStateChange es el evento oficial de Supabase: se dispara
