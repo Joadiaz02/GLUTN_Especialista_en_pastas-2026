@@ -13,6 +13,12 @@ export class Vibracion {
     this.reproducir('assets/sounds/spongebob-fail.mp3');
   }
 
+  // Solo vibra, sin sonido: para errores chicos y repetidos, como un campo
+  // de formulario que quedó inválido.
+  async errorValidacion(durationMs = 200): Promise<void> {
+    await Haptics.vibrate({ duration: durationMs });
+  }
+
   async confirmacion(durationMs = 100): Promise<void> {
     await Haptics.vibrate({ duration: durationMs });
     this.reproducir('assets/sounds/among-us.mp3');

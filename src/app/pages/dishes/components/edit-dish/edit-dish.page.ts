@@ -25,12 +25,14 @@ import { UploaderComponent } from '../create-dish/uploader/uploader.component';
 import { Storage, Plato, Confirm, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { VibrarErrores } from '@app/directives/vibrar-errores';
 
 @Component({
   selector: 'app-edit-dish',
   templateUrl: './edit-dish.page.html',
   styleUrls: ['./edit-dish.page.scss'],
   imports: [
+    VibrarErrores,
     IonContent,
     IonHeader,
     IonTitle,

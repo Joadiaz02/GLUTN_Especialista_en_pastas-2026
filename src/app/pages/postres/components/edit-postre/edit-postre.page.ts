@@ -25,12 +25,14 @@ import { UploaderComponent } from '../../../dishes/components/create-dish/upload
 import { Storage, Postre, Confirm, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { VibrarErrores } from '@app/directives/vibrar-errores';
 
 @Component({
   selector: 'app-edit-postre',
   templateUrl: './edit-postre.page.html',
   styleUrls: ['./edit-postre.page.scss'],
   imports: [
+    VibrarErrores,
     IonContent,
     IonHeader,
     IonTitle,

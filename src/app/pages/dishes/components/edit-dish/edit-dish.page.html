@@ -26,7 +26,7 @@
     <app-uploader [initialPreview]="fotoActual3()" (fileSelected)="onPhotoSelected(2, $event)" />
   </div>
 
-  <form [formGroup]="form" class="fields">
+  <form [formGroup]="form" class="fields" appVibrarErrores>
     <div class="field">
       <label class="field__label">Nombre</label>
 
