@@ -6,16 +6,13 @@
   --padding-bottom: 24px;
 }
 
-// El wrapper ocupa siempre el 100% del ancho/alto disponibles del
-// ion-content (sin importar el tamaño de pantalla) y centra todo el
-// juego, tanto horizontal como verticalmente.
-// Ojo: min-height: 100% (contra un contenedor de altura "auto" que
-// scrollea) puede romper el cálculo de scroll de ion-content y cortar
-// el final del contenido. 100vh es una referencia fija, nunca corta.
+// El wrapper ocupa el alto disponible del ion-content (ya descontados
+// el header y el padding), así el juego llena la pantalla sin scroll.
+// Con 100vh se sumaba la altura del header y aparecía un scroll de más.
+// Se descuenta el safe-area de abajo (barra de navegación del celular).
 .ruleta-wrapper {
   width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: calc(100% - env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -27,15 +24,15 @@
   font-size: 16px;
   font-weight: 600;
   color: var(--ion-text-color);
-  margin: 0 0 24px;
+  margin: 0 0 min(24px, 3vh);
   line-height: 1.4;
 }
 
 .ruleta-contenedor {
   position: relative;
-  width: 260px;
-  height: 260px;
-  margin-bottom: 20px;
+  width: min(260px, 28vh);
+  height: min(260px, 28vh);
+  margin-bottom: min(20px, 3vh);
 }
 
 .ruleta-puntero {
@@ -136,4 +133,33 @@
   height: 52px;
   font-size: 18px;
   font-weight: 600;
+}
+
+// En pantallas bajas el cartel de resultado no entra junto con la rueda
+// en tamaño normal: se achican rueda, título y márgenes (el logo es fijo).
+@media (max-height: 800px) {
+  .titulo-pagina {
+    margin-bottom: 6px;
+    font-size: 20px;
+  }
+
+  .ruleta-contenedor {
+    width: 23vh;
+    height: 23vh;
+  }
+
+  .ruleta-etiqueta__simbolo {
+    margin-top: 14px;
+    font-size: 20px;
+  }
+
+  .ruleta-resultado {
+    font-size: 14px;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+
+  .ruleta-boton {
+    margin-top: 4px;
+  }
 }

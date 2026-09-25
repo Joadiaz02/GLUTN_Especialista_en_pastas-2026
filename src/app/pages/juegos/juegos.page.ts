@@ -1,11 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import {
   IonContent,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
-  IonBackButton,
   IonButton,
   IonModal,
   ToastController,
@@ -13,7 +8,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { ConfigJuego, Juegos, LISTA_JUEGOS, REGLA_DESCUENTO } from '@app/services';
 import { Auth } from '../../services/auth/auth';
-import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
+import { HeaderComponent } from '@app/components/ui/header/header.component';
 
 @Component({
   selector: 'app-juegos',
@@ -21,16 +16,11 @@ import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confi
   templateUrl: './juegos.page.html',
   styleUrls: ['./juegos.page.scss'],
   imports: [
+    HeaderComponent,
     IonContent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
-    IonBackButton,
     IonButton,
     IonModal,
     RouterLink,
-    ConfirmDialogComponent,
   ],
 })
 export class JuegosPage {
@@ -66,6 +56,10 @@ export class JuegosPage {
 
   cerrarAyuda(): void {
     this.ayudaAbierta.set(false);
+  }
+
+  volver(): void {
+    void this._router.navigate(['/home']);
   }
 
   async cerrarSesion(): Promise<void> {

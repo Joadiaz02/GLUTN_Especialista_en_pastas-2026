@@ -6,14 +6,13 @@
   --padding-bottom: 24px;
 }
 
+// El wrapper ocupa el alto disponible del ion-content (ya descontados
+// el header y el padding), así el juego llena la pantalla sin scroll.
+// Con 100vh se sumaba la altura del header y aparecía un scroll de más.
+// Se descuenta el safe-area de abajo (barra de navegación del celular).
 .sopa-wrapper {
   width: 100%;
-  // min-height: 100% (contra un contenedor de altura "auto" que scrollea)
-  // puede romper el cálculo de scroll de ion-content y cortar el final
-  // del contenido. 100vh es una referencia fija, así que nunca corta,
-  // como mucho deja un poco de aire de más abajo.
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: calc(100% - env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,9 +82,9 @@
   display: grid;
   gap: 6px;
   width: 100%;
-  max-width: 230px;
+  max-width: min(230px, 34vh);
   aspect-ratio: 1 / 1;
-  margin-bottom: 20px;
+  margin-bottom: min(20px, 3vh);
 }
 
 .sopa-celda {
@@ -159,4 +158,12 @@
   height: 52px;
   font-size: 18px;
   font-weight: 600;
+}
+
+// Pantallas bajas: título más chico para que el juego entre sin scroll.
+@media (max-height: 700px) {
+  .titulo-pagina {
+    margin-bottom: 6px;
+    font-size: 20px;
+  }
 }

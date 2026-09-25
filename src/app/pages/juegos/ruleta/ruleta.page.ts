@@ -1,17 +1,12 @@
 import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import {
   IonContent,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
   IonButton,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CONFIG_JUEGOS, Juegos, Vibracion } from '@app/services';
-import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { Auth } from '../../../services/auth/auth';
+import { HeaderComponent } from '@app/components/ui/header/header.component';
 
 type EstadoRuleta = 'quieta' | 'girando' | 'frenando' | 'resultado';
 type ResultadoSector = 'gana' | 'pierde' | 'reintenta';
@@ -51,14 +46,9 @@ const VUELTAS_EXTRA_AL_FRENAR = 5;
   templateUrl: './ruleta.page.html',
   styleUrls: ['./ruleta.page.scss'],
   imports: [
+    HeaderComponent,
     IonContent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
     IonButton,
-    ConfirmVolverComponent,
-    ConfirmDialogComponent,
   ],
 })
 export class RuletaPage implements OnDestroy {
