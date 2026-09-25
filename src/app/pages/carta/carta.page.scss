@@ -1,20 +1,44 @@
 .carta-content {
   --background: var(--ion-background-color);
-  --padding-top: 32px;
+  --padding-top: min(16px, 2vh);
   --padding-start: 20px;
   --padding-end: 20px;
+  --padding-bottom: calc(min(24px, 2.5vh) + env(safe-area-inset-bottom));
 }
 
-.carta-titulo {
-  text-align: center;
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--ion-text-color);
-  margin-bottom: 32px;
+// Logo fijo arriba y los tres botones se reparten el alto que queda.
+.carta-wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// Con productos en el carrito aparece la barra del pedido abajo (fija):
+// se le deja lugar para que no tape el último botón.
+.carta-wrapper--con-barra {
+  padding-bottom: 88px;
 }
 
 .carta-botones {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  justify-content: center;
+  gap: min(16px, 1.8vh);
+}
+
+// cqh = % del alto del propio botón: la letra acompaña su tamaño.
+.carta-boton {
+  flex: 1 1 0;
+  min-height: 52px;
+  max-height: 140px;
+  width: 90%;
+  margin: 0 auto;
+  container-type: size;
+  --border-radius: 18px;
+  font-weight: 600;
+}
+
+.carta-boton__texto {
+  font-size: clamp(18px, 28cqh, 30px);
 }
