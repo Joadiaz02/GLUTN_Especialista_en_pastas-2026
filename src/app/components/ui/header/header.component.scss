@@ -1,0 +1,6 @@
+// 10px de aire entre el borde de arriba (o la barra de estado) y el header.
+:host {
+  display: block;
+  padding-top: 10px;
+  background: var(--ion-background-color);
+}

@@ -69,3 +69,21 @@ ion-content {
   width: 160px;
   margin: 40px auto 30px auto;
 }
+
+// Logo de tamaño fijo para las pantallas con app-header: no cambia con
+// el alto de la pantalla (lo que se ajusta es el resto del contenido).
+.logo-container.logo-fijo {
+  flex-shrink: 0;
+  width: 140px;
+  margin: 0 auto 12px;
+}
+
+// Título de la pantalla, centrado debajo del logo (va con app-header).
+.titulo-pagina {
+  margin: 0 0 16px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ion-text-color);
+}
