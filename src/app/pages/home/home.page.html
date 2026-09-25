@@ -1,188 +1,285 @@
-<ion-content>
-
-  <!-- LOGIN / LOGOUT -->
+<app-header
+  [mensajeVolver]="mensajeVolver()"
+  [mostrarCerrarSesion]="isLoggedIn()"
+  (volver)="volver()"
+  (cerrarSesion)="cerrarSesion()"
+>
   @if (!isLoggedIn()) {
-    <ion-button
-      class="login-btn"
-      (click)="irALogin()"
-    >
+    <ion-button headerFin class="login-btn" (click)="irALogin()">
       Ingresar
     </ion-button>
   }
+</app-header>
 
-  @if (isLoggedIn()) {
-    <div class="logout-button">
-      <app-confirm-dialog
-        titulo="¿Cerrar sesión?"
-        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
-        textoConfirmar="Cerrar sesión"
-        icono="log-out-outline"
-        (confirmado)="cerrarSesion()"
-      ></app-confirm-dialog>
-    </div>
-  }
+<ion-content class="home-content">
+  <div class="home-wrapper">
+    <!-- LOGO Y BOTONES PRINCIPALES -->
+    <div class="home-botones">
+      <div class="logo-container logo-fijo">
+        <img
+          src="assets/images/LOGO-GLUTN.png"
+          alt="GLUTN - Especialista en Pastas"
+          class="logo"
+        />
+      </div>
 
-  <!-- LOGO -->
-  <div class="logo-container">
-    <img
-      src="assets/images/LOGO-GLUTN.png"
-      alt="GLUTN - Especialista en Pastas"
-      class="logo"
-    />
-  </div>
+      @if (botones().reservas) {
+        <ion-button class="home-button" expand="block" shape="round" (click)="goToReservas()">
+          <span class="home-button__texto">Reservas</span>
+        </ion-button>
+      }
 
-  <!-- BOTONES PRINCIPALES -->
-  <ion-button class="home-button" expand="block" shape="round" (click)="goToReservas()">
-    Reservas
-  </ion-button>
+      <ion-button class="home-button" expand="block" shape="round" (click)="abrirDestacados()">
+        <span class="home-button__texto">Productos destacados</span>
+      </ion-button>
 
-  <ion-button class="home-button" expand="block" shape="round" (click)="toggleDestacados()">
-    Productos destacados
-  </ion-button>
+      <ion-button class="home-button" expand="block" shape="round" (click)="abrirQuienesSomos()">
+        <span class="home-button__texto">Quienes somos</span>
+      </ion-button>
 
-  @if (showDestacados) {
-    <div class="destacados">
-      <h2 class="destacados__titulo">Productos destacados</h2>
+      @if (botones().carta) {
+        <ion-button class="home-button" expand="block" shape="round" (click)="goToCarta()">
+          <span class="home-button__texto">Carta</span>
+        </ion-button>
+      }
 
-      @if (isLoadingDestacados()) {
-        <div class="destacado-card destacado-card--skeleton">
-          <ion-skeleton-text [animated]="true" class="destacado-card__imagen"></ion-skeleton-text>
-          <ion-skeleton-text [animated]="true" style="width: 70%; height: 14px;"></ion-skeleton-text>
-          <ion-skeleton-text [animated]="true" style="width: 40%; height: 14px;"></ion-skeleton-text>
-        </div>
-      } @else if (destacados().length === 0) {
-        <p class="destacados__vacio">Todavía no hay sugerencias del chef.</p>
-      } @else if (productoDestacadoActual(); as producto) {
-        <div class="destacados__carrusel">
-          <button
-            type="button"
-            class="destacados__flecha"
-            [disabled]="destacados().length < 2"
-            (click)="anteriorDestacado()"
-            aria-label="Producto destacado anterior"
-          >
-            <ion-icon name="chevron-back-outline"></ion-icon>
-          </button>
+      @if (botones().juegos) {
+        <ion-button class="home-button" expand="block" shape="round" (click)="goToJuegos()">
+          <span class="home-button__texto">Juegos</span>
+        </ion-button>
+      }
 
-          <div class="destacado-card">
-            <img class="destacado-card__imagen" [src]="fotoDestacadaActual()" [alt]="producto.nombre">
-            <h3 class="destacado-card__nombre">{{ producto.nombre }}</h3>
-            <span class="destacado-card__precio">{{ producto.precio | currency:'ARS':'$' }}</span>
-            <p class="destacado-card__descripcion">{{ producto.descripcion }}</p>
-          </div>
+      @if (botones().encuestas) {
+        <ion-button class="home-button" expand="block" shape="round" (click)="goToEncuestas()">
+          <span class="home-button__texto">Encuestas</span>
+        </ion-button>
+      }
 
-          <button
-            type="button"
-            class="destacados__flecha"
-            [disabled]="destacados().length < 2"
-            (click)="siguienteDestacado()"
-            aria-label="Siguiente producto destacado"
-          >
-            <ion-icon name="chevron-forward-outline"></ion-icon>
-          </button>
-        </div>
-
-        @if (destacados().length > 1) {
-          <div class="destacados__paginacion">
-            @for (item of destacados(); track item.id_carta; let i = $index) {
-              <span
-                class="destacados__punto"
-                [class.destacados__punto--activo]="i === indiceDestacado()"
-              ></span>
-            }
-          </div>
-        }
+      @if (botones().solicitarCuenta) {
+        <ion-button class="home-button" expand="block" shape="round" (click)="solicitarCuenta()">
+          <span class="home-button__texto">Solicitar cuenta</span>
+        </ion-button>
       }
     </div>
-  }
-
-  <ion-button class="home-button" expand="block" shape="round" (click)="toggleQuienesSomos()">
-    Quienes somos
-  </ion-button>
-
-  @if (showQuienesSomos) {
-    <div class="historia">
-      <h2>Quienes somos</h2>
-      <p>
-        Somos cuatro estudiantes de programación que,
-        entre parciales, commits y deploys, descubrieron que también compilaban buenas pastas.
-        Somos Joaquín, Javier, Mariano y Lucas, un equipo que debuggea recetas, versiona sabores
-        y cocina con la misma pasión con la que escribe código.
-      </p>
-    </div>
-  }
-
-  <ion-button class="home-button" expand="block" shape="round" (click)="goToCarta()">
-    Carta
-  </ion-button>
-
-  <ion-button class="home-button" expand="block" shape="round" (click)="goToJuegos()">
-    Juegos
-  </ion-button>
-
-  @if (mostrarSolicitarCuenta()) {
-    <ion-button class="home-button" expand="block" shape="round" (click)="solicitarCuenta()">
-      Solicitar cuenta
-    </ion-button>
-  }
-
-  <ion-button class="home-button" expand="block" shape="round" (click)="goToEncuestas()">
-    Encuestas
-  </ion-button>
-
-  <!-- ESCÁNER CENTRADO SIMPLE -->
-  <div class="scan-access" (click)="goToScanner()">
-
-    <p class="scan-access__title">Escáner</p>
-
-    <div class="scan-access__icon">
-      <svg
-        width="40"
-        height="40"
-        viewBox="0 0 48 48"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <!-- Esquinas estilo Mercado Pago -->
-        <path d="M14 10H10V14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-        <path d="M34 10H38V14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-        <path d="M10 34V38H14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-        <path d="M34 38H38V34" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-
-        <!-- Cuadrado central QR -->
-        <rect
-          x="16"
-          y="16"
-          width="16"
-          height="16"
-          rx="4"
-          stroke="#ffffff"
-          stroke-width="2"
-        />
-      </svg>
-    </div>
   </div>
 
+  <!-- PRODUCTOS DESTACADOS -->
+  <ion-modal
+    class="home-modal"
+    [isOpen]="showDestacados()"
+    (didDismiss)="cerrarDestacados()"
+  >
+    <ng-template>
+      <div class="home-modal__contenido destacados">
+        <h2 class="destacados__titulo">Productos destacados</h2>
 
-  <!-- GLOBO DE CHAT -->
-  <div class="chat-bubble" (click)="goToChat()">
-    <p class="chat-bubble__title">Consultas</p>
+        @if (isLoadingDestacados()) {
+          <div class="destacado-card destacado-card--skeleton">
+            <ion-skeleton-text [animated]="true" class="destacado-card__imagen"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true" style="width: 70%; height: 14px;"></ion-skeleton-text>
+            <ion-skeleton-text [animated]="true" style="width: 40%; height: 14px;"></ion-skeleton-text>
+          </div>
+        } @else if (destacados().length === 0) {
+          <p class="destacados__vacio">Todavía no hay sugerencias del chef.</p>
+        } @else if (productoDestacadoActual(); as producto) {
+          <div class="destacados__carrusel">
+            <button
+              type="button"
+              class="destacados__flecha"
+              [disabled]="destacados().length < 2"
+              (click)="anteriorDestacado()"
+              aria-label="Producto destacado anterior"
+            >
+              <ion-icon name="chevron-back-outline"></ion-icon>
+            </button>
 
-    <div class="chat-bubble__circle">
-      <img src="assets/images/LOGO-GLUTN.png" alt="Chat GLUTN" />
-    </div>
+            <div class="destacado-card">
+              <img class="destacado-card__imagen" [src]="fotoDestacadaActual()" [alt]="producto.nombre">
+              <h3 class="destacado-card__nombre">{{ producto.nombre }}</h3>
+              <span class="destacado-card__precio">{{ producto.precio | currency:'ARS':'$' }}</span>
+              <p class="destacado-card__descripcion">{{ producto.descripcion }}</p>
+            </div>
 
-    <p class="chat-bubble__subtitle">Chat</p>
-  </div>
-  
-    @if (pedido.idUltimoPedido()) {
-      <div class="pedido-flotante-izq">
-        <p class="chat-bubble__title">Consulta</p>
-        <ion-button class="chat-bubble__circle" (click)="verEstadoPedido(pedido.idUltimoPedido()!)"><ion-icon name="time-outline" style="color: white; font-size: 100px;"></ion-icon></ion-button>
-        <p class="chat-bubble__subtitle">Pedido</p>
+            <button
+              type="button"
+              class="destacados__flecha"
+              [disabled]="destacados().length < 2"
+              (click)="siguienteDestacado()"
+              aria-label="Siguiente producto destacado"
+            >
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
+          </div>
+
+          @if (destacados().length > 1) {
+            <div class="destacados__paginacion">
+              @for (item of destacados(); track item.id_carta; let i = $index) {
+                <span
+                  class="destacados__punto"
+                  [class.destacados__punto--activo]="i === indiceDestacado()"
+                ></span>
+              }
+            </div>
+          }
+        }
+
+        <ion-button
+          class="home-modal__cerrar"
+          expand="block"
+          shape="round"
+          (click)="cerrarDestacados()"
+        >
+          Cerrar
+        </ion-button>
       </div>
-    }
-    
-  
+    </ng-template>
+  </ion-modal>
 
+  <!-- MESA ESCANEADA -->
+  <ion-modal
+    class="home-modal"
+    [isOpen]="mesaEscaneada() !== null"
+    (didDismiss)="cerrarMesa()"
+  >
+    <ng-template>
+      @if (mesaEscaneada(); as mesa) {
+        <div class="home-modal__contenido mesa-info">
+          <h2 class="mesa-info__titulo">Mesa {{ mesa.numero }}</h2>
+
+          <dl class="mesa-info__datos">
+            <dt>Tipo</dt>
+            <dd>{{ mesa.tipo }}</dd>
+
+            @if (esPersonal()) {
+              <dt>Lugares</dt>
+              <dd>{{ mesa.capacidad }}</dd>
+            }
+
+            @if (mesa.disponibilidad) {
+              <dt>Disponibilidad</dt>
+              <dd>{{ mesa.disponibilidad }}</dd>
+            }
+          </dl>
+
+          @if (!esPersonal()) {
+            <p class="mesa-info__nota">
+              Para usar esta mesa, el metre te la tiene que asignar.
+            </p>
+          }
+
+          <ion-button
+            class="home-modal__cerrar"
+            expand="block"
+            shape="round"
+            (click)="cerrarMesa()"
+          >
+            Cerrar
+          </ion-button>
+        </div>
+      }
+    </ng-template>
+  </ion-modal>
+
+  <!-- QUIENES SOMOS -->
+  <ion-modal
+    class="home-modal"
+    [isOpen]="showQuienesSomos()"
+    (didDismiss)="cerrarQuienesSomos()"
+  >
+    <ng-template>
+      <div class="home-modal__contenido historia">
+        <h2>Quienes somos</h2>
+        <p>
+          Somos cuatro estudiantes de programación que,
+          entre parciales, commits y deploys, descubrieron que también compilaban buenas pastas.
+          Somos Joaquín, Javier, Mariano y Lucas, un equipo que debuggea recetas, versiona sabores
+          y cocina con la misma pasión con la que escribe código.
+        </p>
+
+        <ion-button
+          class="home-modal__cerrar"
+          expand="block"
+          shape="round"
+          (click)="cerrarQuienesSomos()"
+        >
+          Cerrar
+        </ion-button>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>
+
+<ion-footer class="home-footer">
+  <!-- FOOTER: PEDIDO / ESCÁNER / CHAT -->
+  @if (hayAccesos()) {
+    <div class="home-accesos">
+      <div class="acceso">
+        @if (botones().estadoPedido && pedido.idUltimoPedido()) {
+          <button
+            type="button"
+            class="acceso__boton"
+            (click)="verEstadoPedido(pedido.idUltimoPedido()!)"
+          >
+            <p class="acceso__titulo">Consulta</p>
+            <span class="acceso__circulo">
+              <ion-icon name="time-outline"></ion-icon>
+            </span>
+            <p class="acceso__subtitulo">Pedido</p>
+          </button>
+        }
+      </div>
+
+      <div class="acceso">
+        @if (botones().escaner) {
+          <button
+            type="button"
+            class="acceso__boton"
+            [disabled]="escaneando()"
+            (click)="escanear()"
+          >
+            <p class="acceso__titulo">Escáner</p>
+            <span class="acceso__circulo">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 48 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <!-- Esquinas estilo Mercado Pago -->
+                <path d="M14 10H10V14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                <path d="M34 10H38V14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                <path d="M10 34V38H14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                <path d="M34 38H38V34" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+
+                <!-- Cuadrado central QR -->
+                <rect
+                  x="16"
+                  y="16"
+                  width="16"
+                  height="16"
+                  rx="4"
+                  stroke="#ffffff"
+                  stroke-width="2"
+                />
+              </svg>
+            </span>
+            <p class="acceso__subtitulo">QR</p>
+          </button>
+        }
+      </div>
+
+      <div class="acceso">
+        @if (botones().consultas) {
+          <button type="button" class="acceso__boton" (click)="goToChat()">
+            <p class="acceso__titulo">Consultas</p>
+            <span class="acceso__circulo">
+              <img src="assets/images/LOGO-GLUTN.png" alt="Chat GLUTN" />
+            </span>
+            <p class="acceso__subtitulo">Chat</p>
+          </button>
+        }
+      </div>
+    </div>
+  }
+</ion-footer>

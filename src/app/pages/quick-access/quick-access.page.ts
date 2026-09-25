@@ -193,6 +193,10 @@ export class QuickAccessPage {
       await this.pushNotificationService
         .inicializar();
 
+      this.auth.registrarPantallaIngreso(
+        '/acceso_rapido'
+      );
+
       const perfil =
         this.auth.obtenerPerfil(
           usuarioAutenticado

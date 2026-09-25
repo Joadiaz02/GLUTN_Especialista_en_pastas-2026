@@ -2,8 +2,21 @@
    GLOBAL
 ========================= */
 
-ion-content {
-  padding: 20px;
+.home-content {
+  --background: var(--ion-background-color);
+  --padding-top: min(16px, 2vh);
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-bottom: min(16px, 2vh);
+}
+
+// Entre el header y el footer: logo arriba y los botones visibles se
+// reparten todo el alto que queda. Así la pantalla siempre se ve llena,
+// haya 3 botones (cocinero) o 7 (cliente con pedido).
+.home-wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* =========================
@@ -11,36 +24,158 @@ ion-content {
 ========================= */
 
 .login-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-
-  --background: var(--ion-background-color); 
+  --background: var(--ion-background-color);
   --border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
-  padding: 6px 14px;
-}
-
-.logout-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 10;
 }
 
 /* =========================
    BOTONES HOME
 ========================= */
 
+.home-botones {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: min(14px, 1.2vh);
+}
+
+// Cada botón crece para llenar el espacio (con un tope para que no queden
+// gigantes cuando hay pocos) y la letra se ajusta al alto del botón
+// (cqh = % del alto del propio botón).
 .home-button {
-  margin: 12px auto;
+  flex: 1 1 0;
+  min-height: 38px;
+  max-height: 110px;
   width: 90%;
+  margin: 0 auto;
+  container-type: size;
   --background: var(--ion-color-primary);
   --background-hover: var(--ion-color-primary-shade);
   --border-radius: 18px;
   --padding-start: 16px;
   --padding-end: 16px;
+  font-weight: 600;
+}
+
+.home-button__texto {
+  font-size: clamp(15px, 32cqh, 26px);
+}
+
+/* =========================
+   FOOTER: PEDIDO / ESCÁNER / CHAT
+========================= */
+
+.home-footer {
+  padding: min(10px, 1.2vh) 12px calc(min(12px, 1.5vh) + env(safe-area-inset-bottom));
+  background: var(--ion-background-color);
+  box-shadow: none;
+}
+
+.home-accesos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: end;
+}
+
+.acceso {
+  display: flex;
+  justify-content: center;
+}
+
+.acceso__boton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.acceso__titulo,
+.acceso__subtitulo {
+  margin: 0;
+  font-size: min(14px, 1.9vh);
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+.acceso__circulo {
+  width: min(70px, 8.5vh);
+  height: min(70px, 8.5vh);
+  margin: 4px 0;
+  background: var(--ion-color-primary);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  img {
+    width: 60%;
+    height: auto;
+  }
+
+  svg {
+    width: 55%;
+    height: 55%;
+  }
+
+  ion-icon {
+    color: #ffffff;
+    font-size: min(42px, 5vh);
+  }
+}
+
+// Pantallas bajas: el footer se achica para dejarles lugar a los botones
+// (el logo tiene tamaño fijo).
+@media (max-height: 700px) {
+  .acceso__titulo,
+  .acceso__subtitulo {
+    font-size: 11px;
+  }
+
+  .acceso__circulo {
+    width: 48px;
+    height: 48px;
+    margin: 2px 0;
+
+    ion-icon {
+      font-size: 28px;
+    }
+  }
+}
+
+/* =========================
+   VENTANAS (destacados / quienes somos)
+========================= */
+
+ion-modal.home-modal {
+  --width: 90%;
+  --max-width: 420px;
+  --height: auto;
+  --max-height: 85%;
+  --border-radius: 24px;
+  --background: var(--ion-background-color);
+  --backdrop-opacity: 0.6;
+}
+
+.home-modal__contenido {
+  padding: 28px 24px 24px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+.home-modal__cerrar {
+  margin-top: 20px;
+  --background: var(--ion-color-primary);
+  --border-radius: 18px;
   height: 52px;
   font-size: 18px;
   font-weight: 600;
@@ -50,15 +185,11 @@ ion-content {
    PRODUCTOS DESTACADOS
 ========================= */
 
-.destacados {
-  margin-top: 25px;
-}
-
 .destacados__titulo {
   font-size: 24px;
   font-weight: 700;
   color: var(--ion-text-color);
-  margin-bottom: 16px;
+  margin: 0 0 16px;
   text-align: center;
 }
 
@@ -162,152 +293,58 @@ ion-content {
 }
 
 /* =========================
-   ITEMS DE FORMULARIO (reserva)
-========================= */
-
-ion-item {
-  --background: var(--ion-background-color);
-  border-radius: 12px;
-  margin: 10px 0;
-  border: 2px solid var(--ion-border-color);
-}
-
- 
-/* =========================
-   RESERVA - FECHA/HORA
-========================= */
- 
-// ion-datetime trae su propio fondo clarito por defecto, sin heredar
-// el tema oscuro de la app. Y como --ion-text-color es blanco a nivel
-// global, quedaba texto blanco sobre fondo claro (invisible).
-// Acá lo sobreescribimos SOLO para este componente (las variables CSS
-// heredan hacia adentro sin afectar el resto de la app).
-.historia ion-datetime {
-  --background: var(--border);
-  --ion-text-color:  var( --ion-background-color);
-  border-radius: 12px;
-  border: 1px solid var( --ion-background-color);
-}
-
-/* =========================
    HISTORIA
 ========================= */
-
-.historia {
-  background: var(--ion-color-light);
-  padding: 25px;
-  margin-top: 25px;
-  border-radius: 18px;
-  border: 2px solid var(--ion-border-color);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
 
 .historia h2 {
   font-size: 24px;
   font-weight: 700;
-  color: var(--ion-color-primary);
-  margin-bottom: 10px;
+  text-align: center;
+  color: var(--ion-text-color);
+  margin: 0 0 16px;
 }
 
 .historia p {
   font-size: 16px;
-  color: var(--ion-background-color);
+  color: var(--ion-text-color);
   line-height: 1.6;
+  margin: 0;
 }
 
 /* =========================
-   ESCÁNER 
+   MESA ESCANEADA
 ========================= */
 
-.scan-access {
-  width: 100%;
-  text-align: center;
-  margin-top: 40px;
-  margin-bottom: 40px;
-  cursor: pointer;
-}
-
-.scan-access__title {
-  font-size: 20px;
+.mesa-info__titulo {
+  margin: 0 0 16px;
+  font-size: 24px;
   font-weight: 700;
+  text-align: center;
   color: var(--ion-text-color);
-  margin-bottom: 12px;
 }
 
-.scan-access__icon {
-  width: 75px;
-  height: 75px;
-  margin: 0 auto;
-  background: var(--ion-color-primary);
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+.mesa-info__datos {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 16px;
+  margin: 0;
+  font-size: 16px;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  dt {
+    font-weight: 700;
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+  }
 }
 
-
-/* =========================
-   GLOBO DE CHAT
-========================= */
-
-.chat-bubble {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  cursor: pointer;
-  z-index: 9999; // Asegura que el globo de chat esté por encima de otros elementos
-}
-
-.chat-bubble__title {
+.mesa-info__nota {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.18);
   font-size: 14px;
-  font-weight: 600;
-  color: var(--ion-text-color);
-  margin-bottom: 6px;
-}
-
-.chat-bubble__circle {
-  width: 75px;
-  height: 75px;
-  background: var(--ion-color-primary);
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  overflow: hidden;
-}
-
-.chat-bubble__circle img {
-  width: 60%;
-  height: auto;
-}
-
-.chat-bubble__subtitle {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ion-text-color);
-  margin-top: 6px;
-}
-
-//boton de consulta de estado del pedido
-.pedido-flotante-izq {
-  position: fixed;
-  bottom: 25px;
-  left: 25px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  cursor: pointer;
-  z-index: 9999;
+  line-height: 1.45;
 }
