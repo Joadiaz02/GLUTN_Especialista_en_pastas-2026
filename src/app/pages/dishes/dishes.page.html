@@ -28,55 +28,70 @@
       (ionInput)="onBuscar($event.detail.value ?? '')"
     ></ion-searchbar>
 
-    @if (isLoading()) {
-      <div class="dishes-lista">
-        @for (i of [1, 2]; track $index) {
-          <app-skeleton-card />
-        }
+    <!-- El spinner va solo en la carga inicial: al recargar después de una
+         acción, el carrusel se queda en el producto en el que estaba. -->
+    @if (isLoading() && dishes().length === 0) {
+      <div class="dishes-vacio">
+        <app-spinner-logo />
       </div>
     } @else if (dishesFiltrados().length === 0) {
       <div class="dishes-vacio">
         <p>{{ dishes().length === 0 ? 'Todavía no cargaste ningún plato.' : 'No encontramos nada que coincida con tu búsqueda.' }}</p>
       </div>
     } @else {
-      <div
-        class="dishes-pagina"
-        (touchstart)="onTouchStart($event)"
-        (touchend)="onTouchEnd($event)"
-      >
-        @if (hayAnterior()) {
-          <button class="flecha flecha-izq" type="button" (click)="anterior()">
-            <ion-icon name="chevron-back-outline"></ion-icon>
-          </button>
-        }
-
-        <div class="dishes-lista">
-          @for (dish of dishesPaginaActual(); track dish.id_carta) {
-            <app-dish-card
-              [name]="dish.nombre"
-              [description]="dish.descripcion"
-              [price]="dish.precio"
-              [image]="dish.foto_1"
-              [sugerencia]="dish.sugerencia"
-              [bajaLogica]="dish.baja_logica"
-              (editar)="editar(dish)"
-              (destacar)="destacar(dish)"
-              (baja)="darDeBaja(dish)"
-              (reactivar)="reactivar(dish)"
-            ></app-dish-card>
-          }
-        </div>
-
-        @if (haySiguiente()) {
-          <button class="flecha flecha-der" type="button" (click)="siguiente()">
-            <ion-icon name="chevron-forward-outline"></ion-icon>
-          </button>
-        }
-      </div>
-
-      @if (totalPaginas() > 1) {
-        <p class="dishes-indicador">{{ indicePagina() + 1 }} / {{ totalPaginas() }}</p>
-      }
+      <app-producto-carrusel
+        [productos]="dishesFiltrados()"
+        etiqueta="platos"
+        [acciones]="accionesProducto"
+      ></app-producto-carrusel>
     }
   </div>
+
+  <!-- Botones del pie de cada tarjeta: destacar, editar y baja/reactivar -->
+  <ng-template #accionesProducto let-item>
+    <div class="acciones">
+      @if (item.baja_logica) {
+        <span class="acciones__baja">Baja</span>
+      } @else {
+        <button
+          type="button"
+          class="acciones__boton"
+          [class.acciones__boton--activo]="item.sugerencia"
+          [attr.aria-label]="item.sugerencia ? 'Quitar de destacados' : 'Destacar'"
+          (click)="destacar(item); $event.stopPropagation()"
+        >
+          <ion-icon [name]="item.sugerencia ? 'star' : 'star-outline'"></ion-icon>
+        </button>
+      }
+
+      <button
+        type="button"
+        class="acciones__boton"
+        aria-label="Editar"
+        (click)="editar(item); $event.stopPropagation()"
+      >
+        <ion-icon name="create-outline"></ion-icon>
+      </button>
+
+      @if (item.baja_logica) {
+        <button
+          type="button"
+          class="acciones__boton acciones__boton--activo"
+          aria-label="Reactivar"
+          (click)="reactivar(item); $event.stopPropagation()"
+        >
+          <ion-icon name="refresh-outline"></ion-icon>
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="acciones__boton acciones__boton--peligro"
+          aria-label="Dar de baja"
+          (click)="darDeBaja(item); $event.stopPropagation()"
+        >
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+      }
+    </div>
+  </ng-template>
 </ion-content>

@@ -1,9 +1,17 @@
+// El logo es fijo y las tarjetas de los juegos se reparten el alto que
+// queda, así el menú llena la pantalla sin scroll.
 .juegos-content {
   --background: var(--ion-background-color);
-  --padding-top: 24px;
+  --padding-top: min(24px, 2.5vh);
   --padding-start: 20px;
   --padding-end: 20px;
-  --padding-bottom: 24px;
+  --padding-bottom: calc(min(24px, 2.5vh) + env(safe-area-inset-bottom));
+}
+
+.juegos-wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .juegos-subtitulo {
@@ -11,23 +19,31 @@
   font-weight: 600;
   color: var(--ion-text-color);
   text-align: center;
-  margin: 0 0 28px;
+  margin: 0 0 min(28px, 2.5vh);
   line-height: 1.4;
 }
 
 .juegos-lista {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  justify-content: center;
+  gap: min(16px, 1.8vh);
 }
 
+// cqh = % del alto de la propia tarjeta: la letra acompaña su tamaño.
 .juego-card {
+  flex: 1 1 0;
+  min-height: 110px;
+  max-height: 220px;
+  container-type: size;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  gap: min(12px, 6cqh);
   width: 100%;
-  padding: 24px;
+  padding: 12px 24px;
   border-radius: 18px;
   background: var(--ion-color-primary);
 }
@@ -43,21 +59,21 @@
 }
 
 .juego-card__nombre {
-  font-size: 22px;
+  font-size: clamp(18px, 15cqh, 30px);
   font-weight: 700;
   color: #ffffff;
 }
 
 .juego-card__porcentaje {
-  font-size: 15px;
+  font-size: clamp(13px, 9cqh, 18px);
   font-weight: 600;
   color: #ffffff;
   opacity: 0.85;
 }
 
 .juego-card__ayuda {
-  min-height: 44px;
-  padding: 8px 28px;
+  min-height: 40px;
+  padding: 0 28px;
   border: 2px solid #ffffff;
   border-radius: 999px;
   background: transparent;
@@ -121,4 +137,16 @@ ion-modal.como-jugar-modal {
   height: 52px;
   font-size: 18px;
   font-weight: 600;
+}
+
+// Pantallas bajas: título más chico para que el menú entre sin scroll.
+@media (max-height: 700px) {
+  .titulo-pagina {
+    margin-bottom: 6px;
+    font-size: 20px;
+  }
+
+  .juego-card {
+    min-height: 96px;
+  }
 }

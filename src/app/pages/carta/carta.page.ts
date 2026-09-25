@@ -2,18 +2,14 @@ import { Component, inject } from '@angular/core';
 import {
   IonContent,
   IonButton,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
   ToastController,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TipoCarta } from '../../models/carta.model';
-import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { BarraPedidoComponent } from '@app/components/ui/barra-pedido/barra-pedido.component';
 import { Carrito } from '../carrito/carrito';
 import { Auth } from '@app/services';
-import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
+import { HeaderComponent } from '@app/components/ui/header/header.component';
 
 @Component({
   selector: 'app-carta',
@@ -21,14 +17,10 @@ import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confir
   templateUrl: './carta.page.html',
   styleUrls: ['./carta.page.scss'],
   imports: [
+    HeaderComponent,
     IonContent,
     IonButton,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    ConfirmVolverComponent,
     BarraPedidoComponent,
-    ConfirmDialogComponent,
   ],
 })
 export class CartaPage {

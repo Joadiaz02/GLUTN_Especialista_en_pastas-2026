@@ -11,12 +11,18 @@
   display: block;
 }
 
+// Queda fuera del ion-content, así no se va con el scroll de los mensajes.
+.chat-cabecera {
+  padding: 0 16px 8px;
+  background: var(--ion-background-color);
+}
+
 .chat-titulo {
   text-align: center;
   font-size: 24px;
   font-weight: 700;
   color: var(--ion-text-color);
-  margin: 0 0 20px;
+  margin: 0;
 }
 
 .chat-estado {
@@ -114,7 +120,8 @@
 }
 
 .chat-pie {
-  padding: 8px 12px 4px;
+  // El safe-area deja el input por encima de la barra de navegación del celular.
+  padding: 8px 12px calc(4px + env(safe-area-inset-bottom));
   background: var(--ion-background-color);
 }
 

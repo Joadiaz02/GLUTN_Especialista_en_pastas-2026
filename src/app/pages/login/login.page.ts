@@ -94,6 +94,8 @@ export class LoginPage {
         await this.probarPush(usuario.id);
       }
 
+      this.authService.registrarPantallaIngreso('/login');
+
       if (this.authService.esPersonal(usuario)) {
         await this.router.navigate(['/seleccion-acceso']);
 

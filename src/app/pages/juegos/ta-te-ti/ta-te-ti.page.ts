@@ -1,17 +1,12 @@
 import { Component, inject, OnDestroy, signal } from '@angular/core';
 import {
   IonContent,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
   IonButton,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CONFIG_JUEGOS, Juegos, Vibracion } from '@app/services';
-import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { Auth } from '../../../services/auth/auth';
+import { HeaderComponent } from '@app/components/ui/header/header.component';
 
 type EstadoTaTeTi = 'jugando' | 'resultado';
 type Celda = 'X' | 'O' | null;
@@ -32,14 +27,9 @@ const LINEAS_GANADORAS = [
   templateUrl: './ta-te-ti.page.html',
   styleUrls: ['./ta-te-ti.page.scss'],
   imports: [
+    HeaderComponent,
     IonContent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
     IonButton,
-    ConfirmVolverComponent,
-    ConfirmDialogComponent,
   ],
 })
 export class TaTeTiPage implements OnDestroy {

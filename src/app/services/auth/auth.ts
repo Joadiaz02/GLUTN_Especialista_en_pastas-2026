@@ -9,6 +9,8 @@ import { EPerfilUsuario } from '@app/enums';
 import type { PerfilUsuario } from '@app/models/usuario.model';
 import { Storage } from '../storage';
 
+const CLAVE_PANTALLA_INGRESO = 'pantallaIngreso';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -20,11 +22,7 @@ export class Auth {
   private readonly storageService =
     inject(Storage);
 
-  // Signal en vez de variable plana: cualquier componente que lo lea
-  // en su template (usuarioActual()) se actualiza SOLO cuando cambia.
-  usuarioActual =
-    signal<any>(null);
-
+  usuarioActual = signal<any>(null);
 
   constructor() {
     // onAuthStateChange es el evento oficial de Supabase: se dispara
@@ -386,6 +384,29 @@ export class Auth {
 
     return (
       this.usuarioActual() !== null
+    );
+  }
+
+
+  // Recuerda por qué pantalla ingresó el usuario (login o acceso
+  // rápido) para que el botón "volver" del Home lo lleve de nuevo ahí.
+  registrarPantallaIngreso(
+    ruta: string
+  ): void {
+
+    sessionStorage.setItem(
+      CLAVE_PANTALLA_INGRESO,
+      ruta
+    );
+  }
+
+
+  obtenerPantallaIngreso(): string {
+
+    return (
+      sessionStorage.getItem(
+        CLAVE_PANTALLA_INGRESO
+      ) ?? '/login'
     );
   }
 }

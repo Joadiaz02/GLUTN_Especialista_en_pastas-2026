@@ -22,6 +22,29 @@ export class Table {
     return data ?? [];
   }
 
+  async getTableById(tableId: string) {
+    const { data } = await this._db.client
+      .from(this._tableName)
+      .select('*')
+      .eq('id', tableId)
+      .maybeSingle();
+
+    return data ?? null;
+  }
+
+  async update(id: string, changes: any): Promise<any> {
+    const { data, error } = await this._db.client
+      .from(this._tableName)
+      .update(changes)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw new Error(`Failed to update table: ${error.message}`);
+
+    return data;
+  }
+
   async add(table: any): Promise<any> {
     const { data, error } = await this._db.client
       .from(this._tableName)
@@ -41,10 +64,6 @@ export class Table {
   }
 
   private async _init(): Promise<void> {
-    // Se registra antes que cualquier await: si no, y el injector se
-    // destruye mientras getList() todavía está en vuelo (por ejemplo en un
-    // test que termina rápido), onDestroy() explota porque el injector ya
-    // no existe cuando se intenta registrar.
     if (!this._destroyRegistrado) {
       this._destroyRegistrado = true;
 
@@ -83,7 +102,7 @@ export class Table {
             case 'UPDATE':
               this._list$.next(
                 currentList.map((item) =>
-                  item.id_carta === payload.new.id_carta ? payload.new : item
+                  item.id === payload.new.id ? payload.new : item
                 )
               );
 

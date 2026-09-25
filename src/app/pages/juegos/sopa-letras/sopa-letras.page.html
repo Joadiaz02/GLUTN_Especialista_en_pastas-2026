@@ -1,36 +1,22 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <app-confirm-volver
-        titulo="¿Salir de la sopa de letras?"
-        [mensaje]="mensajeVolver()"
-        textoConfirmar="Salir"
-        colorConfirmar="primary"
-        (confirmadoVolver)="volver()"
-      ></app-confirm-volver>
-    </ion-buttons>
-    <ion-title>Sopa de letras</ion-title>
-    <ion-buttons slot="end">
-      <app-confirm-dialog
-        titulo="¿Cerrar sesión?"
-        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
-        textoConfirmar="Cerrar sesión"
-        icono="log-out-outline"
-        (confirmado)="cerrarSesion()"
-      ></app-confirm-dialog>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header
+  tituloVolver="¿Salir de la sopa de letras?"
+  [mensajeVolver]="mensajeVolver()"
+  textoConfirmarVolver="Salir"
+  colorConfirmarVolver="primary"
+  (volver)="volver()"
+  (cerrarSesion)="cerrarSesion()"
+></app-header>
 
 <ion-content class="sopa-content">
   <div class="sopa-wrapper">
-    <div class="logo-container">
+    <div class="logo-container logo-fijo">
       <img
         src="assets/images/LOGO-GLUTN.png"
         alt="GLUTN - Especialista en Pastas"
         class="logo"
       />
     </div>
+    <h1 class="titulo-pagina">Sopa de letras</h1>
 
     <p class="sopa-subtitulo">{{ mensajeEstado() }}</p>
 
@@ -59,24 +45,27 @@
         </p>
       </div>
 
-      <div
-        class="sopa-grilla"
-        [style.grid-template-columns]="'repeat(' + sopaLetras.tamanoGrilla + ', 1fr)'"
-      >
-        @for (fila of sopaLetras.grilla(); track $index; let f = $index) {
-          @for (letra of fila; track $index; let c = $index) {
-            <button
-              type="button"
-              class="sopa-celda"
-              [class.sopa-celda--seleccionada]="esCeldaInicio(f, c)"
-              [class.sopa-celda--iluminada]="sopaLetras.esCeldaIluminada(f, c)"
-              (click)="onCeldaClick(f, c)"
-            >
-              {{ letra }}
-            </button>
+      <!-- Al terminar, la grilla deja su lugar al resultado (sin scroll) -->
+      @if (!sopaLetras.juegoTerminado()) {
+        <div
+          class="sopa-grilla"
+          [style.grid-template-columns]="'repeat(' + sopaLetras.tamanoGrilla + ', 1fr)'"
+        >
+          @for (fila of sopaLetras.grilla(); track $index; let f = $index) {
+            @for (letra of fila; track $index; let c = $index) {
+              <button
+                type="button"
+                class="sopa-celda"
+                [class.sopa-celda--seleccionada]="esCeldaInicio(f, c)"
+                [class.sopa-celda--iluminada]="sopaLetras.esCeldaIluminada(f, c)"
+                (click)="onCeldaClick(f, c)"
+              >
+                {{ letra }}
+              </button>
+            }
           }
-        }
-      </div>
+        </div>
+      }
 
       <div class="sopa-palabras">
         @for (palabra of sopaLetras.palabras(); track palabra) {

@@ -13,19 +13,20 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
-import { DishCardComponent } from './components/dish-card/dish-card.component';
 import { Plato, Confirm, Vibracion } from '@app/services';
 import { CartaItem } from '@app/models/carta.model';
-import { SkeletonCardComponent } from './components/skeleton-card/skeleton-card.component';
+import { ProductoCarruselComponent } from '@app/components/producto-carrusel/producto-carrusel.component';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { addIcons } from 'ionicons';
 import {
   addOutline,
-  chevronBackOutline,
-  chevronForwardOutline,
+  createOutline,
+  refreshOutline,
+  star,
+  starOutline,
+  trashOutline,
 } from 'ionicons/icons';
-
-const ITEMS_POR_PAGINA = 2;
 
 @Component({
   selector: 'app-dishes',
@@ -41,10 +42,10 @@ const ITEMS_POR_PAGINA = 2;
     IonButtons,
     IonButton,
     RouterLink,
-    DishCardComponent,
+    ProductoCarruselComponent,
     IonIcon,
     IonSearchbar,
-    SkeletonCardComponent,
+    SpinnerLogoComponent,
     ConfirmVolverComponent,
   ],
 })
@@ -54,7 +55,6 @@ export class DishesPage implements OnInit {
   isLoading = signal<boolean>(false);
 
   textoBusqueda = signal('');
-  indicePagina = signal(0);
 
   private _platoService = inject(Plato);
   private _confirm = inject(Confirm);
@@ -70,20 +70,15 @@ export class DishesPage implements OnInit {
     );
   });
 
-  totalPaginas = computed(() =>
-    Math.max(Math.ceil(this.dishesFiltrados().length / ITEMS_POR_PAGINA), 1)
-  );
-
-  dishesPaginaActual = computed(() => {
-    const inicio = this.indicePagina() * ITEMS_POR_PAGINA;
-    return this.dishesFiltrados().slice(inicio, inicio + ITEMS_POR_PAGINA);
-  });
-
-  hayAnterior = computed(() => this.indicePagina() > 0);
-  haySiguiente = computed(() => this.indicePagina() < this.totalPaginas() - 1);
-
   constructor() {
-    addIcons({ addOutline, chevronBackOutline, chevronForwardOutline });
+    addIcons({
+      addOutline,
+      createOutline,
+      refreshOutline,
+      star,
+      'star-outline': starOutline,
+      trashOutline,
+    });
   }
 
   async ngOnInit() {
@@ -102,41 +97,6 @@ export class DishesPage implements OnInit {
 
   onBuscar(texto: string): void {
     this.textoBusqueda.set(texto);
-    this.indicePagina.set(0);
-  }
-
-  siguiente(): void {
-    if (this.haySiguiente()) {
-      this.indicePagina.update((i) => i + 1);
-    }
-  }
-
-  anterior(): void {
-    if (this.hayAnterior()) {
-      this.indicePagina.update((i) => i - 1);
-    }
-  }
-
-  // ============================
-  // SWIPE (touch), igual que en la Carta del cliente
-  // ============================
-
-  private inicioX = 0;
-  private readonly UMBRAL_SWIPE = 50;
-
-  onTouchStart(evento: TouchEvent): void {
-    this.inicioX = evento.touches[0].clientX;
-  }
-
-  onTouchEnd(evento: TouchEvent): void {
-    const finX = evento.changedTouches[0].clientX;
-    const delta = finX - this.inicioX;
-
-    if (delta > this.UMBRAL_SWIPE) {
-      this.anterior();
-    } else if (delta < -this.UMBRAL_SWIPE) {
-      this.siguiente();
-    }
   }
 
   private async mostrarAviso(mensaje: string): Promise<void> {

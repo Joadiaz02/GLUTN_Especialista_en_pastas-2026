@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonIcon, IonButton } from '@ionic/angular';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonIcon, IonButton, IonToggle, ToastController } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Table } from '@app/services';
@@ -22,12 +22,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
     ConfirmVolverComponent,
     IonButton,
     SpinnerLogoComponent,
-    IonIcon
+    IonIcon,
+    IonToggle
 ],
 })
 export class TablesPage {
   private _router = inject(Router);
   private _tableService = inject(Table);
+  private _toastController = inject(ToastController);  
 
   readonly tipoLabel: any = {
     vip: 'VIP',
@@ -44,5 +46,26 @@ export class TablesPage {
 
   volver(): void {
     void this._router.navigate(['/admin']);
+  }
+
+  async onToggle(table: any, event: CustomEvent): Promise<void> {
+    const activa: boolean = event.detail.checked;
+
+    if (activa === !table.baja_logica) return;
+
+    try {
+      await this._tableService.update(table.id, { baja_logica: !activa });
+    } catch (error) {
+      const toast = await this._toastController.create({
+        message:
+          'No pudimos completar la acción. Intentá nuevamente más tarde.',
+        duration: 5000,
+        position: 'top',
+      });
+
+      await toast.present();
+
+      (event.target as HTMLIonToggleElement).checked = !activa;
+    }
   }
 }

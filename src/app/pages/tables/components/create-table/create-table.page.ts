@@ -94,7 +94,7 @@ export class CreateTablePage {
         capacidad: data.diners,
         foto: image,
         tipo: data.type,
-        disponibilidad: true
+        baja_logica: false
       })
 
       const toast = await this._toastController.create({

@@ -1,32 +1,70 @@
 import {
   Component,
   computed,
+  effect,
   inject,
   OnDestroy,
   OnInit,
   signal,
+  untracked,
 } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import {
   IonContent,
+  IonFooter,
   IonButton,
   IonSkeletonText,
   IonIcon,
+  IonModal,
   ToastController,
   ModalController,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
+import {
+  chevronBackOutline,
+  chevronForwardOutline,
+  timeOutline,
+} from 'ionicons/icons';
 import { Router } from '@angular/router';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { Auth } from '../../services/auth/auth';
-import { Carta } from '@app/services';
+import { Carta, EscanerQr, SupabaseService, Table, Vibracion } from '@app/services';
+import { EPerfilUsuario } from '@app/enums';
+import { CodigoQr } from '@app/models/qr.model';
 import { CartaItem } from '@app/models/carta.model';
-import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confirm-cartel.component';
-import { Carrito } from '../carrito/carrito';
 import { Pedido } from '@app/services/pedido/pedido';
 import { EstadoPedidoComponent } from '@app/components/ui/estado-pedido/estado-pedido.component';
+import { HeaderComponent } from '@app/components/ui/header/header.component';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
+
+const TIPOS_MESA: Record<string, string> = {
+  estandar: 'Estándar',
+  vip: 'VIP',
+  movilidad_reducida: 'Movilidad reducida',
+  vip_movilidad_reducida: 'VIP con movilidad reducida',
+};
+
+const DISPONIBILIDADES_MESA: Record<string, string> = {
+  vacia: 'Vacía',
+  ocupada: 'Ocupada',
+  reservada: 'Reservada',
+};
+
+// Perfiles del personal que pueden escanear el QR de mesa para ver su info.
+const PERFILES_ESCANER_PERSONAL: string[] = [
+  EPerfilUsuario.Dueno,
+  EPerfilUsuario.Supervisor,
+  EPerfilUsuario.Metre,
+  EPerfilUsuario.Mozo,
+];
+
+interface MesaEscaneada {
+  numero: number;
+  capacidad: number;
+  tipo: string;
+  disponibilidad: string | null;
+}
 
 @Component({
   selector: 'app-home',
@@ -34,12 +72,14 @@ const DEMORA_FOTO_DESTACADO_MS = 3000;
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   imports: [
+    HeaderComponent,
     IonContent,
+    IonFooter,
     IonButton,
     IonSkeletonText,
     IonIcon,
+    IonModal,
     CurrencyPipe,
-    ConfirmDialogComponent,
   ],
 })
 export class HomePage implements OnInit, OnDestroy {
@@ -48,15 +88,27 @@ export class HomePage implements OnInit, OnDestroy {
   private authService = inject(Auth);
   private toastController = inject(ToastController);
   private cartaService = inject(Carta);
-  private carrito = inject(Carrito);
   protected pedido = inject(Pedido);
   private _fotoIntervalId: ReturnType<typeof setInterval> | null = null;
   private modalController = inject(ModalController);
+  private escanerQr = inject(EscanerQr);
+  private tableService = inject(Table);
+  private supabaseService = inject(SupabaseService);
+  private vibracion = inject(Vibracion);
+  private _canalPedido: RealtimeChannel | null = null;
 
   constructor() {
     addIcons({
       'chevron-back-outline': chevronBackOutline,
       'chevron-forward-outline': chevronForwardOutline,
+      'time-outline': timeOutline,
+    });
+
+    // Cada vez que el cliente hace un pedido, se escucha su estado para
+    // habilitar los botones que dependen de él (juegos, solicitar cuenta).
+    effect(() => {
+      const idPedido = this.pedido.idUltimoPedido();
+      untracked(() => void this.escucharPedido(idPedido));
     });
   }
 
@@ -80,6 +132,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.detenerCicloFotos();
+    this.dejarDeEscucharPedido();
   }
 
   // ============================
@@ -92,17 +145,86 @@ export class HomePage implements OnInit, OnDestroy {
   // sin tener que "ir a preguntar" en ngOnInit.
   isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
 
+  // El personal entra al Home desde la selección de acceso; los clientes,
+  // desde el login o el acceso rápido.
+  esPersonal = computed(() =>
+    this.authService.esPersonal(this.authService.usuarioActual())
+  );
+
+  mensajeVolver = computed(() => {
+    if (this.esPersonal()) {
+      return 'Vas a volver a la selección de acceso.';
+    }
+
+    if (this.isLoggedIn()) {
+      return 'Se va a cerrar tu sesión y vas a volver a la pantalla de ingreso.';
+    }
+
+    return 'Vas a volver a la pantalla de ingreso.';
+  });
+
   // Provisorio hasta que la asignación de mesas (punto 10) deje la mesa
   // del cliente guardada: hoy se lee de la clave "mesa" del almacenamiento
   // local, la misma que la app borra al cerrar sesión.
   //
   // TEMPORAL: si todavía no hay mesa asignada, se hardcodea una para poder
-  // probar el chat y "pedir la cuenta" como cliente. Sacar cuando el punto
+  // probar el chat y "solicitar cuenta" como cliente. Sacar cuando el punto
   // 10 esté listo.
-  enMesa = !!this.mesaDePrueba();
+  enMesa = signal(!!this.mesaDePrueba());
 
-  showDestacados = false;
-  showQuienesSomos = false;
+  // ============================
+  // VISIBILIDAD DE BOTONES (según perfil y estado del cliente)
+  // ============================
+
+  perfil = computed(() =>
+    this.authService.obtenerPerfil(this.authService.usuarioActual())
+  );
+
+  esCliente = computed(
+    () =>
+      this.perfil() === EPerfilUsuario.ClienteRegistrado ||
+      this.perfil() === EPerfilUsuario.ClienteAnonimo
+  );
+
+  estadoPedido = signal<string | null>(null);
+
+  // TEMPORAL: el estado "recibido" (punto 19, confirmación de la entrega)
+  // todavía no existe. Mientras tanto, el pedido se toma como recibido
+  // cuando el mozo lo acepta. Cambiar a 'entregado' cuando esté el punto 19.
+  pedidoRecibido = computed(() => this.estadoPedido() === 'confirmado');
+
+  // Qué botones ve cada perfil (según el TP). Destacados y Quienes somos
+  // los ven todos.
+  botones = computed(() => {
+    const perfil = this.perfil();
+    const cliente = this.esCliente();
+    const enMesa = this.enMesa();
+    const pedidoRecibido = this.pedidoRecibido();
+
+    return {
+      reservas: perfil === EPerfilUsuario.ClienteRegistrado,
+      carta: cliente ? enMesa : perfil !== null,
+      juegos: cliente && pedidoRecibido,
+      solicitarCuenta: cliente && pedidoRecibido,
+      encuestas:
+        cliente ||
+        perfil === EPerfilUsuario.Dueno ||
+        perfil === EPerfilUsuario.Supervisor,
+      escaner: cliente || PERFILES_ESCANER_PERSONAL.includes(perfil ?? ''),
+      consultas: (cliente && enMesa) || perfil === EPerfilUsuario.Mozo,
+      estadoPedido: cliente && this.pedido.idUltimoPedido() !== null,
+    };
+  });
+
+  hayAccesos = computed(() => {
+    const botones = this.botones();
+    return botones.estadoPedido || botones.escaner || botones.consultas;
+  });
+
+  // Destacados y Quienes somos se abren en una ventana aparte para que
+  // el Home entre completo en la pantalla, sin scroll.
+  showDestacados = signal(false);
+  showQuienesSomos = signal(false);
 
   // ============================
   // PRODUCTOS DESTACADOS (sugerencias de la carta)
@@ -165,10 +287,27 @@ export class HomePage implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 
+  async volver(): Promise<void> {
+    if (this.esPersonal()) {
+      void this.router.navigate(['/seleccion-acceso']);
+      return;
+    }
+
+    const pantallaIngreso = this.authService.obtenerPantallaIngreso();
+
+    if (this.isLoggedIn()) {
+      await this.authService.logout();
+      this.enMesa.set(false);
+      localStorage.removeItem('mesa');
+    }
+
+    void this.router.navigate([pantallaIngreso]);
+  }
+
   async cerrarSesion(): Promise<void> {
     await this.authService.logout();
 
-    this.enMesa = false;
+    this.enMesa.set(false);
     localStorage.removeItem('mesa');
 
     const toast = await this.toastController.create({
@@ -186,21 +325,22 @@ export class HomePage implements OnInit, OnDestroy {
   // BOTONES PRINCIPALES
   // ============================
 
-  toggleDestacados() {
-    this.showDestacados = !this.showDestacados;
-    this.showQuienesSomos = false;
-
-    if (this.showDestacados) {
-      this.iniciarCicloFotos();
-    } else {
-      this.detenerCicloFotos();
-    }
+  abrirDestacados(): void {
+    this.showDestacados.set(true);
+    this.iniciarCicloFotos();
   }
 
-  toggleQuienesSomos() {
-    this.showQuienesSomos = !this.showQuienesSomos;
-    this.showDestacados = false;
+  cerrarDestacados(): void {
+    this.showDestacados.set(false);
     this.detenerCicloFotos();
+  }
+
+  abrirQuienesSomos(): void {
+    this.showQuienesSomos.set(true);
+  }
+
+  cerrarQuienesSomos(): void {
+    this.showQuienesSomos.set(false);
   }
 
   // ============================
@@ -220,37 +360,131 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   goToChat() {
-    if (this.enMesa) {
-      this.router.navigate(['/chat']);
-    }
+    this.router.navigate(['/chat']);
   }
 
   goToEncuestas() {
     this.router.navigate(['/encuestas']);
   }
 
-  goToScanner() {
-    this.router.navigate(['/scanner']);
+  // ============================
+  // ESCÁNER QR (ingreso al local, mesa y propinas)
+  // ============================
+
+  escaneando = signal(false);
+  mesaEscaneada = signal<MesaEscaneada | null>(null);
+
+  async escanear(): Promise<void> {
+    if (this.escaneando()) return;
+
+    this.escaneando.set(true);
+    try {
+      const codigo = await this.escanerQr.escanear();
+      if (codigo) await this.procesarCodigo(codigo);
+    } finally {
+      this.escaneando.set(false);
+    }
+  }
+
+  private async procesarCodigo(codigo: CodigoQr): Promise<void> {
+    switch (codigo.tipo) {
+      case 'mesa':
+        await this.mostrarMesa(codigo.id);
+        break;
+
+      // Lista de espera (punto 9): todavía no está armada.
+      case 'ingreso':
+        await this.mostrarToast('La lista de espera todavía no está disponible.');
+        break;
+
+      // Propina y pago de la cuenta (punto 21): todavía no están armados.
+      case 'propina':
+        await this.mostrarToast(
+          `Propina del ${codigo.porcentaje}% leída. El pago de la cuenta todavía no está disponible.`
+        );
+        break;
+    }
+  }
+
+  private async mostrarMesa(idMesa: string): Promise<void> {
+    const mesa = await this.tableService.getTableById(idMesa);
+
+    if (!mesa) {
+      void this.vibracion.error();
+      await this.mostrarToast('No encontramos esa mesa.', 'danger');
+      return;
+    }
+
+    this.mesaEscaneada.set({
+      numero: mesa.numero,
+      capacidad: mesa.capacidad,
+      tipo: TIPOS_MESA[mesa.tipo] ?? mesa.tipo,
+      disponibilidad: DISPONIBILIDADES_MESA[mesa.disponibilidad ?? mesa.estado] ?? null,
+    });
+  }
+
+  cerrarMesa(): void {
+    this.mesaEscaneada.set(null);
+  }
+
+  private async mostrarToast(mensaje: string, color = 'primary'): Promise<void> {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 3000,
+      position: 'top',
+      color,
+    });
+    await toast.present();
+  }
+
+  // ============================
+  // ESTADO DEL PEDIDO
+  // ============================
+
+  private async escucharPedido(idPedido: string | null): Promise<void> {
+    this.dejarDeEscucharPedido();
+    this.estadoPedido.set(null);
+
+    if (!idPedido) return;
+
+    const { data } = await this.supabaseService.client
+      .from('pedido')
+      .select('estado_pedido')
+      .eq('id_pedido', idPedido)
+      .maybeSingle();
+
+    this.estadoPedido.set(data?.estado_pedido ?? null);
+
+    this._canalPedido = this.supabaseService.client
+      .channel(`home-pedido-${idPedido}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'pedido',
+          filter: `id_pedido=eq.${idPedido}`,
+        },
+        (payload) => this.estadoPedido.set(payload.new['estado_pedido'] ?? null)
+      )
+      .subscribe();
+  }
+
+  private dejarDeEscucharPedido(): void {
+    if (this._canalPedido) {
+      void this.supabaseService.client.removeChannel(this._canalPedido);
+      this._canalPedido = null;
+    }
   }
 
   // ============================
   // SOLICITAR CUENTA (punto 21, Lucas)
   // ============================
 
-  // Placeholder: solo controla cuándo se ve el botón. La lógica real
-  // de solicitud de cuenta/pago (punto 21) la arma Lucas.
-  mostrarSolicitarCuenta(): boolean {
-    return this.isLoggedIn() && this.enMesa && this.carrito.totalItems() > 0;
-  }
-
+  // Placeholder: el botón aparece con el pedido recibido. La lógica real
+  // de la cuenta (aviso al mozo, propina y pago) la arma Lucas.
   async solicitarCuenta(): Promise<void> {
-    const toast = await this.toastController.create({
-      message: 'Pronto vas a poder solicitar tu cuenta desde acá.',
-      duration: 3000,
-      position: 'top',
-      color: 'primary',
-    });
-    await toast.present();
+    await this.mostrarToast('Pronto vas a poder solicitar la cuenta desde acá.');
   }
 
   async verEstadoPedido(idPedido: string) {

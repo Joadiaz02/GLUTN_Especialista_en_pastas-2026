@@ -1,10 +1,6 @@
 import { Component, effect, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   IonContent,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
   IonButton,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -16,9 +12,8 @@ import {
   SopaLetras,
   Vibracion,
 } from '@app/services';
-import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { Auth } from '../../../services/auth/auth';
+import { HeaderComponent } from '@app/components/ui/header/header.component';
 
 interface CeldaSeleccionada {
   fila: number;
@@ -31,14 +26,9 @@ interface CeldaSeleccionada {
   templateUrl: './sopa-letras.page.html',
   styleUrls: ['./sopa-letras.page.scss'],
   imports: [
+    HeaderComponent,
     IonContent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
     IonButton,
-    ConfirmVolverComponent,
-    ConfirmDialogComponent,
   ],
 })
 export class SopaLetrasPage implements OnInit, OnDestroy {

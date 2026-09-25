@@ -25,12 +25,14 @@ import { Storage, Plato, Confirm, Vibracion } from '@app/services';
 import { Router } from '@angular/router';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { VibrarErrores } from '@app/directives/vibrar-errores';
 
 @Component({
   selector: 'app-create-dish',
   templateUrl: './create-dish.page.html',
   styleUrls: ['./create-dish.page.scss'],
   imports: [
+    VibrarErrores,
     IonContent,
     IonHeader,
     IonTitle,

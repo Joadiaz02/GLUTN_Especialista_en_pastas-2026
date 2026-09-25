@@ -6,10 +6,13 @@
   --padding-bottom: 24px;
 }
 
+// El wrapper ocupa el alto disponible del ion-content (ya descontados
+// el header y el padding), así el juego llena la pantalla sin scroll.
+// Con 100vh se sumaba la altura del header y aparecía un scroll de más.
+// Se descuenta el safe-area de abajo (barra de navegación del celular).
 .ta-te-ti-wrapper {
   width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: calc(100% - env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -21,7 +24,7 @@
   font-size: 16px;
   font-weight: 600;
   color: var(--ion-text-color);
-  margin: 0 0 24px;
+  margin: 0 0 min(24px, 3vh);
   line-height: 1.4;
   min-height: 44px;
 }
@@ -30,8 +33,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  width: 260px;
-  margin-bottom: 24px;
+  width: min(260px, 40vh);
+  margin-bottom: min(24px, 3vh);
 }
 
 .ta-te-ti-tablero--bloqueado {
@@ -70,4 +73,16 @@
   height: 52px;
   font-size: 18px;
   font-weight: 600;
+}
+
+// Pantallas bajas: título más chico para que el juego entre sin scroll.
+@media (max-height: 700px) {
+  .titulo-pagina {
+    margin-bottom: 6px;
+    font-size: 20px;
+  }
+
+  .ta-te-ti-tablero {
+    width: 34vh;
+  }
 }

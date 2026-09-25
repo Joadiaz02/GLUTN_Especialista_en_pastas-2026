@@ -7,3 +7,149 @@
     <ion-title>Editar Mesa</ion-title>
   </ion-toolbar>
 </ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (table()) {
+  <div class="upload-container">
+    <app-uploader
+      [onlyTake]="true"
+      [image]="table().foto"
+      (fileSelected)="onPhotoSelected(0, $event)"
+    />
+  </div>
+  }
+
+  <form class="fields" [formGroup]="form">
+    <div class="field">
+      <label class="field__label">Número</label>
+
+      <ion-input
+        fill="outline"
+        class="field__input"
+        placeholder="Número"
+        formControlName="number"
+      />
+
+      @if ( getFormControl('number')?.invalid &&
+      (getFormControl('number')?.touched || getFormControl('number')?.dirty ) )
+      { @if ( getFormControl('number')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
+    </div>
+
+    <div class="field">
+      <label class="field__label">Comensales</label>
+
+      <div class="stepper">
+        <button
+          type="button"
+          class="stepper__button"
+          (click)="decrementDiners()"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_3082_1945)">
+              <mask
+                id="mask0_3082_1945"
+                style="mask-type: luminance"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="24"
+                height="24"
+              >
+                <path d="M24 0H0V24H24V0Z" fill="white" />
+              </mask>
+              <g mask="url(#mask0_3082_1945)">
+                <path
+                  d="M18 12.75H6C5.59 12.75 5.25 12.41 5.25 12C5.25 11.59 5.59 11.25 6 11.25H18C18.41 11.25 18.75 11.59 18.75 12C18.75 12.41 18.41 12.75 18 12.75Z"
+                  fill="white"
+                />
+              </g>
+            </g>
+          </svg>
+        </button>
+        <span class="stepper__value">{{ form.get('diners')?.value }}</span>
+        <button
+          type="button"
+          class="stepper__button"
+          (click)="incrementDiners()"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_3390_1703)">
+              <mask
+                id="mask0_3390_1703"
+                style="mask-type: luminance"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="24"
+                height="24"
+              >
+                <path d="M24 0H0V24H24V0Z" fill="white" />
+              </mask>
+              <g mask="url(#mask0_3390_1703)">
+                <path
+                  d="M6 12H18"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M12 18V6"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </g>
+            </g>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field__label">Tipo</label>
+
+      <div class="chips">
+        @for (t of types; track t.type) {
+        <button
+          type="button"
+          class="chip"
+          [class.chip-activo]="form.get('type')?.value === t.type"
+          (click)="selectType(t.type)"
+        >
+          {{ t.value }}
+        </button>
+        }
+      </div>
+
+      @if (getFormControl('type')?.invalid && (getFormControl('type')?.touched
+      || getFormControl('type')?.dirty)) {
+      <p class="field__error">Debe seleccionar un tipo de mesa.</p>
+      }
+    </div>
+  </form>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="footer-actions">
+    <ion-button expand="block" shape="round" (click)="edit()">
+      @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> } @else {
+      Actualizar mesa }</ion-button
+    >
+  </div>
+</ion-footer>
