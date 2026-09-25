@@ -44,9 +44,11 @@ export class Pedido {
             throw error_items;
         };
 
-        await this.sup.client.functions.invoke('notify-new-pedido', {
-        body: { idPedido: pedido.id_pedido, idMesa: id_mesa }
+        const { data: dataNotif, error: errorNotif } = await this.sup.client.functions.invoke('notify-new-pedido', {
+            body: { idPedido: pedido.id_pedido, idMesa: id_mesa }
         });
+
+        alert('Notif data: ' + JSON.stringify(dataNotif) + ' | error: ' + JSON.stringify(errorNotif));
         this.carrito.vaciar();
         this.estado_pedido.set(true);
         this.idUltimoPedido.set(pedido.id_pedido)
