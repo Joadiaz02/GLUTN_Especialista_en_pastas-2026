@@ -3,21 +3,17 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import {
   IonButton,
-  IonButtons,
   IonContent,
   IonFooter,
-  IonHeader,
-  IonToolbar,
   ToastController,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { Auth, Chat, CHAT_LARGO_MAXIMO, Vibracion } from '@app/services';
 import type { Mensaje } from '@app/models/mensaje.model';
-import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
-import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { GtnAvatar } from '@app/components';
+import { HeaderComponent } from '@app/components/ui/header/header.component';
 
 const LARGO_CITA = 60;
 
@@ -27,16 +23,12 @@ const LARGO_CITA = 60;
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
   imports: [
+    HeaderComponent,
     FormsModule,
     DatePipe,
     IonButton,
-    IonButtons,
     IonContent,
     IonFooter,
-    IonHeader,
-    IonToolbar,
-    ConfirmDialogComponent,
-    ConfirmVolverComponent,
     SpinnerLogoComponent,
     GtnAvatar,
   ],

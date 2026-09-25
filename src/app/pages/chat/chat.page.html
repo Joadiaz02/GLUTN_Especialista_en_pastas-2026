@@ -1,25 +1,12 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <app-confirm-volver
-        mensaje="Vas a salir de la consulta al mozo."
-        (confirmadoVolver)="volver()"
-      ></app-confirm-volver>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <app-confirm-dialog
-        titulo="¿Cerrar sesión?"
-        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
-        textoConfirmar="Cerrar sesión"
-        icono="log-out-outline"
-        (confirmado)="cerrarSesion()"
-      ></app-confirm-dialog>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header
+  mensajeVolver="Vas a salir de la consulta al mozo."
+  (volver)="volver()"
+  (cerrarSesion)="cerrarSesion()"
+></app-header>
 
-<ion-content class="chat-bg">
-  <div class="logo-container">
+<!-- Logo y título fijos: solo scrollean los mensajes -->
+<div class="chat-cabecera">
+  <div class="logo-container logo-fijo">
     <img
       src="assets/images/LOGO-GLUTN.png"
       alt="GLUTN - Especialista en Pastas"
@@ -28,7 +15,9 @@
   </div>
 
   <h1 class="chat-titulo">{{ titulo() }}</h1>
+</div>
 
+<ion-content class="chat-bg">
   @if (chat.cargando() && chat.mensajes().length === 0) {
     <div class="chat-estado">
       <app-spinner-logo />
