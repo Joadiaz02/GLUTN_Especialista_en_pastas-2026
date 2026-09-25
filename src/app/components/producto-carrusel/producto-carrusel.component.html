@@ -27,7 +27,10 @@
         "
       >
 
-        <div class="producto-card">
+        <div
+          class="producto-card"
+          [class.producto-card--baja]="producto.baja_logica"
+        >
 
           <!-- =================================================
                IMAGEN
@@ -211,7 +214,18 @@
                 }}
             </strong>
 
-            @if (
+            @if (acciones) {
+
+                <!-- ACCIONES PROPIAS (pantallas de gestión) -->
+
+                <ng-container
+                *ngTemplateOutlet="
+                    acciones;
+                    context: { $implicit: producto }
+                "
+                ></ng-container>
+
+            } @else if (
                 cantidadActual(producto) === 0
             ) {
 

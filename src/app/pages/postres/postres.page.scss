@@ -30,52 +30,52 @@ ion-searchbar {
   opacity: 0.85;
 }
 
-.dishes-pagina {
-  position: relative;
+// La tarjeta del carrusel ocupa todo el alto que queda debajo del
+// buscador, y la foto se lleva lo que sobra después de los textos.
+app-producto-carrusel {
+  --carrusel-alto-tarjeta: max(460px, calc(100dvh - 164px));
+  --carrusel-alto-imagen: calc(var(--carrusel-alto-tarjeta) - 280px);
+}
+
+/* =========================
+   ACCIONES DEL PIE DE CADA TARJETA
+   (destacar, editar y baja/reactivar)
+========================= */
+
+.acciones {
   display: flex;
   align-items: center;
-  touch-action: pan-y;
+  gap: 6px;
 }
 
-.dishes-lista {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 16px;
-  width: 100%;
-}
-
-.dishes-indicador {
-  flex-shrink: 0;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ion-text-color);
-  opacity: 0.75;
-  margin: 10px 0 0;
-}
-
-.flecha {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
+.acciones__boton {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
   border: 0;
-  background: rgba(0, 0, 0, 0.35);
-  color: #ffffff;
-  font-size: 22px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+  color: #2f3d24;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.flecha-izq {
-  left: -8px;
+.acciones__boton--activo {
+  background: var(--ion-color-primary);
+  color: #ffffff;
 }
 
-.flecha-der {
-  right: -8px;
+.acciones__boton--peligro {
+  color: var(--ion-color-danger);
+}
+
+.acciones__baja {
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: var(--ion-color-danger);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
 }

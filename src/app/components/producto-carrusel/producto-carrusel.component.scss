@@ -116,7 +116,8 @@
 
   max-width: 300px;
 
-  height: 535px;
+  /* Alto configurable desde la pantalla que lo usa (por defecto, 535px). */
+  height: var(--carrusel-alto-tarjeta, 535px);
 
   scroll-snap-align: center;
 
@@ -164,11 +165,11 @@
 
   width: 100%;
 
-  height: 255px;
+  height: var(--carrusel-alto-imagen, 255px);
 
-  min-height: 255px;
+  min-height: var(--carrusel-alto-imagen, 255px);
 
-  max-height: 255px;
+  max-height: var(--carrusel-alto-imagen, 255px);
 
   display: flex;
 
@@ -886,4 +887,15 @@
 
     max-height: 300px;
   }
+}
+/* =========================================================
+   PRODUCTO DADO DE BAJA (solo en las pantallas de gestión)
+========================================================= */
+
+.producto-card--baja .producto-imagen,
+.producto-card--baja .producto-titulo,
+.producto-card--baja .producto-descripcion,
+.producto-card--baja .producto-datos,
+.producto-card--baja .producto-precio {
+  opacity: 0.5;
 }

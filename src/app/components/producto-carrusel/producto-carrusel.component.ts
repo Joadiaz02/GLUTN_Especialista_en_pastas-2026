@@ -4,6 +4,7 @@ import {
   ElementRef,
   Input,
   OnDestroy,
+  TemplateRef,
   ViewChild,
   inject,
   signal,
@@ -37,6 +38,12 @@ export class ProductoCarruselComponent
 
   @Input()
   etiqueta = 'productos';
+
+  // Opcional: botones propios para el pie de cada tarjeta, en lugar de
+  // "Agregar" / cantidad del carrito. Lo usan las pantallas de gestión
+  // (platos y postres del personal) para destacar, editar y dar de baja.
+  @Input()
+  acciones: TemplateRef<{ $implicit: CartaItem }> | null = null;
 
   @ViewChild('productosViewport')
   productosViewport?: ElementRef<HTMLElement>;
