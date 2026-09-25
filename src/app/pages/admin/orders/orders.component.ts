@@ -68,18 +68,22 @@ export class OrdersComponent implements OnInit {
   }
 
   async confirmar(idPedido: string): Promise<void> {
-    this.estado.set(idPedido);
-    await this.pedido.actualizarEstado(idPedido, 'confirmado');
-    this.cargarpedido();
-    this.estado.set(null);
-  }
+  const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
+  if (!pedidoActual) return;
+  this.estado.set(idPedido);
+  await this.pedido.actualizarEstado(idPedido, pedidoActual.id_usuario, 'confirmado');
+  await this.cargarpedido();
+  this.estado.set(null);
+}
 
-  async rechazar(idPedido: string): Promise<void> {
-    this.estado.set(idPedido);
-    await this.pedido.actualizarEstado(idPedido, 'rechazado');
-    this.cargarpedido();
-    this.estado.set(null);
-  }
+async rechazar(idPedido: string): Promise<void> {
+  const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
+  if (!pedidoActual) return;
+  this.estado.set(idPedido);
+  await this.pedido.actualizarEstado(idPedido, pedidoActual.id_usuario, 'rechazado');
+  await this.cargarpedido();
+  this.estado.set(null);
+}
 
   async ngOnInit(): Promise<void> {
     await this.cargarpedido();
