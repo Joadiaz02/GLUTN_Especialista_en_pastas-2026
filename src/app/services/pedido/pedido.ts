@@ -93,9 +93,11 @@ export class Pedido {
 
     if (error) throw error;
 
-    await this.sup.client.functions.invoke('notify-order-status', {
+    await this.sup.client.functions.invoke('notify-pedido-stado', {
     body: {idUsuario , idPedido, nuevoEstado }
+
   });
+  
   }
 
   async actualizar_pedido(id_pedido:string):Promise<void>{
