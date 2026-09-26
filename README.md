@@ -557,8 +557,8 @@ Actualización del ícono y Splash Screen de la aplicación utilizando la identi
 | Logo unificado | Mariano Pastor | 18/09/2026 | 22/09/2026 | Realizado |
 | Escáner QR del Home | Javier Vilchez | 23/09/2026 | — | En desarrollo |
 | Header reutilizable | Lucas Ponte | 23/09/2026 | 24/09/2026 | Realizado |
-| Administración de mesas | Javier Vilchez | — | 24/09/2026 | Realizado |
-| Ícono y Splash en verde | — | 24/09/2026 | 24/09/2026 | Realizado |
+| Administración de mesas | Javier Vilchez | 20/09/2026 | 24/09/2026 | Realizado |
+| Ícono y Splash en verde | Mariano Pastor| 24/09/2026 | 24/09/2026 | Realizado |
 
 ---
 
