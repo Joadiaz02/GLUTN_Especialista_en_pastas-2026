@@ -27,6 +27,7 @@ import {
   starOutline,
   trashOutline,
 } from 'ionicons/icons';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-drinks',
@@ -50,8 +51,6 @@ import {
   ],
 })
 export class DrinksPage implements OnInit {
-  drinks = signal<CartaItem[]>([]);
-  isLoading = signal(false);
   textoBusqueda = signal('');
 
   private _drinkService = inject(Drink);
@@ -59,6 +58,14 @@ export class DrinksPage implements OnInit {
   private _toastController = inject(ToastController);
   private _vibracion = inject(Vibracion);
   private _router = inject(Router);
+
+  // Fuente única de verdad: reacciona sola a los cambios de la base
+  private drinksSignal = toSignal(this._drinkService.getListChanges(), {
+    initialValue: null, // null = todavía no llegó el primer emit
+  });
+
+  drinks = computed(() => this.drinksSignal() ?? []);
+  isLoading = computed(() => this.drinksSignal() === null);
 
   drinksFiltrados = computed(() => {
     const texto = this.textoBusqueda().trim().toLowerCase();
@@ -78,15 +85,8 @@ export class DrinksPage implements OnInit {
     });
   }
 
-  async ngOnInit() {
-    await this.cargarBebidas();
-  }
-
-  private async cargarBebidas(): Promise<void> {
-    this.isLoading.set(true);
-    const drinks = await this._drinkService.getList();
-    this.isLoading.set(false);
-    this.drinks.set(drinks);
+  ngOnInit(): void {
+    // No hace falta cargar nada acá: toSignal ya se suscribe solo
   }
 
   onBuscar(texto: string): void {
@@ -138,13 +138,11 @@ export class DrinksPage implements OnInit {
     if (!confirmado) return;
 
     try {
-      // Usamos update con sugerencia tal como usaba tu servicio original
       await this._drinkService.update(item.id_carta, { sugerencia: activar });
       await this._vibracion.confirmacion();
       await this.mostrarAviso(
         activar ? 'Bebida destacada correctamente.' : 'Bebida retirada de destacadas.'
       );
-      await this.cargarBebidas();
     } catch (error) {
       await this.mostrarError();
     }
@@ -165,7 +163,6 @@ export class DrinksPage implements OnInit {
       await this._drinkService.update(item.id_carta, { baja_logica: true });
       await this._vibracion.confirmacion();
       await this.mostrarAviso('Bebida dada de baja correctamente.');
-      await this.cargarBebidas();
     } catch (error) {
       await this.mostrarError();
     }
@@ -186,7 +183,6 @@ export class DrinksPage implements OnInit {
       await this._drinkService.update(item.id_carta, { baja_logica: false });
       await this._vibracion.confirmacion();
       await this.mostrarAviso('Bebida reactivada correctamente.');
-      await this.cargarBebidas();
     } catch (error) {
       await this.mostrarError();
     }

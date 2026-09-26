@@ -116,11 +116,17 @@ export class CreateDrinkPage {
       await this._drinkService.add({
         nombre: data.title,
         descripcion: data.description,
-        tiempo_elaboracion: data.preparation,
         precio: data.price,
+        tipo: "bebida",
         foto_1: image01,
         foto_2: image02,
         foto_3: image03,
+        tiempo_elaboracion: data.preparation,
+        sugerencia: false,
+        destacado: false,
+        medida_ml: data.ml,
+        tiene_alcohol: data.contieneAlcohol,
+        baja_logica: false
       });
 
       const toast = await this._toastController.create({
