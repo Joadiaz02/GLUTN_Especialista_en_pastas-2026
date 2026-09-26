@@ -1,28 +1,84 @@
 import { Injectable } from '@angular/core';
 import { Haptics } from '@capacitor/haptics';
 
-// Feedback háptico + sonoro centralizado, para que cualquier pantalla
-// del equipo lo llame igual en vez de reimplementar Haptics.vibrate()
-// y el audio suelto cada vez (como ya pasaba en Login).
-// Requisitos excluyentes del TP: vibrar en TODOS los errores, y sonidos
-// distintos según el evento.
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class Vibracion {
+
   async error(durationMs = 300): Promise<void> {
-    await Haptics.vibrate({ duration: durationMs });
-    this.reproducir('assets/sounds/spongebob-fail.mp3');
+    await this.vibrar(durationMs);
+
+    this.reproducir(
+      'assets/sounds/spongebob-fail.mp3'
+    );
   }
 
-  async confirmacion(durationMs = 100): Promise<void> {
-    await Haptics.vibrate({ duration: durationMs });
-    this.reproducir('assets/sounds/among-us.mp3');
+  async errorValidacion(
+    durationMs = 200
+  ): Promise<void> {
+    await this.vibrar(durationMs);
   }
 
-  private reproducir(ruta: string): void {
-    const audio = new Audio(ruta);
-    audio.load();
-    audio.play().catch(error => {
-      console.warn('El reproductor de audio requiere interacción previa del usuario:', error);
-    });
+  async confirmacion(
+    durationMs = 100
+  ): Promise<void> {
+    await this.vibrar(durationMs);
+
+    this.reproducir(
+      'assets/sounds/among-us.mp3'
+    );
+  }
+
+
+  sonidoInicio(): void {
+    this.reproducir(
+      'assets/sounds/inicio.mp3'
+    );
+  }
+
+  sonidoCierre(): void {
+    this.reproducir(
+      'assets/sounds/cierre.wav'
+    );
+  }
+
+
+  private async vibrar(
+    durationMs: number
+  ): Promise<void> {
+    try {
+      await Haptics.vibrate({
+        duration: durationMs,
+      });
+    } catch (error) {
+      console.warn(
+        'No se pudo ejecutar la vibración:',
+        error
+      );
+    }
+  }
+
+
+  private reproducir(
+    ruta: string
+  ): void {
+    try {
+      const audio = new Audio(ruta);
+
+      audio.preload = 'auto';
+
+      void audio.play().catch((error) => {
+        console.warn(
+          'No se pudo reproducir el sonido:',
+          error
+        );
+      });
+    } catch (error) {
+      console.warn(
+        'No se pudo crear el reproductor de audio:',
+        error
+      );
+    }
   }
 }
