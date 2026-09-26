@@ -236,11 +236,6 @@ Los siguientes puntos corresponden a las funcionalidades principales establecida
 
 ## 👤 Joaquín Díaz
 
-### Punto 1 - Agregar empleado
-
-Gestión de empleados y perfiles dentro de la aplicación.
-
----
 
 ### Punto 5 - Crear cliente registrado
 
@@ -278,6 +273,16 @@ Implementación de la aprobación de solicitudes de clientes registrados.
 
 ---
 
+### Punto 9 - Ingreso de cliente anónimo y lista de espera
+
+Funcionalidad correspondiente al ingreso de clientes anónimos y gestión de la lista de espera.
+
+**Estado:** En construcción. 
+
+**Punto reasignado Javier Vilchez --> Joaquín Díaz - 26/09/2026 **
+
+---
+
 ### Punto 20 - Encuestas y gráficos
 
 Implementación del módulo de encuestas y visualización de resultados.
@@ -285,6 +290,14 @@ Implementación del módulo de encuestas y visualización de resultados.
 ---
 
 ## 👤 Javier Vilchez
+
+### Punto 1 - Agregar empleado
+
+Gestión de empleados y perfiles dentro de la aplicación.
+
+**Punto reasignado Joaquín Díaz --> Javier Vilchez - 26/09/2026 **
+
+---
 
 ### Punto 3 - Agregar bebida
 
@@ -302,23 +315,10 @@ Módulo de creación y administración de mesas.
 
 ---
 
-### Punto 9 - Ingreso de cliente anónimo y lista de espera
 
-Funcionalidad correspondiente al ingreso de clientes anónimos y gestión de la lista de espera.
 
-**Estado:** En construcción.
-
----
 
 ## 👤 Lucas Ponte
-
-### Punto 11 - Visualización del menú y consulta al mozo
-
-Implementación de la comunicación entre el cliente y el mozo mediante consultas.
-
-**Estado:** En desarrollo.
-
----
 
 ### Punto 12 - Realización del pedido
 
@@ -338,6 +338,23 @@ Implementación del flujo de rechazo de pedidos.
 
 ---
 
+### Punto 14 -  Confirmación del pedido
+
+Implementación del flujo de confirmación de pedidos.
+
+**Inicio:** 15/09/2026  
+**Finalización:** 02/10/2026.
+
+
+---
+### Punto 19 - Entrega del pedido
+
+Funcionalidad correspondiente a la entrega del pedido al cliente.
+
+**Estado:** Aún no iniciado.
+
+---
+
 ## 👤 Mariano Pastor
 
 ### Punto 2 - Agregar nuevo plato
@@ -354,7 +371,13 @@ Módulo de administración de platos y postres, incluyendo:
 **Finalización:** 22/09/2026.
 
 ---
+### Punto 11 - Visualización del menú y consulta al mozo
 
+Implementación de la comunicación entre el cliente y el mozo mediante consultas.
+
+**Estado:** En desarrollo.
+
+---
 ### Punto 15 - Juegos
 
 Implementación de los juegos disponibles para los clientes:
@@ -385,11 +408,7 @@ Funcionalidad correspondiente a la notificación de productos terminados.
 
 ---
 
-### Punto 19 - Entrega del pedido
 
-Funcionalidad correspondiente a la entrega del pedido al cliente.
-
-**Estado:** Aún no iniciado.
 
 ---
 
@@ -574,6 +593,15 @@ Cada integrante cuenta con funcionalidades principales asignadas. Esta división
 | **Javier Vilchez** | 3, 4, 9, 10, 17 y 22 |
 | **Lucas Ponte** | 11, 12, 13, 14 y 21 |
 | **Mariano Pastor** | 2, 15, 16, 18 y 19 |
+
+**Actualización 26/09/26**
+
+| Integrante | Puntos asignados |
+|---|---|
+| **Joaquín Díaz** | 5, 6, 7, 8, 9 y 20 |
+| **Javier Vilchez** |1, 3, 4, 10, 17 y 22 |
+| **Lucas Ponte** | 12, 13, 14, 19 y 21 |
+| **Mariano Pastor** | 2,11, 15, 16 y 18 |
 
 ---
 
