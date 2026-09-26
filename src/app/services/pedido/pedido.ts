@@ -93,12 +93,14 @@ export class Pedido {
 
     if (error) throw error;
 
-    await this.sup.client.functions.invoke('notify-pedido-stado', {
-    body: {idUsuario , idPedido, nuevoEstado }
+        const { data: dataNotif, error: errorNotif } = await this.sup.client.functions.invoke('notify-pedido-stado', {
+        body: { idUsuario, idPedido, nuevoEstado }
+    });
 
-  });
-  
+        alert('Notif estado data: ' + JSON.stringify(dataNotif) + ' | error: ' + JSON.stringify(errorNotif));
   }
+  
+  
 
   async actualizar_pedido(id_pedido:string):Promise<void>{
     const items = this.carrito.items();
