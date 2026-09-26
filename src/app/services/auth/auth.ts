@@ -8,6 +8,7 @@ import { SupabaseService } from '../supabase.service';
 import { EPerfilUsuario } from '@app/enums';
 import type { PerfilUsuario } from '@app/models/usuario.model';
 import { Storage } from '../storage';
+import { Vibracion } from '../vibracion/vibracion';
 
 const CLAVE_PANTALLA_INGRESO = 'pantallaIngreso';
 
@@ -16,12 +17,10 @@ const CLAVE_PANTALLA_INGRESO = 'pantallaIngreso';
 })
 export class Auth {
 
-  private readonly supabaseService =
-    inject(SupabaseService);
+  private readonly supabaseService = inject(SupabaseService);
 
-  private readonly storageService =
-    inject(Storage);
-
+  private readonly storageService = inject(Storage);
+  private readonly vibracion = inject(Vibracion);
   usuarioActual = signal<any>(null);
 
   constructor() {
@@ -369,15 +368,11 @@ export class Auth {
   }
 
 
-  async logout(): Promise<void> {
-
-    await this.supabaseService.client.auth
-      .signOut();
-
-    this.usuarioActual.set(
-      null
-    );
-  }
+async logout(): Promise<void> {
+  this.vibracion.sonidoCierre();
+  await this.supabaseService.client.auth.signOut();
+  this.usuarioActual.set(null);
+}
 
 
   estaLogueado(): boolean {

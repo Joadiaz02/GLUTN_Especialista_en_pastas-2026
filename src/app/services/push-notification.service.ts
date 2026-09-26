@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 
 import { SupabaseService } from './supabase.service';
 import { Auth } from './auth/auth';
-
+import { Vibracion } from './vibracion/vibracion';
 // Adónde navegar al tocar la notificación, según el "tipo" que manda cada
 // función (ver supabase/functions/notify-chat-message).
 const RUTA_POR_TIPO: Record<string, string> = {
@@ -22,21 +22,16 @@ const RUTA_POR_TIPO: Record<string, string> = {
   providedIn: 'root',
 })
 export class PushNotificationService {
-  private readonly supabaseService =
-    inject(SupabaseService);
+  private readonly supabaseService = inject(SupabaseService);
 
-  private readonly authService =
-    inject(Auth);
+  private readonly authService = inject(Auth);
 
-  private readonly platform =
-    inject(Platform);
+  private readonly platform = inject(Platform);
 
-  private readonly toastController =
-    inject(ToastController);
+  private readonly toastController = inject(ToastController);
 
-  private readonly router =
-    inject(Router);
-
+  private readonly router = inject(Router);
+  private readonly vibracion = inject(Vibracion);
   private inicializado = false;
 
   async inicializar(): Promise<void> {
@@ -96,6 +91,8 @@ export class PushNotificationService {
     await PushNotifications.addListener(
       'registrationError',
       (error) => {
+        void this.vibracion.error();
+
         console.error(
           'Error registrando Push Notifications:',
           error
@@ -106,9 +103,6 @@ export class PushNotificationService {
     await PushNotifications.addListener(
       'pushNotificationReceived',
       async (notification: PushNotificationSchema) => {
-        // Con la app abierta el sistema operativo no muestra el aviso solo:
-        // hay que mostrarlo nosotros para que la notificación se vea tanto
-        // con la app abierta como cerrada.
         await this.mostrarAviso(notification);
       }
     );
@@ -185,18 +179,20 @@ export class PushNotificationService {
         }
       );
 
-  if (error) {
-    console.error(
-      'Error guardando token FCM:',
-      JSON.stringify(
-        error,
-        null,
-        2
-      )
-    );
+if (error) {
+  void this.vibracion.error();
 
-    return;
-  }
+  console.error(
+    'Error guardando token FCM:',
+    JSON.stringify(
+      error,
+      null,
+      2
+    )
+  );
+
+  return;
+}
 
   console.log(
     'TOKEN FCM GUARDADO CORRECTAMENTE'
