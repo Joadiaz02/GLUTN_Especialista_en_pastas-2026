@@ -93,11 +93,9 @@ export class Pedido {
 
     if (error) throw error;
 
-        const { data: dataNotif, error: errorNotif } = await this.sup.client.functions.invoke('notify-pedido-stado', {
-        body: { idUsuario, idPedido, nuevoEstado }
+    await this.sup.client.functions.invoke('notify-pedido-stado', {
+    body: { idUsuario, idPedido, nuevoEstado }
     });
-
-        alert('Notif estado data: ' + JSON.stringify(dataNotif) + ' | error: ' + JSON.stringify(errorNotif));
   }
   
   
