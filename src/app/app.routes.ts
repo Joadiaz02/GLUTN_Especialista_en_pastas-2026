@@ -191,7 +191,32 @@ export const routes: Routes = [
         './pages/admin/orders/orders-detalles/orders-detalles.component'
       ).then((m) => m.OrdersDetallesComponent),
   },
-
+  {
+    path: 'admin/kitchen',
+    canActivate: [authGuard, roleGuard],
+    data: {
+      roles: [EPerfilUsuario.Cocinero],
+      titulo: 'Cocina',
+      tipos: ['plato', 'postre'],
+    },
+    loadComponent: () =>
+      import('./pages/sector-pedidos/sector-pedidos.page').then(
+        (m) => m.SectorPedidosPage
+      ),
+  },
+  {
+    path: 'admin/bar',
+    canActivate: [authGuard, roleGuard],
+    data: {
+      roles: [EPerfilUsuario.Cantinero],
+      titulo: 'Bar',
+      tipos: ['bebida'],
+    },
+    loadComponent: () =>
+      import('./pages/sector-pedidos/sector-pedidos.page').then(
+        (m) => m.SectorPedidosPage
+      ),
+  },
   {
     path: 'juegos',
 
@@ -310,6 +335,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/waiting-room/waiting-room.page').then(
         (m) => m.WaitingRoomPage
+      ),
+  },
+  {
+    path: 'sector-pedidos',
+    loadComponent: () =>
+      import('./pages/sector-pedidos/sector-pedidos.page').then(
+        (m) => m.SectorPedidosPage
       ),
   },
 ];
