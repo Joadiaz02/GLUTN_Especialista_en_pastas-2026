@@ -77,7 +77,7 @@ export class DrinksPage implements OnInit {
       trashOutline,
     });
   }
-
+  //sacar scrol 
   async ngOnInit() {
     await this.cargarBebidas();
   }
