@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+    </ion-buttons>
+
+    <ion-title>Lista de espera</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="waitlist__header">
+    <h1 class="waitlist__title">Clientes esperando</h1>
+    <p class="waitlist__subtitle">
+      @if (users().length > 0) { {{ users().length }} {{ users().length === 1 ?
+      'cliente esperando una mesa.' : 'personas esperando una mesa.' }} } @else
+      { Todavía no hay nadie en la lista }
+    </p>
+  </div>
+
+  @if (users().length === 0) {
+  <div class="waitlist__empty">
+    <p>No hay clientes esperando una mesa por ahora.</p>
+  </div>
+  } @else {
+  <div class="waitlist__list">
+    @for (entry of users(); track entry.id) {
+    <button class="waitlist-card" type="button" [routerLink]="entry.id">
+      <div class="waitlist-card__info">
+        <img
+          [src]="entry.usuarios.avatar"
+          [alt]="entry.usuarios.nombre"
+          class="waitlist-card__avatar"
+        />
+
+        <p class="waitlist-card__name">
+          {{ entry.usuarios.nombre }} {{ entry.usuarios.apellido }}
+        </p>
+      </div>
+
+      <div class="icon">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.42565 17.2247C7.26732 17.2247 7.10898 17.1664 6.98398 17.0414C6.74232 16.7997 6.74232 16.3997 6.98398 16.1581L12.4173 10.7247C12.8173 10.3247 12.8173 9.67475 12.4173 9.27475L6.98398 3.84144C6.74232 3.59977 6.74232 3.19977 6.98398 2.95811C7.22565 2.71644 7.62565 2.71644 7.86732 2.95811L13.3007 8.39141C13.7257 8.81641 13.9673 9.39141 13.9673 9.99975C13.9673 10.6081 13.734 11.1831 13.3007 11.6081L7.86732 17.0414C7.74232 17.1581 7.58398 17.2247 7.42565 17.2247Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+    </button>
+    }
+  </div>
+  }
+</ion-content>

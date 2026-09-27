@@ -43,8 +43,13 @@ export class Pedido {
         if(error_items){
             throw error_items;
         };
-        this.carrito.vaciar();
 
+        await this.sup.client.functions.invoke('notify-new-pedido', {
+            body: { idPedido: pedido.id_pedido, idMesa: id_mesa }
+        });
+
+        
+        this.carrito.vaciar();
         this.estado_pedido.set(true);
         this.idUltimoPedido.set(pedido.id_pedido)
         return pedido.id_pedido;
@@ -62,6 +67,8 @@ export class Pedido {
         }    
         
         return data ?? [];
+
+                
     }
 
     async obtenerPedidoConItems(idPedido: string): Promise<any> {
@@ -78,14 +85,20 @@ export class Pedido {
     return { ...pedido, items: items ?? [] };
   }
 
-    async actualizarEstado(idPedido: string, nuevoEstado: string): Promise<void> {
+    async actualizarEstado(idPedido: string,idUsuario: string ,nuevoEstado: string): Promise<void> {
     const { error } = await this.sup.client
       .from('pedido')
       .update({ estado_pedido: nuevoEstado })
       .eq('id_pedido', idPedido);
 
     if (error) throw error;
+
+    await this.sup.client.functions.invoke('notify-pedido-stado', {
+    body: { idUsuario, idPedido, nuevoEstado }
+    });
   }
+  
+  
 
   async actualizar_pedido(id_pedido:string):Promise<void>{
     const items = this.carrito.items();

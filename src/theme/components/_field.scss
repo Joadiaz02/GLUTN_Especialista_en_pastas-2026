@@ -29,3 +29,25 @@
     text-align: right;
   }
 }
+
+ion-textarea.field__textarea {
+  --background: var(--color-surface-muted);
+  --color: var(--ion-text-color);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --border-radius: 12px;
+  min-height: 120px;
+  font-size: 16px !important;
+
+  --placeholder-color: var(--text-secondary);
+    --placeholder-opacity: 1;
+    
+    --highlight-height: 1px;
+    
+    --border-color: var(--color-surface-muted);
+    --border-style: solid;
+    --border-width: 1px;
+
+    --highlight-color-invalid: var(--ion-color-danger);
+    --highlight-color-valid: var(--ion-color-primary);
+}
