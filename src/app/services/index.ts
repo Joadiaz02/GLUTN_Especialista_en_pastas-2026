@@ -12,6 +12,7 @@ export * from './vibracion';
 export * from './juegos';
 export * from './sopa-letras';
 export * from './chat';
+export * from './mesa-cliente';
 export * from './escaner-qr';
 export * from './waitlist';
 export * from './user';

@@ -5,6 +5,7 @@ import type { Mock } from 'vitest';
 import { EPerfilUsuario } from '../../enums';
 import type { Mensaje } from '../../models/mensaje.model';
 import { Auth } from '../auth/auth';
+import { MesaCliente } from '../mesa-cliente/mesa-cliente';
 import { SupabaseService } from '../supabase.service';
 import { Chat, CHAT_LARGO_MAXIMO } from './chat';
 
@@ -25,6 +26,7 @@ function mensaje(id: string, minuto: number, extra: Partial<Mensaje> = {}): Mens
 
 describe('Chat', () => {
   const usuarioActual = signal<{ id: string } | null>(null);
+  const numeroMesa = signal<string | null>(null);
   let perfil: string;
   let alLlegarEnVivo: (payload: { new: Mensaje }) => void;
 
@@ -38,7 +40,7 @@ describe('Chat', () => {
   let chat: Chat;
 
   beforeEach(() => {
-    localStorage.clear();
+    numeroMesa.set(null);
     perfil = EPerfilUsuario.ClienteRegistrado;
     usuarioActual.set({ id: 'cliente-1' });
 
@@ -75,6 +77,7 @@ describe('Chat', () => {
           provide: Auth,
           useValue: { usuarioActual, obtenerPerfil: () => perfil },
         },
+        { provide: MesaCliente, useValue: { numero: numeroMesa } },
       ],
     });
 
@@ -146,7 +149,7 @@ describe('Chat', () => {
 
   describe('enviar', () => {
     beforeEach(() => {
-      localStorage.setItem('mesa', '4');
+      numeroMesa.set('4');
       insercion.data = mensaje('nuevo', 5, { texto: 'Hola' });
     });
 
@@ -194,7 +197,7 @@ describe('Chat', () => {
     });
 
     it('un cliente sin mesa asignada no puede escribir', async () => {
-      localStorage.removeItem('mesa');
+      numeroMesa.set(null);
 
       await expect(chat.enviar('Hola')).rejects.toThrow('Todavía no tenés una mesa asignada.');
 
@@ -202,7 +205,7 @@ describe('Chat', () => {
     });
 
     it('un mozo puede escribir sin mesa', async () => {
-      localStorage.removeItem('mesa');
+      numeroMesa.set(null);
       perfil = EPerfilUsuario.Mozo;
 
       await expect(chat.enviar('En un momento vamos')).resolves.toBeDefined();
