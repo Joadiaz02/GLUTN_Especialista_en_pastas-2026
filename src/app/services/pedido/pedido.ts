@@ -100,37 +100,44 @@ export class Pedido {
   
   
 
-  async actualizar_pedido(id_pedido:string):Promise<void>{
-    const items = this.carrito.items();
+  async actualizar_pedido(id_pedido: string): Promise<void> {
+  const items = this.carrito.items();
 
-        if (items.length === 0) {
-        throw new Error('El carrito está vacío');
-    }
+  if (items.length === 0) {
+    throw new Error('El carrito está vacío');
+  }
 
-    const { error: errorBorrar } = await this.sup.client.from('pedido_item').delete().eq('id_pedido', id_pedido);
+  const { error: errorBorrar } = await this.sup.client.from('pedido_item').delete().eq('id_pedido', id_pedido);
+  if (errorBorrar) throw errorBorrar;
 
-    if (errorBorrar) throw errorBorrar;
+  const itemsAInsertar = items.map(item => ({
+    id_pedido: id_pedido,
+    id_carta: item.producto.id_carta,
+    cantidad: item.cantidad,
+    precio_unitario: item.producto.precio,
+    subtotal: item.producto.precio * item.cantidad
+  }));
 
-        const itemsAInsertar = items.map(item => ({
-        id_pedido: id_pedido,
-        id_carta: item.producto.id_carta,
-        cantidad: item.cantidad,
-        precio_unitario: item.producto.precio,
-        subtotal: item.producto.precio * item.cantidad
-        }));
+  const { error: error_items } = await this.sup.client.from('pedido_item').insert(itemsAInsertar);
+  if (error_items) throw error_items;
 
-        const {error: error_items} = await this.sup.client.from('pedido_item').insert(itemsAInsertar)
 
-        if(error_items){
-            throw error_items;
-        };
+  const { data: pedidoActualizado, error: error_modificacion } = await this.sup.client
+    .from('pedido')
+    .update({ subtotal: this.carrito.importeTotal(), estado_pedido: 'pendiente' })
+    .eq('id_pedido', id_pedido)
+    .select()
+    .single();
 
-        const {error:error_modificacion} = await this.sup.client.from('pedido').update({subtotal:this.carrito.importeTotal(),estado_pedido:'pendiente'}).eq('id_pedido',id_pedido)
-        
-        if (error_modificacion) throw error_modificacion;
-        this.carrito.vaciar();
-        this.idPedidoEnEdicion.set(null);
-    }
+  if (error_modificacion) throw error_modificacion;
+
+  await this.sup.client.functions.invoke('notify-new-pedido', {
+    body: { idPedido: id_pedido, idMesa: pedidoActualizado.id_mesa }
+  });
+
+  this.carrito.vaciar();
+  this.idPedidoEnEdicion.set(null);
+}
 
 }
 
