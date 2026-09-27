@@ -86,16 +86,25 @@ export class Pedido {
   }
 
     async actualizarEstado(idPedido: string,idUsuario: string ,nuevoEstado: string): Promise<void> {
-    const { error } = await this.sup.client
+    const {data: pedidoActualizado , error } = await this.sup.client
       .from('pedido')
       .update({ estado_pedido: nuevoEstado })
-      .eq('id_pedido', idPedido);
+      .eq('id_pedido', idPedido)
+      .select()
+      .single();
 
     if (error) throw error;
+    if (!pedidoActualizado) throw new Error('Pedido no encontrado');
 
     await this.sup.client.functions.invoke('notify-pedido-stado', {
     body: { idUsuario, idPedido, nuevoEstado }
     });
+
+    if (nuevoEstado === 'confirmado') {
+    await this.sup.client.functions.invoke('notify-kitchen-bar', {
+      body: { idPedido, idMesa: pedidoActualizado.id_mesa }
+      });
+    }
   }
   
   
@@ -137,6 +146,17 @@ export class Pedido {
 
   this.carrito.vaciar();
   this.idPedidoEnEdicion.set(null);
+}
+
+async obtenerPedidosConfirmados(): Promise<any[]> {
+  const { data, error } = await this.sup.client
+    .from('pedido')
+    .select('*, pedido_item(*, carta(*))')
+    .eq('estado_pedido', 'confirmado')
+    .order('fecha_emision_pedido', { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
 }
 
 }
