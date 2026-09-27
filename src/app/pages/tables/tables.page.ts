@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonIcon, IonButton, IonToggle, ToastController } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-import { Table } from '@app/services';
+import { Confirm, Table, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -29,7 +29,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class TablesPage {
   private _router = inject(Router);
   private _tableService = inject(Table);
-  private _toastController = inject(ToastController);  
+  private _toastController = inject(ToastController);
+  private _confirm = inject(Confirm);
+  private _vibracion = inject(Vibracion);
 
   readonly tipoLabel: any = {
     vip: 'VIP',
@@ -49,23 +51,58 @@ export class TablesPage {
   }
 
   async onToggle(table: any, event: CustomEvent): Promise<void> {
-    const activa: boolean = event.detail.checked;
+  const activa: boolean = event.detail.checked;
 
-    if (activa === !table.baja_logica) return;
+  if (activa === !table.baja_logica) return;
 
-    try {
-      await this._tableService.update(table.id, { baja_logica: !activa });
-    } catch (error) {
-      const toast = await this._toastController.create({
-        message:
-          'No pudimos completar la acción. Intentá nuevamente más tarde.',
-        duration: 5000,
-        position: 'top',
-      });
+  const toggleEl = event.target as HTMLIonToggleElement;
 
-      await toast.present();
+  try {
+    const confirmed = activa
+      ? await this._confirm.preguntar({
+          titulo: '¿Reactivar la mesa?',
+          mensaje: `"La mesa N°${table.numero}" va a volver a estar disponible.`,
+          textoConfirmar: 'Reactivar',
+          colorConfirmar: 'primary',
+          icono: 'refresh-outline',
+        })
+      : await this._confirm.preguntar({
+          titulo: '¿Dar de baja la mesa?',
+          mensaje: `"La mesa N°${table.numero}" va a dejar de estar disponible. Vas a poder reactivarlo cuando quieras.`,
+          textoConfirmar: 'Dar de baja',
+          colorConfirmar: 'danger',
+          icono: 'trash-outline',
+        });
 
-      (event.target as HTMLIonToggleElement).checked = !activa;
+    if (!confirmed) {
+      toggleEl.checked = !activa;
+      return;
     }
+
+    await this._tableService.update(table.id, { baja_logica: !activa });
+
+    await this._vibracion.confirmacion();
+
+    const toast = await this._toastController.create({
+      message: activa
+        ? 'Mesa reactivada correctamente.'
+        : 'Mesa dada de baja correctamente.',
+      duration: 3000,
+      position: 'top',
+      color: 'success',
+    });
+
+    await toast.present();
+  } catch (error) {
+    const toast = await this._toastController.create({
+      message: 'No pudimos completar la acción. Intentá nuevamente más tarde.',
+      duration: 5000,
+      position: 'top',
+    });
+
+    await toast.present();
+
+    toggleEl.checked = !activa;
   }
+}
 }

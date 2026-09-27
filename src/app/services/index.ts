@@ -13,3 +13,4 @@ export * from './juegos';
 export * from './sopa-letras';
 export * from './chat';
 export * from './escaner-qr';
+export * from './global-error-handler';

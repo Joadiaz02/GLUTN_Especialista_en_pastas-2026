@@ -8,18 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonButtons,
-  IonButton,
-  IonFooter,
-  ToastController,
-  IonInput,
-  IonToggle,
-} from '@ionic/angular';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonFooter, ToastController, IonInput, IonToggle, IonTextarea } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Drink, Storage } from '@app/services';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
@@ -46,7 +35,8 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     ConfirmVolverComponent,
     GtnUploader,
     SpinnerLogoComponent,
-  ],
+    IonTextarea
+],
 })
 export class EditDrinkPage implements OnInit {
   isLoading = signal<boolean>(false);
