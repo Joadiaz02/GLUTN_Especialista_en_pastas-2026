@@ -82,26 +82,26 @@ export class GuestPage {
   }
 
   async scanQR() {
-    // const { camera } = await BarcodeScanner.requestPermissions();
+    const { camera } = await BarcodeScanner.requestPermissions();
 
-    // if (camera !== 'granted' && camera !== 'limited') {
-    //   await this._showError('Necesitamos permiso de cámara para escanear el código.');
+    if (camera !== 'granted' && camera !== 'limited') {
+      await this._showError('Necesitamos permiso de cámara para escanear el código.');
     
-    //   return;
-    // }
+      return;
+    }
 
-    // const { barcodes } = await BarcodeScanner.scan();
+    const { barcodes } = await BarcodeScanner.scan();
     
-    // if (barcodes.length === 0) return;
+    if (barcodes.length === 0) return;
 
-    // if (barcodes[0].rawValue !== 'ingreso-local') {
+    if (barcodes[0].rawValue !== 'ingreso-local') {
     
-    //   await this._showError('Ese código QR no corresponde al ingreso del local.');
+      await this._showError('Ese código QR no corresponde al ingreso del local.');
     
-    //   return;
-    // }
+      return;
+    }
 
-    // this.scanning.set(true);
+    this.scanning.set(true);
 
     try {
       const { file, fullName } = this.form.getRawValue();
