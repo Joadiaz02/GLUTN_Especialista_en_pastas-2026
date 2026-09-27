@@ -178,6 +178,15 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'admin/kitchen',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/cocina/cocina.page').then((m) => m.CocinaPage),
+  },
+  {
     path: 'admin/orders',
     loadComponent: () =>
       import('./pages/admin/orders/orders.component').then(
@@ -190,19 +199,6 @@ export const routes: Routes = [
       import(
         './pages/admin/orders/orders-detalles/orders-detalles.component'
       ).then((m) => m.OrdersDetallesComponent),
-  },
-  {
-    path: 'admin/kitchen',
-    canActivate: [authGuard, roleGuard],
-    data: {
-      roles: [EPerfilUsuario.Cocinero],
-      titulo: 'Cocina',
-      tipos: ['plato', 'postre'],
-    },
-    loadComponent: () =>
-      import('./pages/sector-pedidos/sector-pedidos.page').then(
-        (m) => m.SectorPedidosPage
-      ),
   },
   {
     path: 'admin/bar',
