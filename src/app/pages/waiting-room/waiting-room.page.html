@@ -1,0 +1,17 @@
+<ion-content class="waiting-room" [fullscreen]="true">
+  <div class="waiting-room__body">
+    <div class="info">
+      <h1 class="waiting-room__title">¡Ya estás en la fila!</h1>
+      <p class="waiting-room__subtitle">
+        El metre ya te tiene anotado. Relajate que tu mesa te está esperando.
+      </p>
+    </div>
+
+    <app-turn-ring [position]="position() ?? 0" [total]="total()" />
+
+    <p class="waiting-room__footer">
+      Te avisaremos cuando tu mesa esté lista. Mantené las notificaciones
+      activadas.
+    </p>
+  </div>
+</ion-content>

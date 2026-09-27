@@ -1,0 +1,44 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+    </ion-buttons>
+
+    <ion-title>Asignar mesa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (loading()) {
+  <app-spinner-logo />
+  } @else {
+  <div class="header">
+    @if (user()) {
+    <img [src]="user().avatar" alt="" />
+    <p>{{ user().nombre }} {{ user().apellido }}</p>
+    }
+  </div>
+
+  <div class="tables">
+    @for (table of availableTables(); track table.id) {
+    <div
+      class="table-card"
+      [class.table-card--selected]="currentTable() && currentTable().id === table.id"
+      (click)="tableSelected(table)"
+    >
+      <h2>Mesa {{ table.numero }}</h2>
+      <p>{{ table.capacidad }} personas</p>
+      <p>{{ table.tipo }}</p>
+    </div>
+    }
+  </div>
+  }
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="footer-actions">
+    <ion-button expand="block" shape="round" (click)="assignTable()"
+      >Asignar mesa</ion-button
+    >
+  </div>
+</ion-footer>
