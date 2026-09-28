@@ -1,0 +1,22 @@
+// El carrusel y la tarjeta salen de cocina.page.scss; acá solo lo propio.
+
+.grupo__titulo {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.pedido__aviso {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 12px;
+  border-radius: 14px;
+  background: #2f3d24;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}

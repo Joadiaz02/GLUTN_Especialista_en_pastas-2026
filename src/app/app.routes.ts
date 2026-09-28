@@ -187,6 +187,17 @@ export const routes: Routes = [
       import('./pages/cocina/cocina.page').then((m) => m.CocinaPage),
   },
   {
+    path: 'admin/ready-orders',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
+
+    loadComponent: () =>
+      import('./pages/pedidos-listos/pedidos-listos.page').then(
+        (m) => m.PedidosListosPage
+      ),
+  },
+  {
     path: 'admin/orders',
     loadComponent: () =>
       import('./pages/admin/orders/orders.component').then(
