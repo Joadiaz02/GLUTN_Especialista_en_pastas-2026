@@ -30,13 +30,19 @@
         fill="outline"
         class="field__input"
         placeholder="Nombre"
+        maxlength="60"
         formControlName="title"
       />
 
       @if ( getFormControl('title')?.invalid &&
       (getFormControl('title')?.touched || getFormControl('title')?.dirty ) ) {
-      @if ( getFormControl('title')?.hasError('required') ) {
+      @if ( getFormControl('title')?.hasError('required') ||
+      getFormControl('title')?.hasError('soloEspacios') ) {
       <p class="field__error">El campo es obligatorio.</p>
+      } @else if ( getFormControl('title')?.hasError('largoMinimo') ) {
+      <p class="field__error">El nombre tiene que tener al menos 3 letras.</p>
+      } @else if ( getFormControl('title')?.hasError('largoMaximo') ) {
+      <p class="field__error">El nombre no puede superar los 60 caracteres.</p>
       } }
     </div>
 
@@ -47,20 +53,26 @@
         fill="outline"
         class="field__input"
         placeholder="Descripción"
+        maxlength="250"
         formControlName="description"
       />
 
       @if ( getFormControl('description')?.invalid &&
       (getFormControl('description')?.touched ||
       getFormControl('description')?.dirty ) ) { @if (
-      getFormControl('description')?.hasError('required') ) {
+      getFormControl('description')?.hasError('required') ||
+      getFormControl('description')?.hasError('soloEspacios') ) {
       <p class="field__error">El campo es obligatorio.</p>
+      } @else if ( getFormControl('description')?.hasError('largoMinimo') ) {
+      <p class="field__error">La descripción tiene que tener al menos 10 caracteres.</p>
+      } @else if ( getFormControl('description')?.hasError('largoMaximo') ) {
+      <p class="field__error">La descripción no puede superar los 250 caracteres.</p>
       } }
     </div>
 
     <div class="fields__row">
       <div class="field">
-        <label class="field__label">Elaboración</label>
+        <label class="field__label">Elaboración (minutos)</label>
 
         <ion-input
           type="text"
@@ -103,7 +115,7 @@
         @if ( getFormControl('price')?.hasError('required') ) {
         <p class="field__error">El campo es obligatorio.</p>
         } @else if ( getFormControl('price')?.hasError('pattern') ) {
-        <p class="field__error">Ingresá un precio válido (ej: 8500 o 8500.50).</p>
+        <p class="field__error">Ingresá un precio válido (por ejemplo, 8500 o 8500.50).</p>
         } @else if ( getFormControl('price')?.hasError('min') ) {
         <p class="field__error">Tiene que ser mayor a 0.</p>
         } }
