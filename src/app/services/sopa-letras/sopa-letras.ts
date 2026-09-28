@@ -85,6 +85,7 @@ export class SopaLetras {
   }
 
   iniciarPartida(): void {
+    this.juegos.iniciarIntento('sopa-de-letras');
     this.detenerTemporizador();
 
     this.palabras.set([]);

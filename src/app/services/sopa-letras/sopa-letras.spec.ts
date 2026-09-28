@@ -5,6 +5,7 @@ import { Auth } from '../auth/auth';
 import { EPerfilUsuario } from '../../enums';
 import { Juegos } from '../juegos/juegos';
 import { SopaLetras } from './sopa-letras';
+import { SupabaseService } from '../supabase.service';
 
 describe('SopaLetras', () => {
   let sopa: SopaLetras;
@@ -13,6 +14,10 @@ describe('SopaLetras', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        {
+          provide: SupabaseService,
+          useValue: { client: { rpc: vi.fn().mockResolvedValue({ data: null, error: null }) } },
+        },
         {
           provide: Auth,
           useValue: {

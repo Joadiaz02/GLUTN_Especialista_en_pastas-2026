@@ -37,6 +37,12 @@ export class JuegosPage {
   juegoAyuda = signal<ConfigJuego | null>(null);
   ayudaAbierta = signal(false);
 
+  // Al entrar se trae el descuento guardado de la estadía, por si el
+  // primer intento se jugó en otra sesión o en otro dispositivo.
+  ionViewWillEnter(): void {
+    void this._juegosService.cargar();
+  }
+
   puedeJugarPorPrimeraVez(): boolean {
     return this._juegosService.puedeJugarPorPrimeraVez();
   }
