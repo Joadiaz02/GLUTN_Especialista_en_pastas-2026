@@ -13,7 +13,6 @@ import {
   IonContent,
   IonFooter,
   IonButton,
-  IonSkeletonText,
   IonIcon,
   IonModal,
   ToastController,
@@ -35,6 +34,7 @@ import { CartaItem } from '@app/models/carta.model';
 import { Pedido } from '@app/services/pedido/pedido';
 import { EstadoPedidoComponent } from '@app/components/ui/estado-pedido/estado-pedido.component';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
 
@@ -76,10 +76,10 @@ interface MesaEscaneada {
     IonContent,
     IonFooter,
     IonButton,
-    IonSkeletonText,
     IonIcon,
     IonModal,
     CurrencyPipe,
+    SpinnerLogoComponent,
   ],
 })
 export class HomePage implements OnInit, OnDestroy {
@@ -117,11 +117,17 @@ export class HomePage implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.isLoadingDestacados.set(true);
 
-    const destacados = await this.cartaService.getSugeridos();
-
-    this.isLoadingDestacados.set(false);
-
-    this.destacados.set(destacados);
+    try {
+      this.destacados.set(await this.cartaService.getSugeridos());
+    } catch (error) {
+      void this.vibracion.error();
+      await this.mostrarToast(
+        error instanceof Error ? error.message : 'No pudimos cargar los productos destacados.',
+        'danger'
+      );
+    } finally {
+      this.isLoadingDestacados.set(false);
+    }
   }
 
   ngOnDestroy(): void {

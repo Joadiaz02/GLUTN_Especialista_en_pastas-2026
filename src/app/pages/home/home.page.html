@@ -34,7 +34,7 @@
       </ion-button>
 
       <ion-button class="home-button" expand="block" shape="round" (click)="abrirQuienesSomos()">
-        <span class="home-button__texto">Quienes somos</span>
+        <span class="home-button__texto">Quiénes somos</span>
       </ion-button>
 
       @if (botones().carta) {
@@ -74,10 +74,8 @@
         <h2 class="destacados__titulo">Productos destacados</h2>
 
         @if (isLoadingDestacados()) {
-          <div class="destacado-card destacado-card--skeleton">
-            <ion-skeleton-text [animated]="true" class="destacado-card__imagen"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true" style="width: 70%; height: 14px;"></ion-skeleton-text>
-            <ion-skeleton-text [animated]="true" style="width: 40%; height: 14px;"></ion-skeleton-text>
+          <div class="destacados__cargando">
+            <app-spinner-logo />
           </div>
         } @else if (destacados().length === 0) {
           <p class="destacados__vacio">Todavía no hay sugerencias del chef.</p>
@@ -188,7 +186,7 @@
   >
     <ng-template>
       <div class="home-modal__contenido historia">
-        <h2>Quienes somos</h2>
+        <h2>Quiénes somos</h2>
         <p>
           Somos cuatro estudiantes de programación que,
           entre parciales, commits y deploys, descubrieron que también compilaban buenas pastas.

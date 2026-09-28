@@ -11,21 +11,29 @@ export class Carta {
   private _db = inject(SupabaseService);
 
   async getSugeridos(): Promise<CartaItem[]> {
-    const { data } = await this._db.client
+    const { data, error } = await this._db.client
       .from(this._tableName)
       .select('*')
       .eq('sugerencia', true)
       .eq('baja_logica', false);
 
+    if (error) {
+      throw new Error('No pudimos cargar los productos destacados.');
+    }
+
     return data ?? [];
   }
 
   async getPorTipo(tipo: TipoCarta): Promise<CartaItem[]> {
-    const { data } = await this._db.client
+    const { data, error } = await this._db.client
       .from(this._tableName)
       .select('*')
       .eq('tipo', tipo)
       .eq('baja_logica', false);
+
+    if (error) {
+      throw new Error('No pudimos cargar la carta.');
+    }
 
     return data ?? [];
   }
