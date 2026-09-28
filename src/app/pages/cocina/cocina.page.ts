@@ -122,6 +122,7 @@ export class CocinaPage implements OnDestroy {
           'success'
         );
       } else {
+        void this._vibracion.errorValidacion();
         await this.avisar('Otro cocinero ya había recibido este pedido.', 'warning');
       }
     });
@@ -161,6 +162,7 @@ export class CocinaPage implements OnDestroy {
         await this._vibracion.confirmacion();
         await this.avisar('Pedido rechazado. Se le avisó al cliente.', 'success');
       } else {
+        void this._vibracion.errorValidacion();
         await this.avisar('Este pedido ya no se puede rechazar.', 'warning');
       }
     });
@@ -175,6 +177,7 @@ export class CocinaPage implements OnDestroy {
         await this._vibracion.confirmacion();
         await this.avisar('El pedido volvió a "Por recibir".', 'success');
       } else {
+        void this._vibracion.errorValidacion();
         await this.avisar('Este pedido ya no se puede devolver.', 'warning');
       }
     });
