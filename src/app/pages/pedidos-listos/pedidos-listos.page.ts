@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -11,19 +12,33 @@ import { DatePipe } from '@angular/common';
 import { IonContent, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
-import { Auth, ItemListo, PedidosListos, Vibracion } from '@app/services';
-import type { TipoCarta } from '@app/models/carta.model';
+import {
+  Auth,
+  EstadoParte,
+  PedidoDelMozo,
+  PedidosListos,
+  SectorPedido,
+  Vibracion,
+} from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 
-const NOMBRE_TIPO: Record<TipoCarta, string> = {
-  plato: 'Platos',
-  bebida: 'Bebidas',
-  postre: 'Postres',
+const NOMBRE_SECTOR: Record<SectorPedido, string> = {
+  cocina: 'Cocina',
+  bar: 'Bar',
 };
 
-// Punto 18: pedidos completos para llevar a la mesa, de a uno por tarjeta
-// y ordenados por mesa (mismo carrusel que Cocina).
+const NOMBRE_ESTADO: Record<EstadoParte, string> = {
+  por_recibir: 'Por recibir',
+  en_preparacion: 'En preparación',
+  listo: 'Listo',
+};
+
+export type VistaMozo = 'listos' | 'en_preparacion';
+
+// Punto 18: pedidos pendientes del mozo, de a uno por tarjeta y ordenados
+// por mesa (mismo carrusel que Cocina). En "En preparación" se ve cómo va
+// cada parte (cocina y bar); en "Listos" los completos para llevar.
 @Component({
   selector: 'app-pedidos-listos',
   standalone: true,
@@ -43,11 +58,19 @@ export class PedidosListosPage implements OnDestroy {
 
   indiceActual = signal(0);
 
+  vista = signal<VistaMozo>('listos');
+
+  pedidos = computed<PedidoDelMozo[]>(() =>
+    this.vista() === 'listos'
+      ? this.pedidosListos.completos()
+      : this.pedidosListos.enPreparacion()
+  );
+
   constructor() {
     // Cuando se entrega el último pedido de la lista, el contador no puede
     // quedar apuntando a una tarjeta que ya no existe.
     effect(() => {
-      const ultimo = Math.max(0, this.pedidosListos.pedidos().length - 1);
+      const ultimo = Math.max(0, this.pedidos().length - 1);
 
       if (this.indiceActual() > ultimo) {
         this.indiceActual.set(ultimo);
@@ -64,23 +87,26 @@ export class PedidosListosPage implements OnDestroy {
     this.pedidosListos.detener();
   }
 
-  // Ítems agrupados por tipo, en el orden en que vienen (platos, bebidas,
-  // postres).
-  gruposDe(items: ItemListo[]): { titulo: string; items: ItemListo[] }[] {
-    const grupos: { titulo: string; items: ItemListo[] }[] = [];
+  nombreSector(sector: SectorPedido): string {
+    return NOMBRE_SECTOR[sector];
+  }
 
-    for (const item of items) {
-      const titulo = NOMBRE_TIPO[item.tipo] ?? 'Otros';
-      const grupo = grupos.find((g) => g.titulo === titulo);
+  nombreEstado(estado: EstadoParte): string {
+    return NOMBRE_ESTADO[estado];
+  }
 
-      if (grupo) {
-        grupo.items.push(item);
-      } else {
-        grupos.push({ titulo, items: [item] });
-      }
+  cambiarVista(vista: VistaMozo): void {
+    if (vista === this.vista()) {
+      return;
     }
 
-    return grupos;
+    this.vista.set(vista);
+    this.indiceActual.set(0);
+
+    const viewport = this._viewport()?.nativeElement;
+    if (viewport) {
+      viewport.scrollLeft = 0;
+    }
   }
 
   irA(indice: number): void {

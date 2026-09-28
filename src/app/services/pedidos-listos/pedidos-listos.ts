@@ -1,37 +1,60 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 import type { TipoCarta } from '../../models/carta.model';
 import { SupabaseService } from '../supabase.service';
 
-export interface ItemListo {
+export type SectorPedido = 'cocina' | 'bar';
+
+// Cómo va cada parte del pedido en su sector.
+export type EstadoParte = 'por_recibir' | 'en_preparacion' | 'listo';
+
+export interface ItemPedido {
   nombre: string;
   cantidad: number;
   tipo: TipoCarta;
 }
 
-export interface PedidoListo {
+// La parte del pedido que prepara un sector (platos y postres en la
+// cocina, bebidas en el bar).
+export interface ParteDelPedido {
+  sector: SectorPedido;
+  estado: EstadoParte;
+  items: ItemPedido[];
+}
+
+export interface PedidoDelMozo {
   idPedido: string;
   numeroMesa: string;
   fecha: string;
-  items: ItemListo[];
+  completo: boolean;
+  partes: ParteDelPedido[];
 }
 
-// Orden en que el mozo lleva las cosas a la mesa.
-const ORDEN_TIPOS: TipoCarta[] = ['plato', 'bebida', 'postre'];
+const SECTOR_POR_TIPO: Record<TipoCarta, SectorPedido> = {
+  plato: 'cocina',
+  postre: 'cocina',
+  bebida: 'bar',
+};
 
-// Punto 18: el mozo ve los pedidos completos (cocina y bar terminaron su
-// parte, ver supabase/sql/pedido_sectores.sql) para llevarlos a la mesa.
-// Se actualiza en vivo: cuando un pedido pasa a 'listo' aparece solo, y
-// cuando se entrega (punto 19) desaparece.
+// Orden en que se muestran los ítems dentro de la cocina.
+const ORDEN_TIPOS: TipoCarta[] = ['plato', 'postre', 'bebida'];
+
+// Punto 18: el mozo ve, en su listado de pedidos pendientes, cómo va cada
+// parte del pedido (cocina y bar), y cuándo está completo para llevarlo a
+// la mesa (solo cuando terminaron todos los sectores que intervienen, ver
+// supabase/sql/pedido_sectores.sql). Se actualiza en vivo.
 @Injectable({ providedIn: 'root' })
 export class PedidosListos {
   private _db = inject(SupabaseService);
 
   private _canal?: RealtimeChannel;
 
-  pedidos = signal<PedidoListo[]>([]);
+  pedidos = signal<PedidoDelMozo[]>([]);
   cargando = signal(false);
+
+  completos = computed(() => this.pedidos().filter((p) => p.completo));
+  enPreparacion = computed(() => this.pedidos().filter((p) => !p.completo));
 
   // Idempotente: si el canal ya existe, solo vuelve a cargar.
   async iniciar(): Promise<void> {
@@ -53,12 +76,12 @@ export class PedidosListos {
     try {
       const { data: pedidos, error } = await this._db.client
         .from('pedido')
-        .select('id_pedido, id_mesa, fecha_emision_pedido')
-        .eq('estado_pedido', 'listo')
+        .select('id_pedido, id_mesa, fecha_emision_pedido, estado_pedido, estado_cocina, estado_bar')
+        .in('estado_pedido', ['confirmado', 'en_preparacion', 'listo'])
         .order('fecha_emision_pedido', { ascending: true });
 
       if (error) {
-        throw new Error('No pudimos cargar los pedidos listos.');
+        throw new Error('No pudimos cargar los pedidos.');
       }
 
       if (!pedidos || pedidos.length === 0) {
@@ -78,14 +101,14 @@ export class PedidosListos {
       ]);
 
       if (respuestaItems.error || respuestaMesas.error) {
-        throw new Error('No pudimos cargar los pedidos listos.');
+        throw new Error('No pudimos cargar los pedidos.');
       }
 
       const numeroPorMesa = new Map<string, string>(
         (respuestaMesas.data ?? []).map((m) => [m.id, String(m.numero)])
       );
 
-      const itemsPorPedido = new Map<string, ItemListo[]>();
+      const itemsPorPedido = new Map<string, ItemPedido[]>();
 
       for (const item of respuestaItems.data ?? []) {
         const carta = item.carta as unknown as { nombre: string; tipo: TipoCarta } | null;
@@ -99,21 +122,26 @@ export class PedidosListos {
         itemsPorPedido.set(item.id_pedido, lista);
       }
 
-      const pedidosListos = pedidos.map((p) => ({
-        idPedido: p.id_pedido,
-        numeroMesa: numeroPorMesa.get(p.id_mesa) ?? 'sin número',
-        fecha: p.fecha_emision_pedido,
-        items: (itemsPorPedido.get(p.id_pedido) ?? []).sort(
+      const lista = pedidos.map((p) => {
+        const items = (itemsPorPedido.get(p.id_pedido) ?? []).sort(
           (a, b) => ORDEN_TIPOS.indexOf(a.tipo) - ORDEN_TIPOS.indexOf(b.tipo)
-        ),
-      }));
+        );
+
+        return {
+          idPedido: p.id_pedido,
+          numeroMesa: numeroPorMesa.get(p.id_mesa) ?? 'sin número',
+          fecha: p.fecha_emision_pedido,
+          completo: p.estado_pedido === 'listo',
+          partes: this.armarPartes(items, p.estado_cocina, p.estado_bar),
+        };
+      });
 
       // Los de una misma mesa quedan juntos; las mesas, por el pedido que
       // está esperando hace más tiempo.
-      const ordenMesas = [...new Set(pedidosListos.map((p) => p.numeroMesa))];
+      const ordenMesas = [...new Set(lista.map((p) => p.numeroMesa))];
 
       this.pedidos.set(
-        pedidosListos.sort(
+        lista.sort(
           (a, b) => ordenMesas.indexOf(a.numeroMesa) - ordenMesas.indexOf(b.numeroMesa)
         )
       );
@@ -122,9 +150,36 @@ export class PedidosListos {
     }
   }
 
+  // Solo aparecen los sectores que tienen algo para preparar.
+  private armarPartes(
+    items: ItemPedido[],
+    estadoCocina: string | null,
+    estadoBar: string | null
+  ): ParteDelPedido[] {
+    const partes: ParteDelPedido[] = [];
+
+    for (const sector of ['cocina', 'bar'] as SectorPedido[]) {
+      const delSector = items.filter((item) => SECTOR_POR_TIPO[item.tipo] === sector);
+
+      if (delSector.length === 0) {
+        continue;
+      }
+
+      const estado = sector === 'cocina' ? estadoCocina : estadoBar;
+
+      partes.push({
+        sector,
+        estado: estado === 'listo' || estado === 'en_preparacion' ? estado : 'por_recibir',
+        items: delSector,
+      });
+    }
+
+    return partes;
+  }
+
   private suscribir(): void {
     this._canal = this._db.client
-      .channel('pedidos-listos')
+      .channel('pedidos-del-mozo')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'pedido' },

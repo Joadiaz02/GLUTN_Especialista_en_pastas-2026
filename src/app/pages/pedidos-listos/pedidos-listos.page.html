@@ -1,5 +1,5 @@
 <app-header
-  tituloVolver="¿Salir de Pedidos listos?"
+  tituloVolver="¿Salir de Pedidos?"
   mensajeVolver="Vas a volver al panel de administración."
   textoConfirmarVolver="Salir"
   colorConfirmarVolver="primary"
@@ -16,40 +16,83 @@
         class="logo"
       />
     </div>
-    <h1 class="titulo-pagina">Pedidos listos</h1>
+    <h1 class="titulo-pagina">Pedidos pendientes</h1>
+
+    <div class="vistas" role="tablist">
+      <button
+        type="button"
+        role="tab"
+        class="vistas__boton"
+        [class.vistas__boton--activo]="vista() === 'listos'"
+        [attr.aria-selected]="vista() === 'listos'"
+        (click)="cambiarVista('listos')"
+      >
+        Listos
+        <span class="vistas__cantidad">{{ pedidosListos.completos().length }}</span>
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        class="vistas__boton"
+        [class.vistas__boton--activo]="vista() === 'en_preparacion'"
+        [attr.aria-selected]="vista() === 'en_preparacion'"
+        (click)="cambiarVista('en_preparacion')"
+      >
+        En preparación
+        <span class="vistas__cantidad">{{ pedidosListos.enPreparacion().length }}</span>
+      </button>
+    </div>
 
     @if (pedidosListos.cargando() && pedidosListos.pedidos().length === 0) {
       <div class="cocina-vacio">
         <app-spinner-logo />
       </div>
-    } @else if (pedidosListos.pedidos().length === 0) {
+    } @else if (pedidos().length === 0) {
       <div class="cocina-vacio">
-        <p>No hay pedidos listos para llevar a las mesas.</p>
+        <p>
+          {{
+            vista() === 'listos'
+              ? 'No hay pedidos listos para llevar a las mesas.'
+              : 'No hay pedidos en preparación.'
+          }}
+        </p>
       </div>
     } @else {
       <!-- Un pedido por tarjeta; se desliza hacia los costados. -->
       <div #viewport class="carrusel" (scroll)="alDesplazar()">
-        @for (pedido of pedidosListos.pedidos(); track pedido.idPedido; let i = $index) {
+        @for (pedido of pedidos(); track pedido.idPedido; let i = $index) {
           <article class="slide" [class.slide--activo]="i === indiceActual()">
-            <div class="pedido pedido--preparando">
+            <div class="pedido" [class.pedido--preparando]="pedido.completo">
               <header class="pedido__mesa">
                 <h2>Mesa {{ pedido.numeroMesa }}</h2>
               </header>
 
               <div class="pedido__encabezado">
                 <div class="pedido__momento">
-                  <span class="pedido__hora">{{ pedido.fecha | date: 'HH:mm' }} h</span>
+                  <span class="pedido__hora">{{ pedido.fecha | date: 'HH:mm' }}</span>
                   <span class="pedido__fecha">{{ pedido.fecha | date: 'dd/MM/yyyy' }}</span>
                 </div>
 
-                <span class="pedido__estado pedido__estado--preparando">Completo</span>
+                <span
+                  class="pedido__estado"
+                  [class.pedido__estado--preparando]="pedido.completo"
+                >
+                  {{ pedido.completo ? 'Completo' : 'En preparación' }}
+                </span>
               </div>
 
+              <!-- Cada parte del pedido con el estado de su sector. -->
               <div class="pedido__items">
-                @for (grupo of gruposDe(pedido.items); track grupo.titulo) {
-                  <p class="grupo__titulo">{{ grupo.titulo }}</p>
+                @for (parte of pedido.partes; track parte.sector) {
+                  <div class="parte">
+                    <span class="parte__sector">{{ nombreSector(parte.sector) }}</span>
+                    <span class="parte__estado" [class]="'parte__estado--' + parte.estado">
+                      {{ nombreEstado(parte.estado) }}
+                    </span>
+                  </div>
 
-                  @for (item of grupo.items; track $index) {
+                  @for (item of parte.items; track $index) {
                     <div class="pedido__item">
                       <span class="pedido__cantidad">{{ item.cantidad }}</span>
                       <span class="pedido__nombre">{{ item.nombre }}</span>
@@ -58,7 +101,9 @@
                 }
               </div>
 
-              <p class="pedido__aviso">Cocina y bar terminaron: ya se puede llevar a la mesa.</p>
+              @if (pedido.completo) {
+                <p class="pedido__aviso">Cocina y bar terminaron: ya se puede llevar a la mesa.</p>
+              }
             </div>
           </article>
         }
@@ -75,13 +120,13 @@
           ‹
         </button>
 
-        <span>Pedido {{ indiceActual() + 1 }} de {{ pedidosListos.pedidos().length }}</span>
+        <span>Pedido {{ indiceActual() + 1 }} de {{ pedidos().length }}</span>
 
         <button
           type="button"
           class="contador__flecha"
           aria-label="Pedido siguiente"
-          [disabled]="indiceActual() === pedidosListos.pedidos().length - 1"
+          [disabled]="indiceActual() === pedidos().length - 1"
           (click)="irA(indiceActual() + 1)"
         >
           ›

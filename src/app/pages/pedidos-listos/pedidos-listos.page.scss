@@ -1,12 +1,43 @@
-// El carrusel y la tarjeta salen de cocina.page.scss; acá solo lo propio.
+// El carrusel, las pestañas y la tarjeta salen de cocina.page.scss; acá
+// solo lo propio.
 
-.grupo__titulo {
-  margin: 4px 0 0;
-  font-size: 13px;
+// Encabezado de cada parte del pedido: sector y cómo va.
+.parte {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(47, 61, 36, 0.2);
+}
+
+.parte__sector {
+  font-size: 15px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  opacity: 0.75;
+}
+
+.parte__estado {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.parte__estado--por_recibir {
+  background: #6b5c4e;
+}
+
+.parte__estado--en_preparacion {
+  background: var(--ion-color-primary);
+}
+
+.parte__estado--listo {
+  background: #2f3d24;
 }
 
 .pedido__aviso {
