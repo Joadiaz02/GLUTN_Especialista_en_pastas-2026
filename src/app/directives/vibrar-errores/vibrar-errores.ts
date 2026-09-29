@@ -4,7 +4,6 @@ import { Vibracion } from '@app/services/vibracion';
 
 // Va en un <form [formGroup]>: cuando el usuario sale de un campo y ese
 // campo quedó inválido (se muestra su mensaje de error), el celular vibra.
-// Requisito del TP: vibrar en TODOS los errores, incluidas las validaciones.
 @Directive({
   selector: 'form[appVibrarErrores]',
 })

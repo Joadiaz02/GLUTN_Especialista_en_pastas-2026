@@ -2,12 +2,12 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { IonIcon, ModalController, ToastController } from '@ionic/angular';
 import { UploadOptionsComponent } from '@app/components/ui/uploader/upload-options/upload-options.component';
 import { Camera, MediaResult } from '@capacitor/camera';
-
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 @Component({
   selector: 'app-uploader',
   templateUrl: './uploader.component.html',
   styleUrls: ['./uploader.component.scss'],
-  imports: [IonIcon],
+  imports: [IonIcon, SpinnerLogoComponent],
 })
 export class UploaderComponent {
   // Foto ya existente (edición), se muestra hasta que se elija una nueva.
@@ -53,6 +53,7 @@ export class UploaderComponent {
   }
 
   async selectFromGallery() {
+    this.uploading.set(true);
     try {
       const result = await Camera.chooseFromGallery({
         includeMetadata: true,
@@ -65,6 +66,8 @@ export class UploaderComponent {
       }
     } catch (err) {
       this.showErrorToast();
+    } finally {
+      this.uploading.set(false);
     }
   }
 

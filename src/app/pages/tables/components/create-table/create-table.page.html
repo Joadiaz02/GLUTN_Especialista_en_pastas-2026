@@ -10,7 +10,7 @@
 <ion-content [fullscreen]="true">
   <app-uploader [onlyTake]="true" (fileSelected)="onPhotoSelected(0, $event)" />
 
-  <form class="fields" [formGroup]="form">
+  <form class="fields" [formGroup]="form" appVibrarErrores>
     <div class="field">
       <label class="field__label">Número</label>
 
@@ -144,7 +144,7 @@
       (click)="create()"
       [disabled]="(form.statusChanges | async) !== 'VALID'"
     >
-      @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> } @else {
+      @if (isLoading()) { <app-spinner-logo size="sm" /> } @else {
       Crear mesa }</ion-button
     >
   </div>

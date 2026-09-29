@@ -33,7 +33,7 @@
 
     <ion-button expand="block" class="boton_i" (click)="iniciarSesion()" [disabled]="cargando()">
       @if (cargando()) {
-        <ion-spinner  name="dots"></ion-spinner>
+        <app-spinner-logo size="sm" />
       } @else {
         Iniciar sesión
       }
