@@ -15,7 +15,7 @@
     <app-uploader (fileSelected)="onPhotoSelected(2, $event)" />
   </div>
 
-  <form [formGroup]="form" class="fields">
+  <form [formGroup]="form" class="fields" appVibrarErrores>
     <div class="field">
       <label class="field__label">Titulo</label>
 
@@ -151,7 +151,7 @@
       [disabled]="(form.statusChanges | async) !== 'VALID'"
       (click)="create()"
     >
-      @if (isLoading()) { <ion-spinner name="crescent"></ion-spinner> }
+      @if (isLoading()) { <app-spinner-logo size="sm" /> }
       Guardar</ion-button
     >
   </div>

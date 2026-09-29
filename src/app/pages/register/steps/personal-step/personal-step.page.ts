@@ -11,6 +11,7 @@ import {
   BarcodeFormat,
 } from '@capacitor-mlkit/barcode-scanning';
 import { DniFormat } from '@app/directives/dni-format/dni-format';
+import { Vibracion } from '@app/services';
 
 @Component({
   selector: 'app-personal-step',
@@ -22,7 +23,7 @@ export class PersonalStepPage {
   @Input() control!: AbstractControl;
 
   private _toastController = inject(ToastController);
-
+  private _vibracion = inject(Vibracion);
   scanning = false;
   scanError: string | null = null;
 
@@ -85,6 +86,7 @@ export class PersonalStepPage {
 
       this.parseBarcode(barcodes[0].rawValue);
     } catch (err) {
+      await this._vibracion.error();
       const toast = await this._toastController.create({
         message: 'Ocurrió un problema al escanear. Intentá nuevamente.',
         duration: 5000,

@@ -1,13 +1,14 @@
-import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal, } from '@angular/core';
 import { IonIcon, ModalController, ToastController } from '@ionic/angular';
 import { UploadOptionsComponent } from './upload-options/upload-options.component';
 import { Camera, MediaResult } from '@capacitor/camera';
-
+import { SpinnerLogoComponent } from '../spinner-logo/spinner-logo.component';
+import { Vibracion } from '@app/services';
 @Component({
   selector: 'app-uploader',
   templateUrl: './uploader.component.html',
   styleUrls: ['./uploader.component.scss'],
-  imports: [IonIcon],
+  imports: [IonIcon, SpinnerLogoComponent, ],
 })
 export class UploaderComponent implements OnInit {
   uploading = signal<boolean>(false);
@@ -19,6 +20,7 @@ export class UploaderComponent implements OnInit {
 
   private _toastController = inject(ToastController);
   private _modalController = inject(ModalController);
+  private _vibracion = inject(Vibracion);
 
   ngOnInit() {
     this.photoPreview.set(this.image());
@@ -47,34 +49,54 @@ export class UploaderComponent implements OnInit {
   }
 
   async takePhoto() {
-    try {
-      const photo = await Camera.takePhoto({
+
+  this.uploading.set(true);
+
+  try {
+
+    const photo =
+      await Camera.takePhoto({
         quality: 60,
         editable: 'no',
         includeMetadata: true,
       });
 
-      await this.processPhoto(photo);
-    } catch (err) {
-      this.showErrorToast();
-    }
+    await this.processPhoto(photo);
+
+  } catch (err) {
+    await this.showErrorToast();
+
+  } finally {
+
+    this.uploading.set(false);
+
   }
+}
 
   async selectFromGallery() {
-    try {
-      const result = await Camera.chooseFromGallery({
+
+  this.uploading.set(true);
+
+  try {
+
+    const result =
+      await Camera.chooseFromGallery({
         includeMetadata: true,
       });
-
-      const media = result.results?.[0];
-
-      if (media) {
-        await this.processPhoto(media);
-      }
-    } catch (err) {
-      this.showErrorToast();
+    const media = result.results?.[0];
+    if (media) {
+      await this.processPhoto(media);
     }
+
+  } catch (err) {
+    await this.showErrorToast();
+
+  } finally {
+
+    this.uploading.set(false);
+
   }
+}
 
   private async processPhoto(photo: MediaResult) {
     this.photoPreview.set(photo.webPath ?? null);
@@ -103,6 +125,7 @@ export class UploaderComponent implements OnInit {
   }
 
   private async showErrorToast() {
+    await this._vibracion.error();
     const toast = await this._toastController.create({
       message:
         'Ocurrió un problema al guardar tu información. Intentá nuevamente.',

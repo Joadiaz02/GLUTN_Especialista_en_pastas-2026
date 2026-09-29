@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Vibracion } from '@app/services/vibracion';
 import {
   FormArray,
   FormControl,
@@ -14,6 +15,7 @@ import { Drink, Storage } from '@app/services';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { GtnUploader } from '@app/components';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { VibrarErrores } from '@app/directives';
 
 @Component({
   selector: 'app-edit-drink',
@@ -35,7 +37,8 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     ConfirmVolverComponent,
     GtnUploader,
     SpinnerLogoComponent,
-    IonTextarea
+    IonTextarea,
+    VibrarErrores
 ],
 })
 export class EditDrinkPage implements OnInit {
@@ -55,7 +58,7 @@ export class EditDrinkPage implements OnInit {
   private _router = inject(Router);
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
-
+  private _vibracion = inject(Vibracion);
   private _drinkService = inject(Drink);
 
   form = new FormGroup({
@@ -177,7 +180,7 @@ export class EditDrinkPage implements OnInit {
 
       this._router.navigateByUrl('/admin/drinks');
     } catch (error) {
-      console.log(error);
+      await this._vibracion.error();
       const toast = await this._toastController.create({
         message:
           'No pudimos completar la acción. Intentá nuevamente más tarde.',

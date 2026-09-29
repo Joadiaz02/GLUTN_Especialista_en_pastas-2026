@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { VibrarErrores } from '@app/directives/vibrar-errores';
 import {
   FormArray,
   FormControl,
@@ -25,6 +26,8 @@ import { Storage, Drink } from '@app/services';
 import { Router } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { GtnUploader } from '@app/components';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { Vibracion } from '@app/services';
 
 @Component({
   selector: 'app-create-drink',
@@ -46,6 +49,9 @@ import { GtnUploader } from '@app/components';
     IonSpinner,
     IonToggle,
     ConfirmVolverComponent,
+    VibrarErrores,
+    SpinnerLogoComponent,
+    
   ],
 })
 export class CreateDrinkPage {
@@ -57,6 +63,7 @@ export class CreateDrinkPage {
   private _drinkService = inject(Drink);
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
+  private _vibracion = inject(Vibracion);
 
   form = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -139,6 +146,7 @@ export class CreateDrinkPage {
 
       this._router.navigateByUrl('/admin/drinks');
     } catch (error) {
+      await this._vibracion.error();
       const toast = await this._toastController.create({
         message:
           'No pudimos completar la acción. Intentá nuevamente más tarde.',

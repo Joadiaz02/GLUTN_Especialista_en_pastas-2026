@@ -23,6 +23,7 @@ import { addIcons } from 'ionicons';
 import { Pedido } from '@app/services/pedido/pedido';
 import { Carrito } from '@app/pages/carrito/carrito';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 @Component({
   selector: 'app-orders',
@@ -40,6 +41,7 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
     IonButton,
     IonRouterLink,
     RouterLink,
+    SpinnerLogoComponent
   ],
 })
 export class OrdersComponent implements OnInit {

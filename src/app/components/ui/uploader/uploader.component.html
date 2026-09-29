@@ -1,3 +1,14 @@
+<div class="uploader-wrapper">
+
+  @if (uploading()) {
+
+    <div class="uploader-loading">
+
+      <app-spinner-logo />
+
+    </div>
+
+  }
 @if (photoPreview()) {
 <div class="uploader uploader--has-preview">
   <img [src]="photoPreview()" alt="Preview" class="uploader__preview" />
@@ -54,3 +65,4 @@
   <ion-icon src="assets/icons/plus.svg"></ion-icon>
 </button>
 }
+</div>

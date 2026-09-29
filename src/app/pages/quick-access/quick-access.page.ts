@@ -8,16 +8,13 @@ import {
   ToastController
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import {
-  arrowBackOutline,
-  personCircleOutline
-} from 'ionicons/icons';
-
+import { arrowBackOutline, personCircleOutline} from 'ionicons/icons';
 import { Auth } from '../../services/auth/auth';
 import { SupabaseService } from '../../services/supabase.service';
 import { PushNotificationService } from '../../services/push-notification.service';
 import { EPerfilUsuario } from '../../enums/role.enum';
 import type { PerfilUsuario } from '../../models/usuario.model';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 interface UsuarioAccesoRapido {
   nombre: string;
@@ -34,30 +31,19 @@ interface UsuarioAccesoRapido {
   imports: [
     CommonModule,
     IonContent,
-    IonIcon
+    IonIcon,
+    SpinnerLogoComponent
   ],
   templateUrl: './quick-access.page.html',
   styleUrl: './quick-access.page.scss',
 })
 export class QuickAccessPage {
-
-  private readonly auth =
-    inject(Auth);
-
-  private readonly router =
-    inject(Router);
-
-  private readonly toastController =
-    inject(ToastController);
-
-  private readonly supabaseService =
-    inject(SupabaseService);
-
-  private readonly pushNotificationService =
-    inject(PushNotificationService);
-
+  private readonly auth = inject(Auth);
+  private readonly router = inject(Router);
+  private readonly toastController = inject(ToastController);
+  private readonly supabaseService = inject(SupabaseService);
+  private readonly pushNotificationService = inject(PushNotificationService);
   usuarioIngresando: string | null = null;
-
   readonly usuarios: UsuarioAccesoRapido[] = [
 
     {

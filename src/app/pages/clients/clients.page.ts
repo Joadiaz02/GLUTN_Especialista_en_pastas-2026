@@ -10,13 +10,13 @@ import {
   IonToolbar,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
-
 import { ClientsService } from '@app/services/clients/clients.service';
 import { Usuario } from '@app/models/usuario.model';
-
 import { ClientCardComponent } from './components/client-card/client-card.component';
 import { ClientsNavigationComponent } from './components/clients-navigation/clients-navigation.component';
 import { RejectClientModalComponent } from './components/reject-client-modal/reject-client-modal.component';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { Vibracion } from '@app/services';
 
 @Component({
   selector: 'app-clients',
@@ -28,40 +28,24 @@ import { RejectClientModalComponent } from './components/reject-client-modal/rej
     ClientCardComponent,
     ClientsNavigationComponent,
     RejectClientModalComponent,
+    SpinnerLogoComponent
   ],
   templateUrl: './clients.page.html',
   styleUrls: ['./clients.page.scss'],
 })
 export class ClientsPage implements OnInit {
-  private readonly clientsService =
-    inject(ClientsService);
+  private readonly clientsService = inject(ClientsService);
+  private readonly router = inject(Router);
+  private _vibracion = inject(Vibracion);
+  clientesPendientes =signal<Usuario[]>([]);
+  cargando =signal(false);
+  indiceActual = signal(0);
+  procesandoCliente = signal(false);
+  mostrarModalRechazo = signal(false);
+  motivoRechazo = signal('');
+  clienteARechazar = signal<Usuario | null>(null);
+  tarjetaSaliendo = signal(false);
 
-  private readonly router =
-    inject(Router);
-
-  clientesPendientes =
-    signal<Usuario[]>([]);
-
-  cargando =
-    signal(false);
-
-  indiceActual =
-    signal(0);
-
-  procesandoCliente =
-    signal(false);
-
-  mostrarModalRechazo =
-    signal(false);
-
-  motivoRechazo =
-    signal('');
-
-  clienteARechazar =
-    signal<Usuario | null>(null);
-
-  tarjetaSaliendo =
-    signal(false);
 
   private touchStartX = 0;
   private touchEndX = 0;
@@ -103,6 +87,7 @@ export class ClientsPage implements OnInit {
         );
       }
     } catch (error) {
+      await this._vibracion.error();
       console.error(
         'Error al cargar clientes pendientes:',
         error
@@ -305,6 +290,7 @@ onTouchEnd(
           'aprobado'
         );
       } catch (error) {
+        await this._vibracion.error();
         console.error(
           'Cliente aprobado, pero no se pudo enviar el email:',
           error
@@ -321,6 +307,7 @@ onTouchEnd(
         );
       }
     } catch (error) {
+      await this._vibracion.error();
       console.error(
         'Error al aprobar cliente:',
         error
@@ -413,6 +400,7 @@ onTouchEnd(
         );
       }
     } catch (error) {
+      await this._vibracion.error();
       console.error(
         'Error al rechazar cliente:',
         error
@@ -499,9 +487,7 @@ onTouchEnd(
   private async mostrarToast(
     mensaje: string
   ): Promise<void> {
-    const toast =
-      document.createElement('ion-toast');
-
+    const toast =  document.createElement('ion-toast');
     toast.message = mensaje;
     toast.duration = 3000;
     toast.position = 'bottom';

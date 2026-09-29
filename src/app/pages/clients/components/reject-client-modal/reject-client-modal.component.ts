@@ -3,12 +3,16 @@ import {
   EventEmitter,
   Input,
   Output,
+  inject
 } from '@angular/core';
-
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { Vibracion } from '@app/services';
 import { Usuario } from '@app/models/usuario.model';
+
 @Component({
   selector: 'app-reject-client-modal',
   standalone: true,
+  imports: [SpinnerLogoComponent],
   templateUrl: './reject-client-modal.component.html',
   styleUrls: ['./reject-client-modal.component.scss'],
 })
@@ -33,6 +37,8 @@ export class RejectClientModalComponent {
 
   @Output()
   confirmar = new EventEmitter<string>();
+
+  private _vibracion = inject(Vibracion);
 
   actualizarMotivo(event: Event): void {
     const textarea =

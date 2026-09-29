@@ -6,7 +6,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Storage, Table } from '@app/services';
 import { GtnUploader } from '@app/components';
-
+import { Vibracion } from '@app/services/vibracion';
+import { VibrarErrores } from '@app/directives';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 @Component({
   selector: 'app-edit-table',
   templateUrl: './edit-table.page.html',
@@ -24,7 +26,9 @@ import { GtnUploader } from '@app/components';
     GtnUploader,
     IonFooter,
     IonButton,
-    IonSpinner
+    IonSpinner,
+    VibrarErrores,
+    SpinnerLogoComponent
 ],
 })
 export class EditTablePage implements OnInit {
@@ -33,7 +37,7 @@ export class EditTablePage implements OnInit {
   private _tableService = inject(Table);
   private _toastController = inject(ToastController);
   private _storageService = inject(Storage);
-
+  private _vibracion = inject(Vibracion);
   isLoading = signal<boolean>(false);
 
   image = signal<string | null>(null);
@@ -133,6 +137,7 @@ export class EditTablePage implements OnInit {
 
       this._router.navigateByUrl('/admin/tables');
     } catch (error) {
+      await this._vibracion.error();
       const toast = await this._toastController.create({
         message:
           'No pudimos completar la acción. Intentá nuevamente más tarde.',
