@@ -86,51 +86,78 @@ export class Pedido {
   }
 
     async actualizarEstado(idPedido: string,idUsuario: string ,nuevoEstado: string): Promise<void> {
-    const { error } = await this.sup.client
+    const {data: pedidoActualizado , error } = await this.sup.client
       .from('pedido')
       .update({ estado_pedido: nuevoEstado })
-      .eq('id_pedido', idPedido);
+      .eq('id_pedido', idPedido)
+      .select()
+      .single();
 
     if (error) throw error;
+    if (!pedidoActualizado) throw new Error('Pedido no encontrado');
 
     await this.sup.client.functions.invoke('notify-pedido-stado', {
     body: { idUsuario, idPedido, nuevoEstado }
     });
+
+    if (nuevoEstado === 'confirmado') {
+    await this.sup.client.functions.invoke('notify-kitchen-bar', {
+      body: { idPedido, idMesa: pedidoActualizado.id_mesa }
+      });
+    }
   }
   
   
 
-  async actualizar_pedido(id_pedido:string):Promise<void>{
-    const items = this.carrito.items();
+  async actualizar_pedido(id_pedido: string): Promise<void> {
+  const items = this.carrito.items();
 
-        if (items.length === 0) {
-        throw new Error('El carrito está vacío');
-    }
+  if (items.length === 0) {
+    throw new Error('El carrito está vacío');
+  }
 
-    const { error: errorBorrar } = await this.sup.client.from('pedido_item').delete().eq('id_pedido', id_pedido);
+  const { error: errorBorrar } = await this.sup.client.from('pedido_item').delete().eq('id_pedido', id_pedido);
+  if (errorBorrar) throw errorBorrar;
 
-    if (errorBorrar) throw errorBorrar;
+  const itemsAInsertar = items.map(item => ({
+    id_pedido: id_pedido,
+    id_carta: item.producto.id_carta,
+    cantidad: item.cantidad,
+    precio_unitario: item.producto.precio,
+    subtotal: item.producto.precio * item.cantidad
+  }));
 
-        const itemsAInsertar = items.map(item => ({
-        id_pedido: id_pedido,
-        id_carta: item.producto.id_carta,
-        cantidad: item.cantidad,
-        precio_unitario: item.producto.precio,
-        subtotal: item.producto.precio * item.cantidad
-        }));
+  const { error: error_items } = await this.sup.client.from('pedido_item').insert(itemsAInsertar);
+  if (error_items) throw error_items;
 
-        const {error: error_items} = await this.sup.client.from('pedido_item').insert(itemsAInsertar)
 
-        if(error_items){
-            throw error_items;
-        };
+  const { data: pedidoActualizado, error: error_modificacion } = await this.sup.client
+    .from('pedido')
+    .update({ subtotal: this.carrito.importeTotal(), estado_pedido: 'pendiente' })
+    .eq('id_pedido', id_pedido)
+    .select()
+    .single();
 
-        const {error:error_modificacion} = await this.sup.client.from('pedido').update({subtotal:this.carrito.importeTotal(),estado_pedido:'pendiente'}).eq('id_pedido',id_pedido)
-        
-        if (error_modificacion) throw error_modificacion;
-        this.carrito.vaciar();
-        this.idPedidoEnEdicion.set(null);
-    }
+  if (error_modificacion) throw error_modificacion;
+
+  await this.sup.client.functions.invoke('notify-new-pedido', {
+    body: { idPedido: id_pedido, idMesa: pedidoActualizado.id_mesa }
+  });
+
+  this.carrito.vaciar();
+  this.idPedidoEnEdicion.set(null);
+}
+
+async obtenerPedidosConfirmados(): Promise<any[]> {
+  const { data, error } = await this.sup.client
+    .from('pedido')
+    .select('*, pedido_item(*, carta(*))')
+    .eq('estado_pedido', 'confirmado')
+    .order('fecha_emision_pedido', { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
+}
 
 }
 

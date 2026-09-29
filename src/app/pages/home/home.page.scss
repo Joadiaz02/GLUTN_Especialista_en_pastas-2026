@@ -288,8 +288,11 @@ ion-modal.home-modal {
   line-height: 1.4;
 }
 
-.destacado-card--skeleton {
-  gap: 8px;
+.destacados__cargando {
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* =========================

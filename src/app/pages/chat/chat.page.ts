@@ -63,12 +63,6 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // TEMPORAL: hasta que exista la asignación de mesas (punto 10), para
-    // poder probar el chat como cliente. Sacar cuando ese punto esté listo.
-    if (!localStorage.getItem('mesa')) {
-      localStorage.setItem('mesa', '4');
-    }
-
     void this.iniciar();
   }
 

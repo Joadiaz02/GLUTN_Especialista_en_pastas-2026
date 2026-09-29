@@ -1,0 +1,18 @@
+<div class="turn-ring">
+  <svg viewBox="0 0 200 200" class="turn-ring__svg">
+    <circle class="turn-ring__track" cx="100" cy="100" [attr.r]="radio" />
+    <circle
+      class="turn-ring__progress"
+      cx="100"
+      cy="100"
+      [attr.r]="radio"
+      [attr.stroke-dasharray]="circunferencial"
+      [attr.stroke-dashoffset]="dashoffset()"
+    />
+  </svg>
+
+  <div class="turn-ring__label">
+    <span class="turn-ring__caption">Tu turno</span>
+    <span class="turn-ring__number">#{{ position() }}</span>
+  </div>
+</div>

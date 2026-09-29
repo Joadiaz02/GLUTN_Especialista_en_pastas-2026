@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Auth, Juegos, Vibracion } from '@app/services';
 import { EPerfilUsuario } from '../../../enums';
 import { TaTeTiPage } from './ta-te-ti.page';
+import { SupabaseService } from '../../../services/supabase.service';
 
 describe('TaTeTiPage - salir en medio de una partida', () => {
   let page: TaTeTiPage;
@@ -15,6 +16,10 @@ describe('TaTeTiPage - salir en medio de una partida', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        {
+          provide: SupabaseService,
+          useValue: { client: { rpc: vi.fn().mockResolvedValue({ data: null, error: null }) } },
+        },
         {
           provide: Auth,
           useValue: {

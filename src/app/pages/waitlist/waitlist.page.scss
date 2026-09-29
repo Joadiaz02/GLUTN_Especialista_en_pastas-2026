@@ -1,0 +1,55 @@
+.waitlist {
+  &__header {
+    margin-bottom: 40px;
+  }
+
+  &__title {
+    margin-bottom: 8px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: 16px;
+    color: #D5E0C9;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.waitlist-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 16px;
+  background: #A8B68A;
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    object-fit: cover
+  }
+
+  &__name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+}

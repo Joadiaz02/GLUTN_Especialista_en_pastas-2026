@@ -4,6 +4,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 import { EPerfilUsuario } from '../../enums';
 import type { Mensaje } from '../../models/mensaje.model';
 import { Auth } from '../auth/auth';
+import { MesaCliente } from '../mesa-cliente/mesa-cliente';
 import { SupabaseService } from '../supabase.service';
 
 export const CHAT_LARGO_MAXIMO = 500;
@@ -18,6 +19,7 @@ const CHAT_LIMITE_MENSAJES = 50;
 export class Chat {
   private _db = inject(SupabaseService);
   private _auth = inject(Auth);
+  private _mesaCliente = inject(MesaCliente);
 
   private _canal?: RealtimeChannel;
 
@@ -61,15 +63,9 @@ export class Chat {
     return this._db.getAvatarUrl(foto).data.publicUrl;
   }
 
-  // Provisorio hasta que la asignación de mesas (punto 10) deje la mesa
-  // del cliente guardada: hoy se lee de la clave "mesa" del almacenamiento
-  // local, la misma que la app borra al cerrar sesión.
+  // Mesa asignada por el metre (punto 10); null si todavía no tiene.
   numeroMesa(): string | null {
-    try {
-      return localStorage.getItem('mesa')?.trim() || null;
-    } catch {
-      return null;
-    }
+    return this._mesaCliente.numero();
   }
 
   // Los mozos siempre pueden escribir; los clientes solo con mesa asignada.

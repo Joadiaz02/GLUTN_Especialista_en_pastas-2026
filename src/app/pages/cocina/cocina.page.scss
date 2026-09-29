@@ -1,0 +1,279 @@
+.cocina-content {
+  --background: var(--ion-background-color);
+  --padding-top: min(16px, 2vh);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-bottom: calc(min(16px, 2vh) + env(safe-area-inset-bottom));
+}
+
+// Logo y título arriba; el carrusel se lleva todo el alto que queda.
+.cocina-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cocina-vacio {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  font-size: 18px;
+  color: var(--ion-text-color);
+}
+
+/* =========================
+   SELECTOR DE VISTA
+   (por recibir / en preparación)
+========================= */
+
+.vistas {
+  flex-shrink: 0;
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.vistas__boton {
+  flex: 1;
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ion-text-color);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s ease;
+}
+
+.vistas__boton--activo {
+  background: var(--ion-color-primary);
+}
+
+.vistas__cantidad {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #2f3d24;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* =========================
+   CARRUSEL
+   (mismo criterio que el de la carta: tarjeta centrada y las vecinas
+   asomando a los costados)
+========================= */
+
+.carrusel {
+  --ancho-tarjeta: min(360px, calc(100vw - 72px));
+
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 16px;
+  margin: 0 -16px;
+  // El % del padding se toma del ancho del contenedor (sin los 32px del
+  // margen negativo): por eso se suman para que la tarjeta quede centrada.
+  padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  box-sizing: border-box;
+}
+
+.carrusel::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  flex: 0 0 var(--ancho-tarjeta);
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  transform: scale(0.94);
+  opacity: 0.6;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.slide--activo {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.contador {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+}
+
+.contador__flecha {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+  color: #ffffff;
+  font-size: 28px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contador__flecha:disabled {
+  opacity: 0.4;
+}
+
+/* =========================
+   TARJETA DEL PEDIDO
+========================= */
+
+.pedido {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  background: var(--ion-color-light, #f4ebdd);
+  color: #2f3d24;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  box-sizing: border-box;
+}
+
+.pedido--preparando {
+  border-top: 8px solid var(--ion-color-primary);
+}
+
+.pedido__mesa {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+
+  h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.pedido__encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(47, 61, 36, 0.2);
+}
+
+.pedido__momento {
+  display: flex;
+  flex-direction: column;
+}
+
+.pedido__hora {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.pedido__fecha {
+  font-size: 15px;
+}
+
+.pedido__estado {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #2f3d24;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pedido__estado--preparando {
+  background: var(--ion-color-primary);
+}
+
+// Los ítems ocupan el alto libre de la tarjeta; si son muchos, se
+// desplazan adentro y los botones quedan siempre a la vista.
+.pedido__items {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pedido__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 19px;
+}
+
+.pedido__cantidad {
+  flex-shrink: 0;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 8px;
+  border-radius: 12px;
+  background: #2f3d24;
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.pedido__nombre {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pedido__acciones {
+  flex-shrink: 0;
+  display: flex;
+  gap: 12px;
+}
+
+.pedido__boton {
+  flex: 1;
+  margin: 0;
+  min-height: 52px;
+  font-weight: 700;
+  --border-radius: 16px;
+}

@@ -62,7 +62,7 @@ export const ADMIN_MODULES: AdminModule[] = [
     description: 'Consultar clientes esperando una mesa',
     icon: 'clock',
     roles: [EPerfilUsuario.Metre],
-    path: 'waiting-list',
+    path: 'waitlist',
   },
 
   {

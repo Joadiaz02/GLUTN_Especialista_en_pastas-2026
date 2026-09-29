@@ -9,6 +9,7 @@ import { EPerfilUsuario } from '@app/enums';
 import type { PerfilUsuario } from '@app/models/usuario.model';
 import { Storage } from '../storage';
 import { Vibracion } from '../vibracion/vibracion';
+import { User } from '../user';
 
 const CLAVE_PANTALLA_INGRESO = 'pantallaIngreso';
 
@@ -16,11 +17,12 @@ const CLAVE_PANTALLA_INGRESO = 'pantallaIngreso';
   providedIn: 'root',
 })
 export class Auth {
-
   private readonly supabaseService = inject(SupabaseService);
+  private _userRepository = inject(User);
 
   private readonly storageService = inject(Storage);
   private readonly vibracion = inject(Vibracion);
+
   usuarioActual = signal<any>(null);
 
   constructor() {
@@ -403,5 +405,30 @@ async logout(): Promise<void> {
         CLAVE_PANTALLA_INGRESO
       ) ?? '/login'
     );
+  }
+
+  async loginAnonymous(fullName: string, file: File): Promise<string> {
+    const avatar = await this.storageService.uploadImage(file);
+
+    const { data: authData, error: authError } = await this.supabaseService.client.auth.signInAnonymously({
+      options: {
+        data: {
+          nombre: fullName.split(' ')[0],
+          apellido: fullName.split(' ')[1],
+          perfil: 'cliente_anonimo',
+          avatar: avatar,
+        },
+      },
+    });
+    
+    if (authError) throw authError;
+
+    console.log(authData)
+    
+    const userId = authData.user!.id;
+    
+    console.log(userId)
+
+    return userId;
   }
 }

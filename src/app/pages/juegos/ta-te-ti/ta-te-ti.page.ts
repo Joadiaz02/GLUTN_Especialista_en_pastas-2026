@@ -114,6 +114,11 @@ export class TaTeTiPage implements OnDestroy {
   jugar(indice: number): void {
     if (this.estado() !== 'jugando' || this.turnoPc() || this.celdas()[indice] !== null) return;
 
+    // La primera marca es la que empieza la partida.
+    if (this.celdas().every((celda) => celda === null)) {
+      this._juegosService.iniciarIntento('ta-te-ti');
+    }
+
     this.celdas.update((celdas) => {
       const copia = [...celdas];
       copia[indice] = 'X';
@@ -181,6 +186,8 @@ export class TaTeTiPage implements OnDestroy {
     } else if (tipo === 'pierde') {
       this._juegosService.registrarIntento(false, PORCENTAJE_TATETI);
       await this._vibracion.error();
+    } else {
+      this._juegosService.anularIntento();
     }
   }
 

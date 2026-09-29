@@ -162,6 +162,7 @@ export class RuletaPage implements OnDestroy {
   }
 
   private comenzar(): void {
+    this._juegosService.iniciarIntento('ruleta');
     this.estado.set('girando');
     this.transicionActiva.set(false);
     this._rafId = requestAnimationFrame(this.loopGirar);
@@ -224,6 +225,8 @@ export class RuletaPage implements OnDestroy {
     } else if (tipo === 'pierde') {
       this._juegosService.registrarIntento(false, PORCENTAJE_RULETA);
       await this._vibracion.error();
+    } else {
+      this._juegosService.anularIntento();
     }
   }
 
