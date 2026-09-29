@@ -10,12 +10,9 @@
 <ion-content class="cocina-content" [scrollY]="false">
   <div class="cocina-wrapper">
     <div class="logo-container logo-fijo">
-      <img
-        src="assets/images/LOGO-GLUTN.png"
-        alt="GLUTN - Especialista en Pastas"
-        class="logo"
-      />
+      <img src="assets/images/LOGO-GLUTN.png" alt="GLUTN - Especialista en Pastas" class="logo" />
     </div>
+
     <h1 class="titulo-pagina">Cocina</h1>
 
     <div class="vistas" role="tablist">
@@ -45,9 +42,7 @@
     </div>
 
     @if (cocina.cargando() && pedidos().length === 0) {
-      <div class="cocina-vacio">
-        <app-spinner-logo />
-      </div>
+      <div class="cocina-vacio"></div>
     } @else if (pedidos().length === 0) {
       <div class="cocina-vacio">
         <p>
@@ -59,18 +54,13 @@
         </p>
       </div>
     } @else {
-      <!-- Un pedido por tarjeta; se desliza hacia los costados. Los
-           pedidos van ordenados por mesa, así los de una misma mesa
-           quedan juntos. -->
       <div #viewport class="carrusel" (scroll)="alDesplazar()">
         @for (pedido of pedidos(); track pedido.idPedido; let i = $index) {
-          <article
-            class="slide"
-            [class.slide--activo]="i === indiceActual()"
-          >
+          <article class="slide" [class.slide--activo]="i === indiceActual()">
             <div class="pedido" [class.pedido--preparando]="pedido.estadoCocina">
               <header class="pedido__mesa">
                 <h2>Mesa {{ pedido.numeroMesa }}</h2>
+
                 @if (pedido.totalEnMesa > 1) {
                   <span>Pedido {{ pedido.numeroEnMesa }} de {{ pedido.totalEnMesa }}</span>
                 }
@@ -117,11 +107,7 @@
                   [disabled]="procesando() !== null"
                   (click)="pedido.estadoCocina ? entregar(pedido) : recibir(pedido)"
                 >
-                  @if (procesando() === pedido.idPedido) {
-                    <app-spinner-logo size="sm" />
-                  } @else {
-                    {{ pedido.estadoCocina ? 'Entregar' : 'Recibir' }}
-                  }
+                  {{ pedido.estadoCocina ? 'Entregar' : 'Recibir' }}
                 </ion-button>
               </div>
             </div>
@@ -155,3 +141,17 @@
     }
   </div>
 </ion-content>
+
+@if (cocina.cargando() && pedidos().length === 0) {
+  <div class="cocina-loading">
+    <app-spinner-logo />
+    <span>Cargando pedidos...</span>
+  </div>
+}
+
+@if (procesando() !== null) {
+  <div class="cocina-loading">
+    <app-spinner-logo />
+    <span>Procesando pedido...</span>
+  </div>
+}

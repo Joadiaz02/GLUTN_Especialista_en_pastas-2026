@@ -31,13 +31,21 @@
   </p>
 </div>
 
-    <ion-button expand="block" class="boton_i" (click)="iniciarSesion()" [disabled]="cargando()">
       @if (cargando()) {
-        <app-spinner-logo size="sm" />
-      } @else {
-        Iniciar sesión
+        <div class="page-loading">
+          <app-spinner-logo />
+          <span>Iniciando sesión...</span>
+        </div>
       }
-    </ion-button>
+
+      <ion-button
+        expand="block"
+        class="boton_i"
+        (click)="iniciarSesion()"
+        [disabled]="cargando()"
+      >
+        Iniciar sesión
+      </ion-button>
 
     <div class="separador">
       <span class="linea_isq"></span>

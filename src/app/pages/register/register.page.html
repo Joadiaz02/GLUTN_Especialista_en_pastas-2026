@@ -68,6 +68,12 @@
 
 </ion-content>
 
+@if (isLoading()) {
+  <div class="page-loading">
+    <app-spinner-logo />
+    <span>Creando cuenta...</span>
+  </div>
+}
 
 <ion-footer class="ion-no-border">
 
@@ -115,29 +121,19 @@
           isLoading()
         "
       >
-
-        @if (isLoading()) {
-
-          <app-spinner-logo size="sm" />
-        }
-        @else {
-
-          Crear cuenta
-
-        }
-
+        Registrarse
       </ion-button>
 
 
-      <app-confirm-volver
-        (confirmadoVolver)="previousStep()"
-      ></app-confirm-volver>
+            <app-confirm-volver
+              (confirmadoVolver)="previousStep()"
+            ></app-confirm-volver>
 
-    }
+          }
 
-  </div>
+        </div>
 
-</ion-footer>
+      </ion-footer>
 
 
 <!-- =========================================

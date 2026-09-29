@@ -2,27 +2,19 @@
   [fullscreen]="true"
   class="quick-content"
 >
-
   <main class="quick-page">
-
     <header class="quick-header">
-
       <button
         class="back-button"
         type="button"
         (click)="volver()"
         aria-label="Volver al inicio de sesión"
       >
-
         <ion-icon
           name="arrow-back-outline"
         ></ion-icon>
-
       </button>
-
-
     </header>
-
 
     <div class="logo-container">
       <img
@@ -41,57 +33,35 @@
     </h1>
 
     <p class="instruction">
-
       Seleccioná el perfil con el que querés
       ingresar a la aplicación.
-
     </p>
-
 
     <section
       class="users-grid"
       aria-label="Usuarios de acceso rápido"
     >
-
       @for (
         usuario of usuarios;
         track usuario.email;
         let i = $index
       ) {
-
         <button
           class="user-card"
-          [class.loading]="
-            usuarioIngresando === usuario.email
-          "
+          [class.loading]="usuarioIngresando === usuario.email"
           [style.animation-delay.ms]="i * 70"
           type="button"
           (click)="ingresar(usuario)"
-          [attr.aria-label]="
-            'Ingresar como ' + usuario.rol
-          "
+          [attr.aria-label]="'Ingresar como ' + usuario.rol"
         >
-
           <div class="photo-wrapper">
-
             <img
               [src]="usuario.foto"
               [alt]="'Foto de ' + usuario.nombre"
             />
-
-            @if (
-              usuarioIngresando === usuario.email
-            ) {
-
-              <app-spinner-logo size="sm" />
-
-            }
-
           </div>
 
-
           <div class="user-info">
-
             <strong>
               {{ usuario.nombre }}
             </strong>
@@ -99,18 +69,12 @@
             <span>
               {{ usuario.rol }}
             </span>
-
           </div>
-
         </button>
-
       }
-
     </section>
 
-
     <footer class="quick-footer">
-
       <ion-icon
         name="person-circle-outline"
       ></ion-icon>
@@ -118,9 +82,13 @@
       <span>
         Usuarios disponibles para demostración
       </span>
-
     </footer>
-
   </main>
-
 </ion-content>
+
+@if (usuarioIngresando !== null) {
+  <div class="quick-loading">
+    <app-spinner-logo />
+    <span>Ingresando...</span>
+  </div>
+}

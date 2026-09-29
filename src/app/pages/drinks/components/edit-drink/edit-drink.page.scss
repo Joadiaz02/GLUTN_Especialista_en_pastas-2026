@@ -1,169 +1,157 @@
-ion-content::part(scroll) {
-  overflow: hidden;
+:host {
+  display: block;
+  height: 100%;
 }
-
-
-.upload-container {
-  display: grid;
-
-  grid-template-columns:
-    repeat(
-      3,
-      minmax(0, 1fr)
-    );
-
-  align-items: stretch;
-
-  gap:
-    clamp(
-      8px,
-      3vw,
-      16px
-    );
-
-  width: 100%;
-
-  height:
-    clamp(
-      96px,
-      24vw,
-      150px
-    );
-
-  flex: 0 0 auto;
-
-  box-sizing: border-box;
-
-  app-uploader {
-    width: 100%;
-    height: 100%;
-
-    min-width: 0;
-    min-height: 0;
-  }
-}
-
-
-.fields {
-  margin-top: 12px;
-
-  &__row {
-    display: grid;
-
-    grid-template-columns:
-      minmax(0, 1fr)
-      minmax(0, 1fr);
-
-    gap: 10px;
-  }
-}
-
-
-.field {
-  margin-bottom: 10px;
-
-  &__label {
-    display: block;
-
-    font-weight: 600;
-
-    margin-bottom: 5px;
-
-    font-size: 15px;
-  }
-
-  &__input {
-    width: 100%;
-  }
-
-  &__error {
-    color: var(--ion-color-danger);
-
-    font-size: 11px;
-
-    margin-top: 3px;
-  }
-}
-
-
-.toggle-group {
-  margin-bottom: 12px;
-
-  &__title {
-    font-size: 15px;
-
-    font-weight: 600;
-
-    margin:
-      0
-      0
-      6px;
-  }
-
-  &__row {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-  }
-
-  &__row-label {
-    font-size: 15px;
-
-    color: #D5E0C9;
-  }
-}
-
 
 ion-content {
   --padding-start: 20px;
   --padding-end: 20px;
-
-  --padding-top: 10px;
+  --padding-top: 8px;
   --padding-bottom: 8px;
 }
 
+ion-content::part(scroll) {
+  overflow: hidden;
+  box-sizing: border-box;
+}
 
-@media (max-height: 760px) {
+.upload-container {
+  width: 100%;
+  height: clamp(82px, 24vw, 118px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(7px, 2.5vw, 12px);
+  box-sizing: border-box;
+}
 
-  .upload-container {
-    height: 100px;
+.upload-container app-uploader {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
 
+.fields {
+  margin-top: 8px;
+  gap: 7px;
+
+  .fields__row {
     gap: 8px;
+  }
+}
+
+.field {
+  margin: 0;
+  gap: 4px;
+
+  .field__label {
+    font-size: 14px;
+    line-height: 1.15;
+  }
+
+  .field__error {
+    font-size: 10px;
+    line-height: 1.1;
+  }
+
+  .field__input {
+    width: 100%;
+    min-height: 48px;
+  }
+}
+
+.toggle-group {
+  margin: 2px 0 0;
+
+  &__title {
+    margin: 0 0 3px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__row {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  &__row-label {
+    font-size: 13px;
+    color: #d5e0c9;
+  }
+}
+
+.page-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  width: 100vw;
+  height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  background: rgba(31, 45, 24, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+ion-footer .footer-actions {
+  padding: 8px 20px max(8px, env(safe-area-inset-bottom));
+}
+
+ion-footer ion-button {
+  margin: 0;
+  min-height: 50px;
+}
+
+@media (max-height: 720px) {
+  .upload-container {
+    height: 76px;
+    gap: 7px;
   }
 
   .fields {
-    margin-top: 8px;
+    margin-top: 5px;
+    gap: 5px;
+
+    .fields__row {
+      gap: 7px;
+    }
   }
 
   .field {
-    margin-bottom: 7px;
+    gap: 2px;
+
+    .field__label {
+      font-size: 13px;
+    }
+
+    .field__input {
+      min-height: 44px !important;
+    }
   }
 
   .toggle-group {
-    margin-bottom: 7px;
-  }
-}
+    &__title {
+      font-size: 13px;
+    }
 
+    &__row {
+      min-height: 30px;
+    }
 
-ion-footer .footer-actions {
-  padding:
-    10px
-    20px
-    max(
-      10px,
-      env(
-        safe-area-inset-bottom
-      )
-    );
-}
-
-
-@media (max-height: 760px) {
-
-  ion-input.field__input {
-    min-height:
-      52px !important;
+    &__row-label {
+      font-size: 12px;
+    }
   }
 }

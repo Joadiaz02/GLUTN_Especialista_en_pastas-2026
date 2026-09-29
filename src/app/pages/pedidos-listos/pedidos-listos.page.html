@@ -45,8 +45,9 @@
     </div>
 
     @if (pedidosListos.cargando() && pedidosListos.pedidos().length === 0) {
-      <div class="cocina-vacio">
+      <div class="cocina-loading">
         <app-spinner-logo />
+        <span>Cargando pedidos...</span>
       </div>
     } @else if (pedidos().length === 0) {
       <div class="cocina-vacio">

@@ -17,8 +17,11 @@
 <ion-content [fullscreen]="true">
   <div class="container-full-center">
     @if (isLoading()) {
+  <div class="page-loading">
     <app-spinner-logo />
-    } @else {
+    <span>Cargando mesas...</span>
+  </div>
+} @else {
     <div class="table__list">
       @for (table of tables(); track table.id) {
       <article

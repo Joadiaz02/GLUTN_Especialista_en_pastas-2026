@@ -10,7 +10,7 @@ import type { PerfilUsuario } from '@app/models/usuario.model';
 import { Storage } from '../storage';
 import { Vibracion } from '../vibracion/vibracion';
 import { User } from '../user';
-
+import { Carrito } from '@app/pages/carrito/carrito';
 const CLAVE_PANTALLA_INGRESO = 'pantallaIngreso';
 
 @Injectable({
@@ -19,7 +19,7 @@ const CLAVE_PANTALLA_INGRESO = 'pantallaIngreso';
 export class Auth {
   private readonly supabaseService = inject(SupabaseService);
   private _userRepository = inject(User);
-
+  private readonly carrito = inject(Carrito);
   private readonly storageService = inject(Storage);
   private readonly vibracion = inject(Vibracion);
 
@@ -372,6 +372,7 @@ export class Auth {
 
 async logout(): Promise<void> {
   this.vibracion.sonidoCierre();
+  this.carrito.vaciar();
   await this.supabaseService.client.auth.signOut();
   this.usuarioActual.set(null);
 }

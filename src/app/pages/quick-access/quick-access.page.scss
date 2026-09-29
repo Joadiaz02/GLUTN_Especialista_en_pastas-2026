@@ -1,54 +1,56 @@
 :host {
   display: block;
+  height: 100%;
 }
 
 .quick-content {
   --background: #657a4d;
 }
 
+.quick-content::part(scroll) {
+  overflow: hidden;
+}
+
 .quick-page {
-  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   box-sizing: border-box;
-
-  padding: 18px 18px 14px;
-
+  padding:
+    max(10px, env(safe-area-inset-top))
+    18px
+    max(10px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-
   color: #f2e8d0;
+  overflow: hidden;
 }
 
 .quick-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  flex: 0 0 auto;
 }
 
 .back-button {
   width: 42px;
   height: 42px;
-
   flex: 0 0 42px;
-
   border: 0;
-  border-radius: 14px;
-
+  border-radius: 50%;
   display: grid;
   place-items: center;
-
   background: #3f5130;
   color: #f2e8d0;
-
   font-size: 21px;
-
   cursor: pointer;
 }
 
 .logo-container {
   width: 100%;
-  max-width: 96px;
-
-  margin: 4px auto 6px;
+  max-width: 78px;
+  margin: 3px auto 3px;
+  flex: 0 0 auto;
 }
 
 .logo {
@@ -58,290 +60,205 @@
 
 .quick-eyebrow {
   display: block;
-
   color: #d9a441;
-
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: 1.2px;
+  letter-spacing: 1.1px;
   text-align: center;
+  flex: 0 0 auto;
 }
 
 .quick-titulo {
   margin: 2px 0 0;
-
-  font-size: 23px;
+  font-size: 21px;
   line-height: 1.05;
-
   font-weight: 800;
   text-align: center;
+  flex: 0 0 auto;
 }
 
 .instruction {
-  margin: 12px 2px 14px;
-
+  margin: 7px 2px 8px;
   color: #e4dcc8;
-
-  font-size: 13px;
-  line-height: 1.35;
-
+  font-size: 12px;
+  line-height: 1.3;
   text-align: center;
+  flex: 0 0 auto;
 }
 
 .users-grid {
-  flex: 1;
-
+  flex: 1 1 auto;
   min-height: 0;
-
   display: grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
-  grid-template-rows:
-    repeat(4, minmax(0, 1fr));
-
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .user-card {
   min-width: 0;
   min-height: 0;
-
   border: 0;
-  border-radius: 20px;
-
-  padding: 10px 7px;
-
+  border-radius: 18px;
+  padding: 7px 6px;
   background: #a8b68a;
   color: #2f3d24;
-
-  box-shadow:
-    0 9px 18px
-    rgba(35, 48, 24, 0.18);
-
+  box-shadow: 0 7px 14px rgba(35, 48, 24, 0.16);
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
-
-  gap: 7px;
-
+  gap: 5px;
   font: inherit;
-
   cursor: pointer;
-
   opacity: 0;
-
-  transform:
-    translateY(14px)
-    scale(0.94);
-
-  animation:
-    card-in 420ms
-    cubic-bezier(0.2, 0.8, 0.2, 1)
-    forwards;
-
-  transition:
-    transform 160ms ease,
-    box-shadow 160ms ease;
+  transform: translateY(10px) scale(0.96);
+  animation: card-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .user-card:nth-child(7) {
   grid-column: 1 / -1;
-
-  width: calc(50% - 5px);
-
+  width: calc(50% - 4px);
   justify-self: center;
-}
-
-.user-card:active {
-  transform: scale(0.96);
 }
 
 .user-card.loading {
   pointer-events: none;
-
   opacity: 0.72;
 }
 
 .photo-wrapper {
   position: relative;
-
-  width:
-    clamp(
-      58px,
-      18vw,
-      82px
-    );
-
+  width: clamp(48px, 16vw, 70px);
   aspect-ratio: 1;
-
   flex: 0 0 auto;
 }
 
 .photo-wrapper img {
   width: 100%;
   height: 100%;
-
   display: block;
-
   border-radius: 50%;
-
   object-fit: cover;
-
-  border: 3px solid #f2e8d0;
-
+  border: 2px solid #f2e8d0;
   background: #657a4d;
-}
-
-.card-spinner {
-  position: absolute;
-
-  inset: 0;
-
-  margin: auto;
-
-  width: 25px;
-  height: 25px;
-
-  border:
-    3px solid
-    rgba(242, 232, 208, 0.45);
-
-  border-top-color: #e76f45;
-
-  border-radius: 50%;
-
-  animation:
-    spin 700ms linear infinite;
 }
 
 .user-info {
   min-width: 0;
-
   width: 100%;
-
   text-align: center;
 }
 
 .user-info strong,
 .user-info span {
   display: block;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
-
   white-space: nowrap;
 }
 
 .user-info strong {
-  font-size: 13px;
-
+  font-size: 12px;
   line-height: 1.15;
 }
 
 .user-info span {
-  margin-top: 3px;
-
+  margin-top: 2px;
   color: #e76f45;
-
-  font-size: 11px;
-
+  font-size: 10px;
   font-weight: 800;
 }
 
 .quick-footer {
-  min-height: 28px;
-
-  padding-top: 8px;
-
+  min-height: 22px;
+  padding-top: 5px;
   display: flex;
-
   justify-content: center;
   align-items: center;
-
-  gap: 6px;
-
+  gap: 5px;
   color: #e4dcc8;
-
-  font-size: 10px;
-
+  font-size: 9px;
   text-align: center;
+  flex: 0 0 auto;
 }
 
 .quick-footer ion-icon {
-  font-size: 15px;
+  font-size: 14px;
+}
+
+.quick-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  width: 100vw;
+  height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  background: rgba(31, 45, 24, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 @keyframes card-in {
-
   to {
-
     opacity: 1;
-
-    transform:
-      translateY(0)
-      scale(1);
-
+    transform: translateY(0) scale(1);
   }
-
-}
-
-@keyframes spin {
-
-  to {
-    transform: rotate(360deg);
-  }
-
 }
 
 @media (max-height: 680px) {
-
   .quick-page {
-    padding-top: 12px;
-    padding-bottom: 8px;
+    padding-top: max(7px, env(safe-area-inset-top));
+    padding-bottom: max(7px, env(safe-area-inset-bottom));
+  }
+
+  .logo-container {
+    max-width: 64px;
+  }
+
+  .quick-titulo {
+    font-size: 19px;
   }
 
   .instruction {
-    margin: 7px 2px 9px;
-  }
-
-  .users-grid {
-    gap: 7px;
-  }
-
-  .user-card {
-    padding: 6px;
-
-    border-radius: 16px;
-
-    gap: 4px;
-  }
-
-  .photo-wrapper {
-    width:
-      clamp(
-        48px,
-        15vw,
-        65px
-      );
-  }
-
-  .user-info strong {
+    margin: 4px 2px 5px;
     font-size: 11px;
   }
 
+  .users-grid {
+    gap: 6px;
+  }
+
+  .user-card {
+    padding: 5px;
+    border-radius: 15px;
+    gap: 3px;
+  }
+
+  .photo-wrapper {
+    width: clamp(42px, 14vw, 58px);
+  }
+
+  .user-info strong {
+    font-size: 10px;
+  }
+
   .user-info span {
-    font-size: 9px;
+    font-size: 8px;
   }
 
   .quick-footer {
-    min-height: 20px;
-    padding-top: 4px;
+    min-height: 18px;
+    padding-top: 3px;
+    font-size: 8px;
   }
-
 }

@@ -87,3 +87,30 @@ ion-content {
   text-align: center;
   color: var(--ion-text-color);
 }
+
+html,
+body,
+ion-app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+ion-header.ion-no-border:not(.glutn-header) {
+  padding-top: env(safe-area-inset-top);
+  box-sizing: border-box;
+}
+
+ion-header.ion-no-border:not(.glutn-header) ion-toolbar {
+  --min-height: 56px;
+}
+
+ion-footer.ion-no-border {
+  padding-bottom: 0;
+  box-sizing: border-box;
+}
+
+ion-content {
+  --padding-bottom: max(8px, env(safe-area-inset-bottom));
+}

@@ -1,20 +1,22 @@
 .cocina-content {
   --background: var(--ion-background-color);
-  --padding-top: min(16px, 2vh);
+  --padding-top: min(12px, 1.5vh);
   --padding-start: 16px;
   --padding-end: 16px;
-  --padding-bottom: calc(min(16px, 2vh) + env(safe-area-inset-bottom));
+  --padding-bottom: max(10px, env(safe-area-inset-bottom));
 }
 
-// Logo y título arriba; el carrusel se lleva todo el alto que queda.
 .cocina-wrapper {
+  width: 100%;
   height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
 .cocina-vacio {
   flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,16 +26,11 @@
   color: var(--ion-text-color);
 }
 
-/* =========================
-   SELECTOR DE VISTA
-   (por recibir / en preparación)
-========================= */
-
 .vistas {
   flex-shrink: 0;
   display: flex;
   gap: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   padding: 4px;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.18);
@@ -41,18 +38,19 @@
 
 .vistas__boton {
   flex: 1;
-  min-height: 44px;
+  min-width: 0;
+  min-height: 42px;
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--ion-text-color);
   font-family: inherit;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
   transition: background 0.2s ease;
 }
 
@@ -61,24 +59,18 @@
 }
 
 .vistas__cantidad {
-  min-width: 24px;
-  height: 24px;
+  min-width: 23px;
+  height: 23px;
   padding: 0 6px;
   border-radius: 999px;
   background: #ffffff;
   color: #2f3d24;
-  font-size: 13px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
 }
-
-/* =========================
-   CARRUSEL
-   (mismo criterio que el de la carta: tarjeta centrada y las vecinas
-   asomando a los costados)
-========================= */
 
 .carrusel {
   --ancho-tarjeta: min(360px, calc(100vw - 72px));
@@ -88,9 +80,7 @@
   display: flex;
   gap: 16px;
   margin: 0 -16px;
-  // El % del padding se toma del ancho del contenedor (sin los 32px del
-  // margen negativo): por eso se suman para que la tarjeta quede centrada.
-  padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 12px;
+  padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 10px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -104,6 +94,8 @@
 
 .slide {
   flex: 0 0 var(--ancho-tarjeta);
+  min-width: 0;
+  min-height: 0;
   scroll-snap-align: center;
   scroll-snap-stop: always;
   transform: scale(0.94);
@@ -120,23 +112,25 @@
 
 .contador {
   flex-shrink: 0;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  font-size: 16px;
+  gap: 14px;
+  padding-bottom: 2px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--ion-text-color);
 }
 
 .contador__flecha {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border: 0;
   border-radius: 50%;
   background: var(--ion-color-primary);
   color: #ffffff;
-  font-size: 28px;
+  font-size: 27px;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -147,16 +141,13 @@
   opacity: 0.4;
 }
 
-/* =========================
-   TARJETA DEL PEDIDO
-========================= */
-
 .pedido {
   height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
+  gap: 10px;
+  padding: 15px;
   border-radius: 24px;
   background: var(--ion-color-light, #f4ebdd);
   color: #2f3d24;
@@ -176,12 +167,12 @@
 
   h2 {
     margin: 0;
-    font-size: 26px;
+    font-size: 25px;
     font-weight: 800;
   }
 
   span {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
   }
 }
@@ -201,21 +192,21 @@
 }
 
 .pedido__hora {
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 700;
 }
 
 .pedido__fecha {
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .pedido__estado {
   flex-shrink: 0;
-  padding: 6px 12px;
+  padding: 6px 11px;
   border-radius: 999px;
   background: #2f3d24;
   color: #ffffff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -223,8 +214,6 @@
   background: var(--ion-color-primary);
 }
 
-// Los ítems ocupan el alto libre de la tarjeta; si son muchos, se
-// desplazan adentro y los botones quedan siempre a la vista.
 .pedido__items {
   flex: 1;
   min-height: 0;
@@ -234,20 +223,20 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 9px;
 }
 
 .pedido__item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 19px;
+  gap: 10px;
+  font-size: 18px;
 }
 
 .pedido__cantidad {
   flex-shrink: 0;
-  min-width: 44px;
-  height: 44px;
+  min-width: 42px;
+  height: 42px;
   padding: 0 8px;
   border-radius: 12px;
   background: #2f3d24;
@@ -260,6 +249,7 @@
 }
 
 .pedido__nombre {
+  min-width: 0;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
@@ -267,13 +257,114 @@
 .pedido__acciones {
   flex-shrink: 0;
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .pedido__boton {
   flex: 1;
+  min-width: 0;
   margin: 0;
-  min-height: 52px;
+  min-height: 50px;
   font-weight: 700;
   --border-radius: 16px;
+}
+
+.cocina-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  width: 100vw;
+  height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding:
+    max(24px, env(safe-area-inset-top))
+    24px
+    max(24px, env(safe-area-inset-bottom));
+  background: rgba(31, 45, 24, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-height: 720px) {
+  .cocina-content {
+    --padding-top: 7px;
+  }
+
+  .logo-container {
+    margin-bottom: 2px;
+  }
+
+  .titulo-pagina {
+    margin-top: 2px;
+    margin-bottom: 5px;
+  }
+
+  .vistas {
+    margin-bottom: 7px;
+  }
+
+  .vistas__boton {
+    min-height: 38px;
+    font-size: 13px;
+  }
+
+  .vistas__cantidad {
+    min-width: 21px;
+    height: 21px;
+    font-size: 11px;
+  }
+
+  .carrusel {
+    --ancho-tarjeta: min(340px, calc(100vw - 62px));
+    padding-bottom: 7px;
+  }
+
+  .pedido {
+    gap: 7px;
+    padding: 12px;
+  }
+
+  .pedido__mesa h2 {
+    font-size: 22px;
+  }
+
+  .pedido__hora {
+    font-size: 19px;
+  }
+
+  .pedido__fecha {
+    font-size: 13px;
+  }
+
+  .pedido__item {
+    font-size: 16px;
+  }
+
+  .pedido__cantidad {
+    min-width: 38px;
+    height: 38px;
+  }
+
+  .pedido__boton {
+    min-height: 44px;
+  }
+
+  .contador {
+    min-height: 38px;
+    font-size: 13px;
+  }
+
+  .contador__flecha {
+    width: 36px;
+    height: 36px;
+    font-size: 23px;
+  }
 }

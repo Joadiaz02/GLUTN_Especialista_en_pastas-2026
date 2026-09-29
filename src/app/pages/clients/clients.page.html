@@ -1,8 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-
     <div class="toolbar-content">
-
       <button
         type="button"
         class="toolbar-back-button"
@@ -20,160 +18,96 @@
         type="button"
         class="toolbar-refresh-button"
         (click)="cargarClientesPendientes()"
-        [disabled]="
-          cargando() ||
-          procesandoCliente()
-        "
+        [disabled]="cargando() || procesandoCliente()"
         aria-label="Actualizar clientes"
       >
         <span class="refresh-icon">
           ↻
         </span>
       </button>
-
     </div>
-
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content
   class="clients-content"
-  [fullscreen]="true"
 >
-
   <main class="clients-container">
+    @if (!cargando()) {
+      @if (totalClientes === 0) {
+        <section class="empty-section">
+          <div class="empty-icon">
+            ✓
+          </div>
 
-    @if (cargando()) {
+          <h2>
+            No hay clientes pendientes
+          </h2>
 
-      <section class="loading-section">
+          <p>
+            Todos los clientes registrados
+            fueron gestionados.
+          </p>
+        </section>
+      }
 
-        <app-spinner-logo />
+      @else {
+        <section
+          class="cards-section"
+          (touchstart)="onTouchStart($event)"
+          (touchmove)="onTouchMove($event)"
+          (touchend)="onTouchEnd($event)"
+          (touchcancel)="onTouchEnd($event)"
+        >
+          <div class="cards-track">
+            @for (
+              cliente of clientesPendientes();
+              track cliente.id;
+              let i = $index
+            ) {
+              <app-client-card
+                [cliente]="cliente"
+                [avatarUrl]="obtenerAvatarUrl(cliente.avatar)"
+                [posicion]="obtenerClaseCarta(i)"
+                [saliendo]="tarjetaSaliendo() && i === indiceActual()"
+                [deshabilitada]="procesandoCliente() || i !== indiceActual()"
+                (aprobar)="aprobarCliente($event)"
+                (rechazar)="abrirRechazo($event)"
+              />
+            }
+          </div>
+        </section>
 
-        <p>
-          Cargando clientes...
-        </p>
-
-      </section>
-
+        <app-clients-navigation
+          [posicionActual]="posicionVisible"
+          [totalClientes]="totalClientes"
+          [deshabilitada]="procesandoCliente()"
+          (anterior)="irAnterior()"
+          (siguiente)="irSiguiente()"
+        />
+      }
     }
-
-    @else if (totalClientes === 0) {
-
-      <section class="empty-section">
-
-        <div class="empty-icon">
-          ✓
-        </div>
-
-        <h2>
-          No hay clientes pendientes
-        </h2>
-
-        <p>
-          Todos los clientes registrados
-          fueron gestionados.
-        </p>
-
-      </section>
-
-    }
-
-    @else {
-
-      <section
-        class="cards-section"
-        (touchstart)="onTouchStart($event)"
-        (touchmove)="onTouchMove($event)"
-        (touchend)="onTouchEnd($event)"
-        (touchcancel)="onTouchEnd($event)"
-      >
-
-        <div class="cards-track">
-
-          @for (
-            cliente of clientesPendientes();
-            track cliente.id;
-            let i = $index
-          ) {
-
-            <app-client-card
-              [cliente]="cliente"
-              [avatarUrl]="
-                obtenerAvatarUrl(
-                  cliente.avatar
-                )
-              "
-              [posicion]="
-                obtenerClaseCarta(i)
-              "
-              [saliendo]="
-                tarjetaSaliendo() &&
-                i === indiceActual()
-              "
-              [deshabilitada]="
-                procesandoCliente() ||
-                i !== indiceActual()
-              "
-              (aprobar)="
-                aprobarCliente($event)
-              "
-              (rechazar)="
-                abrirRechazo($event)
-              "
-            />
-
-          }
-
-        </div>
-
-      </section>
-
-
-      <app-clients-navigation
-        [posicionActual]="posicionVisible"
-        [totalClientes]="totalClientes"
-        [deshabilitada]="
-          procesandoCliente()
-        "
-        (anterior)="irAnterior()"
-        (siguiente)="irSiguiente()"
-      />
-
-    }
-
   </main>
-
-
-  @if (procesandoCliente()) {
-
-    <app-loading-overlay
-      mensaje="Actualizando cliente..."
-    />
-
-  }
-
-
-  <app-reject-client-modal
-    [cliente]="clienteARechazar()"
-    [avatarUrl]="
-      obtenerAvatarUrl(
-        clienteARechazar()?.avatar
-      )
-    "
-    [motivo]="motivoRechazo()"
-    [procesando]="
-      procesandoCliente()
-    "
-    (cerrar)="
-      cerrarModalRechazo()
-    "
-    (motivoChange)="
-      actualizarMotivo($event)
-    "
-    (confirmar)="
-      confirmarRechazo($event)
-    "
-  />
-
 </ion-content>
+
+@if (cargando()) {
+  <app-loading-overlay
+    mensaje="Cargando clientes..."
+  />
+}
+
+@if (procesandoCliente()) {
+  <app-loading-overlay
+    mensaje="Actualizando cliente..."
+  />
+}
+
+<app-reject-client-modal
+  [cliente]="clienteARechazar()"
+  [avatarUrl]="obtenerAvatarUrl(clienteARechazar()?.avatar)"
+  [motivo]="motivoRechazo()"
+  [procesando]="procesandoCliente()"
+  (cerrar)="cerrarModalRechazo()"
+  (motivoChange)="actualizarMotivo($event)"
+  (confirmar)="confirmarRechazo($event)"
+/>

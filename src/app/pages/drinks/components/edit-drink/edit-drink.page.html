@@ -1,196 +1,253 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+      <app-confirm-volver
+        (confirmadoVolver)="volver()"
+      />
     </ion-buttons>
 
     <ion-title>Editar Bebida</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  @if (isLoadingDrink()) {
-  <div class="carga-plato">
-    <app-spinner-logo />
-  </div>
-  } @else if (drink()) {
-  <div class="upload-container">
-    <app-uploader
-      [image]="drink().foto_1"
-      (fileSelected)="onPhotoSelected(0, $event)"
-    />
-    <app-uploader
-      [image]="drink().foto_2"
-      (fileSelected)="onPhotoSelected(1, $event)"
-    />
-    <app-uploader
-      [image]="drink().foto_3"
-      (fileSelected)="onPhotoSelected(2, $event)"
-    />
-  </div>
-
-  <form [formGroup]="form" class="fields" appVibrarErrores>
-    <div class="field">
-      <label class="field__label">Nombre</label>
-
-      <ion-input
-        fill="outline"
-        class="field__input"
-        placeholder="Nombre"
-        formControlName="title"
-        [value]="drink().titulo"
+<ion-content>
+  @if (drink()) {
+    <div class="upload-container">
+      <app-uploader
+        [image]="drink().foto_1"
+        (fileSelected)="onPhotoSelected(0, $event)"
       />
 
-      @if ( getFormControl('title')?.invalid &&
-      (getFormControl('title')?.touched || getFormControl('title')?.dirty ) ) {
-      @if ( getFormControl('title')?.hasError('required') ) {
-      <p class="field__error">El campo es obligatorio.</p>
-      } }
-    </div>
-
-    <div class="field">
-      <label class="field__label">Descripción</label>
-
-      <ion-input
-        fill="outline"
-        class="field__input"
-        placeholder="Descripción"
-        formControlName="description"
+      <app-uploader
+        [image]="drink().foto_2"
+        (fileSelected)="onPhotoSelected(1, $event)"
       />
-      <!-- <ion-textarea
-        aria-label="Custom textarea"
-        placeholder="Descripción"
-        class="field__textarea"
-      ></ion-textarea> -->
 
-      @if ( getFormControl('description')?.invalid &&
-      (getFormControl('description')?.touched ||
-      getFormControl('description')?.dirty ) ) { @if (
-      getFormControl('description')?.hasError('required') ) {
-      <p class="field__error">El campo es obligatorio.</p>
-      } }
+      <app-uploader
+        [image]="drink().foto_3"
+        (fileSelected)="onPhotoSelected(2, $event)"
+      />
     </div>
 
-    <div class="fields__row">
+    <form
+      [formGroup]="form"
+      class="fields"
+      appVibrarErrores
+    >
       <div class="field">
-        <label class="field__label">Elaboración</label>
+        <label class="field__label">
+          Nombre
+        </label>
+
+        <ion-input
+          fill="outline"
+          class="field__input"
+          placeholder="Nombre"
+          formControlName="title"
+        />
+
+        @if (
+          getFormControl('title')?.invalid &&
+          (
+            getFormControl('title')?.touched ||
+            getFormControl('title')?.dirty
+          )
+        ) {
+          @if (
+            getFormControl('title')?.hasError('required')
+          ) {
+            <p class="field__error">
+              El campo es obligatorio.
+            </p>
+          }
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label">
+          Descripción
+        </label>
+
+        <ion-input
+          fill="outline"
+          class="field__input"
+          placeholder="Descripción"
+          formControlName="description"
+        />
+
+        @if (
+          getFormControl('description')?.invalid &&
+          (
+            getFormControl('description')?.touched ||
+            getFormControl('description')?.dirty
+          )
+        ) {
+          @if (
+            getFormControl('description')?.hasError('required')
+          ) {
+            <p class="field__error">
+              El campo es obligatorio.
+            </p>
+          }
+        }
+      </div>
+
+      <div class="fields__row">
+        <div class="field">
+          <label class="field__label">
+            Elaboración
+          </label>
+
+          <ion-input
+            type="text"
+            inputmode="numeric"
+            maxlength="3"
+            fill="outline"
+            class="field__input"
+            placeholder="Elaboración"
+            formControlName="preparation"
+          />
+
+          @if (
+            getFormControl('preparation')?.invalid &&
+            (
+              getFormControl('preparation')?.touched ||
+              getFormControl('preparation')?.dirty
+            )
+          ) {
+            @if (
+              getFormControl('preparation')?.hasError('required')
+            ) {
+              <p class="field__error">
+                El campo es obligatorio.
+              </p>
+            }
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label">
+            Precio
+          </label>
+
+          <ion-input
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            fill="outline"
+            class="field__input"
+            placeholder="Precio"
+            formControlName="price"
+          />
+
+          @if (
+            getFormControl('price')?.invalid &&
+            (
+              getFormControl('price')?.touched ||
+              getFormControl('price')?.dirty
+            )
+          ) {
+            @if (
+              getFormControl('price')?.hasError('required')
+            ) {
+              <p class="field__error">
+                El campo es obligatorio.
+              </p>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label">
+          Mililitros
+        </label>
 
         <ion-input
           type="text"
           inputmode="numeric"
-          maxlength="3"
+          maxlength="5"
           fill="outline"
           class="field__input"
-          placeholder="Elaboración"
-          formControlName="preparation"
+          placeholder="Mililitros"
+          formControlName="ml"
         />
 
-        @if ( getFormControl('preparation')?.invalid &&
-        (getFormControl('preparation')?.touched ||
-        getFormControl('preparation')?.dirty ) ) { @if (
-        getFormControl('preparation')?.hasError('required') ) {
-        <p class="field__error">El campo es obligatorio.</p>
-        } @else if ( getFormControl('preparation')?.hasError('pattern') ) {
-        <p class="field__error">
-          Ingresá solo números, sin letras ni símbolos.
-        </p>
-        } @else if ( getFormControl('preparation')?.hasError('min') ) {
-        <p class="field__error">Tiene que ser mayor a 0.</p>
-        } }
+        @if (
+          getFormControl('ml')?.invalid &&
+          (
+            getFormControl('ml')?.touched ||
+            getFormControl('ml')?.dirty
+          )
+        ) {
+          @if (
+            getFormControl('ml')?.hasError('required')
+          ) {
+            <p class="field__error">
+              El campo es obligatorio.
+            </p>
+          }
+        }
       </div>
 
-      <div class="field">
-        <label class="field__label">Precio</label>
+      <div class="toggle-group">
+        <h3 class="toggle-group__title">
+          Contiene alcohol
+        </h3>
 
-        <ion-input
-          type="text"
-          inputmode="numeric"
-          maxlength="6"
-          fill="outline"
-          class="field__input"
-          placeholder="Precio"
-          formControlName="price"
-        />
+        <div class="toggle-group__row">
+          <span class="toggle-group__row-label">
+            Bebida con alcohol
+          </span>
 
-        @if ( getFormControl('price')?.invalid &&
-        (getFormControl('price')?.touched || getFormControl('price')?.dirty ) )
-        { @if ( getFormControl('price')?.hasError('required') ) {
-        <p class="field__error">El campo es obligatorio.</p>
-        } @else if ( getFormControl('price')?.hasError('pattern') ) {
-        <p class="field__error">
-          Ingresá un precio válido (ej: 8500 o 8500.50).
-        </p>
-        } @else if ( getFormControl('price')?.hasError('min') ) {
-        <p class="field__error">Tiene que ser mayor a 0.</p>
-        } }
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="field__label">Mililitros</label>
-
-      <ion-input
-        type="text"
-        inputmode="numeric"
-        maxlength="5"
-        fill="outline"
-        class="field__input"
-        placeholder="Mililitros"
-        formControlName="ml"
-      />
-
-      @if ( getFormControl('ml')?.invalid && (getFormControl('ml')?.touched ||
-      getFormControl('ml')?.dirty ) ) { @if (
-      getFormControl('ml')?.hasError('required') ) {
-      <p class="field__error">El campo es obligatorio.</p>
-      } @else if ( getFormControl('ml')?.hasError('pattern') ) {
-      <p class="field__error">Ingresá solo números, sin letras ni símbolos.</p>
-      } @else if ( getFormControl('ml')?.hasError('min') ) {
-      <p class="field__error">Tiene que ser mayor a 0.</p>
-      } }
-    </div>
-
-    <div class="toggle-group">
-      <h3 class="toggle-group__title">Contiene alcohol</h3>
-
-      <div class="toggle-group__row">
-        <span class="toggle-group__row-label">Bebida con alcohol</span>
-
-        <ion-toggle
-          class="toggle-group__toggle"
-          formControlName="contieneAlcohol"
-        ></ion-toggle>
-      </div>
-    </div>
-
-    <div class="toggle-group">
-      <h3 class="toggle-group__title">Sugerencia de la casa</h3>
-
-      <div class="toggle-group__row">
-        <span class="toggle-group__row-label">Mostrar como recomendada</span>
-
-        <ion-toggle formControlName="sugerencia"></ion-toggle>
+          <ion-toggle
+            formControlName="contieneAlcohol"
+          />
+        </div>
       </div>
 
-      <!-- <p class="toggle-group__hint">
-        Las bebidas marcadas como sugerencia aparecen en el slide de "Productos
-        destacados" del inicio.
-      </p> -->
-    </div>
-  </form>
+      <div class="toggle-group">
+        <h3 class="toggle-group__title">
+          Sugerencia de la casa
+        </h3>
+
+        <div class="toggle-group__row">
+          <span class="toggle-group__row-label">
+            Mostrar como recomendada
+          </span>
+
+          <ion-toggle
+            formControlName="sugerencia"
+          />
+        </div>
+      </div>
+    </form>
   }
 </ion-content>
+
+@if (isLoadingDrink()) {
+  <div class="page-loading">
+    <app-spinner-logo />
+    <span>Cargando bebida...</span>
+  </div>
+}
+
+@if (isLoading()) {
+  <div class="page-loading">
+    <app-spinner-logo />
+    <span>Guardando cambios...</span>
+  </div>
+}
 
 <ion-footer class="ion-no-border">
   <div class="footer-actions">
     <ion-button
       expand="block"
       shape="round"
-      [disabled]="(form.statusChanges | async) !== 'VALID'"
+      [disabled]="form.invalid || isLoading() || isLoadingDrink()"
       (click)="update()"
     >
-      @if (isLoading()) { <app-spinner-logo size="sm" /> } @else { Guardar
-      cambios }
+      Guardar cambios
     </ion-button>
   </div>
 </ion-footer>

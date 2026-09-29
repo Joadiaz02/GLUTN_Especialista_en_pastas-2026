@@ -115,26 +115,13 @@
         </button>
 
 
-        <button
+<button
   type="button"
   class="modal-confirm-button"
-  [disabled]="
-    !motivo.trim() ||
-    procesando
-  "
+  [disabled]="!motivo.trim() || procesando"
   (click)="confirmarRechazo()"
 >
-
-  @if (procesando) {
-
-    <app-spinner-logo size="sm" />
-
-  } @else {
-
-    Rechazar
-
-  }
-
+  Rechazar
 </button>
 
       </div>
