@@ -11,10 +11,7 @@ export interface OpcionesConfirmacion {
   icono?: string;
 }
 
-// Envuelve el cartel de confirmación que ya existe (usado hoy para el
-// logout de Admin) para poder abrirlo desde cualquier botón/acción,
-// sin depender de su modo "trigger" (que siempre muestra el ícono de
-// logout). Reutiliza el mismo componente como contenido del modal.
+// abre el cartel de confirmación desde cualquier acción
 @Injectable({ providedIn: 'root' })
 export class Confirm {
   private _modalController = inject(ModalController);

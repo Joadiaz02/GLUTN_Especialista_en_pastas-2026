@@ -59,7 +59,7 @@
         </p>
       </div>
     } @else {
-      <!-- Un pedido por tarjeta; se desliza hacia los costados. -->
+      <!-- un pedido por tarjeta -->
       <div #viewport class="carrusel" (scroll)="alDesplazar()">
         @for (pedido of pedidos(); track pedido.idPedido; let i = $index) {
           <article class="slide" [class.slide--activo]="i === indiceActual()">
@@ -82,7 +82,7 @@
                 </span>
               </div>
 
-              <!-- Cada parte del pedido con el estado de su sector. -->
+              <!-- cada parte del pedido con su estado -->
               <div class="pedido__items">
                 @for (parte of pedido.partes; track parte.sector) {
                   <div class="parte">

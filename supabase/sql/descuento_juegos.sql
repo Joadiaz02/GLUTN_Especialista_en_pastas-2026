@@ -1,19 +1,4 @@
--- Descuento de los juegos (punto 15).
--- Se ejecuta en Supabase > SQL Editor (se puede volver a correr).
---
--- El descuento es uno solo por ESTADÍA: cuenta el primer intento en
--- cualquiera de los tres juegos, y solo si lo gana un cliente registrado.
--- La estadía es la fila del cliente en lista_espera con la mesa asignada:
--- si vuelve otro día, es otra estadía y puede volver a jugar.
---
--- Una fila por estadía (la clave única lo garantiza aunque la app falle):
---   terminado = false -> el primer intento se está jugando (si el cliente
---                        cierra la app a mitad de partida, queda usado y
---                        sin descuento: salir cuenta como perder).
---   terminado = true  -> ya se jugó; porcentaje es lo que ganó (0 si perdió).
---
--- La app no escribe la tabla directo: usa las funciones de abajo, que
--- validan la estadía, el perfil y el porcentaje de cada juego.
+-- descuento de los juegos, uno por estadía
 
 create table if not exists public.descuento_juegos (
   id uuid primary key default gen_random_uuid(),
@@ -27,8 +12,7 @@ create table if not exists public.descuento_juegos (
 
 alter table public.descuento_juegos enable row level security;
 
--- Cada cliente ve solo su descuento; el personal los ve todos (para la
--- cuenta del punto 21). Nadie escribe directo: solo las funciones.
+-- cada cliente ve lo suyo, el personal ve todo
 drop policy if exists descuento_juegos_select on public.descuento_juegos;
 create policy descuento_juegos_select on public.descuento_juegos
   for select to authenticated
@@ -41,7 +25,7 @@ create policy descuento_juegos_select on public.descuento_juegos
     )
   );
 
--- Estadía actual del cliente logueado (null si no tiene mesa asignada).
+-- estadía actual del cliente
 create or replace function public.juego_estadia_actual()
 returns uuid
 language sql
@@ -57,10 +41,7 @@ as $$
    limit 1;
 $$;
 
--- Descuento de la estadía actual:
---   null -> todavía no jugó su primer intento
---   0    -> ya lo jugó y no le quedó descuento
---   >0   -> porcentaje ganado
+-- descuento actual: null no jugó, 0 sin descuento, mayor a 0 ganado
 create or replace function public.juego_descuento_actual()
 returns integer
 language sql
@@ -73,8 +54,7 @@ as $$
    where dj.id_estadia = public.juego_estadia_actual();
 $$;
 
--- Empieza el primer intento. Devuelve false si no hay estadía o si el
--- intento de esta estadía ya se había usado.
+-- empieza el primer intento
 create or replace function public.juego_iniciar(p_juego text)
 returns boolean
 language plpgsql
@@ -96,9 +76,7 @@ begin
 end;
 $$;
 
--- Termina el primer intento. El porcentaje lo decide la base según el
--- juego (no lo manda la app), y solo un cliente registrado se lo queda.
--- Devuelve el porcentaje final, o null si no había intento en curso.
+-- termina el primer intento y la base decide el porcentaje
 create or replace function public.juego_terminar(p_gano boolean)
 returns integer
 language plpgsql
@@ -132,8 +110,7 @@ begin
 end;
 $$;
 
--- Resultado neutro (empate en el Ta-Te-Ti, "Volvé a intentarlo" en la
--- Ruleta): el primer intento no se consume y se puede volver a jugar.
+-- resultado neutro, libera el intento
 create or replace function public.juego_anular()
 returns void
 language sql

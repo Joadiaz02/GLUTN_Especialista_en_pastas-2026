@@ -36,9 +36,7 @@ const NOMBRE_ESTADO: Record<EstadoParte, string> = {
 
 export type VistaMozo = 'listos' | 'en_preparacion';
 
-// Punto 18: pedidos pendientes del mozo, de a uno por tarjeta y ordenados
-// por mesa (mismo carrusel que Cocina). En "En preparación" se ve cómo va
-// cada parte (cocina y bar); en "Listos" los completos para llevar.
+// pedidos pendientes del mozo, listos o en preparación
 @Component({
   selector: 'app-pedidos-listos',
   standalone: true,
@@ -67,8 +65,7 @@ export class PedidosListosPage implements OnDestroy {
   );
 
   constructor() {
-    // Cuando se entrega el último pedido de la lista, el contador no puede
-    // quedar apuntando a una tarjeta que ya no existe.
+    // ajusta el contador cuando se va el último pedido
     effect(() => {
       const ultimo = Math.max(0, this.pedidos().length - 1);
 
@@ -78,7 +75,7 @@ export class PedidosListosPage implements OnDestroy {
     });
   }
 
-  // Ionic mantiene las páginas en pila: al volver se recarga el listado.
+  // recarga el listado al volver a la pantalla
   ionViewWillEnter(): void {
     void this.iniciar();
   }
@@ -125,7 +122,7 @@ export class PedidosListosPage implements OnDestroy {
     });
   }
 
-  // La tarjeta activa es la que queda más cerca del centro.
+  // la tarjeta activa es la más cercana al centro
   alDesplazar(): void {
     const viewport = this._viewport()?.nativeElement;
 

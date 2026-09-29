@@ -6,7 +6,7 @@
   --padding-bottom: calc(min(16px, 2vh) + env(safe-area-inset-bottom));
 }
 
-// Logo y título arriba; el carrusel se lleva todo el alto que queda.
+// logo y título arriba, el carrusel ocupa el resto
 .cocina-wrapper {
   height: 100%;
   display: flex;
@@ -24,10 +24,7 @@
   color: var(--ion-text-color);
 }
 
-/* =========================
-   SELECTOR DE VISTA
-   (por recibir / en preparación)
-========================= */
+// pestañas por recibir y en preparación
 
 .vistas {
   flex-shrink: 0;
@@ -74,11 +71,7 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   CARRUSEL
-   (mismo criterio que el de la carta: tarjeta centrada y las vecinas
-   asomando a los costados)
-========================= */
+// carrusel de pedidos
 
 .carrusel {
   --ancho-tarjeta: min(360px, calc(100vw - 72px));
@@ -88,8 +81,7 @@
   display: flex;
   gap: 16px;
   margin: 0 -16px;
-  // El % del padding se toma del ancho del contenedor (sin los 32px del
-  // margen negativo): por eso se suman para que la tarjeta quede centrada.
+  // padding para que la tarjeta quede centrada
   padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 12px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -147,9 +139,7 @@
   opacity: 0.4;
 }
 
-/* =========================
-   TARJETA DEL PEDIDO
-========================= */
+// tarjeta del pedido
 
 .pedido {
   height: 100%;
@@ -223,8 +213,7 @@
   background: var(--ion-color-primary);
 }
 
-// Los ítems ocupan el alto libre de la tarjeta; si son muchos, se
-// desplazan adentro y los botones quedan siempre a la vista.
+// los ítems se desplazan y los botones quedan a la vista
 .pedido__items {
   flex: 1;
   min-height: 0;

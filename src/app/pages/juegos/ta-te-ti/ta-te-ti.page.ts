@@ -47,10 +47,7 @@ export class TaTeTiPage implements OnDestroy {
   turnoPc = signal(false);
   resultadoTipo = signal<ResultadoTaTeTi | null>(null);
 
-  // Salir de la página, por el botón "volver", el botón atrás del celular
-  // o cualquier otra navegación, con una partida en curso cuenta como
-  // perder. Ionic mantiene las páginas en pila y no siempre las destruye,
-  // por eso se cubren los dos ganchos; abandonar es idempotente.
+  // salir con una partida en curso cuenta como perder
   ionViewWillLeave(): void {
     this.abandonar();
   }
@@ -59,8 +56,7 @@ export class TaTeTiPage implements OnDestroy {
     this.abandonar();
   }
 
-  // Un tablero sin ninguna marca todavía no es una partida: se puede
-  // salir sin gastar el intento.
+  // sin marcas todavía no hay partida
   private enCurso(): boolean {
     return this.estado() === 'jugando' && this.celdas().some((c) => c !== null);
   }
@@ -114,7 +110,7 @@ export class TaTeTiPage implements OnDestroy {
   jugar(indice: number): void {
     if (this.estado() !== 'jugando' || this.turnoPc() || this.celdas()[indice] !== null) return;
 
-    // La primera marca es la que empieza la partida.
+    // la primera marca empieza la partida
     if (this.celdas().every((celda) => celda === null)) {
       this._juegosService.iniciarIntento('ta-te-ti');
     }
@@ -174,8 +170,7 @@ export class TaTeTiPage implements OnDestroy {
     return null;
   }
 
-  // El empate es neutro, igual que "reintenta" en la Ruleta: no consume
-  // el intento ni cuenta como gano/perdio para el descuento de la estadia.
+  // el empate no consume el intento
   private async procesarResultado(tipo: ResultadoTaTeTi): Promise<void> {
     this.resultadoTipo.set(tipo);
     this.estado.set('resultado');

@@ -3,11 +3,10 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 
 import { SupabaseService } from '../supabase.service';
 
-// Lo que se prepara en la cocina; las bebidas van al bar.
+// tipos que prepara la cocina
 const TIPOS_COCINA = ['plato', 'postre'];
 
-// Estados del pedido en los que la cocina puede recibirlo: ya lo aceptó
-// el mozo ('confirmado') o el bar ya empezó con su parte ('en_preparacion').
+// estados en los que la cocina puede recibir el pedido
 const ESTADOS_PARA_COCINA = ['confirmado', 'en_preparacion'];
 
 export interface ItemCocina {
@@ -15,7 +14,7 @@ export interface ItemCocina {
   cantidad: number;
 }
 
-// null = todavía no lo recibió la cocina; 'en_preparacion' = ya lo tomó.
+// null sin recibir, en preparación ya tomado
 export type EstadoCocina = null | 'en_preparacion';
 
 export interface PedidoCocina {
@@ -31,11 +30,7 @@ export interface MesaCocina {
   pedidos: PedidoCocina[];
 }
 
-// Puntos 16 y 18: la cocina recibe los productos y avisa cuando los
-// terminó. Lista los pedidos que el mozo ya confirmó y que la cocina
-// todavía no terminó, agrupados por número de mesa. Los cambios de estado
-// los hacen funciones de la base (ver supabase/sql/pedido_sectores.sql) y
-// el cliente los ve en vivo (ver EstadoPedidoComponent).
+// pedidos de la cocina agrupados por mesa
 @Injectable({ providedIn: 'root' })
 export class Cocina {
   private _db = inject(SupabaseService);
@@ -46,8 +41,7 @@ export class Cocina {
 
   cargando = signal(false);
 
-  // Mesas ordenadas por el pedido más viejo: lo que espera hace más
-  // tiempo queda arriba.
+  // mesas ordenadas por el pedido más viejo
   mesas = computed<MesaCocina[]>(() => {
     const porMesa = new Map<string, PedidoCocina[]>();
 
@@ -63,7 +57,7 @@ export class Cocina {
     }));
   });
 
-  // Idempotente: si el canal ya existe, solo vuelve a cargar.
+  // si el canal ya existe solo recarga
   async iniciar(): Promise<void> {
     if (!this._canal) {
       this.suscribir();
@@ -130,7 +124,7 @@ export class Cocina {
         itemsPorPedido.set(item.id_pedido, lista);
       }
 
-      // Un pedido que es solo de bebidas no tiene nada para la cocina.
+      // los pedidos solo de bebidas no van a la cocina
       this._pedidos.set(
         pedidos
           .filter((p) => itemsPorPedido.has(p.id_pedido))
@@ -148,7 +142,7 @@ export class Cocina {
     }
   }
 
-  // Punto 16. Devuelve false si otro cocinero ya lo había recibido.
+  // recibe el pedido, false si ya lo tomó otro cocinero
   async recibir(pedido: PedidoCocina): Promise<boolean> {
     const { data: recibido, error } = await this._db.client.rpc(
       'pedido_sector_recibir',
@@ -175,8 +169,7 @@ export class Cocina {
     return true;
   }
 
-  // Punto 18. La cocina terminó su parte; devuelve true si con eso el
-  // pedido quedó completo (el bar también terminó o no tenía bebidas).
+  // marca la parte de la cocina lista, true si el pedido quedó completo
   async entregar(pedido: PedidoCocina): Promise<boolean> {
     const { data: estado, error } = await this._db.client.rpc(
       'pedido_sector_listo',
@@ -193,7 +186,7 @@ export class Cocina {
       return false;
     }
 
-    // Los avisos no deben frenar a la cocina si fallan.
+    // los avisos no frenan a la cocina
     this.avisarCliente(pedido, 'listo');
     void this._db.client.functions.invoke('notify-pedido-listo', {
       body: { idPedido: pedido.idPedido },
@@ -202,9 +195,7 @@ export class Cocina {
     return true;
   }
 
-  // Punto 16. La cocina no puede prepararlo: vuelve al cliente como
-  // rechazado para que lo modifique. Devuelve false si ya no se podía
-  // (otro cocinero lo recibió o el mozo lo cambió).
+  // rechaza el pedido y vuelve al cliente
   async rechazar(pedido: PedidoCocina): Promise<boolean> {
     const { data: rechazado, error } = await this._db.client.rpc(
       'pedido_sector_rechazar',
@@ -224,7 +215,7 @@ export class Cocina {
     return !!rechazado;
   }
 
-  // Deshace "Recibir" (por si se tocó por error): vuelve a "Por recibir".
+  // deshace recibir
   async devolver(pedido: PedidoCocina): Promise<boolean> {
     const { data: devuelto, error } = await this._db.client.rpc(
       'pedido_sector_devolver',
@@ -254,8 +245,7 @@ export class Cocina {
     });
   }
 
-  // Cualquier cambio en los pedidos (uno nuevo confirmado por el mozo, uno
-  // recibido por otro cocinero) vuelve a armar el listado.
+  // recarga el listado con cualquier cambio de pedidos
   private suscribir(): void {
     this._canal = this._db.client
       .channel('cocina-pedidos')

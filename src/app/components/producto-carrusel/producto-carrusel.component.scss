@@ -116,7 +116,7 @@
 
   max-width: 300px;
 
-  /* Alto configurable desde la pantalla que lo usa (por defecto, 535px). */
+  // alto de la tarjeta configurable desde la pantalla
   height: var(--carrusel-alto-tarjeta, 535px);
 
   scroll-snap-align: center;
@@ -888,9 +888,7 @@
     max-height: 300px;
   }
 }
-/* =========================================================
-   PRODUCTO DADO DE BAJA (solo en las pantallas de gestión)
-========================================================= */
+// producto dado de baja
 
 .producto-card--baja .producto-imagen,
 .producto-card--baja .producto-titulo,

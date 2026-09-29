@@ -6,15 +6,14 @@
   --padding-bottom: calc(min(24px, 2.5vh) + env(safe-area-inset-bottom));
 }
 
-// Logo fijo arriba y los tres botones se reparten el alto que queda.
+// logo fijo arriba y botones que llenan el alto
 .carta-wrapper {
   min-height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-// Con productos en el carrito aparece la barra del pedido abajo (fija):
-// se le deja lugar para que no tape el último botón.
+// lugar para que la barra del pedido no tape el último botón
 .carta-wrapper--con-barra {
   padding-bottom: 88px;
 }
@@ -27,7 +26,7 @@
   gap: min(16px, 1.8vh);
 }
 
-// cqh = % del alto del propio botón: la letra acompaña su tamaño.
+// la letra acompaña el alto del botón
 .carta-boton {
   flex: 1 1 0;
   min-height: 52px;

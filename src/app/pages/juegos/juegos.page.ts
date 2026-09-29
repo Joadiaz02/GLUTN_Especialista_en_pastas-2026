@@ -32,13 +32,11 @@ export class JuegosPage {
   readonly juegos: ConfigJuego[] = LISTA_JUEGOS;
   readonly reglaDescuento = REGLA_DESCUENTO;
 
-  // El juego se conserva al cerrar la ventana para que el texto no
-  // desaparezca en medio de la animación de cierre.
+  // conserva el juego al cerrar la ventana
   juegoAyuda = signal<ConfigJuego | null>(null);
   ayudaAbierta = signal(false);
 
-  // Al entrar se trae el descuento guardado de la estadía, por si el
-  // primer intento se jugó en otra sesión o en otro dispositivo.
+  // trae el descuento guardado al entrar
   ionViewWillEnter(): void {
     void this._juegosService.cargar();
   }

@@ -1,13 +1,11 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-// Texto obligatorio que se mide sin los espacios de los costados:
-// "   " cuenta como vacío (Validators.required lo deja pasar).
-// Errores: 'soloEspacios', 'largoMinimo' y 'largoMaximo' (con el límite).
+// texto obligatorio sin solo espacios y con largo mínimo y máximo
 export function textoValido(minimo: number, maximo: number): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const valor = control.value;
 
-    // El vacío lo informa Validators.required.
+    // el vacío lo informa required
     if (valor === null || valor === undefined || valor === '') {
       return null;
     }

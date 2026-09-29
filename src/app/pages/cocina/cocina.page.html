@@ -59,9 +59,7 @@
         </p>
       </div>
     } @else {
-      <!-- Un pedido por tarjeta; se desliza hacia los costados. Los
-           pedidos van ordenados por mesa, así los de una misma mesa
-           quedan juntos. -->
+      <!-- un pedido por tarjeta, ordenados por mesa -->
       <div #viewport class="carrusel" (scroll)="alDesplazar()">
         @for (pedido of pedidos(); track pedido.idPedido; let i = $index) {
           <article

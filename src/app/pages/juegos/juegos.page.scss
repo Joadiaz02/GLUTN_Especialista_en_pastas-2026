@@ -1,5 +1,4 @@
-// El logo es fijo y las tarjetas de los juegos se reparten el alto que
-// queda, así el menú llena la pantalla sin scroll.
+// logo fijo y tarjetas que llenan la pantalla
 .juegos-content {
   --background: var(--ion-background-color);
   --padding-top: min(24px, 2.5vh);
@@ -31,7 +30,7 @@
   gap: min(16px, 1.8vh);
 }
 
-// cqh = % del alto de la propia tarjeta: la letra acompaña su tamaño.
+// la letra acompaña el alto de la tarjeta
 .juego-card {
   flex: 1 1 0;
   min-height: 110px;
@@ -83,7 +82,7 @@
   cursor: pointer;
 }
 
-// Ventana centrada, con el mismo fondo verde de la app y bordes redondeados.
+// ventana centrada con el fondo de la app
 ion-modal.como-jugar-modal {
   --width: 90%;
   --max-width: 420px;
@@ -139,7 +138,7 @@ ion-modal.como-jugar-modal {
   font-weight: 600;
 }
 
-// Pantallas bajas: título más chico para que el menú entre sin scroll.
+// en pantallas bajas se achica el título
 @media (max-height: 700px) {
   .titulo-pagina {
     margin-bottom: 6px;

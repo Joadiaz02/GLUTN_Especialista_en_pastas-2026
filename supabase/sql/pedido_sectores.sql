@@ -1,12 +1,4 @@
--- Estado de cada sector (cocina y bar) dentro de un pedido.
--- Puntos 16 y 18: la cocina y el bar reciben su parte del pedido y avisan
--- cuando la terminan. El pedido recién está "listo" cuando terminaron
--- todos los sectores que tienen algo para preparar.
--- Se ejecuta en Supabase > SQL Editor (se puede volver a correr).
---
--- null             = el sector todavía no lo recibió (o no tiene nada que preparar)
--- 'en_preparacion' = el sector lo recibió y lo está preparando
--- 'listo'          = el sector terminó su parte
+-- estado de cocina y bar dentro de un pedido
 
 alter table public.pedido
   add column if not exists estado_cocina text
@@ -16,7 +8,7 @@ alter table public.pedido
   add column if not exists estado_bar text
     check (estado_bar in ('en_preparacion', 'listo'));
 
--- Solo el cocinero maneja la cocina y solo el cantinero maneja el bar.
+-- solo cocinero en cocina y cantinero en bar
 create or replace function public.pedido_validar_sector(p_sector text)
 returns void
 language plpgsql
@@ -41,8 +33,7 @@ begin
 end;
 $$;
 
--- Punto 16: el sector recibe su parte. El pedido pasa a 'en_preparacion'.
--- Devuelve false si otro empleado del sector ya lo había recibido.
+-- el sector recibe su parte
 create or replace function public.pedido_sector_recibir(p_id_pedido uuid, p_sector text)
 returns boolean
 language plpgsql
@@ -76,10 +67,7 @@ begin
 end;
 $$;
 
--- Punto 18: el sector terminó su parte. Si ya terminaron todos los
--- sectores que tienen ítems en el pedido, el pedido pasa a 'listo'.
--- El "for update" evita que cocina y bar terminen a la vez y ninguno de
--- los dos vea al otro terminado. Devuelve el estado final del pedido.
+-- el sector termina su parte y el pedido queda listo si terminaron todos
 create or replace function public.pedido_sector_listo(p_id_pedido uuid, p_sector text)
 returns text
 language plpgsql
@@ -140,10 +128,7 @@ begin
 end;
 $$;
 
--- El sector no puede preparar el pedido (ej. falta un ingrediente): el
--- pedido vuelve al cliente como 'rechazado', igual que cuando lo rechaza
--- el mozo, para que lo modifique y lo reenvíe. Solo antes de recibirlo.
--- Devuelve false si ya no se podía rechazar (ej. otro lo recibió).
+-- el sector rechaza el pedido y vuelve al cliente
 create or replace function public.pedido_sector_rechazar(p_id_pedido uuid, p_sector text)
 returns boolean
 language plpgsql
@@ -172,9 +157,7 @@ begin
 end;
 $$;
 
--- Deshace "Recibir" (por si se tocó por error): el pedido vuelve a
--- quedar para recibir. Si el otro sector no lo tiene en preparación, el
--- pedido vuelve a 'confirmado'.
+-- deshace recibir
 create or replace function public.pedido_sector_devolver(p_id_pedido uuid, p_sector text)
 returns boolean
 language plpgsql
@@ -219,7 +202,7 @@ revoke execute on function public.pedido_sector_listo(uuid, text) from public, a
 grant execute on function public.pedido_sector_recibir(uuid, text) to authenticated;
 grant execute on function public.pedido_sector_listo(uuid, text) to authenticated;
 
--- La pantalla de cocina escucha los cambios de pedido en tiempo real.
+-- cambios de pedido en vivo
 do $$
 begin
   if not exists (
@@ -232,5 +215,5 @@ begin
   end if;
 end $$;
 
--- Que la API vea las columnas y funciones nuevas sin esperar.
+-- recarga el esquema de la api
 notify pgrst, 'reload schema';

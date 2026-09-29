@@ -37,10 +37,7 @@ function recortar(texto: string): string {
     : texto;
 }
 
-// Avisa de un mensaje nuevo de la sala de consultas (punto 11):
-//  - si escribe un cliente, les llega a TODOS los mozos;
-//  - si escribe un mozo, le llega al cliente cuya consulta responde
-//    (el de "en_respuesta_a" o, si no eligió ninguna, el último que consultó).
+// avisa los mensajes del chat: del cliente a los mozos, del mozo al cliente
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -77,7 +74,7 @@ Deno.serve(async (req) => {
       throw new Error('No se encontró el mensaje.');
     }
 
-    // Solo el autor puede pedir que se avise de su propio mensaje.
+    // solo el autor pide el aviso
     if (mensaje.id_autor !== usuario.id) {
       throw new Error('No tenés permisos para realizar esta acción.');
     }
@@ -142,7 +139,7 @@ Deno.serve(async (req) => {
       cuerpo = recortar(mensaje.texto);
     }
 
-    // Nadie recibe el aviso de su propio mensaje.
+    // nadie recibe su propio aviso
     destinatarios = destinatarios.filter(
       (id) => id !== usuario.id
     );
