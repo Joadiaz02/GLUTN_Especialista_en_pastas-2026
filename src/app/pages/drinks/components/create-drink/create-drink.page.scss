@@ -1,39 +1,136 @@
-.upload-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  width: 100%;
-  height: 160px;
+ion-content::part(scroll) {
+  overflow: hidden;
 }
+
+
+.upload-container {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  align-items: stretch;
+
+  gap:
+    clamp(
+      8px,
+      3vw,
+      16px
+    );
+
+  width: 100%;
+
+  height:
+    clamp(
+      96px,
+      24vw,
+      150px
+    );
+
+  flex: 0 0 auto;
+
+  box-sizing: border-box;
+
+  app-uploader {
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+  }
+}
+
 
 .fields {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
+
 .toggle-group {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 
   &__title {
-    font-size: 16px;
+    font-size: 15px;
+
     font-weight: 600;
-    margin: 0 0 8px;
+
+    margin:
+      0
+      0
+      6px;
   }
 
   &__row {
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
   }
 
   &__row-label {
-    font-size: 16px;
+    font-size: 15px;
+
     color: #D5E0C9;
   }
+}
 
-  &__hint {
-    color: #D5E0C9;
+
+ion-content {
+  --padding-start: 20px;
+  --padding-end: 20px;
+
+  --padding-top: 10px;
+  --padding-bottom: 8px;
+}
+
+
+@media (max-height: 760px) {
+
+  .upload-container {
+    height: 100px;
+
+    gap: 8px;
+  }
+
+  .fields {
+    margin-top: 8px;
+  }
+
+  .field {
+    margin-bottom: 8px;
+  }
+
+  .field__label {
     font-size: 14px;
-    margin-top: 6px;
+  }
+
+  .toggle-group {
+    margin-bottom: 8px;
+  }
+}
+
+
+ion-footer .footer-actions {
+  padding:
+    10px
+    20px
+    max(
+      10px,
+      env(
+        safe-area-inset-bottom
+      )
+    );
+}
+
+
+@media (max-height: 760px) {
+
+  ion-input.field__input {
+    min-height:
+      52px !important;
   }
 }

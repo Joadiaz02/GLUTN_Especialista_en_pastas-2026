@@ -17,6 +17,7 @@ import { ClientsNavigationComponent } from './components/clients-navigation/clie
 import { RejectClientModalComponent } from './components/reject-client-modal/reject-client-modal.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { Vibracion } from '@app/services';
+import { LoadingOverlayComponent } from '@app/components/ui/loading-overlay/loading-overlay.component';
 
 @Component({
   selector: 'app-clients',
@@ -28,7 +29,8 @@ import { Vibracion } from '@app/services';
     ClientCardComponent,
     ClientsNavigationComponent,
     RejectClientModalComponent,
-    SpinnerLogoComponent
+    SpinnerLogoComponent,
+    LoadingOverlayComponent
   ],
   templateUrl: './clients.page.html',
   styleUrls: ['./clients.page.scss'],

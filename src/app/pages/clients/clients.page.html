@@ -1,5 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
+
     <div class="toolbar-content">
 
       <button
@@ -19,13 +20,19 @@
         type="button"
         class="toolbar-refresh-button"
         (click)="cargarClientesPendientes()"
-        [disabled]="cargando() || procesandoCliente()"
+        [disabled]="
+          cargando() ||
+          procesandoCliente()
+        "
         aria-label="Actualizar clientes"
       >
-        <span class="refresh-icon">↻</span>
+        <span class="refresh-icon">
+          ↻
+        </span>
       </button>
 
     </div>
+
   </ion-toolbar>
 </ion-header>
 
@@ -34,6 +41,7 @@
   class="clients-content"
   [fullscreen]="true"
 >
+
   <main class="clients-container">
 
     @if (cargando()) {
@@ -48,7 +56,9 @@
 
       </section>
 
-    } @else if (totalClientes === 0) {
+    }
+
+    @else if (totalClientes === 0) {
 
       <section class="empty-section">
 
@@ -67,7 +77,9 @@
 
       </section>
 
-    } @else {
+    }
+
+    @else {
 
       <section
         class="cards-section"
@@ -121,7 +133,9 @@
       <app-clients-navigation
         [posicionActual]="posicionVisible"
         [totalClientes]="totalClientes"
-        [deshabilitada]="procesandoCliente()"
+        [deshabilitada]="
+          procesandoCliente()
+        "
         (anterior)="irAnterior()"
         (siguiente)="irSiguiente()"
       />
@@ -129,6 +143,15 @@
     }
 
   </main>
+
+
+  @if (procesandoCliente()) {
+
+    <app-loading-overlay
+      mensaje="Actualizando cliente..."
+    />
+
+  }
 
 
   <app-reject-client-modal
@@ -139,10 +162,18 @@
       )
     "
     [motivo]="motivoRechazo()"
-    [procesando]="procesandoCliente()"
-    (cerrar)="cerrarModalRechazo()"
-    (motivoChange)="actualizarMotivo($event)"
-    (confirmar)="confirmarRechazo($event)"
+    [procesando]="
+      procesandoCliente()
+    "
+    (cerrar)="
+      cerrarModalRechazo()
+    "
+    (motivoChange)="
+      actualizarMotivo($event)
+    "
+    (confirmar)="
+      confirmarRechazo($event)
+    "
   />
 
 </ion-content>

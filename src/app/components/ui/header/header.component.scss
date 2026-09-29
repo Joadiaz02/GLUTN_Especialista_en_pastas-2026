@@ -1,6 +1,30 @@
-// 10px de aire entre el borde de arriba (o la barra de estado) y el header.
 :host {
   display: block;
-  padding-top: 10px;
-  background: var(--ion-background-color);
+
+  padding-top:
+    max(
+      8px,
+      env(
+        safe-area-inset-top
+      )
+    );
+
+  background:
+    var(
+      --ion-background-color
+    );
+}
+
+
+@media (max-height: 720px) {
+
+  :host {
+    padding-top:
+      max(
+        5px,
+        env(
+          safe-area-inset-top
+        )
+      );
+  }
 }

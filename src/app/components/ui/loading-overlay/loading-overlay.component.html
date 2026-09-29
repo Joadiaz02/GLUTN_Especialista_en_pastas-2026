@@ -1,0 +1,16 @@
+<div
+  class="loading-overlay"
+  role="status"
+  aria-live="polite"
+  aria-label="Cargando"
+>
+  <div class="loading-overlay__content">
+    <app-spinner-logo />
+
+    @if (mensaje()) {
+      <span class="loading-overlay__message">
+        {{ mensaje() }}
+      </span>
+    }
+  </div>
+</div>
