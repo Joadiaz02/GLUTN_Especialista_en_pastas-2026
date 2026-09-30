@@ -212,18 +212,12 @@ export const routes: Routes = [
       ).then((m) => m.OrdersDetallesComponent),
   },
   {
-    path: 'admin/bar',
-    canActivate: [authGuard, roleGuard],
-    data: {
-      roles: [EPerfilUsuario.Cantinero],
-      titulo: 'Bar',
-      tipos: ['bebida'],
-    },
-    loadComponent: () =>
-      import('./pages/sector-pedidos/sector-pedidos.page').then(
-        (m) => m.SectorPedidosPage
-      ),
-  },
+  path: 'admin/bar',
+  canActivate: [authGuard, roleGuard],
+  data: { roles: [EPerfilUsuario.Cantinero] },
+  loadComponent: () =>
+    import('./pages/bar/bar.page').then((m) => m.BarPage),
+},
   {
     path: 'juegos',
 
@@ -343,12 +337,5 @@ export const routes: Routes = [
       import('./pages/waiting-room/waiting-room.page').then(
         (m) => m.WaitingRoomPage
       ),
-  },
-  {
-    path: 'sector-pedidos',
-    loadComponent: () =>
-      import('./pages/sector-pedidos/sector-pedidos.page').then(
-        (m) => m.SectorPedidosPage
-      ),
-  },
+  }
 ];

@@ -19,3 +19,4 @@ export * from './user';
 export * from './global-error-handler';
 export * from './cocina';
 export * from './pedidos-listos';
+export * from './bar/bar'
