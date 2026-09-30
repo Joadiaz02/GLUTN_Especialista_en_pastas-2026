@@ -358,4 +358,16 @@ export const routes: Routes = [
         (m) => m.AssignedTablePage
       ),
   },
+  {
+    path: 'admin/employees',
+    loadComponent: () =>
+      import('./pages/employees/employees.page').then((m) => m.EmployeesPage),
+  },
+  {
+    path: 'admin/employees/create',
+    loadComponent: () =>
+      import('./pages/employees/create-employee/create-employee.page').then(
+        (m) => m.CreateEmployeePage
+      ),
+  },
 ];

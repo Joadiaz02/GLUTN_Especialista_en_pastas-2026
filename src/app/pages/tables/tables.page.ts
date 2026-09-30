@@ -1,6 +1,17 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonIcon, IonButton, IonToggle, ToastController, ModalController } from '@ionic/angular';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonIcon,
+  IonButton,
+  IonToggle,
+  ToastController,
+  ModalController,
+} from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Confirm, Table, Vibracion } from '@app/services';
@@ -24,8 +35,8 @@ import { TableQrModalComponent } from './components/table-qr-modal/table-qr-moda
     IonButton,
     SpinnerLogoComponent,
     IonIcon,
-    IonToggle
-],
+    IonToggle,
+  ],
 })
 export class TablesPage {
   private _router = inject(Router);
@@ -67,58 +78,59 @@ export class TablesPage {
   }
 
   async onToggle(table: any, event: CustomEvent): Promise<void> {
-  const activa: boolean = event.detail.checked;
+    const activa: boolean = event.detail.checked;
 
-  if (activa === !table.baja_logica) return;
+    if (activa === !table.baja_logica) return;
 
-  const toggleEl = event.target as HTMLIonToggleElement;
+    const toggleEl = event.target as HTMLIonToggleElement;
 
-  try {
-    const confirmed = activa
-      ? await this._confirm.preguntar({
-          titulo: '¿Reactivar la mesa?',
-          mensaje: `"La mesa N°${table.numero}" va a volver a estar disponible.`,
-          textoConfirmar: 'Reactivar',
-          colorConfirmar: 'primary',
-          icono: 'refresh-outline',
-        })
-      : await this._confirm.preguntar({
-          titulo: '¿Dar de baja la mesa?',
-          mensaje: `"La mesa N°${table.numero}" va a dejar de estar disponible. Vas a poder reactivarlo cuando quieras.`,
-          textoConfirmar: 'Dar de baja',
-          colorConfirmar: 'danger',
-          icono: 'trash-outline',
-        });
+    try {
+      const confirmed = activa
+        ? await this._confirm.preguntar({
+            titulo: '¿Reactivar la mesa?',
+            mensaje: `"La mesa N°${table.numero}" va a volver a estar disponible.`,
+            textoConfirmar: 'Reactivar',
+            colorConfirmar: 'primary',
+            icono: 'refresh-outline',
+          })
+        : await this._confirm.preguntar({
+            titulo: '¿Dar de baja la mesa?',
+            mensaje: `"La mesa N°${table.numero}" va a dejar de estar disponible. Vas a poder reactivarlo cuando quieras.`,
+            textoConfirmar: 'Dar de baja',
+            colorConfirmar: 'danger',
+            icono: 'trash-outline',
+          });
 
-    if (!confirmed) {
+      if (!confirmed) {
+        toggleEl.checked = !activa;
+        return;
+      }
+
+      await this._tableService.update(table.id, { baja_logica: !activa });
+
+      await this._vibracion.confirmacion();
+
+      const toast = await this._toastController.create({
+        message: activa
+          ? 'Mesa reactivada correctamente.'
+          : 'Mesa dada de baja correctamente.',
+        duration: 3000,
+        position: 'top',
+        color: 'success',
+      });
+
+      await toast.present();
+    } catch (error) {
+      const toast = await this._toastController.create({
+        message:
+          'No pudimos completar la acción. Intentá nuevamente más tarde.',
+        duration: 5000,
+        position: 'top',
+      });
+
+      await toast.present();
+
       toggleEl.checked = !activa;
-      return;
     }
-
-    await this._tableService.update(table.id, { baja_logica: !activa });
-
-    await this._vibracion.confirmacion();
-
-    const toast = await this._toastController.create({
-      message: activa
-        ? 'Mesa reactivada correctamente.'
-        : 'Mesa dada de baja correctamente.',
-      duration: 3000,
-      position: 'top',
-      color: 'success',
-    });
-
-    await toast.present();
-  } catch (error) {
-    const toast = await this._toastController.create({
-      message: 'No pudimos completar la acción. Intentá nuevamente más tarde.',
-      duration: 5000,
-      position: 'top',
-    });
-
-    await toast.present();
-
-    toggleEl.checked = !activa;
   }
-}
 }

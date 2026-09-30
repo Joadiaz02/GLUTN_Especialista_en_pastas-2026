@@ -1,0 +1,124 @@
+<div [formGroup]="formGroup">
+  <h1 class="step__title">Identificalo</h1>
+  <p class="step__subtitle">Escaneá el DNI o completá sus datos manualmente.</p>
+
+  <div class="fields">
+    <div class="field">
+      <label class="field__label">Nombre</label>
+
+      <ion-input
+        type="text"
+        fill="outline"
+        class="field__input"
+        placeholder="Nombre"
+        formControlName="name"
+      />
+
+      @if ( getFormControl('name')?.invalid && ( getFormControl('name')?.touched
+      || getFormControl('name')?.dirty ) ) { @if (
+      getFormControl('name')?.hasError('required') ) {
+      <p class="field__error">El nombre es obligatorio.</p>
+      } @if ( getFormControl('name')?.hasError('minlength') ) {
+      <p class="field__error">El nombre debe tener al menos 2 caracteres.</p>
+      } @if ( getFormControl('name')?.hasError('maxlength') ) {
+      <p class="field__error">El nombre no puede superar los 50 caracteres.</p>
+      } @if ( getFormControl('name')?.hasError('pattern') ) {
+      <p class="field__error">El nombre solo puede contener letras.</p>
+      } }
+    </div>
+
+    <div class="field">
+      <label class="field__label">Apellido</label>
+
+      <ion-input
+        type="text"
+        fill="outline"
+        class="field__input"
+        placeholder="Apellido"
+        formControlName="lastName"
+      />
+
+      @if ( getFormControl('lastName')?.invalid && (
+      getFormControl('lastName')?.touched || getFormControl('lastName')?.dirty )
+      ) { @if ( getFormControl('lastName')?.hasError('required') ) {
+      <p class="field__error">El apellido es obligatorio.</p>
+      } @if ( getFormControl('lastName')?.hasError('minlength') ) {
+      <p class="field__error">El apellido debe tener al menos 2 caracteres.</p>
+      } @if ( getFormControl('lastName')?.hasError('maxlength') ) {
+      <p class="field__error">
+        El apellido no puede superar los 50 caracteres.
+      </p>
+      } @if ( getFormControl('lastName')?.hasError('pattern') ) {
+      <p class="field__error">El apellido solo puede contener letras.</p>
+      } }
+    </div>
+
+    <div class="field">
+      <label class="field__label">Puesto</label>
+
+      <div class="chips">
+        @for (t of types; track t.type) {
+        <button
+          type="button"
+          class="chip"
+          [class.chip-activo]="typeSelected() === t.type"
+          (click)="selectType(t.type)"
+        >
+          {{ t.type }}
+        </button>
+        }
+      </div>
+
+      @if (getFormControl('type')?.invalid && (getFormControl('type')?.touched
+      || getFormControl('type')?.dirty)) {
+      <p class="field__error">Debe seleccionar un puesto.</p>
+      }
+    </div>
+
+    <div class="field">
+      <label class="field__label">CUIL</label>
+
+      <ion-input
+        type="text"
+        inputmode="numeric"
+        fill="outline"
+        class="field__input"
+        placeholder="CUIL"
+        formControlName="cuil"
+      />
+
+      @if ( getFormControl('cuil')?.invalid && ( getFormControl('cuil')?.touched
+      || getFormControl('cuil')?.dirty ) ) { @if (
+      getFormControl('cuil')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
+    </div>
+
+    <div class="field">
+      <label class="field__label">DNI</label>
+
+      <ion-input
+        type="text"
+        inputmode="numeric"
+        maxlength="10"
+        class="field__input"
+        fill="outline"
+        placeholder="00.000.000"
+        formControlName="dni"
+        appDniFormat
+      />
+      @if ( getFormControl('dni')?.invalid && ( getFormControl('dni')?.touched
+      || getFormControl('dni')?.dirty ) ) { @if (
+      getFormControl('dni')?.hasError('required') ) {
+      <p class="field__error">El DNI es obligatorio.</p>
+      } @if ( getFormControl('dni')?.hasError('pattern') ) {
+      <p class="field__error">Ingresá un DNI válido.</p>
+      } }
+    </div>
+  </div>
+
+  <button (click)="scanDNI()" class="button-scan">
+    <ion-icon src="assets/icons/scan.svg"></ion-icon>
+    Escanear DNI
+  </button>
+</div>
