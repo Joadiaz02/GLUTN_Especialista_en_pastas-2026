@@ -84,9 +84,7 @@ export class NuevaReservaPage implements OnInit {
     return value;
   }
 
-  // El alta/edición real de la reserva (guardado, validación de
-  // disponibilidad, etc.) todavía no está implementada — la arma otro
-  // integrante del equipo. Por ahora solo se valida que estén los datos.
+  // por ahora solo valida que estén los datos
   async confirmar(): Promise<void> {
     if (!this.fecha || !this.hora) {
       const toastError = await this._toastController.create({

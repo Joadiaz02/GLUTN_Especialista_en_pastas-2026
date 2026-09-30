@@ -1,11 +1,9 @@
--- Incremental sobre mensajes.sql (punto 11): agrega el avatar del autor a
--- cada mensaje, para poder mostrarlo en el chat. Se ejecuta una sola vez,
--- DESPUÉS de mensajes.sql, en Supabase > SQL Editor.
+-- agrega el avatar del autor a los mensajes
 
 alter table public.mensajes
   add column if not exists foto text;
 
--- Mismo trigger de mensajes.sql, con el agregado de copiar el avatar.
+-- trigger que además copia el avatar
 create or replace function public.mensajes_completar()
 returns trigger
 language plpgsql
@@ -29,8 +27,7 @@ begin
     from public.usuarios u
    where u.id = new.id_autor;
 
-  -- Un usuario sin fila en usuarios solo puede ser un cliente anónimo,
-  -- nunca un mozo.
+  -- sin fila en usuarios es cliente anónimo
   new.perfil := coalesce(v_perfil, 'cliente_anonimo');
 
   new.nombre := coalesce(
@@ -46,7 +43,7 @@ begin
 
   new.texto := btrim(new.texto);
 
-  -- Los mozos no tienen mesa.
+  -- los mozos no tienen mesa
   if new.perfil = 'mozo' then
     new.numero_mesa := null;
   end if;

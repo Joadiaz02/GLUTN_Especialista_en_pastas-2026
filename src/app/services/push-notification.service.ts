@@ -11,8 +11,7 @@ import { Router } from '@angular/router';
 import { SupabaseService } from './supabase.service';
 import { Auth } from './auth/auth';
 import { Vibracion } from './vibracion/vibracion';
-// Adónde navegar al tocar la notificación, según el "tipo" que manda cada
-// función (ver supabase/functions/notify-chat-message).
+// pantalla que abre cada notificación
 const RUTA_POR_TIPO: Record<string, string> = {
   consulta_mozo: '/admin/queries',
   respuesta_mozo: '/chat',

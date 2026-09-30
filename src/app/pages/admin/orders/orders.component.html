@@ -19,7 +19,16 @@
 
 <ion-content class="ion-padding">
   @if (cargando()) {
-    <p>Cargando...</p>
+    <div class="loading-container">
+
+    <app-spinner-logo />
+
+    <p>
+      Cargando pedidos...
+    </p>
+
+  </div>
+
   } @else if (pedidos().length === 0) {
     <p class="sin-pedidos">No hay pedidos pendientes.</p>
   } @else {

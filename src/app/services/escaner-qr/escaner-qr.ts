@@ -9,9 +9,7 @@ import { ToastController } from '@ionic/angular';
 import { CodigoQr, PORCENTAJES_PROPINA, PorcentajePropina } from '@app/models/qr.model';
 import { Vibracion } from '../vibracion';
 
-// Lector de los QR de la app (ingreso al local, mesa y propinas).
-// escanear() abre la cámara y devuelve el código ya interpretado, o null
-// si se canceló o hubo un problema (en ese caso ya avisó con un toast).
+// lee los qr de la app y los interpreta
 @Injectable({ providedIn: 'root' })
 export class EscanerQr {
   private _toastController = inject(ToastController);
@@ -35,7 +33,7 @@ export class EscanerQr {
         formats: [BarcodeFormat.QrCode],
       });
 
-      // Sin códigos = el usuario cerró el escáner: no es un error.
+      // sin códigos es que cerró el escáner
       if (barcodes.length === 0) return null;
 
       const codigo = this.interpretar(barcodes[0].rawValue ?? '');
@@ -92,8 +90,7 @@ export class EscanerQr {
     return pedido.camera === 'granted';
   }
 
-  // En Android el escáner de Google se descarga la primera vez: hay que
-  // esperar a que termine de instalarse antes de poder escanear.
+  // en android espera a que se instale el escáner
   private async asegurarModuloEscaner(): Promise<void> {
     if (Capacitor.getPlatform() !== 'android') return;
 

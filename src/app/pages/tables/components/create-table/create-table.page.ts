@@ -6,6 +6,9 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
 import { Router } from '@angular/router';
 import { GtnUploader } from '@app/components';
 import { Storage, Table } from '@app/services';
+import { Vibracion } from '@app/services/vibracion';
+import { VibrarErrores } from '@app/directives';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 type TipoMesa = 'vip' | 'estandar' | 'movilidad_reducida';
 
@@ -26,7 +29,9 @@ type TipoMesa = 'vip' | 'estandar' | 'movilidad_reducida';
     IonButton,
     IonInput,
     GtnUploader,
-    IonSpinner
+    IonSpinner,
+    VibrarErrores,
+    SpinnerLogoComponent
 ],
 })
 export class CreateTablePage {
@@ -34,7 +39,7 @@ export class CreateTablePage {
   private _tableService = inject(Table);
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
-
+  private _vibracion = inject(Vibracion);
   isLoading = signal<boolean>(false);
 
   form = new FormGroup({
@@ -108,6 +113,7 @@ export class CreateTablePage {
 
       await this._router.navigate(['/admin/tables']);
     } catch {
+      await this._vibracion.error();
       const toast = await this._toastController.create({
         message:
           'No pudimos completar la acción. Intentá nuevamente más tarde.',

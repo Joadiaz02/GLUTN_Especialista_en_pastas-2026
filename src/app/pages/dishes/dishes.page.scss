@@ -30,17 +30,13 @@ ion-searchbar {
   opacity: 0.85;
 }
 
-// La tarjeta del carrusel ocupa todo el alto que queda debajo del
-// buscador, y la foto se lleva lo que sobra después de los textos.
+// la tarjeta ocupa el alto que queda
 app-producto-carrusel {
   --carrusel-alto-tarjeta: max(460px, calc(100dvh - 164px));
   --carrusel-alto-imagen: calc(var(--carrusel-alto-tarjeta) - 280px);
 }
 
-/* =========================
-   ACCIONES DEL PIE DE CADA TARJETA
-   (destacar, editar y baja/reactivar)
-========================= */
+// botones del pie de cada tarjeta
 
 .acciones {
   display: flex;

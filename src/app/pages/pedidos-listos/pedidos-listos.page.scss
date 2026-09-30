@@ -1,0 +1,52 @@
+// el resto de los estilos sale de cocina
+
+// sector y estado de cada parte
+.parte {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(47, 61, 36, 0.2);
+}
+
+.parte__sector {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.parte__estado {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.parte__estado--por_recibir {
+  background: #6b5c4e;
+}
+
+.parte__estado--en_preparacion {
+  background: var(--ion-color-primary);
+}
+
+.parte__estado--listo {
+  background: #2f3d24;
+}
+
+.pedido__aviso {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 12px;
+  border-radius: 14px;
+  background: #2f3d24;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}

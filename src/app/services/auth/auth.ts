@@ -26,9 +26,7 @@ export class Auth {
   usuarioActual = signal<any>(null);
 
   constructor() {
-    // onAuthStateChange es el evento oficial de Supabase: se dispara
-    // en login, logout, refresh de token, y al arrancar la app con
-    // la sesión restaurada. Mantiene el signal sincronizado solo.
+    // mantiene el usuario actual sincronizado con supabase
     this.supabaseService.client.auth
       .onAuthStateChange(
         (_event, session) => {
@@ -385,8 +383,7 @@ async logout(): Promise<void> {
   }
 
 
-  // Recuerda por qué pantalla ingresó el usuario (login o acceso
-  // rápido) para que el botón "volver" del Home lo lleve de nuevo ahí.
+  // recuerda por qué pantalla ingresó el usuario
   registrarPantallaIngreso(
     ruta: string
   ): void {

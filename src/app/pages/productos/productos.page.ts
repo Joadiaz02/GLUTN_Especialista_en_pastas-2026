@@ -24,6 +24,7 @@ import { CartaItem, TipoCarta } from '../../models/carta.model';
 import {
   Auth,
   Carta,
+  Vibracion,
 } from '@app/services';
 
 import { Carrito } from '../carrito/carrito';
@@ -94,6 +95,8 @@ export class ProductosPage implements OnInit {
 
   private toastController = inject(ToastController);
 
+  private vibracion = inject(Vibracion);
+
 
   tipo = signal<TipoCarta>(
     (this.route.snapshot.paramMap.get('tipo') as TipoCarta)
@@ -145,6 +148,23 @@ export class ProductosPage implements OnInit {
         );
 
       this.productos.set(productos);
+
+    } catch (error) {
+
+      void this.vibracion.error();
+
+      const toast =
+        await this.toastController.create({
+          message:
+            error instanceof Error
+              ? error.message
+              : 'No pudimos cargar la carta.',
+          duration: 5000,
+          position: 'top',
+          color: 'danger',
+        });
+
+      await toast.present();
 
     } finally {
 

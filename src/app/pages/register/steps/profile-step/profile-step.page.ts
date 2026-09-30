@@ -1,7 +1,7 @@
 import { Component, inject, Input, signal } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-
+import { Vibracion } from '@app/services';
 import {
   AbstractControl,
   FormGroup,
@@ -24,6 +24,7 @@ export class ProfileStepPage {
   photoPreview = signal<string | null>(null);
 
   private _toastController = inject(ToastController);
+  private _vibracion = inject(Vibracion);
 
   get formGroup(): FormGroup {
     return this.control as FormGroup;
@@ -66,6 +67,7 @@ export class ProfileStepPage {
         this.formGroup.patchValue({ file });
       }
     } catch (err) {
+      await this._vibracion.error();
       const toast = await this._toastController.create({
         message:
           'Ocurrió un problema al guardar tu información. Intentá nuevamente.',

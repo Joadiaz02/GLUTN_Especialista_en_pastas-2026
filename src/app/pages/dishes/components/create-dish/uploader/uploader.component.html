@@ -1,7 +1,33 @@
-<button (click)="open()" class="upload-placeholder">
-  @if (photoPreview() || initialPreview()) {
-  <img [src]="photoPreview() ?? initialPreview()" alt="Preview" class="upload-preview" />
+<button
+  (click)="open()"
+  class="upload-placeholder"
+  [disabled]="uploading()"
+>
+
+  @if (uploading()) {
+
+    <app-spinner-logo size="sm" />
+
+  } @else if (
+    photoPreview() ||
+    initialPreview()
+  ) {
+
+    <img
+      [src]="
+        photoPreview() ??
+        initialPreview()
+      "
+      alt="Preview"
+      class="upload-preview"
+    />
+
   } @else {
-  <ion-icon src="assets/icons/plus.svg"></ion-icon>
+
+    <ion-icon
+      src="assets/icons/plus.svg"
+    ></ion-icon>
+
   }
+
 </button>

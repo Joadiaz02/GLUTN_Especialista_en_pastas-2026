@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { IonInput, IonButton, IonIcon, ToastController } from '@ionic/angular';
 import { Camera } from '@capacitor/camera';
-
+import { Vibracion } from '@app/services';
 @Component({
   selector: 'app-identity-step',
   templateUrl: './identity-step.page.html',
@@ -21,6 +21,7 @@ export class IdentityStepPage {
   photoPreview = signal<string | null>(null);
 
   private _toastController = inject(ToastController);
+  private _vibracion = inject(Vibracion);
 
   get formGroup(): FormGroup {
     return this.control() as FormGroup;
@@ -63,6 +64,7 @@ export class IdentityStepPage {
         this.formGroup.patchValue({ file });
       }
     } catch (err) {
+      await this._vibracion.error();
       const toast = await this._toastController.create({
         message:
           'Ocurrió un problema al guardar tu información. Intentá nuevamente.',

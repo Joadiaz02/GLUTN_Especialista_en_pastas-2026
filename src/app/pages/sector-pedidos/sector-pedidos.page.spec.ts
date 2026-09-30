@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DishCardComponent } from './dish-card.component';
+import { SectorPedidosPage } from './sector-pedidos.page';
 
-describe('DishCardComponent', () => {
-  let component: DishCardComponent;
-  let fixture: ComponentFixture<DishCardComponent>;
+describe('SectorPedidosPage', () => {
+  let component: SectorPedidosPage;
+  let fixture: ComponentFixture<SectorPedidosPage>;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DishCardComponent);
+    fixture = TestBed.createComponent(SectorPedidosPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

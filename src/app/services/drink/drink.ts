@@ -64,10 +64,7 @@ export class Drink {
   }
 
   private async _init(): Promise<void> {
-    // Se registra antes que cualquier await: si no, y el injector se
-    // destruye mientras getList() todavía está en vuelo (por ejemplo en un
-    // test que termina rápido), onDestroy() explota porque el injector ya
-    // no existe cuando se intenta registrar.
+    // registra la limpieza antes de cualquier espera
     if (!this._destroyRegistrado) {
       this._destroyRegistrado = true;
 

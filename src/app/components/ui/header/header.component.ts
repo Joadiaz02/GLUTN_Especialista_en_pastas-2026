@@ -3,13 +3,7 @@ import { IonHeader, IonToolbar, IonButtons } from '@ionic/angular';
 import { ConfirmVolverComponent } from '../confirm-volver/confirm-volver.component';
 import { ConfirmDialogComponent } from '../confirm-cartel/confirm-cartel.component';
 
-// Header común: botón "volver" (con confirmación) a la izquierda y
-// "cerrar sesión" (con confirmación) a la derecha. El título de la
-// pantalla no va acá: va debajo del logo, con la clase .titulo-pagina.
-//
-// Si la pantalla necesita otra cosa a la derecha (ej. "Ingresar" cuando
-// no hay sesión), se pasa con el atributo headerFin y se oculta el
-// cerrar sesión con [mostrarCerrarSesion]="false".
+// header común con volver y cerrar sesión
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',

@@ -1,0 +1,53 @@
+-- validaciones de platos y postres en la base
+
+do $$
+declare
+  v_reglas text[][] := array[
+    array['carta_plato_nombre_valido',
+          'tipo not in (''plato'', ''postre'') or (nombre is not null and length(btrim(nombre)) between 3 and 60)'],
+    array['carta_plato_descripcion_valida',
+          'tipo not in (''plato'', ''postre'') or (descripcion is not null and length(btrim(descripcion)) between 10 and 250)'],
+    array['carta_plato_tiempo_valido',
+          'tipo not in (''plato'', ''postre'') or (tiempo_elaboracion is not null and tiempo_elaboracion between 1 and 999 and tiempo_elaboracion = trunc(tiempo_elaboracion))'],
+    array['carta_plato_precio_valido',
+          'tipo not in (''plato'', ''postre'') or (precio is not null and precio > 0 and precio < 1000000000 and precio = round(precio::numeric, 2))'],
+    array['carta_plato_fotos_validas',
+          'tipo not in (''plato'', ''postre'') or (foto_1 is not null and foto_2 is not null and foto_3 is not null and foto_1 ~ ''^https?://'' and foto_2 ~ ''^https?://'' and foto_3 ~ ''^https?://'')']
+  ];
+  v_regla text[];
+begin
+  foreach v_regla slice 1 in array v_reglas loop
+    execute format('alter table public.carta drop constraint if exists %I', v_regla[1]);
+
+    -- la regla vale para lo nuevo sin fallar por filas viejas
+    execute format(
+      'alter table public.carta add constraint %I check (%s) not valid',
+      v_regla[1], v_regla[2]
+    );
+
+    -- valida del todo si las filas viejas cumplen
+    begin
+      execute format('alter table public.carta validate constraint %I', v_regla[1]);
+    exception when check_violation then
+      raise notice 'Hay platos o postres cargados que no cumplen %: corregilos (consulta al final del archivo).', v_regla[1];
+    end;
+  end loop;
+end $$;
+
+notify pgrst, 'reload schema';
+
+-- consulta para encontrar platos y postres que no cumplen las reglas:
+-- select id_carta, tipo, nombre, descripcion, tiempo_elaboracion, precio,
+--        foto_1, foto_2, foto_3
+--   from public.carta
+--  where tipo in ('plato', 'postre')
+--    and (
+--      nombre is null or length(btrim(nombre)) not between 3 and 60
+--      or descripcion is null or length(btrim(descripcion)) not between 10 and 250
+--      or tiempo_elaboracion is null or tiempo_elaboracion not between 1 and 999
+--      or tiempo_elaboracion <> trunc(tiempo_elaboracion)
+--      or precio is null or precio <= 0 or precio >= 1000000000
+--      or precio <> round(precio::numeric, 2)
+--      or foto_1 !~ '^https?://' or foto_2 !~ '^https?://' or foto_3 !~ '^https?://'
+--      or foto_1 is null or foto_2 is null or foto_3 is null
+--    );

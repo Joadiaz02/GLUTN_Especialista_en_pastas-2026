@@ -3,18 +3,13 @@ import {
   inject,
   signal,
 } from '@angular/core';
-
-import {
-  CommonModule,
-} from '@angular/common';
-
+import {CommonModule} from '@angular/common';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
 import {
   IonContent,
   IonHeader,
@@ -27,70 +22,31 @@ import {
   ToastController,
   IonModal,
 } from '@ionic/angular';
+import {Router} from '@angular/router';
+import {PersonalStepPage} from './steps/personal-step/personal-step.page';
+import {CredentialsStepPage} from './steps/credentials-step/credentials-step.page';
+import {ProfileStepPage} from './steps/profile-step/profile-step.page';
+import {Auth} from '@app/services';
+import {EPerfilUsuario,} from '@app/enums';
+import {ProgressBarComponent} from '@app/components';
+import {ConfirmVolverComponent,} from '@app/components/ui/confirm-volver/confirm-volver.component';
+import {ConfirmDialogComponent,} from '@app/components/ui/confirm-cartel/confirm-cartel.component';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { Vibracion } from '@app/services';
 
-import {
-  Router,
-} from '@angular/router';
-
-import {
-  PersonalStepPage,
-} from './steps/personal-step/personal-step.page';
-
-import {
-  CredentialsStepPage,
-} from './steps/credentials-step/credentials-step.page';
-
-import {
-  ProfileStepPage,
-} from './steps/profile-step/profile-step.page';
-
-import {
-  Auth,
-} from '@app/services';
-
-import {
-  EPerfilUsuario,
-} from '@app/enums';
-
-import {
-  ProgressBarComponent,
-} from '@app/components';
-
-import {
-  ConfirmVolverComponent,
-} from '@app/components/ui/confirm-volver/confirm-volver.component';
-
-import {
-  ConfirmDialogComponent,
-} from '@app/components/ui/confirm-cartel/confirm-cartel.component';
-
-
-const NAME_PATTERN =
-  /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/;
-
-const DNI_PATTERN =
-  /^\d{8}$/;
-
-const PASSWORD_PATTERN =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
+const NAME_PATTERN =/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/;
+const DNI_PATTERN =/^\d{8}$/;
+const PASSWORD_PATTERN =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
 
 
 @Component({
   selector: 'app-register',
-
-  templateUrl:
-    './register.page.html',
-
-  styleUrls: [
-    './register.page.scss',
-  ],
+  templateUrl:'./register.page.html',
+  styleUrls: ['./register.page.scss',],
 
   imports: [
-
     CommonModule,
-
     ReactiveFormsModule,
-
     IonContent,
     IonHeader,
     IonTitle,
@@ -100,16 +56,13 @@ const PASSWORD_PATTERN =
     IonSpinner,
     IonFooter,
     IonModal,
-
     PersonalStepPage,
     CredentialsStepPage,
     ProfileStepPage,
-
     ProgressBarComponent,
-
     ConfirmVolverComponent,
     ConfirmDialogComponent,
-
+    SpinnerLogoComponent
   ],
 })
 export class RegisterPage {
@@ -200,30 +153,13 @@ export class RegisterPage {
 
     });
 
-
-  currentStep =
-    signal<number>(1);
-
-
-  isLoading =
-    signal<boolean>(false);
-
-
-  mostrarRegistroExitoso =
-    signal<boolean>(false);
-
-
-  private readonly authService =
-    inject(Auth);
-
-
-  private readonly router =
-    inject(Router);
-
-
-  private readonly toastController =
-    inject(ToastController);
-
+  currentStep = signal<number>(1);
+  isLoading = signal<boolean>(false);
+  mostrarRegistroExitoso = signal<boolean>(false);
+  private readonly authService = inject(Auth);
+  private readonly router = inject(Router);
+  private readonly toastController = inject(ToastController);
+  private _vibracion = inject(Vibracion);
 
   getFormGroup(
     step: string
@@ -359,25 +295,17 @@ export class RegisterPage {
 
 
     } catch (error) {
-
+      await this._vibracion.error();
       console.error(
         'Error durante el registro:',
         error
       );
 
 
-      const toast =
-        await this.toastController
-          .create({
-            message:
-              'No pudimos completar el registro. Intentá nuevamente más tarde.',
-
-            duration:
-              5000,
-
-            position:
-              'top',
-
+      const toast = await this.toastController.create({
+            message: 'No pudimos completar el registro. Intentá nuevamente más tarde.',
+            duration: 5000,
+            position: 'top',
           });
 
       await toast.present();

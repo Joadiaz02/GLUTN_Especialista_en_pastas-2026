@@ -1,6 +1,4 @@
-// Fuente única de los datos de cada juego: nombre, ruta, porcentaje de
-// descuento y texto de "Cómo jugar". Los juegos, sus servicios y el
-// selector leen de acá, así un porcentaje se cambia en un solo lugar.
+// datos de cada juego en un solo lugar
 
 export type IdJuego = 'ruleta' | 'ta-te-ti' | 'sopa-de-letras';
 
@@ -64,7 +62,7 @@ export const CONFIG_JUEGOS: Record<IdJuego, ConfigJuego> = {
   },
 };
 
-// Orden en que se muestran en el selector de juegos.
+// orden del selector de juegos
 export const LISTA_JUEGOS: ConfigJuego[] = [
   CONFIG_JUEGOS.ruleta,
   CONFIG_JUEGOS['ta-te-ti'],

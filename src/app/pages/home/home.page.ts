@@ -13,7 +13,6 @@ import {
   IonContent,
   IonFooter,
   IonButton,
-  IonSkeletonText,
   IonIcon,
   IonModal,
   ToastController,
@@ -28,13 +27,14 @@ import {
 import { Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Auth } from '../../services/auth/auth';
-import { Carta, EscanerQr, SupabaseService, Table, Vibracion } from '@app/services';
+import { Carta, EscanerQr, MesaCliente, SupabaseService, Table, Vibracion } from '@app/services';
 import { EPerfilUsuario } from '@app/enums';
 import { CodigoQr } from '@app/models/qr.model';
 import { CartaItem } from '@app/models/carta.model';
 import { Pedido } from '@app/services/pedido/pedido';
 import { EstadoPedidoComponent } from '@app/components/ui/estado-pedido/estado-pedido.component';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
 
@@ -51,7 +51,7 @@ const DISPONIBILIDADES_MESA: Record<string, string> = {
   reservada: 'Reservada',
 };
 
-// Perfiles del personal que pueden escanear el QR de mesa para ver su info.
+// personal que puede ver los datos de una mesa
 const PERFILES_ESCANER_PERSONAL: string[] = [
   EPerfilUsuario.Dueno,
   EPerfilUsuario.Supervisor,
@@ -76,10 +76,10 @@ interface MesaEscaneada {
     IonContent,
     IonFooter,
     IonButton,
-    IonSkeletonText,
     IonIcon,
     IonModal,
     CurrencyPipe,
+    SpinnerLogoComponent,
   ],
 })
 export class HomePage implements OnInit, OnDestroy {
@@ -95,6 +95,7 @@ export class HomePage implements OnInit, OnDestroy {
   private tableService = inject(Table);
   private supabaseService = inject(SupabaseService);
   private vibracion = inject(Vibracion);
+  private mesaCliente = inject(MesaCliente);
   private _canalPedido: RealtimeChannel | null = null;
 
   constructor() {
@@ -104,30 +105,28 @@ export class HomePage implements OnInit, OnDestroy {
       'time-outline': timeOutline,
     });
 
-    // Cada vez que el cliente hace un pedido, se escucha su estado para
-    // habilitar los botones que dependen de él (juegos, solicitar cuenta).
+    // escucha el estado del último pedido del cliente
     effect(() => {
       const idPedido = this.pedido.idUltimoPedido();
       untracked(() => void this.escucharPedido(idPedido));
     });
   }
 
-  private mesaDePrueba(): string | null {
-    if (!localStorage.getItem('mesa')) {
-      localStorage.setItem('mesa', '4');
-    }
-
-    return localStorage.getItem('mesa');
-  }
 
   async ngOnInit(): Promise<void> {
     this.isLoadingDestacados.set(true);
 
-    const destacados = await this.cartaService.getSugeridos();
-
-    this.isLoadingDestacados.set(false);
-
-    this.destacados.set(destacados);
+    try {
+      this.destacados.set(await this.cartaService.getSugeridos());
+    } catch (error) {
+      void this.vibracion.error();
+      await this.mostrarToast(
+        error instanceof Error ? error.message : 'No pudimos cargar los productos destacados.',
+        'danger'
+      );
+    } finally {
+      this.isLoadingDestacados.set(false);
+    }
   }
 
   ngOnDestroy(): void {
@@ -135,18 +134,12 @@ export class HomePage implements OnInit, OnDestroy {
     this.dejarDeEscucharPedido();
   }
 
-  // ============================
-  // ESTADOS
-  // ============================
+  // estados
 
-  // Ya no es un booleano local: es un computed que lee directo del
-  // signal de Auth. Se actualiza SOLO en cuanto Auth.usuarioActual
-  // cambia (login, logout, refresh de sesión) — sin carreras de tiempo,
-  // sin tener que "ir a preguntar" en ngOnInit.
+  // sesión iniciada
   isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
 
-  // El personal entra al Home desde la selección de acceso; los clientes,
-  // desde el login o el acceso rápido.
+  // el personal vuelve a la selección de acceso
   esPersonal = computed(() =>
     this.authService.esPersonal(this.authService.usuarioActual())
   );
@@ -163,18 +156,10 @@ export class HomePage implements OnInit, OnDestroy {
     return 'Vas a volver a la pantalla de ingreso.';
   });
 
-  // Provisorio hasta que la asignación de mesas (punto 10) deje la mesa
-  // del cliente guardada: hoy se lee de la clave "mesa" del almacenamiento
-  // local, la misma que la app borra al cerrar sesión.
-  //
-  // TEMPORAL: si todavía no hay mesa asignada, se hardcodea una para poder
-  // probar el chat y "solicitar cuenta" como cliente. Sacar cuando el punto
-  // 10 esté listo.
-  enMesa = signal(!!this.mesaDePrueba());
+  // mesa asignada por el metre
+  enMesa = computed(() => this.mesaCliente.numero() !== null);
 
-  // ============================
-  // VISIBILIDAD DE BOTONES (según perfil y estado del cliente)
-  // ============================
+  // botones visibles según perfil y estado
 
   perfil = computed(() =>
     this.authService.obtenerPerfil(this.authService.usuarioActual())
@@ -188,13 +173,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   estadoPedido = signal<string | null>(null);
 
-  // TEMPORAL: el estado "recibido" (punto 19, confirmación de la entrega)
-  // todavía no existe. Mientras tanto, el pedido se toma como recibido
-  // cuando el mozo lo acepta. Cambiar a 'entregado' cuando esté el punto 19.
+  // temporal: el pedido cuenta como recibido cuando el mozo lo acepta
   pedidoRecibido = computed(() => this.estadoPedido() === 'confirmado');
 
-  // Qué botones ve cada perfil (según el TP). Destacados y Quienes somos
-  // los ven todos.
+  // botones que ve cada perfil
   botones = computed(() => {
     const perfil = this.perfil();
     const cliente = this.esCliente();
@@ -221,14 +203,11 @@ export class HomePage implements OnInit, OnDestroy {
     return botones.estadoPedido || botones.escaner || botones.consultas;
   });
 
-  // Destacados y Quienes somos se abren en una ventana aparte para que
-  // el Home entre completo en la pantalla, sin scroll.
+  // destacados y quiénes somos se abren en una ventana
   showDestacados = signal(false);
   showQuienesSomos = signal(false);
 
-  // ============================
-  // PRODUCTOS DESTACADOS (sugerencias de la carta)
-  // ============================
+  // productos destacados
 
   destacados = signal<CartaItem[]>([]);
   isLoadingDestacados = signal(false);
@@ -279,9 +258,7 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  // ============================
-  // LOGIN / LOGOUT
-  // ============================
+  // login y logout
 
   irALogin(): void {
     this.router.navigate(['/login']);
@@ -297,7 +274,6 @@ export class HomePage implements OnInit, OnDestroy {
 
     if (this.isLoggedIn()) {
       await this.authService.logout();
-      this.enMesa.set(false);
       localStorage.removeItem('mesa');
     }
 
@@ -307,7 +283,6 @@ export class HomePage implements OnInit, OnDestroy {
   async cerrarSesion(): Promise<void> {
     await this.authService.logout();
 
-    this.enMesa.set(false);
     localStorage.removeItem('mesa');
 
     const toast = await this.toastController.create({
@@ -321,9 +296,7 @@ export class HomePage implements OnInit, OnDestroy {
     void this.router.navigate(['/login']);
   }
 
-  // ============================
-  // BOTONES PRINCIPALES
-  // ============================
+  // botones principales
 
   abrirDestacados(): void {
     this.showDestacados.set(true);
@@ -343,9 +316,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.showQuienesSomos.set(false);
   }
 
-  // ============================
-  // NAVEGACIONES
-  // ============================
+  // navegaciones
 
   goToCarta() {
     this.router.navigate(['/carta']);
@@ -367,9 +338,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.router.navigate(['/encuestas']);
   }
 
-  // ============================
-  // ESCÁNER QR (ingreso al local, mesa y propinas)
-  // ============================
+  // escáner qr
 
   escaneando = signal(false);
   mesaEscaneada = signal<MesaEscaneada | null>(null);
@@ -393,12 +362,12 @@ export class HomePage implements OnInit, OnDestroy {
         await this.mostrarMesa(codigo.id);
         break;
 
-      // Lista de espera (punto 9): todavía no está armada.
+      // lista de espera, todavía no disponible
       case 'ingreso':
         await this.mostrarToast('La lista de espera todavía no está disponible.');
         break;
 
-      // Propina y pago de la cuenta (punto 21): todavía no están armados.
+      // propina y pago, todavía no disponibles
       case 'propina':
         await this.mostrarToast(
           `Propina del ${codigo.porcentaje}% leída. El pago de la cuenta todavía no está disponible.`
@@ -416,12 +385,47 @@ export class HomePage implements OnInit, OnDestroy {
       return;
     }
 
+    // el cliente va a la carta y el personal ve los datos de la mesa
+    if (this.esCliente()) {
+      await this.abrirCartaDeMesa(String(mesa.numero));
+      return;
+    }
+
     this.mesaEscaneada.set({
       numero: mesa.numero,
       capacidad: mesa.capacidad,
       tipo: TIPOS_MESA[mesa.tipo] ?? mesa.tipo,
       disponibilidad: DISPONIBILIDADES_MESA[mesa.disponibilidad ?? mesa.estado] ?? null,
     });
+  }
+
+  private async abrirCartaDeMesa(numeroEscaneado: string): Promise<void> {
+    // vuelve a buscar la mesa por si la asignaron recién
+    if (!this.mesaCliente.numero()) {
+      await this.mesaCliente.actualizar();
+    }
+
+    const miMesa = this.mesaCliente.numero();
+
+    if (!miMesa) {
+      void this.vibracion.error();
+      await this.mostrarToast(
+        'Todavía no tenés una mesa asignada. Pedile una al metre.',
+        'danger'
+      );
+      return;
+    }
+
+    if (miMesa !== numeroEscaneado) {
+      void this.vibracion.error();
+      await this.mostrarToast(
+        `Este código es de la mesa ${numeroEscaneado}. Tu mesa es la ${miMesa}.`,
+        'danger'
+      );
+      return;
+    }
+
+    await this.router.navigate(['/carta']);
   }
 
   cerrarMesa(): void {
@@ -438,9 +442,7 @@ export class HomePage implements OnInit, OnDestroy {
     await toast.present();
   }
 
-  // ============================
-  // ESTADO DEL PEDIDO
-  // ============================
+  // estado del pedido
 
   private async escucharPedido(idPedido: string | null): Promise<void> {
     this.dejarDeEscucharPedido();
@@ -478,12 +480,9 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  // ============================
-  // SOLICITAR CUENTA (punto 21, Lucas)
-  // ============================
+  // solicitar cuenta
 
-  // Placeholder: el botón aparece con el pedido recibido. La lógica real
-  // de la cuenta (aviso al mozo, propina y pago) la arma Lucas.
+  // provisorio hasta que esté la cuenta
   async solicitarCuenta(): Promise<void> {
     await this.mostrarToast('Pronto vas a poder solicitar la cuenta desde acá.');
   }

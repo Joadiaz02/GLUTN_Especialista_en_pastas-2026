@@ -22,8 +22,7 @@ interface SectorRuleta {
 
 const PORCENTAJE_RULETA = CONFIG_JUEGOS.ruleta.porcentaje;
 
-// 10 sectores de 36° cada uno, intercalados (no agrupados) para que
-// se vea como una ruleta real: 4 "gana" / 3 "pierde" / 3 "reintenta".
+// 10 sectores intercalados: 4 gana, 3 pierde, 3 reintenta
 const ORDEN_TIPOS: ResultadoSector[] = [
   'gana', 'pierde', 'reintenta',
   'gana', 'pierde', 'reintenta',
@@ -83,10 +82,7 @@ export class RuletaPage implements OnDestroy {
     this.transicionActiva() ? 'transform 2.6s cubic-bezier(0.12, 0.67, 0.14, 1)' : 'none'
   );
 
-  // Salir de la página, por el botón "volver", el botón atrás del celular
-  // o cualquier otra navegación, con la ruleta girando cuenta como perder.
-  // Ionic mantiene las páginas en pila y no siempre las destruye, por eso
-  // se cubren los dos ganchos; abandonar es idempotente.
+  // salir con la ruleta girando cuenta como perder
   ionViewWillLeave(): void {
     this.abandonar();
   }
@@ -162,6 +158,7 @@ export class RuletaPage implements OnDestroy {
   }
 
   private comenzar(): void {
+    this._juegosService.iniciarIntento('ruleta');
     this.estado.set('girando');
     this.transicionActiva.set(false);
     this._rafId = requestAnimationFrame(this.loopGirar);
@@ -216,14 +213,15 @@ export class RuletaPage implements OnDestroy {
     const tipo = this.sectores[indice].tipo;
     this.resultadoTipo.set(tipo);
 
-    // "Reintenta" es neutro: no consume el intento ni cuenta como
-    // gano/perdio para el descuento de la estadia.
+    // reintenta no consume el intento
     if (tipo === 'gana') {
       this._juegosService.registrarIntento(true, PORCENTAJE_RULETA);
       await this._vibracion.confirmacion();
     } else if (tipo === 'pierde') {
       this._juegosService.registrarIntento(false, PORCENTAJE_RULETA);
       await this._vibracion.error();
+    } else {
+      this._juegosService.anularIntento();
     }
   }
 

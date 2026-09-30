@@ -6,10 +6,7 @@
   --padding-bottom: 24px;
 }
 
-// El wrapper ocupa el alto disponible del ion-content (ya descontados
-// el header y el padding), así el juego llena la pantalla sin scroll.
-// Con 100vh se sumaba la altura del header y aparecía un scroll de más.
-// Se descuenta el safe-area de abajo (barra de navegación del celular).
+// el juego ocupa el alto disponible sin scroll
 .sopa-wrapper {
   width: 100%;
   min-height: calc(100% - env(safe-area-inset-bottom));
@@ -35,7 +32,7 @@
   align-items: center;
   justify-content: center;
   gap: 24px;
-  // Deja el bloque centrado en la pantalla, sin un vacío grande abajo.
+  // deja el juego centrado
   padding-bottom: 96px;
 }
 
@@ -160,7 +157,7 @@
   font-weight: 600;
 }
 
-// Pantallas bajas: título más chico para que el juego entre sin scroll.
+// en pantallas bajas se achica el título
 @media (max-height: 700px) {
   .titulo-pagina {
     margin-bottom: 6px;

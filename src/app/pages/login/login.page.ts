@@ -3,14 +3,8 @@ import {
   inject,
   signal,
 } from '@angular/core';
-
 import { FormsModule } from '@angular/forms';
-
-import {
-  Router,
-  RouterLink,
-} from '@angular/router';
-
+import { Router,RouterLink} from '@angular/router';
 import {
   IonText,
   ToastController,
@@ -20,30 +14,17 @@ import {
   IonButton,
   IonSpinner,
 } from '@ionic/angular';
-
 import { Vibracion } from '@app/services/vibracion';
-
 import { Auth } from '../../services/auth/auth';
-
-import {
-  PushNotificationService,
-} from '../../services/push-notification.service';
-
-import {
-  SupabaseService,
-} from '../../services/supabase.service';
+import {PushNotificationService} from '../../services/push-notification.service';
+import {SupabaseService} from '../../services/supabase.service';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 @Component({
-  selector: 'app-login',
-
+  selector:'app-login',
   standalone: true,
-
-  templateUrl:
-    './login.page.html',
-
-  styleUrl:
-    './login.page.scss',
-
+  templateUrl:'./login.page.html',
+  styleUrl: './login.page.scss',
   imports: [
     FormsModule,
     RouterLink,
@@ -53,20 +34,16 @@ import {
     IonContent,
     IonButton,
     IonSpinner,
+    SpinnerLogoComponent
   ],
 })
 export class LoginPage {
 
   private readonly router = inject(Router);
-
   private readonly authService = inject(Auth);
-
   private readonly vibracion = inject(Vibracion);
-
   private readonly toastController = inject(ToastController);
-
   private readonly pushNotificationService = inject(PushNotificationService);
-
   private readonly supabaseService = inject(SupabaseService);
 
   email = '';

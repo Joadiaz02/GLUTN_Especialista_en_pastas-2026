@@ -7,13 +7,14 @@ import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { CurrencyPipe } from '@angular/common';
 import { Auth } from '@app/services';
-
+import { Vibracion } from '@app/services';
 
 @Component({
   selector: 'app-pedido',
   templateUrl: './pedido.component.html',
   styleUrls: ['./pedido.component.scss'],
-  imports: [IonHeader, IonToolbar, IonButtons, IonContent, ConfirmVolverComponent, ConfirmDialogComponent, CurrencyPipe, IonButton, IonFooter],
+  imports: [IonHeader, IonToolbar, IonButtons, IonContent, ConfirmVolverComponent, ConfirmDialogComponent, 
+    CurrencyPipe, IonButton, IonFooter],
 })
 export class PedidoComponent  {
  
@@ -22,7 +23,7 @@ export class PedidoComponent  {
   root = inject(Router);
   private authService = inject(Auth);
   private toastController = inject(ToastController);
-  
+  private vibracion = inject(Vibracion);
 
 
   continuarPedido() {
@@ -50,6 +51,7 @@ export class PedidoComponent  {
 
       this.root.navigate(['/home']);
     } catch (error) {
+      await this.vibracion.error();
       console.error('Error al confirmar el pedido:', error);
     }
   }

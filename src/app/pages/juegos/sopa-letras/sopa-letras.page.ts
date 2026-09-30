@@ -47,9 +47,7 @@ export class SopaLetrasPage implements OnInit, OnDestroy {
   private _yaVibroFinal = false;
 
   constructor() {
-    // El fin de partida puede llegar por un click (encontró la última
-    // palabra) o solo por el paso del tiempo (setInterval del service) —
-    // con un effect() cubrimos los dos casos sin duplicar lógica.
+    // detecta el fin de la partida por palabra o por tiempo
     effect(() => {
       const terminado = this.sopaLetras.juegoTerminado();
 
@@ -71,10 +69,7 @@ export class SopaLetrasPage implements OnInit, OnDestroy {
     this.sopaLetras.prepararPartida();
   }
 
-  // Salir de la página, por el botón "volver", el botón atrás del celular
-  // o cualquier otra navegación, en medio de una partida cuenta como
-  // perder. Ionic mantiene las páginas en pila y no siempre las destruye,
-  // por eso se cubren los dos ganchos; abandonarPartida es idempotente.
+  // salir en medio de la partida cuenta como perder
   ionViewWillLeave(): void {
     this.abandonar();
   }

@@ -178,6 +178,26 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'admin/kitchen',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cocinero] },
+
+    loadComponent: () =>
+      import('./pages/cocina/cocina.page').then((m) => m.CocinaPage),
+  },
+  {
+    path: 'admin/ready-orders',
+
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
+
+    loadComponent: () =>
+      import('./pages/pedidos-listos/pedidos-listos.page').then(
+        (m) => m.PedidosListosPage
+      ),
+  },
+  {
     path: 'admin/orders',
     loadComponent: () =>
       import('./pages/admin/orders/orders.component').then(
@@ -191,7 +211,19 @@ export const routes: Routes = [
         './pages/admin/orders/orders-detalles/orders-detalles.component'
       ).then((m) => m.OrdersDetallesComponent),
   },
-
+  {
+    path: 'admin/bar',
+    canActivate: [authGuard, roleGuard],
+    data: {
+      roles: [EPerfilUsuario.Cantinero],
+      titulo: 'Bar',
+      tipos: ['bebida'],
+    },
+    loadComponent: () =>
+      import('./pages/sector-pedidos/sector-pedidos.page').then(
+        (m) => m.SectorPedidosPage
+      ),
+  },
   {
     path: 'juegos',
 
@@ -310,6 +342,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/waiting-room/waiting-room.page').then(
         (m) => m.WaitingRoomPage
+      ),
+  },
+  {
+    path: 'sector-pedidos',
+    loadComponent: () =>
+      import('./pages/sector-pedidos/sector-pedidos.page').then(
+        (m) => m.SectorPedidosPage
       ),
   },
 ];

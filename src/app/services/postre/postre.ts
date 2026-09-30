@@ -7,18 +7,14 @@ type NuevoPostre = Pick<
   'nombre' | 'descripcion' | 'precio' | 'tiempo_elaboracion' | 'foto_1' | 'foto_2' | 'foto_3'
 > & Partial<Pick<CartaItem, 'sugerencia'>>;
 
-// Mismo patron que Plato: platos, bebidas y postres viven en la misma
-// tabla "carta", distinguidos por la columna "tipo". Este servicio es
-// el recorte de ese servicio general para el rol cocinero (tipo = 'postre').
+// postres de la carta para el cocinero
 @Injectable({ providedIn: 'root' })
 export class Postre {
   private _tableName = 'carta';
   private _tipo: TipoCarta = 'postre';
   private _db = inject(SupabaseService);
 
-  // El cocinero ve TODOS sus postres, incluidos los dados de baja
-  // (marcados en la UI, no ocultos) — a diferencia de Carta.getPorTipo,
-  // que sí los oculta de la vista del cliente.
+  // incluye los postres dados de baja
   async getList(): Promise<CartaItem[]> {
     const { data } = await this._db.client
       .from(this._tableName)

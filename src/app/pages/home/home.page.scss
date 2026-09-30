@@ -1,6 +1,4 @@
-/* =========================
-   GLOBAL
-========================= */
+// global
 
 .home-content {
   --background: var(--ion-background-color);
@@ -10,18 +8,14 @@
   --padding-bottom: min(16px, 2vh);
 }
 
-// Entre el header y el footer: logo arriba y los botones visibles se
-// reparten todo el alto que queda. Así la pantalla siempre se ve llena,
-// haya 3 botones (cocinero) o 7 (cliente con pedido).
+// logo arriba y botones que llenan la pantalla
 .home-wrapper {
   min-height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-/* =========================
-  BOTON LOGIN
-========================= */
+// botón ingresar
 
 .login-btn {
   --background: var(--ion-background-color);
@@ -30,9 +24,7 @@
   font-weight: 600;
 }
 
-/* =========================
-   BOTONES HOME
-========================= */
+// botones del home
 
 .home-botones {
   flex: 1;
@@ -42,9 +34,7 @@
   gap: min(14px, 1.2vh);
 }
 
-// Cada botón crece para llenar el espacio (con un tope para que no queden
-// gigantes cuando hay pocos) y la letra se ajusta al alto del botón
-// (cqh = % del alto del propio botón).
+// cada botón crece para llenar el espacio
 .home-button {
   flex: 1 1 0;
   min-height: 38px;
@@ -64,9 +54,7 @@
   font-size: clamp(15px, 32cqh, 26px);
 }
 
-/* =========================
-   FOOTER: PEDIDO / ESCÁNER / CHAT
-========================= */
+// footer: pedido, escáner y chat
 
 .home-footer {
   padding: min(10px, 1.2vh) 12px calc(min(12px, 1.5vh) + env(safe-area-inset-bottom));
@@ -131,8 +119,7 @@
   }
 }
 
-// Pantallas bajas: el footer se achica para dejarles lugar a los botones
-// (el logo tiene tamaño fijo).
+// en pantallas bajas se achica el footer
 @media (max-height: 700px) {
   .acceso__titulo,
   .acceso__subtitulo {
@@ -150,9 +137,7 @@
   }
 }
 
-/* =========================
-   VENTANAS (destacados / quienes somos)
-========================= */
+// ventanas de destacados y quiénes somos
 
 ion-modal.home-modal {
   --width: 90%;
@@ -181,9 +166,7 @@ ion-modal.home-modal {
   font-weight: 600;
 }
 
-/* =========================
-   PRODUCTOS DESTACADOS
-========================= */
+// productos destacados
 
 .destacados__titulo {
   font-size: 24px;
@@ -288,13 +271,14 @@ ion-modal.home-modal {
   line-height: 1.4;
 }
 
-.destacado-card--skeleton {
-  gap: 8px;
+.destacados__cargando {
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* =========================
-   HISTORIA
-========================= */
+// quiénes somos
 
 .historia h2 {
   font-size: 24px;
@@ -311,9 +295,7 @@ ion-modal.home-modal {
   margin: 0;
 }
 
-/* =========================
-   MESA ESCANEADA
-========================= */
+// mesa escaneada
 
 .mesa-info__titulo {
   margin: 0 0 16px;

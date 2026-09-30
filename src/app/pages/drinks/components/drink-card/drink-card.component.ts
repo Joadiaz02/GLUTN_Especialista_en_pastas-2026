@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Confirm } from '@app/services';
+import { Confirm, Vibracion } from '@app/services';
 
 @Component({
   selector: 'app-drink-card',
@@ -27,6 +27,7 @@ export class DrinkCardComponent {
   editClick = output<void>();
   deleteClick = output<void>();
 
+  private _vibracion = inject(Vibracion)
   private _confirm = inject(Confirm);
 
   async onFavorite() {
@@ -68,7 +69,7 @@ export class DrinkCardComponent {
       // await this.mostrarAviso('Plato dado de baja correctamente.');
       // await this.cargarPlatos();
     } catch (error) {
-      // await this.mostrarError();
+      await this._vibracion.error();
     }
   }
 }

@@ -39,9 +39,7 @@ export class ProductoCarruselComponent
   @Input()
   etiqueta = 'productos';
 
-  // Opcional: botones propios para el pie de cada tarjeta, en lugar de
-  // "Agregar" / cantidad del carrito. Lo usan las pantallas de gestión
-  // (platos y postres del personal) para destacar, editar y dar de baja.
+  // botones propios para el pie de la tarjeta en las pantallas de gestión
   @Input()
   acciones: TemplateRef<{ $implicit: CartaItem }> | null = null;
 

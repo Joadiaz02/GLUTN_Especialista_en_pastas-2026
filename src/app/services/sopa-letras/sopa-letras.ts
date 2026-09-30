@@ -16,19 +16,13 @@ const TAMANO_GRILLA = 5;
 const CANTIDAD_PALABRAS_POR_PARTIDA = SOPA_LETRAS_PALABRAS_POR_PARTIDA;
 const DURACION_SEGUNDOS = SOPA_LETRAS_DURACION_SEGUNDOS;
 
-// Ninguna palabra puede superar TAMANO_GRILLA letras, si no queda sin
-// poder colocarse en la grilla (y el juego sería imposible de ganar).
+// palabras que entran en la grilla
 const BANCO_PALABRAS = [
   'AJO', 'QUESO', 'TUCO', 'FIDEO', 'SALSA',
   'PASTA', 'CREMA', 'PESTO', 'PAN', 'SAL',
 ];
 
-// Sopa de letras temática de pastas, a contrarreloj: hay que encontrar
-// todas las palabras antes de que se acabe el tiempo (ver juegos.config).
-// Si las encuentra a tiempo, gana; si no, pierde (ambos casos consumen
-// el intento de la estadía). La sopa y las palabras no se generan hasta
-// que el jugador aprieta "Comenzar". Salir en medio de una partida cuenta
-// como perder (ver abandonarPartida).
+// sopa de letras de pastas contra reloj
 @Injectable({ providedIn: 'root' })
 export class SopaLetras {
   private juegos = inject(Juegos);
@@ -50,17 +44,14 @@ export class SopaLetras {
   private _posicionesPorPalabra = new Map<string, CeldaGrilla[]>();
 
   constructor() {
-    // Si cambia el usuario (logout o login de otra persona) se corta la
-    // partida: el cronómetro no puede seguir corriendo y cargarle una
-    // derrota al usuario siguiente.
+    // corta la partida si cambia el usuario
     effect(() => {
       this.juegos.idUsuario();
       untracked(() => this.prepararPartida());
     });
   }
 
-  // Deja el juego en su estado inicial: sin sopa, sin palabras y con el
-  // cronómetro detenido, esperando a que el jugador toque "Comenzar".
+  // deja el juego listo para comenzar
   prepararPartida(): void {
     this.detenerTemporizador();
 
@@ -73,10 +64,7 @@ export class SopaLetras {
     this.tiempoRestante.set(DURACION_SEGUNDOS);
   }
 
-  // Salir en medio de una partida cuenta como perder: si era el primer
-  // intento de la estadía, se pierde el descuento; si ya estaba gastado,
-  // registrarIntento no hace nada y se juega solo por diversión. En los dos
-  // casos la sopa queda reiniciada (palabras y cronómetro nuevos al volver).
+  // salir en medio de la partida cuenta como perder
   abandonarPartida(): void {
     if (!this.iniciada() || this.juegoTerminado()) return;
 
@@ -85,6 +73,7 @@ export class SopaLetras {
   }
 
   iniciarPartida(): void {
+    this.juegos.iniciarIntento('sopa-de-letras');
     this.detenerTemporizador();
 
     this.palabras.set([]);
@@ -265,8 +254,7 @@ export class SopaLetras {
     this.detenerTemporizador();
     this.juegoTerminado.set(true);
 
-    // Encontró las 3 palabras a tiempo -> gano. Si ya se habia jugado el
-    // primer intento en otro juego, Juegos.registrarIntento no hace nada.
+    // encontró todas las palabras a tiempo
     this.juegos.registrarIntento(true, PORCENTAJE_SOPA_LETRAS);
   }
 

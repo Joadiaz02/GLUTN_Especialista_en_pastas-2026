@@ -1,7 +1,6 @@
 import type { PerfilUsuario } from './usuario.model';
 
-// Un mensaje de la sala de consultas entre mozos y clientes (punto 11).
-// El autor, el nombre y el perfil los completa la base de datos, no la app.
+// mensaje de la sala de consultas entre mozos y clientes
 export interface Mensaje {
   id: string;
 
@@ -13,8 +12,7 @@ export interface Mensaje {
 
   numero_mesa: string | null;
 
-  // Avatar del autor al momento de escribir (copiado de usuarios.avatar por
-  // la base). Puede ser una URL completa o una ruta del bucket "images".
+  // avatar del autor al momento de escribir
   foto: string | null;
 
   texto: string;

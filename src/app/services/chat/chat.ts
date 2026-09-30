@@ -4,35 +4,32 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 import { EPerfilUsuario } from '../../enums';
 import type { Mensaje } from '../../models/mensaje.model';
 import { Auth } from '../auth/auth';
+import { MesaCliente } from '../mesa-cliente/mesa-cliente';
 import { SupabaseService } from '../supabase.service';
 
 export const CHAT_LARGO_MAXIMO = 500;
 
 const CHAT_LIMITE_MENSAJES = 50;
 
-// Sala de conversación entre TODOS los mozos y TODOS los clientes
-// (punto 11). Los mensajes se guardan en la tabla "mensajes" y llegan en
-// vivo con Realtime. Cada consulta lleva el número de mesa y la hora; el
-// nombre y el perfil del autor los completa la base (ver supabase/sql).
+// sala de consultas entre mozos y clientes en vivo
 @Injectable({ providedIn: 'root' })
 export class Chat {
   private _db = inject(SupabaseService);
   private _auth = inject(Auth);
+  private _mesaCliente = inject(MesaCliente);
 
   private _canal?: RealtimeChannel;
 
   mensajes = signal<Mensaje[]>([]);
   cargando = signal(false);
 
-  // Se compara por id y no por objeto: Supabase emite un usuario nuevo en
-  // cada refresco de token y eso no debe cortar la sala.
+  // compara por id para no cortar la sala al refrescar la sesión
   private _idUsuario = computed<string | null>(
     () => this._auth.usuarioActual()?.id ?? null
   );
 
   constructor() {
-    // Si cambia el usuario (logout o login de otra persona) no puede
-    // quedar la sala ni el canal del usuario anterior.
+    // corta la sala si cambia el usuario
     effect(() => {
       this._idUsuario();
       untracked(() => this.detener());
@@ -47,8 +44,7 @@ export class Chat {
     return this._auth.obtenerPerfil() === EPerfilUsuario.Mozo;
   }
 
-  // El avatar del mensaje puede venir como URL completa o como ruta del
-  // bucket "images" (mismo criterio que ClientsService.obtenerAvatarUrl).
+  // arma la dirección del avatar
   avatarUrl(foto: string | null): string | null {
     if (!foto) {
       return null;
@@ -61,23 +57,17 @@ export class Chat {
     return this._db.getAvatarUrl(foto).data.publicUrl;
   }
 
-  // Provisorio hasta que la asignación de mesas (punto 10) deje la mesa
-  // del cliente guardada: hoy se lee de la clave "mesa" del almacenamiento
-  // local, la misma que la app borra al cerrar sesión.
+  // mesa asignada por el metre
   numeroMesa(): string | null {
-    try {
-      return localStorage.getItem('mesa')?.trim() || null;
-    } catch {
-      return null;
-    }
+    return this._mesaCliente.numero();
   }
 
-  // Los mozos siempre pueden escribir; los clientes solo con mesa asignada.
+  // el mozo siempre escribe, el cliente solo con mesa
   puedeEscribir(): boolean {
     return this.esMozo() || this.numeroMesa() !== null;
   }
 
-  // Devuelve el mensaje de error a mostrar, o null si el texto es válido.
+  // devuelve el error del texto o null si es válido
   validar(texto: string): string | null {
     const limpio = texto.trim();
 
@@ -92,7 +82,7 @@ export class Chat {
     return null;
   }
 
-  // Idempotente: si el canal ya existe, solo vuelve a cargar los mensajes.
+  // si el canal ya existe solo recarga
   async iniciar(): Promise<void> {
     if (!this._canal) {
       this.suscribir();
@@ -117,7 +107,7 @@ export class Chat {
 
       const recibidos = (data ?? []) as Mensaje[];
 
-      // Lo que llegó en vivo mientras se cargaba no se pierde.
+      // no pierde lo que llegó mientras cargaba
       this.mensajes.update((actuales) =>
         this.ordenar([...recibidos, ...actuales])
       );
@@ -179,8 +169,7 @@ export class Chat {
       .subscribe();
   }
 
-  // Sin duplicados: el mensaje propio llega dos veces, por el insert y por
-  // Realtime.
+  // evita el mensaje propio duplicado
   private agregar(mensaje: Mensaje): void {
     this.mensajes.update((actuales) => this.ordenar([...actuales, mensaje]));
   }
@@ -197,8 +186,7 @@ export class Chat {
       .slice(-CHAT_LIMITE_MENSAJES);
   }
 
-  // La notificación push no puede frenar ni romper el envío: el mensaje ya
-  // está guardado y visible para todos.
+  // el aviso push no frena el envío
   private async avisar(idMensaje: string): Promise<void> {
     try {
       const { error } = await this._db.client.functions.invoke(

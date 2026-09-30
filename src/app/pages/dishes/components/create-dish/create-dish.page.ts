@@ -26,6 +26,7 @@ import { Router } from '@angular/router';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { VibrarErrores } from '@app/directives/vibrar-errores';
+import { textoValido } from '@app/validators/texto';
 
 @Component({
   selector: 'app-create-dish',
@@ -63,8 +64,8 @@ export class CreateDishPage {
   private _vibracion = inject(Vibracion);
 
   form = new FormGroup({
-    title: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
+    title: new FormControl('', [Validators.required, textoValido(3, 60)]),
+    description: new FormControl('', [Validators.required, textoValido(10, 250)]),
     preparation: new FormControl('', [
       Validators.required,
       Validators.pattern(/^[0-9]+$/),
@@ -134,8 +135,8 @@ export class CreateDishPage {
       );
 
       await this._platoService.add({
-        nombre: data.title as string,
-        descripcion: data.description as string,
+        nombre: (data.title as string).trim(),
+        descripcion: (data.description as string).trim(),
         tiempo_elaboracion: Number(data.preparation),
         precio: Number(data.price),
         foto_1: foto1,
