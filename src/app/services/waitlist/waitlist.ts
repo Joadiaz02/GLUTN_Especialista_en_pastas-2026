@@ -1,6 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { parseTableQr } from '@app/utils';
 
 @Service()
 export class Waitlist {
@@ -80,6 +81,55 @@ export class Waitlist {
     const index = (data ?? []).findIndex((e) => e.usuario_id === usuarioId);
     
     return index === -1 ? null : index + 1;
+  }
+
+  async linkTable(userId: string, scannedText: string) {
+    console.log("waiting.ts 87")
+    console.log(userId)
+    console.log("waiting.ts 89")
+    console.log(scannedText)
+    
+    const scannedTableId = parseTableQr(scannedText);
+
+    console.log("waiting.ts 94")
+    console.log(scannedTableId)
+
+    if (!scannedTableId) {
+      return { ok: false, reason: 'invalid_qr' };
+    }
+
+    const { data } = await this._db.client
+      .from('lista_espera')
+      .select('id, estado, mesa_id, mesas(numero)')
+      .eq('usuario_id', userId)
+      .in('estado', ['asignado', 'en_mesa'])
+      .maybeSingle();
+    
+    console.log("waiting.ts 108")
+    console.log(data)
+    
+    if (!data) {
+      return { ok: false, reason: 'no_table_assigned' };
+    }
+
+    const entry = data as any;
+
+    if (entry.mesa_id !== scannedTableId) {
+      return {
+        ok: false,
+        reason: 'wrong_table',
+        correctTableNumber: entry.mesas.numero,
+      };
+    }
+
+    if (entry.estado === 'asignado') {
+      await this._db.client
+        .from('lista_espera')
+        .update({ estado: 'en_mesa', updated_at: new Date().toISOString() })
+        .eq('id', entry.id);
+    }
+
+    return { ok: true };
   }
 
   async getMyEntry(usuarioId: string) {

@@ -5,6 +5,6 @@ export const PORCENTAJES_PROPINA = [0, 5, 10, 15, 20] as const;
 export type PorcentajePropina = (typeof PORCENTAJES_PROPINA)[number];
 
 export type CodigoQr =
-  | { tipo: 'ingreso' }
+  | { tipo: 'ingreso-local' }
   | { tipo: 'mesa'; id: string }
   | { tipo: 'propina'; porcentaje: PorcentajePropina };

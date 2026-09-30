@@ -351,4 +351,11 @@ export const routes: Routes = [
         (m) => m.SectorPedidosPage
       ),
   },
+  {
+    path: 'assigned-table',
+    loadComponent: () =>
+      import('./pages/assigned-table/assigned-table.page').then(
+        (m) => m.AssignedTablePage
+      ),
+  },
 ];

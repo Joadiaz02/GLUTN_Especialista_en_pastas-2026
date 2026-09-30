@@ -1,11 +1,12 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonIcon, IonButton, IonToggle, ToastController } from '@ionic/angular';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonIcon, IonButton, IonToggle, ToastController, ModalController } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Confirm, Table, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { TableQrModalComponent } from './components/table-qr-modal/table-qr-modal.component';
 
 @Component({
   selector: 'app-tables',
@@ -32,6 +33,7 @@ export class TablesPage {
   private _toastController = inject(ToastController);
   private _confirm = inject(Confirm);
   private _vibracion = inject(Vibracion);
+  private _modalController = inject(ModalController);
 
   readonly tipoLabel: any = {
     vip: 'VIP',
@@ -48,6 +50,20 @@ export class TablesPage {
 
   volver(): void {
     void this._router.navigate(['/admin']);
+  }
+
+  async showModalSheet($event: any, table: any) {
+    $event.stopPropagation();
+
+    const modal = await this._modalController.create({
+      component: TableQrModalComponent,
+      componentProps: { table },
+      breakpoints: [0, 0.8],
+      initialBreakpoint: 0.8,
+      handle: true,
+    });
+
+    await modal.present();
   }
 
   async onToggle(table: any, event: CustomEvent): Promise<void> {
