@@ -380,6 +380,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.escaneando.set(true);
     try {
       const codigo = await this.escanerQr.escanear();
+      
       if (codigo) await this.procesarCodigo(codigo);
     } finally {
       this.escaneando.set(false);

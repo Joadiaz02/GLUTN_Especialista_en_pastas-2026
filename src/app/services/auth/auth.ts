@@ -410,6 +410,8 @@ async logout(): Promise<void> {
   async loginAnonymous(fullName: string, file: File): Promise<string> {
     const avatar = await this.storageService.uploadImage(file);
 
+    console.log(avatar);
+
     const { data: authData, error: authError } = await this.supabaseService.client.auth.signInAnonymously({
       options: {
         data: {
