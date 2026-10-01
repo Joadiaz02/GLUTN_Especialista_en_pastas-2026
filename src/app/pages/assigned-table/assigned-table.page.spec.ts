@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SectorPedidosPage } from './sector-pedidos.page';
+import { AssignedTablePage } from './assigned-table.page';
 
-describe('SectorPedidosPage', () => {
-  let component: SectorPedidosPage;
-  let fixture: ComponentFixture<SectorPedidosPage>;
+describe('AssignedTablePage', () => {
+  let component: AssignedTablePage;
+  let fixture: ComponentFixture<AssignedTablePage>;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SectorPedidosPage);
+    fixture = TestBed.createComponent(AssignedTablePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

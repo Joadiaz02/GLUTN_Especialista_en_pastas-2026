@@ -1,0 +1,89 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-dialog
+        titulo="¿Salir del registro?"
+        mensaje="Si salís ahora, vas a perder los datos ingresados."
+        textoCancelar="Cancelar"
+        textoConfirmar="Salir"
+        icono="log-out-outline"
+        (confirmado)="cancelarRegistro()"
+      ></app-confirm-dialog>
+    </ion-buttons>
+
+    <ion-title> {{ getStepTitle() }} </ion-title>
+  </ion-toolbar>
+
+  <app-progress-bar [currentStep]="currentStep()"></app-progress-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @switch (currentStep()) { @case (1) {
+
+  <app-personal-step
+    [control]="
+          getFormGroup('personal')
+        "
+  />
+
+  } @case (2) {
+
+  <app-credentials-step
+    [control]="
+          getFormGroup('credentials')
+        "
+  />
+
+  } @case (3) {
+
+  <app-profile-step
+    [control]="
+          getFormGroup('profile')
+        "
+  />
+
+  } }
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="footer-actions">
+    @if (currentStep() === 1) {
+
+    <ion-button expand="block" shape="round" (click)="nextStep()">
+      Continuar
+    </ion-button>
+
+    } @else if (currentStep() === 2) {
+
+    <ion-button expand="block" shape="round" (click)="nextStep()">
+      Continuar
+    </ion-button>
+
+    <app-confirm-volver
+      (confirmadoVolver)="previousStep()"
+    ></app-confirm-volver>
+
+    } @else {
+
+    <ion-button
+      expand="block"
+      shape="round"
+      (click)="register()"
+      [disabled]="
+          (form.statusChanges | async) !== 'VALID' ||
+          isLoading()
+        "
+    >
+      @if (isLoading()) {
+
+      <app-spinner-logo size="sm" />
+      } @else { Crear empleado }
+    </ion-button>
+
+    <app-confirm-volver
+      (confirmadoVolver)="previousStep()"
+    ></app-confirm-volver>
+
+    }
+  </div>
+</ion-footer>

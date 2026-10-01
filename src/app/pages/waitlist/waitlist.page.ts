@@ -1,9 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonHeader, IonTitle, IonToolbar, IonButtons, IonContent } from '@ionic/angular';
+import {
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonContent,
+  ToastController,
+} from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Router, RouterLink } from '@angular/router';
-import { Waitlist } from '@app/services';
+import { Confirm, Waitlist } from '@app/services';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 @Component({
   selector: 'app-waitlist',
@@ -17,37 +25,155 @@ import { Waitlist } from '@app/services';
     IonToolbar,
     IonButtons,
     ConfirmVolverComponent,
-    IonContent
-],
+    IonContent,
+    SpinnerLogoComponent,
+  ],
 })
 export class WaitlistPage {
   private _router = inject(Router);
   private _waitlistService = inject(Waitlist);
+  private _confirm = inject(Confirm);
+  private _toastController = inject(ToastController);
+
   private _unsubscribe: (() => void) | null = null;
 
-  users = signal<any[]>([])
+  users = signal<any[]>([]);
+  filtroSeleccionado = signal<number | 'todos'>('todos');
+  cargando = signal(true);
 
-  async ngOnInit() {
-    await this._loadList();
+  readonly filtros: Array<number | 'todos'> = [
+    'todos',
+    1,
+    2,
+    3,
+    4,
+    5,
+  ];
 
-    console.log(this.users())
+  usuariosFiltrados(): any[] {
+    const filtro = this.filtroSeleccionado();
 
-    this._unsubscribe = this._waitlistService.getListChange(() => {
-      this._loadList();
-    });
+    if (filtro === 'todos') {
+      return this.users();
+    }
+
+    if (filtro === 5) {
+      return this.users().filter(
+        (entry) =>
+          Number(entry.comensales ?? 1) >= 5
+      );
+    }
+
+    return this.users().filter(
+      (entry) =>
+        Number(entry.comensales ?? 1) === filtro
+    );
   }
 
-  private async _loadList() {
-    const users = await this._waitlistService.getList();
-  
-    this.users.set(users);
+  seleccionarFiltro(
+    filtro: number | 'todos'
+  ): void {
+    this.filtroSeleccionado.set(filtro);
+  }
+
+  async eliminar(entry: any): Promise<void> {
+    const nombre =
+      `${entry.usuarios?.nombre ?? ''} ${entry.usuarios?.apellido ?? ''}`
+        .trim();
+
+    const confirmado =
+      await this._confirm.preguntar({
+        titulo: '¿Eliminar de la lista?',
+        mensaje:
+          `${nombre || 'Este cliente'} dejará de esperar una mesa.`,
+        textoConfirmar: 'Eliminar',
+        colorConfirmar: 'danger',
+        icono: 'trash-outline',
+      });
+
+    if (!confirmado) {
+      return;
+    }
+
+    try {
+      await this._waitlistService.remove(
+        entry.id
+      );
+
+      const toast =
+        await this._toastController.create({
+          message:
+            'Cliente eliminado de la lista.',
+          duration: 2500,
+          position: 'top',
+          color: 'success',
+        });
+
+      await toast.present();
+    } catch (error) {
+      console.error(
+        'Error eliminando cliente:',
+        error
+      );
+
+      const toast =
+        await this._toastController.create({
+          message:
+            'No pudimos eliminar al cliente. Intentá nuevamente.',
+          duration: 3000,
+          position: 'top',
+          color: 'danger',
+        });
+
+      await toast.present();
+    }
+  }
+
+  async ngOnInit(): Promise<void> {
+    await this._loadList();
+
+    this._unsubscribe =
+      this._waitlistService.getListChange(
+        () => {
+          void this._loadList();
+        }
+      );
+  }
+
+  private async _loadList(): Promise<void> {
+    try {
+      const users =
+        await this._waitlistService.getList();
+
+      this.users.set(users);
+    } catch (error) {
+      console.error(
+        'Error cargando lista de espera:',
+        error
+      );
+
+      const toast =
+        await this._toastController.create({
+          message:
+            'No pudimos cargar la lista de espera.',
+          duration: 3000,
+          position: 'top',
+          color: 'danger',
+        });
+
+      await toast.present();
+    } finally {
+      this.cargando.set(false);
+    }
   }
 
   volver(): void {
-    void this._router.navigate(['/admin']);
+    void this._router.navigate([
+      '/admin',
+    ]);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._unsubscribe?.();
   }
 }

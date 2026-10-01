@@ -12,7 +12,7 @@ describe('Juegos', () => {
   let rpc: ReturnType<typeof vi.fn>;
   let descuentoGuardado: number | null;
 
-  // Espera a que terminen las llamadas a la base (van encadenadas).
+  // espera a que terminen las llamadas a la base
   const esperarBase = () => new Promise((resolve) => setTimeout(resolve, 0));
 
   beforeEach(() => {

@@ -8,15 +8,34 @@ import { environment } from '../../environments/environment';
 export class SupabaseService {
   private supabase: SupabaseClient;
 
+  private statelessSupabase: SupabaseClient;
+
   constructor() {
     this.supabase = createClient(
       environment.supabaseUrl,
       environment.supabaseKey
     );
+
+    this.statelessSupabase = createClient(
+      environment.supabaseUrl,
+      environment.supabaseKey,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+          storageKey: 'stateless-signup-client',
+        },
+      }
+    );
   }
 
   get client(): SupabaseClient {
     return this.supabase;
+  }
+
+  get statelessClient(): SupabaseClient {
+    return this.statelessSupabase;
   }
 
   async uploadAvatar(filePath: string, file: File) {

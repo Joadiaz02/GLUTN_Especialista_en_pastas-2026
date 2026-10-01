@@ -1,8 +1,9 @@
+// separación entre el borde de arriba y el header
 :host {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding-top: env(safe-area-inset-top);
+  padding-top: max(10px, env(safe-area-inset-top));
   background: var(--ion-background-color);
 }
 

@@ -1,0 +1,29 @@
+<ion-content class="ion-padding">
+  <div class="qr-modal">
+    <h2 class="qr-modal__title">Código QR de la mesa N° {{ table.numero }}</h2>
+    <p class="qr-modal__subtitle">
+      Imprimilo y pegalo en la mesa para que los clientes lo escaneen.
+    </p>
+
+    <div class="qr-modal__frame">
+      @if (qrDataUrl(); as src) {
+      <img
+        class="qr-modal__img"
+        [src]="src"
+        [alt]="'Código QR de la mesa N° ' + table.numero"
+      />
+      } @else {
+      <app-spinner-logo />
+      }
+    </div>
+
+    <ion-button
+      expand="block"
+      shape="round"
+      [disabled]="!qrDataUrl() || isDownloading()"
+      (click)="download()"
+    >
+      Descargar código QR
+    </ion-button>
+  </div>
+</ion-content>

@@ -28,9 +28,7 @@ export class ConfirmDialogComponent {
   @Input() icono = 'log-out-outline';
   @Input() esContenidoModal = false;
 
-  // Se emite cuando el usuario confirma la acción en el modal.
-  // Quien use este botón decide qué hacer al confirmar (logout,
-  // borrar, guardar, etc.) — este componente solo pregunta.
+  // avisa cuando el usuario confirma la acción
   @Output() confirmado = new EventEmitter<void>();
 
   constructor() {

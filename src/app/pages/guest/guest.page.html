@@ -7,7 +7,9 @@
       ></ion-back-button>
     </ion-buttons>
 
-    <ion-title>{{ getStepTitle() }}</ion-title>
+    <ion-title>
+      {{ getStepTitle() }}
+    </ion-title>
   </ion-toolbar>
 
   <app-progress-bar
@@ -16,35 +18,168 @@
   ></app-progress-bar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  @switch (currentStep()) { @case (1) {
-  <app-identity-step [control]="form" />
-  } @case (2) {
-  <app-location-step />
-  } }
+<ion-content>
+
+  @switch (currentStep()) {
+
+    @case (1) {
+
+      <app-identity-step
+        [control]="form"
+      />
+
+      <div
+        class="guest-extra"
+        [formGroup]="form"
+      >
+
+        <div class="guest-extra__section">
+
+          <h2>
+            ¿Cuántos son?
+          </h2>
+
+          <p>
+            Indicá la cantidad de personas que van a ocupar la mesa.
+          </p>
+
+          <div class="guest-stepper">
+
+            <button
+              type="button"
+              aria-label="Disminuir cantidad"
+              [disabled]="form.controls.comensales.value === 1"
+              (click)="ajustarComensales(-1)"
+            >
+              −
+            </button>
+
+            <strong>
+              {{ form.controls.comensales.value }}
+            </strong>
+
+            <button
+              type="button"
+              aria-label="Aumentar cantidad"
+              [disabled]="form.controls.comensales.value === 20"
+              (click)="ajustarComensales(1)"
+            >
+              +
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="guest-extra__section">
+
+          <h2>
+            ¿Necesitan alguna consideración?
+          </h2>
+
+          <p>
+            Podés seleccionar más de una.
+          </p>
+
+          <div class="guest-options">
+
+            <button
+              type="button"
+              class="guest-option"
+              [class.guest-option--active]="
+                tieneConsideracion('movilidad_reducida')
+              "
+              (click)="
+                toggleConsideracion('movilidad_reducida')
+              "
+            >
+              Movilidad reducida
+            </button>
+
+            <button
+              type="button"
+              class="guest-option"
+              [class.guest-option--active]="
+                tieneConsideracion('silla_bebe')
+              "
+              (click)="
+                toggleConsideracion('silla_bebe')
+              "
+            >
+              Silla para bebé
+            </button>
+
+            <button
+              type="button"
+              class="guest-option"
+              [class.guest-option--active]="
+                tieneConsideracion('otra')
+              "
+              (click)="
+                toggleConsideracion('otra')
+              "
+            >
+              Otra consideración
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+    @case (2) {
+
+      <app-location-step />
+
+    }
+
+  }
+
 </ion-content>
 
 <ion-footer class="ion-no-border">
+
   <div class="footer-actions">
+
     @if (currentStep() === 1) {
-    <ion-button
-      expand="block"
-      shape="round"
-      (click)="nextStep()"
-      [disabled]="(form.statusChanges | async) !== 'VALID'"
-      >Continuar</ion-button
-    >
-    } @else if (currentStep() === 2) {
-    <ion-button expand="block" shape="round" (click)="scanQR()"
-      >Escanear QR</ion-button
-    >
-    <ion-button
-      expand="block"
-      shape="round"
-      fill="outline"
-      (click)="previousStep()"
-      >Volver</ion-button
-    >
+
+      <ion-button
+        expand="block"
+        shape="round"
+        (click)="nextStep()"
+        [disabled]="form.invalid"
+      >
+        Continuar
+      </ion-button>
+
     }
+
+    @else if (currentStep() === 2) {
+
+      <ion-button
+        expand="block"
+        shape="round"
+        (click)="scanQR()"
+        [disabled]="scanning()"
+      >
+        {{ scanning() ? 'Procesando...' : 'Escanear QR' }}
+      </ion-button>
+
+      <ion-button
+        expand="block"
+        shape="round"
+        fill="outline"
+        (click)="previousStep()"
+        [disabled]="scanning()"
+      >
+        Volver
+      </ion-button>
+
+    }
+
   </div>
+
 </ion-footer>

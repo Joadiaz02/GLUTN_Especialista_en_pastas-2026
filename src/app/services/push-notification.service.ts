@@ -5,33 +5,45 @@ import {
   PushNotifications,
   Token,
 } from '@capacitor/push-notifications';
-import { Platform, ToastController } from '@ionic/angular';
+import {
+  Platform,
+  ToastController,
+} from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { SupabaseService } from './supabase.service';
 import { Auth } from './auth/auth';
 import { Vibracion } from './vibracion/vibracion';
-// Adónde navegar al tocar la notificación, según el "tipo" que manda cada
-// función (ver supabase/functions/notify-chat-message).
+
 const RUTA_POR_TIPO: Record<string, string> = {
   consulta_mozo: '/admin/queries',
   respuesta_mozo: '/chat',
+  lista_espera: '/admin/waitlist',
+  mesa_asignada: '/waiting-room',
 };
 
 @Injectable({
   providedIn: 'root',
 })
 export class PushNotificationService {
-  private readonly supabaseService = inject(SupabaseService);
+  private readonly supabaseService =
+    inject(SupabaseService);
 
-  private readonly authService = inject(Auth);
+  private readonly authService =
+    inject(Auth);
 
-  private readonly platform = inject(Platform);
+  private readonly platform =
+    inject(Platform);
 
-  private readonly toastController = inject(ToastController);
+  private readonly toastController =
+    inject(ToastController);
 
-  private readonly router = inject(Router);
-  private readonly vibracion = inject(Vibracion);
+  private readonly router =
+    inject(Router);
+
+  private readonly vibracion =
+    inject(Vibracion);
+
   private inicializado = false;
 
   async inicializar(): Promise<void> {
@@ -61,7 +73,9 @@ export class PushNotificationService {
       const resultado =
         await PushNotifications.requestPermissions();
 
-      if (resultado.receive !== 'granted') {
+      if (
+        resultado.receive !== 'granted'
+      ) {
         console.warn(
           'El usuario no otorgó permisos para notificaciones.'
         );
@@ -102,14 +116,20 @@ export class PushNotificationService {
 
     await PushNotifications.addListener(
       'pushNotificationReceived',
-      async (notification: PushNotificationSchema) => {
-        await this.mostrarAviso(notification);
+      async (
+        notification: PushNotificationSchema
+      ) => {
+        await this.mostrarAviso(
+          notification
+        );
       }
     );
 
     await PushNotifications.addListener(
       'pushNotificationActionPerformed',
-      (action: ActionPerformed) => {
+      (
+        action: ActionPerformed
+      ) => {
         this.irALaPantalla(
           action.notification.data
         );
@@ -131,7 +151,9 @@ export class PushNotificationService {
           {
             text: 'Ver',
             handler: () =>
-              this.irALaPantalla(notification.data),
+              this.irALaPantalla(
+                notification.data
+              ),
           },
         ],
       });
@@ -140,7 +162,9 @@ export class PushNotificationService {
   }
 
   private irALaPantalla(
-    datos: Record<string, unknown> | undefined
+    datos:
+      | Record<string, unknown>
+      | undefined
   ): void {
     const tipo =
       typeof datos?.['tipo'] === 'string'
@@ -148,30 +172,33 @@ export class PushNotificationService {
         : null;
 
     const ruta =
-      tipo ? RUTA_POR_TIPO[tipo] : undefined;
+      tipo
+        ? RUTA_POR_TIPO[tipo]
+        : undefined;
 
     if (ruta) {
-      void this.router.navigate([ruta]);
+      void this.router.navigate([
+        ruta,
+      ]);
     }
   }
 
   private async guardarToken(
-  token: string
-): Promise<void> {
-  const usuario =
-    await this.authService.obtenerUsuarioActual();
+    token: string
+  ): Promise<void> {
+    const usuario =
+      await this.authService.obtenerUsuarioActual();
 
-  if (!usuario?.id) {
-    console.warn(
-      'No hay un usuario autenticado para guardar el token.'
-    );
+    if (!usuario?.id) {
+      console.warn(
+        'No hay un usuario autenticado para guardar el token.'
+      );
 
-    return;
-  }
+      return;
+    }
 
-  const { error } =
-    await this.supabaseService.client
-      .rpc(
+    const { error } =
+      await this.supabaseService.client.rpc(
         'registrar_dispositivo_push',
         {
           p_token: token,
@@ -179,23 +206,23 @@ export class PushNotificationService {
         }
       );
 
-if (error) {
-  void this.vibracion.error();
+    if (error) {
+      void this.vibracion.error();
 
-  console.error(
-    'Error guardando token FCM:',
-    JSON.stringify(
-      error,
-      null,
-      2
-    )
-  );
+      console.error(
+        'Error guardando token FCM:',
+        JSON.stringify(
+          error,
+          null,
+          2
+        )
+      );
 
-  return;
-}
+      return;
+    }
 
-  console.log(
-    'TOKEN FCM GUARDADO CORRECTAMENTE'
-  );
-}
+    console.log(
+      'TOKEN FCM GUARDADO CORRECTAMENTE'
+    );
+  }
 }

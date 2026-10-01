@@ -13,7 +13,7 @@
 
 <ion-content class="home-content">
   <div class="home-wrapper">
-    <!-- LOGO Y BOTONES PRINCIPALES -->
+    <!-- logo y botones principales -->
     <div class="home-botones">
       <div class="logo-container logo-fijo">
         <img
@@ -63,7 +63,7 @@
     </div>
   </div>
 
-  <!-- PRODUCTOS DESTACADOS -->
+  <!-- productos destacados -->
   <ion-modal
     class="home-modal"
     [isOpen]="showDestacados()"
@@ -133,52 +133,7 @@
     </ng-template>
   </ion-modal>
 
-  <!-- MESA ESCANEADA -->
-  <ion-modal
-    class="home-modal"
-    [isOpen]="mesaEscaneada() !== null"
-    (didDismiss)="cerrarMesa()"
-  >
-    <ng-template>
-      @if (mesaEscaneada(); as mesa) {
-        <div class="home-modal__contenido mesa-info">
-          <h2 class="mesa-info__titulo">Mesa {{ mesa.numero }}</h2>
-
-          <dl class="mesa-info__datos">
-            <dt>Tipo</dt>
-            <dd>{{ mesa.tipo }}</dd>
-
-            @if (esPersonal()) {
-              <dt>Lugares</dt>
-              <dd>{{ mesa.capacidad }}</dd>
-            }
-
-            @if (mesa.disponibilidad) {
-              <dt>Disponibilidad</dt>
-              <dd>{{ mesa.disponibilidad }}</dd>
-            }
-          </dl>
-
-          @if (!esPersonal()) {
-            <p class="mesa-info__nota">
-              Para usar esta mesa, el metre te la tiene que asignar.
-            </p>
-          }
-
-          <ion-button
-            class="home-modal__cerrar"
-            expand="block"
-            shape="round"
-            (click)="cerrarMesa()"
-          >
-            Cerrar
-          </ion-button>
-        </div>
-      }
-    </ng-template>
-  </ion-modal>
-
-  <!-- QUIENES SOMOS -->
+  <!-- quiénes somos -->
   <ion-modal
     class="home-modal"
     [isOpen]="showQuienesSomos()"
@@ -208,7 +163,7 @@
 </ion-content>
 
 <ion-footer class="home-footer">
-  <!-- FOOTER: PEDIDO / ESCÁNER / CHAT -->
+  <!-- footer: pedido, escáner y chat -->
   @if (hayAccesos()) {
     <div class="home-accesos">
       <div class="acceso">
@@ -244,13 +199,13 @@
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <!-- Esquinas estilo Mercado Pago -->
+                <!-- esquinas del ícono del escáner -->
                 <path d="M14 10H10V14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
                 <path d="M34 10H38V14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
                 <path d="M10 34V38H14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
                 <path d="M34 38H38V34" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
 
-                <!-- Cuadrado central QR -->
+                <!-- cuadrado central del ícono -->
                 <rect
                   x="16"
                   y="16"

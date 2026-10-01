@@ -1,44 +1,312 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
+
     <ion-buttons slot="start">
-      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+
+      <app-confirm-volver
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
+
     </ion-buttons>
 
-    <ion-title>Asignar mesa</ion-title>
+    <ion-title>
+      Asignar mesa
+    </ion-title>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  @if (loading()) {
-  <app-spinner-logo />
-  } @else {
-  <div class="header">
-    @if (user()) {
-    <img [src]="user().avatar" alt="" />
-    <p>{{ user().nombre }} {{ user().apellido }}</p>
-    }
-  </div>
 
-  <div class="tables">
-    @for (table of availableTables(); track table.id) {
-    <div
-      class="table-card"
-      [class.table-card--selected]="currentTable() && currentTable().id === table.id"
-      (click)="tableSelected(table)"
-    >
-      <h2>Mesa {{ table.numero }}</h2>
-      <p>{{ table.capacidad }} personas</p>
-      <p>{{ table.tipo }}</p>
+  @if (loading()) {
+
+    <div class="assignment-loading">
+
+      <app-spinner-logo />
+
+      <span>
+        Cargando mesas...
+      </span>
+
     </div>
-    }
-  </div>
+
   }
+
+  @else {
+
+    <div class="assignment">
+
+      @if (user()) {
+
+        <section
+          class="assignment-client"
+        >
+
+          @if (user().avatar) {
+
+            <img
+              [src]="user().avatar"
+              [alt]="user().nombre"
+            />
+
+          }
+
+          @else {
+
+            <div
+              class="assignment-client__avatar"
+            >
+              {{
+                user().nombre
+                  ?.charAt(0)
+                  ?.toUpperCase() || '?'
+              }}
+            </div>
+
+          }
+
+          <div>
+
+            <h1>
+              {{ user().nombre }}
+              {{ user().apellido }}
+            </h1>
+
+            <p>
+
+              {{ waitlist()?.comensales ?? 1 }}
+
+              {{
+                (waitlist()?.comensales ?? 1) === 1
+                  ? 'comensal'
+                  : 'comensales'
+              }}
+
+            </p>
+
+            @if (
+              (waitlist()?.consideraciones ?? []).length > 0
+            ) {
+
+              <div
+                class="assignment-tags"
+              >
+
+                @for (
+                  consideracion
+                  of waitlist().consideraciones;
+                  track consideracion
+                ) {
+
+                  <span>
+                    {{
+                      getConsideracionLabel(
+                        consideracion
+                      )
+                    }}
+                  </span>
+
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+        </section>
+
+      }
+
+      <div class="assignment-title">
+
+        <h2>
+          Seleccioná una mesa
+        </h2>
+
+        <p>
+          Las mesas se muestran según
+          la capacidad y las necesidades
+          indicadas por el cliente.
+        </p>
+
+      </div>
+
+      @if (!hayMesasCompatibles()) {
+
+        <div
+          class="assignment-empty"
+        >
+
+          <p>
+            No hay mesas disponibles que
+            cumplan con los requisitos
+            de este cliente.
+          </p>
+
+        </div>
+
+      }
+
+      @else {
+
+        <div class="tables">
+
+          @for (
+            table of availableTables();
+            track table.id
+          ) {
+
+            <button
+              type="button"
+              class="table-card"
+
+              [class.table-card--selected]="
+                currentTable()?.id === table.id
+              "
+
+              [class.table-card--available]="
+                table.estadoVisual === 'disponible'
+              "
+
+              [class.table-card--occupied]="
+                table.estadoVisual === 'ocupada'
+              "
+
+              [class.table-card--unavailable]="
+                table.estadoVisual === 'no_apta'
+              "
+
+              [disabled]="
+                !table.compatible ||
+                assigning()
+              "
+
+              (click)="tableSelected(table)"
+            >
+
+              <div
+                class="table-card__media"
+              >
+
+                @if (table.foto) {
+
+                  <img
+                    [src]="table.foto"
+                    [alt]="'Mesa ' + table.numero"
+                  />
+
+                }
+
+                <span
+                  class="table-card__number"
+                >
+                  M-{{ table.numero }}
+                </span>
+
+                <span
+                  class="table-card__status"
+                >
+
+                  {{
+                    table.estadoVisual ===
+                    'disponible'
+                      ? 'Disponible'
+                      : table.estadoVisual ===
+                        'ocupada'
+                        ? 'Ocupada'
+                        : 'No apta'
+                  }}
+
+                </span>
+
+              </div>
+
+              <div
+                class="table-card__info"
+              >
+
+                <h2>
+                  Mesa {{ table.numero }}
+                </h2>
+
+                <p>
+                  {{ table.capacidad }}
+                  {{
+                    table.capacidad === 1
+                      ? 'persona'
+                      : 'personas'
+                  }}
+                </p>
+
+                <span>
+
+                  {{
+                    table.tipo ===
+                    'vip_movilidad_reducida'
+                      ? 'VIP · Movilidad reducida'
+                      : table.tipo ===
+                        'movilidad_reducida'
+                        ? 'Movilidad reducida'
+                        : table.tipo ===
+                          'vip'
+                          ? 'VIP'
+                          : 'Estándar'
+                  }}
+
+                </span>
+
+              </div>
+
+            </button>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
 </ion-content>
 
 <ion-footer class="ion-no-border">
+
   <div class="footer-actions">
-    <ion-button expand="block" shape="round" (click)="assignTable()"
-      >Asignar mesa</ion-button
+
+    <ion-button
+      expand="block"
+      shape="round"
+
+      [disabled]="
+        !currentTable() ||
+        assigning() ||
+        loading()
+      "
+
+      (click)="assignTable()"
     >
+      Asignar mesa
+    </ion-button>
+
   </div>
+
 </ion-footer>
+
+@if (assigning()) {
+
+  <div
+    class="assignment-loading"
+  >
+
+    <app-spinner-logo />
+
+    <span>
+      Asignando mesa...
+    </span>
+
+  </div>
+
+}

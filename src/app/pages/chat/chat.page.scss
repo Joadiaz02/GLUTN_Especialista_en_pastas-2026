@@ -11,7 +11,7 @@
   display: block;
 }
 
-// Queda fuera del ion-content, así no se va con el scroll de los mensajes.
+// fuera del contenido para que no se vaya con el scroll
 .chat-cabecera {
   padding: 0 16px 8px;
   background: var(--ion-background-color);
@@ -48,7 +48,7 @@
   gap: 12px;
 }
 
-// Mensajes de los demás: verde oscuro con texto blanco (contraste alto).
+// mensajes de los demás
 .mensaje {
   max-width: 82%;
   align-self: flex-start;
@@ -58,7 +58,7 @@
   color: #ffffff;
 }
 
-// Mensajes propios: naranja de la marca, a la derecha.
+// mensajes propios
 .mensaje--propio {
   align-self: flex-end;
   background: var(--ion-color-primary);
@@ -120,7 +120,7 @@
 }
 
 .chat-pie {
-  // El safe-area deja el input por encima de la barra de navegación del celular.
+  // deja el campo de texto arriba de la barra del celular
   padding: 8px 12px calc(4px + env(safe-area-inset-bottom));
   background: var(--ion-background-color);
 }

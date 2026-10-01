@@ -10,7 +10,11 @@
 <ion-content class="cocina-content" [scrollY]="false">
   <div class="cocina-wrapper">
     <div class="logo-container logo-fijo">
-      <img src="assets/images/LOGO-GLUTN.png" alt="GLUTN - Especialista en Pastas" class="logo" />
+      <img
+        src="assets/images/LOGO-GLUTN.png"
+        alt="GLUTN - Especialista en Pastas"
+        class="logo"
+      />
     </div>
 
     <h1 class="titulo-pagina">Cocina</h1>
@@ -54,22 +58,35 @@
         </p>
       </div>
     } @else {
+      <!-- un pedido por tarjeta, ordenados por mesa -->
       <div #viewport class="carrusel" (scroll)="alDesplazar()">
         @for (pedido of pedidos(); track pedido.idPedido; let i = $index) {
-          <article class="slide" [class.slide--activo]="i === indiceActual()">
-            <div class="pedido" [class.pedido--preparando]="pedido.estadoCocina">
+          <article
+            class="slide"
+            [class.slide--activo]="i === indiceActual()"
+          >
+            <div
+              class="pedido"
+              [class.pedido--preparando]="pedido.estadoCocina"
+            >
               <header class="pedido__mesa">
                 <h2>Mesa {{ pedido.numeroMesa }}</h2>
 
                 @if (pedido.totalEnMesa > 1) {
-                  <span>Pedido {{ pedido.numeroEnMesa }} de {{ pedido.totalEnMesa }}</span>
+                  <span>
+                    Pedido {{ pedido.numeroEnMesa }} de {{ pedido.totalEnMesa }}
+                  </span>
                 }
               </header>
 
               <div class="pedido__encabezado">
                 <div class="pedido__momento">
-                  <span class="pedido__hora">{{ pedido.fecha | date: 'HH:mm' }}</span>
-                  <span class="pedido__fecha">{{ pedido.fecha | date: 'dd/MM/yyyy' }}</span>
+                  <span class="pedido__hora">
+                    {{ pedido.fecha | date: 'HH:mm' }}
+                  </span>
+                  <span class="pedido__fecha">
+                    {{ pedido.fecha | date: 'dd/MM/yyyy' }}
+                  </span>
                 </div>
 
                 <span
@@ -83,8 +100,12 @@
               <ul class="pedido__items">
                 @for (item of pedido.items; track $index) {
                   <li class="pedido__item">
-                    <span class="pedido__cantidad">{{ item.cantidad }}</span>
-                    <span class="pedido__nombre">{{ item.nombre }}</span>
+                    <span class="pedido__cantidad">
+                      {{ item.cantidad }}
+                    </span>
+                    <span class="pedido__nombre">
+                      {{ item.nombre }}
+                    </span>
                   </li>
                 }
               </ul>
@@ -126,7 +147,9 @@
           ‹
         </button>
 
-        <span>Pedido {{ indiceActual() + 1 }} de {{ pedidos().length }}</span>
+        <span>
+          Pedido {{ indiceActual() + 1 }} de {{ pedidos().length }}
+        </span>
 
         <button
           type="button"

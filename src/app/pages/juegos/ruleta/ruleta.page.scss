@@ -6,10 +6,7 @@
   --padding-bottom: 24px;
 }
 
-// El wrapper ocupa el alto disponible del ion-content (ya descontados
-// el header y el padding), así el juego llena la pantalla sin scroll.
-// Con 100vh se sumaba la altura del header y aparecía un scroll de más.
-// Se descuenta el safe-area de abajo (barra de navegación del celular).
+// el juego ocupa el alto disponible sin scroll
 .ruleta-wrapper {
   width: 100%;
   min-height: calc(100% - env(safe-area-inset-bottom));
@@ -135,8 +132,7 @@
   font-weight: 600;
 }
 
-// En pantallas bajas el cartel de resultado no entra junto con la rueda
-// en tamaño normal: se achican rueda, título y márgenes (el logo es fijo).
+// en pantallas bajas se achica la ruleta
 @media (max-height: 800px) {
   .titulo-pagina {
     margin-bottom: 6px;

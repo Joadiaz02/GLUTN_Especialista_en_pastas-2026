@@ -1,11 +1,12 @@
 .cocina-content {
   --background: var(--ion-background-color);
-  --padding-top: min(12px, 1.5vh);
+  --padding-top: min(16px, 2vh);
   --padding-start: 16px;
   --padding-end: 16px;
-  --padding-bottom: max(10px, env(safe-area-inset-bottom));
+  --padding-bottom: calc(min(16px, 2vh) + env(safe-area-inset-bottom));
 }
 
+// logo y título arriba, el carrusel ocupa el resto
 .cocina-wrapper {
   width: 100%;
   height: 100%;
@@ -26,11 +27,12 @@
   color: var(--ion-text-color);
 }
 
+// pestañas por recibir y en preparación
 .vistas {
   flex-shrink: 0;
   display: flex;
   gap: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   padding: 4px;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.18);
@@ -39,18 +41,18 @@
 .vistas__boton {
   flex: 1;
   min-width: 0;
-  min-height: 42px;
+  min-height: 44px;
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--ion-text-color);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 8px;
   transition: background 0.2s ease;
 }
 
@@ -59,28 +61,29 @@
 }
 
 .vistas__cantidad {
-  min-width: 23px;
-  height: 23px;
+  min-width: 24px;
+  height: 24px;
   padding: 0 6px;
   border-radius: 999px;
   background: #ffffff;
   color: #2f3d24;
-  font-size: 12px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
 }
 
+// carrusel de pedidos
 .carrusel {
   --ancho-tarjeta: min(360px, calc(100vw - 72px));
-
   flex: 1;
   min-height: 0;
   display: flex;
   gap: 16px;
   margin: 0 -16px;
-  padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 10px;
+  // padding para que la tarjeta quede centrada
+  padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 12px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -116,21 +119,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 16px;
   padding-bottom: 2px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--ion-text-color);
 }
 
 .contador__flecha {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 50%;
   background: var(--ion-color-primary);
   color: #ffffff;
-  font-size: 27px;
+  font-size: 28px;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -141,13 +144,14 @@
   opacity: 0.4;
 }
 
+// tarjeta del pedido
 .pedido {
   height: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 15px;
+  gap: 12px;
+  padding: 16px;
   border-radius: 24px;
   background: var(--ion-color-light, #f4ebdd);
   color: #2f3d24;
@@ -167,12 +171,12 @@
 
   h2 {
     margin: 0;
-    font-size: 25px;
+    font-size: 26px;
     font-weight: 800;
   }
 
   span {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
   }
 }
@@ -192,21 +196,21 @@
 }
 
 .pedido__hora {
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 700;
 }
 
 .pedido__fecha {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .pedido__estado {
   flex-shrink: 0;
-  padding: 6px 11px;
+  padding: 6px 12px;
   border-radius: 999px;
   background: #2f3d24;
   color: #ffffff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -214,6 +218,7 @@
   background: var(--ion-color-primary);
 }
 
+// los ítems se desplazan y los botones quedan a la vista
 .pedido__items {
   flex: 1;
   min-height: 0;
@@ -223,20 +228,20 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
 }
 
 .pedido__item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 18px;
+  gap: 12px;
+  font-size: 19px;
 }
 
 .pedido__cantidad {
   flex-shrink: 0;
-  min-width: 42px;
-  height: 42px;
+  min-width: 44px;
+  height: 44px;
   padding: 0 8px;
   border-radius: 12px;
   background: #2f3d24;
@@ -257,14 +262,14 @@
 .pedido__acciones {
   flex-shrink: 0;
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .pedido__boton {
   flex: 1;
   min-width: 0;
   margin: 0;
-  min-height: 50px;
+  min-height: 52px;
   font-weight: 700;
   --border-radius: 16px;
 }

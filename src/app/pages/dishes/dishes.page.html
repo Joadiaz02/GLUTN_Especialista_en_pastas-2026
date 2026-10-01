@@ -28,8 +28,7 @@
       (ionInput)="onBuscar($event.detail.value ?? '')"
     ></ion-searchbar>
 
-    <!-- El spinner va solo en la carga inicial: al recargar después de una
-         acción, el carrusel se queda en el producto en el que estaba. -->
+    <!-- spinner solo en la carga inicial -->
     @if (isLoading() && dishes().length === 0) {
       <div class="dishes-vacio">
         <app-spinner-logo />
@@ -47,7 +46,7 @@
     }
   </div>
 
-  <!-- Botones del pie de cada tarjeta: destacar, editar y baja/reactivar -->
+  <!-- botones de destacar, editar y dar de baja -->
   <ng-template #accionesProducto let-item>
     <div class="acciones">
       @if (item.baja_logica) {

@@ -6,7 +6,7 @@ import { SupabaseService } from '../supabase.service';
 
 export type SectorPedido = 'cocina' | 'bar';
 
-// Cómo va cada parte del pedido en su sector.
+// estado de cada parte del pedido
 export type EstadoParte = 'por_recibir' | 'en_preparacion' | 'listo';
 
 export interface ItemPedido {
@@ -15,8 +15,7 @@ export interface ItemPedido {
   tipo: TipoCarta;
 }
 
-// La parte del pedido que prepara un sector (platos y postres en la
-// cocina, bebidas en el bar).
+// parte del pedido de un sector
 export interface ParteDelPedido {
   sector: SectorPedido;
   estado: EstadoParte;
@@ -37,13 +36,10 @@ const SECTOR_POR_TIPO: Record<TipoCarta, SectorPedido> = {
   bebida: 'bar',
 };
 
-// Orden en que se muestran los ítems dentro de la cocina.
+// orden de los ítems
 const ORDEN_TIPOS: TipoCarta[] = ['plato', 'postre', 'bebida'];
 
-// Punto 18: el mozo ve, en su listado de pedidos pendientes, cómo va cada
-// parte del pedido (cocina y bar), y cuándo está completo para llevarlo a
-// la mesa (solo cuando terminaron todos los sectores que intervienen, ver
-// supabase/sql/pedido_sectores.sql). Se actualiza en vivo.
+// pedidos pendientes del mozo con cada parte
 @Injectable({ providedIn: 'root' })
 export class PedidosListos {
   private _db = inject(SupabaseService);
@@ -56,7 +52,7 @@ export class PedidosListos {
   completos = computed(() => this.pedidos().filter((p) => p.completo));
   enPreparacion = computed(() => this.pedidos().filter((p) => !p.completo));
 
-  // Idempotente: si el canal ya existe, solo vuelve a cargar.
+  // si el canal ya existe solo recarga
   async iniciar(): Promise<void> {
     if (!this._canal) {
       this.suscribir();
@@ -136,8 +132,7 @@ export class PedidosListos {
         };
       });
 
-      // Los de una misma mesa quedan juntos; las mesas, por el pedido que
-      // está esperando hace más tiempo.
+      // agrupa por mesa, primero la que espera hace más
       const ordenMesas = [...new Set(lista.map((p) => p.numeroMesa))];
 
       this.pedidos.set(
@@ -150,7 +145,7 @@ export class PedidosListos {
     }
   }
 
-  // Solo aparecen los sectores que tienen algo para preparar.
+  // solo sectores con algo para preparar
   private armarPartes(
     items: ItemPedido[],
     estadoCocina: string | null,

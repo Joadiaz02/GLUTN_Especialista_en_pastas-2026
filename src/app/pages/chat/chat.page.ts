@@ -55,7 +55,7 @@ export class ChatPage implements OnInit, OnDestroy {
   );
 
   constructor() {
-    // Cada mensaje nuevo (propio o ajeno) deja la sala al final.
+    // baja al último mensaje cuando llega uno nuevo
     effect(() => {
       this.chat.mensajes();
       setTimeout(() => void this._contenido()?.scrollToBottom(200), 0);
@@ -66,7 +66,7 @@ export class ChatPage implements OnInit, OnDestroy {
     void this.iniciar();
   }
 
-  // Ionic mantiene las páginas en pila: al volver se recarga la sala.
+  // recarga la sala al volver a la pantalla
   ionViewWillEnter(): void {
     void this.iniciar();
   }
@@ -103,7 +103,7 @@ export class ChatPage implements OnInit, OnDestroy {
     return this.chat.avatarUrl(mensaje.foto);
   }
 
-  // Fallback cuando no hay foto: las iniciales del nombre, hasta 2 letras.
+  // iniciales del nombre cuando no hay foto
   iniciales(nombre: string): string {
     const letras = nombre
       .trim()
@@ -114,7 +114,7 @@ export class ChatPage implements OnInit, OnDestroy {
     return (letras[0] ?? '') + (letras[1] ?? '');
   }
 
-  // Solo el mozo responde, y solo consultas de clientes.
+  // solo el mozo responde consultas de clientes
   puedeResponder(mensaje: Mensaje): boolean {
     return this.chat.esMozo() && !this.esDeMozo(mensaje);
   }

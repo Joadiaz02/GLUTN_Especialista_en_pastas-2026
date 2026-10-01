@@ -7,8 +7,7 @@ import {
   enviarNotificacionFirebase,
 } from '../_shared/firebase.ts';
 
-// Punto 18: cuando cocina y bar terminaron su parte, avisa a todos los
-// mozos que el pedido está completo para llevarlo a la mesa.
+// avisa a los mozos cuando el pedido está completo
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -38,7 +37,7 @@ Deno.serve(async (req) => {
 
     const supabaseAdmin = crearClienteAdmin();
 
-    // Solo se avisa si el pedido de verdad quedó listo.
+    // solo avisa si el pedido está listo
     const { data: pedido, error: errorPedido } = await supabaseAdmin
       .from('pedido')
       .select('id_mesa, estado_pedido')

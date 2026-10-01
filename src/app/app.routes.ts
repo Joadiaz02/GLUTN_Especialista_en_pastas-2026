@@ -212,18 +212,12 @@ export const routes: Routes = [
       ).then((m) => m.OrdersDetallesComponent),
   },
   {
-    path: 'admin/bar',
-    canActivate: [authGuard, roleGuard],
-    data: {
-      roles: [EPerfilUsuario.Cantinero],
-      titulo: 'Bar',
-      tipos: ['bebida'],
-    },
-    loadComponent: () =>
-      import('./pages/sector-pedidos/sector-pedidos.page').then(
-        (m) => m.SectorPedidosPage
-      ),
-  },
+  path: 'admin/bar',
+  canActivate: [authGuard, roleGuard],
+  data: { roles: [EPerfilUsuario.Cantinero] },
+  loadComponent: () =>
+    import('./pages/bar/bar.page').then((m) => m.BarPage),
+},
   {
     path: 'juegos',
 
@@ -345,10 +339,22 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'sector-pedidos',
+    path: 'assigned-table',
     loadComponent: () =>
-      import('./pages/sector-pedidos/sector-pedidos.page').then(
-        (m) => m.SectorPedidosPage
+      import('./pages/assigned-table/assigned-table.page').then(
+        (m) => m.AssignedTablePage
+      ),
+  },
+  {
+    path: 'admin/employees',
+    loadComponent: () =>
+      import('./pages/employees/employees.page').then((m) => m.EmployeesPage),
+  },
+  {
+    path: 'admin/employees/create',
+    loadComponent: () =>
+      import('./pages/employees/create-employee/create-employee.page').then(
+        (m) => m.CreateEmployeePage
       ),
   },
 ];

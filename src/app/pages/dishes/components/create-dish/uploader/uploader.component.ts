@@ -10,7 +10,7 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
   imports: [IonIcon, SpinnerLogoComponent],
 })
 export class UploaderComponent {
-  // Foto ya existente (edición), se muestra hasta que se elija una nueva.
+  // foto actual del plato al editar
   initialPreview = input<string | null>(null);
 
   uploading = signal<boolean>(false);

@@ -4,10 +4,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 import { Auth } from '../auth/auth';
 import { SupabaseService } from '../supabase.service';
 
-// Mesa asignada al cliente logueado (punto 10: el metre la asigna desde
-// la lista de espera). Se lee de "lista_espera" (fila del cliente en
-// estado 'asignado') y se actualiza en vivo: cuando el metre asigna o
-// libera la mesa, el Home, el chat y el QR de mesa se enteran solos.
+// mesa asignada al cliente, en vivo
 @Injectable({ providedIn: 'root' })
 export class MesaCliente {
   private _db = inject(SupabaseService);
@@ -15,11 +12,10 @@ export class MesaCliente {
 
   private _canal?: RealtimeChannel;
 
-  // Número de mesa (el que ve la gente), no el id.
+  // número de mesa visible
   numero = signal<string | null>(null);
 
-  // Se compara por id y no por objeto: Supabase emite un usuario nuevo en
-  // cada refresco de token y eso no debe volver a consultar la mesa.
+  // compara por id para no repetir la consulta
   private _idCliente = computed<string | null>(() => {
     const usuario = this._auth.usuarioActual();
 
@@ -43,7 +39,7 @@ export class MesaCliente {
 
     const numero = await this.buscarNumero(idCliente);
 
-    // Si mientras tanto cambió el usuario, esta respuesta ya no sirve.
+    // descarta la respuesta si cambió el usuario
     if (this._idCliente() === idCliente) {
       this.numero.set(numero);
     }
@@ -83,7 +79,7 @@ export class MesaCliente {
       .from('lista_espera')
       .select('mesa_id')
       .eq('usuario_id', idCliente)
-      .eq('estado', 'asignado')
+      .eq('estado', 'en_mesa')
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();

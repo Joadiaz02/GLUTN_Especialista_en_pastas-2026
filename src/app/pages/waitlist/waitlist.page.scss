@@ -1,55 +1,228 @@
+ion-content {
+  --padding-top: 8px;
+  --padding-bottom: 20px;
+}
+
 .waitlist {
-  &__header {
-    margin-bottom: 40px;
-  }
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-  &__title {
-    margin-bottom: 8px;
-    font-size: 24px;
-    font-weight: 700;
-    color: #FFFFFF;
-  }
+.waitlist__header {
+  margin-bottom: 18px;
+}
 
-  &__subtitle {
-    margin: 0;
-    font-size: 16px;
-    color: #D5E0C9;
-  }
+.waitlist__title {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
 
-  &__list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+.waitlist__subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: #d5e0c9;
+}
+
+.waitlist-filters {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(5, 1fr);
+  gap: 6px;
+  width: 100%;
+  padding: 0 0 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+.waitlist-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.waitlist-filter {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 999px;
+  background: #8ca273;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.waitlist-filter:active {
+  transform: scale(0.96);
+}
+
+.waitlist-filter--active {
+  background: #e76f45;
+}
+
+.waitlist__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 24px;
+}
+
+.waitlist__empty {
+  flex: 1;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #d5e0c9;
 }
 
 .waitlist-card {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  align-items: stretch;
   width: 100%;
-  padding: 16px;
-  border: none;
-  border-radius: 16px;
-  background: #A8B68A;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #a8b68a;
+}
 
-  &__info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.waitlist-card__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+  font: inherit;
+}
+
+.waitlist-card__avatar {
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  object-fit: cover;
+  background: #657a4d;
+}
+
+.waitlist-card__avatar--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.waitlist-card__info {
+  min-width: 0;
+  flex: 1;
+}
+
+.waitlist-card__name,
+.waitlist-card__details {
+  margin: 0;
+}
+
+.waitlist-card__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.waitlist-card__details {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+}
+
+.waitlist-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.waitlist-card__tags span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(231, 111, 69, 0.95);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.waitlist-card__delete {
+  flex: 0 0 48px;
+  border: 0;
+  background: rgba(0, 0, 0, 0.12);
+  color: #fff;
+  font-size: 28px;
+  transition: background 0.2s ease;
+}
+
+.waitlist-card__delete:active {
+  background: rgba(0, 0, 0, 0.22);
+}
+
+@media (max-width: 380px) {
+  .waitlist__title {
+    font-size: 21px;
   }
 
-  &__avatar {
-    width: 48px;
-    height: 48px;
+  .waitlist-card__main {
+    padding: 11px;
+    gap: 9px;
+  }
+
+  .waitlist-card__avatar {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
     border-radius: 12px;
-    object-fit: cover
   }
 
-  &__name {
-    font-size: 16px;
-    font-weight: 600;
-    color: #FFFFFF;
+  .waitlist-card__name {
+    font-size: 14px;
+  }
+
+  .waitlist-card__details {
+    font-size: 12px;
+  }
+
+  .waitlist-card__delete {
+    flex-basis: 42px;
+    font-size: 25px;
+  }
+}
+
+@media (max-height: 720px) {
+  .waitlist__header {
+    margin-bottom: 10px;
+  }
+
+  .waitlist__title {
+    font-size: 21px;
+  }
+
+  .waitlist-card__main {
+    padding: 10px;
+  }
+
+  .waitlist-card__avatar {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
   }
 }

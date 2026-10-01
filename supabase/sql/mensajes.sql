@@ -1,8 +1,4 @@
--- Sala de conversación entre mozos y clientes (punto 11: consulta al mozo).
--- Se ejecuta una sola vez en Supabase > SQL Editor.
---
--- Es UNA sola sala: todos los mozos y todos los clientes leen los mismos
--- mensajes. Por eso no hay un id de conversación.
+-- sala de consultas entre mozos y clientes
 
 create table if not exists public.mensajes (
   id uuid primary key default gen_random_uuid(),
@@ -18,9 +14,7 @@ create table if not exists public.mensajes (
 create index if not exists mensajes_created_at_idx
   on public.mensajes (created_at desc);
 
--- El nombre, el perfil y el autor NO los manda la app: los completa la base
--- a partir de la sesión y de la tabla usuarios. Así nadie puede escribir
--- haciéndose pasar por otra persona ni por un mozo.
+-- la base completa autor, nombre y perfil
 create or replace function public.mensajes_completar()
 returns trigger
 language plpgsql
@@ -43,8 +37,7 @@ begin
     from public.usuarios u
    where u.id = new.id_autor;
 
-  -- Un usuario sin fila en usuarios solo puede ser un cliente anónimo,
-  -- nunca un mozo.
+  -- sin fila en usuarios es cliente anónimo
   new.perfil := coalesce(v_perfil, 'cliente_anonimo');
 
   new.nombre := coalesce(
@@ -58,7 +51,7 @@ begin
 
   new.texto := btrim(new.texto);
 
-  -- Los mozos no tienen mesa.
+  -- los mozos no tienen mesa
   if new.perfil = 'mozo' then
     new.numero_mesa := null;
   end if;
@@ -73,9 +66,7 @@ create trigger mensajes_completar_trg
   before insert on public.mensajes
   for each row execute function public.mensajes_completar();
 
--- Seguridad: cualquier usuario logueado lee la sala, y solo puede escribir
--- como sí mismo. No hay políticas de update ni de delete: los mensajes no
--- se editan ni se borran.
+-- todos leen, cada uno escribe como sí mismo
 alter table public.mensajes enable row level security;
 
 drop policy if exists mensajes_leer on public.mensajes;
@@ -92,5 +83,5 @@ create policy mensajes_escribir
   to authenticated
   with check (id_autor = (select auth.uid()));
 
--- Realtime: para que los mensajes nuevos lleguen en vivo.
+-- mensajes en vivo
 alter publication supabase_realtime add table public.mensajes;

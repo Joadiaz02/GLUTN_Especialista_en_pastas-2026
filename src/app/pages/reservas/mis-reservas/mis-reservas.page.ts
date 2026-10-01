@@ -17,9 +17,7 @@ interface Reserva {
   personas: number;
 }
 
-// Datos de ejemplo para mostrar la pantalla: el alta, la edición y la
-// baja reales de reservas todavía no están implementadas — las arma
-// otro integrante del equipo.
+// datos de ejemplo hasta que estén las reservas reales
 const RESERVAS_MOCK: Reserva[] = [
   { id: '1', fecha: '2026-09-20', hora: '21:00', personas: 4 },
   { id: '2', fecha: '2026-10-05', hora: '13:00', personas: 2 },

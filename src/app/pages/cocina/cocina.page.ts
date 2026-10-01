@@ -18,9 +18,7 @@ import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { addIcons } from 'ionicons';
 import { closeCircleOutline } from 'ionicons/icons';
 
-// Puntos 16 y 18: pedidos pendientes de la cocina, de a uno por tarjeta
-// y ordenados por mesa. Arriba se elige qué ver: los que faltan recibir o
-// los que el cocinero ya tomó y tiene que entregar.
+// pedidos de la cocina de a uno por tarjeta, por recibir o en preparación
 export type VistaCocina = 'por_recibir' | 'en_preparacion';
 
 export interface SlideCocina extends PedidoCocina {
@@ -47,7 +45,7 @@ export class CocinaPage implements OnDestroy {
 
   private _viewport = viewChild<ElementRef<HTMLElement>>('viewport');
 
-  // Pedido con una acción en curso (recibir, entregar, rechazar o devolver).
+  // pedido que se está procesando
   procesando = signal<string | null>(null);
 
   indiceActual = signal(0);
@@ -68,7 +66,7 @@ export class CocinaPage implements OnDestroy {
     () => this._todos().filter((p) => p.estadoCocina).length
   );
 
-  // Los de la vista elegida, numerados dentro de su mesa.
+  // pedidos de la pestaña elegida, numerados por mesa
   pedidos = computed<SlideCocina[]>(() => {
     const porRecibir = this.vista() === 'por_recibir';
     const lista = this._todos().filter((p) => !p.estadoCocina === porRecibir);
@@ -91,8 +89,7 @@ export class CocinaPage implements OnDestroy {
   constructor() {
     addIcons({ 'close-circle-outline': closeCircleOutline });
 
-    // Al entregar el último pedido de la lista, el contador no puede
-    // quedar apuntando a una tarjeta que ya no existe.
+    // ajusta el contador cuando se va el último pedido
     effect(() => {
       const ultimo = Math.max(0, this.pedidos().length - 1);
 
@@ -102,7 +99,7 @@ export class CocinaPage implements OnDestroy {
     });
   }
 
-  // Ionic mantiene las páginas en pila: al volver se recarga el listado.
+  // recarga el listado al volver a la pantalla
   ionViewWillEnter(): void {
     void this.iniciar();
   }
@@ -142,8 +139,7 @@ export class CocinaPage implements OnDestroy {
     });
   }
 
-  // La cocina no puede prepararlo (ej. falta un ingrediente): vuelve al
-  // cliente para que lo modifique.
+  // la cocina rechaza el pedido y vuelve al cliente
   async rechazar(pedido: SlideCocina): Promise<void> {
     const confirmado = await this._confirm.preguntar({
       titulo: '¿Rechazar el pedido?',
@@ -168,7 +164,7 @@ export class CocinaPage implements OnDestroy {
     });
   }
 
-  // Deshace "Recibir" por si se tocó por error.
+  // deshace recibir por si fue un error
   devolver(pedido: PedidoCocina): Promise<void> {
     return this.procesar(pedido, async () => {
       const devuelto = await this.cocina.devolver(pedido);
@@ -229,7 +225,7 @@ export class CocinaPage implements OnDestroy {
     });
   }
 
-  // La tarjeta activa es la que queda más cerca del centro.
+  // la tarjeta activa es la más cercana al centro
   alDesplazar(): void {
     const viewport = this._viewport()?.nativeElement;
 
