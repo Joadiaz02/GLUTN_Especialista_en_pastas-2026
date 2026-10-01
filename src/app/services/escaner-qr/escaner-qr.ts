@@ -36,13 +36,24 @@ export class EscanerQr {
       // sin códigos es que cerró el escáner
       if (barcodes.length === 0) return null;
 
+      console.log("escanear-qr.ts 39");
+      console.log(barcodes)
+      
       const codigo = this.interpretar(barcodes[0].rawValue ?? '');
-
+      
+      console.log("escanear-qr.ts 44");
+      console.log(codigo)
+      console.log("escanear-qr.ts 46");
+      console.log(!codigo)
+      
       if (!codigo) {
         await this.avisarError('Este código QR no pertenece a GLUTN.');
+
         return null;
       }
-
+      
+      console.log("escanear-qr.ts 52");
+      console.log(codigo)
       return codigo;
     } catch {
       await this.avisarError('Ocurrió un problema al escanear. Intentá nuevamente.');
@@ -53,6 +64,10 @@ export class EscanerQr {
   interpretar(texto: string): CodigoQr | null {
     let datos: unknown;
 
+    console.log("escanear-qr.ts 66");
+    console.log(texto)
+    console.log(JSON.parse(texto))
+    
     try {
       datos = JSON.parse(texto);
     } catch {
@@ -63,9 +78,14 @@ export class EscanerQr {
 
     const qr = datos as Record<string, unknown>;
 
+    console.log("escanear-qr.ts 79");
+    console.log(qr['tipo']);
+    
     switch (qr['tipo']) {
-      case 'ingreso':
-        return { tipo: 'ingreso' };
+      case 'ingreso-local':
+        console.log("escanear-qr.ts 85");
+        console.log('ingreso-local');
+        return { tipo: 'ingreso-local' };
 
       case 'mesa':
         return typeof qr['id'] === 'string' && qr['id'] !== ''

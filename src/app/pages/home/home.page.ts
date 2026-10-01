@@ -27,7 +27,7 @@ import {
 import { Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Auth } from '../../services/auth/auth';
-import { Carta, EscanerQr, MesaCliente, SupabaseService, Table, Vibracion } from '@app/services';
+import { Carta, EscanerQr, MesaCliente, SupabaseService, Table, Vibracion, Waitlist } from '@app/services';
 import { EPerfilUsuario } from '@app/enums';
 import { CodigoQr } from '@app/models/qr.model';
 import { CartaItem } from '@app/models/carta.model';
@@ -35,6 +35,7 @@ import { Pedido } from '@app/services/pedido/pedido';
 import { EstadoPedidoComponent } from '@app/components/ui/estado-pedido/estado-pedido.component';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
 
@@ -97,6 +98,7 @@ export class HomePage implements OnInit, OnDestroy {
   private vibracion = inject(Vibracion);
   private mesaCliente = inject(MesaCliente);
   private _canalPedido: RealtimeChannel | null = null;
+  private _waitlistService = inject(Waitlist);
 
   constructor() {
     addIcons({
@@ -348,8 +350,37 @@ export class HomePage implements OnInit, OnDestroy {
 
     this.escaneando.set(true);
     try {
-      const codigo = await this.escanerQr.escanear();
-      if (codigo) await this.procesarCodigo(codigo);
+      const { camera } = await BarcodeScanner.requestPermissions();
+
+      if (camera !== 'granted' && camera !== 'limited') {
+        await this.mostrarToast('Necesitamos permiso de cámara para escanear el código.');
+      
+        return;
+      }
+
+      const { barcodes } = await BarcodeScanner.scan();
+      
+      if (barcodes.length === 0) return;
+
+      console.log(barcodes)
+
+      if (barcodes[0].rawValue !== 'ingreso-local') {
+      
+        await this.mostrarToast('Ese código QR no corresponde al ingreso del local.');
+      
+        return;
+      }
+
+      // const codigo = await this.escanerQr.escanear();
+
+      // console.log("home.page.ts 354");
+      // console.log(codigo);
+      
+      // if (codigo) await this.procesarCodigo(codigo);
+      
+      await this.procesarCodigo({
+        tipo: 'ingreso-local'
+      });
     } finally {
       this.escaneando.set(false);
     }
@@ -361,9 +392,21 @@ export class HomePage implements OnInit, OnDestroy {
         await this.mostrarMesa(codigo.id);
         break;
 
-      // lista de espera, todavía no disponible
-      case 'ingreso':
-        await this.mostrarToast('La lista de espera todavía no está disponible.');
+      case 'ingreso-local':
+        // await this.mostrarToast('La lista de espera todavía no está disponible.');
+        try {
+          const currentUser = this.authService.usuarioActual();
+          
+          await this._waitlistService.add({
+            usuario_id: currentUser.id,
+            estado: "esperando"
+          });
+          
+          this.router.navigate(['/waiting-room']);
+        } catch {
+          await this.mostrarToast('No pudimos anotarte en la lista de espera. Probá de nuevo.');
+        }
+
         break;
 
       // propina y pago, todavía no disponibles

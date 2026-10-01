@@ -94,6 +94,8 @@ export class GuestPage {
     
     if (barcodes.length === 0) return;
 
+    console.log(barcodes)
+
     if (barcodes[0].rawValue !== 'ingreso-local') {
     
       await this._showError('Ese código QR no corresponde al ingreso del local.');

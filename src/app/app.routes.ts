@@ -337,5 +337,24 @@ export const routes: Routes = [
       import('./pages/waiting-room/waiting-room.page').then(
         (m) => m.WaitingRoomPage
       ),
-  }
+  },
+  {
+    path: 'assigned-table',
+    loadComponent: () =>
+      import('./pages/assigned-table/assigned-table.page').then(
+        (m) => m.AssignedTablePage
+      ),
+  },
+  {
+    path: 'admin/employees',
+    loadComponent: () =>
+      import('./pages/employees/employees.page').then((m) => m.EmployeesPage),
+  },
+  {
+    path: 'admin/employees/create',
+    loadComponent: () =>
+      import('./pages/employees/create-employee/create-employee.page').then(
+        (m) => m.CreateEmployeePage
+      ),
+  },
 ];

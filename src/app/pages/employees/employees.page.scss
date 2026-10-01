@@ -1,0 +1,172 @@
+.users-grid {
+  flex: 1;
+
+  min-height: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  grid-template-rows:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.user-card {
+  min-width: 0;
+  min-height: 0;
+
+  border: 0;
+  border-radius: 20px;
+
+  padding: 10px 7px;
+
+  background: #a8b68a;
+  color: #2f3d24;
+
+  box-shadow:
+    0 9px 18px
+    rgba(35, 48, 24, 0.18);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  font: inherit;
+
+  cursor: pointer;
+}
+
+.user-card:nth-child(7) {
+  grid-column: 1 / -1;
+
+  width: calc(50% - 5px);
+
+  justify-self: center;
+}
+
+.user-card:active {
+  // transform: scale(0.96);
+}
+
+.user-card.loading {
+  pointer-events: none;
+
+  opacity: 0.72;
+}
+
+.photo-wrapper {
+  position: relative;
+
+  width:
+    clamp(
+      58px,
+      18vw,
+      82px
+    );
+
+  aspect-ratio: 1;
+
+  flex: 0 0 auto;
+}
+
+.photo-wrapper img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  border: 3px solid #f2e8d0;
+
+  background: #657a4d;
+}
+
+.card-spinner {
+  position: absolute;
+
+  inset: 0;
+
+  margin: auto;
+
+  width: 25px;
+  height: 25px;
+
+  border:
+    3px solid
+    rgba(242, 232, 208, 0.45);
+
+  border-top-color: #e76f45;
+
+  border-radius: 50%;
+
+  animation:
+    spin 700ms linear infinite;
+}
+
+.user-info {
+  min-width: 0;
+
+  width: 100%;
+
+  text-align: center;
+}
+
+.user-info strong,
+.user-info span {
+  display: block;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.user-info strong {
+  font-size: 13px;
+
+  line-height: 1.15;
+}
+
+.user-info span {
+  margin-top: 3px;
+
+  color: #e76f45;
+
+  font-size: 11px;
+
+  font-weight: 800;
+}
+
+.button__options {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.button__option {
+  margin-top: 16px;
+  background-color: #94A07A;
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+}
