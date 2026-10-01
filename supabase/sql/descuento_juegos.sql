@@ -36,7 +36,7 @@ as $$
   select le.id
     from public.lista_espera le
    where le.usuario_id = auth.uid()
-     and le.estado = 'asignado'
+     and le.estado = 'en_mesa'
    order by le.created_at desc
    limit 1;
 $$;

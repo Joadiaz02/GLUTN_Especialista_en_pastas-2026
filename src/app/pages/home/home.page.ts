@@ -27,7 +27,7 @@ import {
 import { Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Auth } from '../../services/auth/auth';
-import { Carta, EscanerQr, MesaCliente, SupabaseService, Table, Vibracion, Waitlist } from '@app/services';
+import { Carta, MesaCliente, SupabaseService, Vibracion, Waitlist } from '@app/services';
 import { EPerfilUsuario } from '@app/enums';
 import { CodigoQr } from '@app/models/qr.model';
 import { CartaItem } from '@app/models/carta.model';
@@ -38,34 +38,6 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
-
-const TIPOS_MESA: Record<string, string> = {
-  estandar: 'Estándar',
-  vip: 'VIP',
-  movilidad_reducida: 'Movilidad reducida',
-  vip_movilidad_reducida: 'VIP con movilidad reducida',
-};
-
-const DISPONIBILIDADES_MESA: Record<string, string> = {
-  vacia: 'Vacía',
-  ocupada: 'Ocupada',
-  reservada: 'Reservada',
-};
-
-// personal que puede ver los datos de una mesa
-const PERFILES_ESCANER_PERSONAL: string[] = [
-  EPerfilUsuario.Dueno,
-  EPerfilUsuario.Supervisor,
-  EPerfilUsuario.Metre,
-  EPerfilUsuario.Mozo,
-];
-
-interface MesaEscaneada {
-  numero: number;
-  capacidad: number;
-  tipo: string;
-  disponibilidad: string | null;
-}
 
 @Component({
   selector: 'app-home',
@@ -92,8 +64,6 @@ export class HomePage implements OnInit, OnDestroy {
   protected pedido = inject(Pedido);
   private _fotoIntervalId: ReturnType<typeof setInterval> | null = null;
   private modalController = inject(ModalController);
-  private escanerQr = inject(EscanerQr);
-  private tableService = inject(Table);
   private supabaseService = inject(SupabaseService);
   private vibracion = inject(Vibracion);
   private mesaCliente = inject(MesaCliente);
@@ -113,7 +83,6 @@ export class HomePage implements OnInit, OnDestroy {
       untracked(() => void this.escucharPedido(idPedido));
     });
   }
-
 
   async ngOnInit(): Promise<void> {
     this.isLoadingDestacados.set(true);
@@ -194,7 +163,7 @@ export class HomePage implements OnInit, OnDestroy {
         cliente ||
         perfil === EPerfilUsuario.Dueno ||
         perfil === EPerfilUsuario.Supervisor,
-      escaner: cliente || PERFILES_ESCANER_PERSONAL.includes(perfil ?? ''),
+      escaner: cliente,
       consultas: (cliente && enMesa) || perfil === EPerfilUsuario.Mozo,
       estadoPedido: cliente && this.pedido.idUltimoPedido() !== null,
     };
@@ -343,7 +312,6 @@ export class HomePage implements OnInit, OnDestroy {
   // escáner qr
 
   escaneando = signal(false);
-  mesaEscaneada = signal<MesaEscaneada | null>(null);
 
   async escanear(): Promise<void> {
     if (this.escaneando()) return;
@@ -388,10 +356,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   private async procesarCodigo(codigo: CodigoQr): Promise<void> {
     switch (codigo.tipo) {
-      case 'mesa':
-        await this.mostrarMesa(codigo.id);
-        break;
-
       case 'ingreso-local':
         // await this.mostrarToast('La lista de espera todavía no está disponible.');
         try {
@@ -408,70 +372,7 @@ export class HomePage implements OnInit, OnDestroy {
         }
 
         break;
-
-      // propina y pago, todavía no disponibles
-      case 'propina':
-        await this.mostrarToast(
-          `Propina del ${codigo.porcentaje}% leída. El pago de la cuenta todavía no está disponible.`
-        );
-        break;
     }
-  }
-
-  private async mostrarMesa(idMesa: string): Promise<void> {
-    const mesa = await this.tableService.getTableById(idMesa);
-
-    if (!mesa) {
-      void this.vibracion.error();
-      await this.mostrarToast('No encontramos esa mesa.', 'danger');
-      return;
-    }
-
-    // el cliente va a la carta y el personal ve los datos de la mesa
-    if (this.esCliente()) {
-      await this.abrirCartaDeMesa(String(mesa.numero));
-      return;
-    }
-
-    this.mesaEscaneada.set({
-      numero: mesa.numero,
-      capacidad: mesa.capacidad,
-      tipo: TIPOS_MESA[mesa.tipo] ?? mesa.tipo,
-      disponibilidad: DISPONIBILIDADES_MESA[mesa.disponibilidad ?? mesa.estado] ?? null,
-    });
-  }
-
-  private async abrirCartaDeMesa(numeroEscaneado: string): Promise<void> {
-    // vuelve a buscar la mesa por si la asignaron recién
-    if (!this.mesaCliente.numero()) {
-      await this.mesaCliente.actualizar();
-    }
-
-    const miMesa = this.mesaCliente.numero();
-
-    if (!miMesa) {
-      void this.vibracion.error();
-      await this.mostrarToast(
-        'Todavía no tenés una mesa asignada. Pedile una al metre.',
-        'danger'
-      );
-      return;
-    }
-
-    if (miMesa !== numeroEscaneado) {
-      void this.vibracion.error();
-      await this.mostrarToast(
-        `Este código es de la mesa ${numeroEscaneado}. Tu mesa es la ${miMesa}.`,
-        'danger'
-      );
-      return;
-    }
-
-    await this.router.navigate(['/carta']);
-  }
-
-  cerrarMesa(): void {
-    this.mesaEscaneada.set(null);
   }
 
   private async mostrarToast(mensaje: string, color = 'primary'): Promise<void> {

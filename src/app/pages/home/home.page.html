@@ -133,51 +133,6 @@
     </ng-template>
   </ion-modal>
 
-  <!-- mesa escaneada -->
-  <ion-modal
-    class="home-modal"
-    [isOpen]="mesaEscaneada() !== null"
-    (didDismiss)="cerrarMesa()"
-  >
-    <ng-template>
-      @if (mesaEscaneada(); as mesa) {
-        <div class="home-modal__contenido mesa-info">
-          <h2 class="mesa-info__titulo">Mesa {{ mesa.numero }}</h2>
-
-          <dl class="mesa-info__datos">
-            <dt>Tipo</dt>
-            <dd>{{ mesa.tipo }}</dd>
-
-            @if (esPersonal()) {
-              <dt>Lugares</dt>
-              <dd>{{ mesa.capacidad }}</dd>
-            }
-
-            @if (mesa.disponibilidad) {
-              <dt>Disponibilidad</dt>
-              <dd>{{ mesa.disponibilidad }}</dd>
-            }
-          </dl>
-
-          @if (!esPersonal()) {
-            <p class="mesa-info__nota">
-              Para usar esta mesa, el metre te la tiene que asignar.
-            </p>
-          }
-
-          <ion-button
-            class="home-modal__cerrar"
-            expand="block"
-            shape="round"
-            (click)="cerrarMesa()"
-          >
-            Cerrar
-          </ion-button>
-        </div>
-      }
-    </ng-template>
-  </ion-modal>
-
   <!-- quiénes somos -->
   <ion-modal
     class="home-modal"

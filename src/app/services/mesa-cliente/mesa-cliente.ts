@@ -79,7 +79,7 @@ export class MesaCliente {
       .from('lista_espera')
       .select('mesa_id')
       .eq('usuario_id', idCliente)
-      .eq('estado', 'asignado')
+      .eq('estado', 'en_mesa')
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle();

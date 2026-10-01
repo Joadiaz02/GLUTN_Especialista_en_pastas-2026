@@ -294,39 +294,3 @@ ion-modal.home-modal {
   line-height: 1.6;
   margin: 0;
 }
-
-// mesa escaneada
-
-.mesa-info__titulo {
-  margin: 0 0 16px;
-  font-size: 24px;
-  font-weight: 700;
-  text-align: center;
-  color: var(--ion-text-color);
-}
-
-.mesa-info__datos {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px 16px;
-  margin: 0;
-  font-size: 16px;
-
-  dt {
-    font-weight: 700;
-  }
-
-  dd {
-    margin: 0;
-    text-align: right;
-  }
-}
-
-.mesa-info__nota {
-  margin: 16px 0 0;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.18);
-  font-size: 14px;
-  line-height: 1.45;
-}
