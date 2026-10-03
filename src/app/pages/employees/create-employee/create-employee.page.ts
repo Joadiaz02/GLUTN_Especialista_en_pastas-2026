@@ -196,37 +196,21 @@ export class CreateEmployeePage {
       this.isLoading.set(true);
 
       this.form.markAsPending();
-
-      console.log("CREAR EMPLEADOOOOO")
-      console.log(data)
       
       const user = await this.authService.registerEmployee(
         data,
         data.personal.role
       ) as any;
 
-      console.log("USER EMPLEADOOOOO CREADOOO")
-      console.log(user)
-
       await this._userRepository.update(user.user?.id, {
         cuil: data.personal.cuil,
       })
-
-      // await this._userRepository.add({
-      //   id: user.user?.id,
-      //   nombre: data.personal.nombre,
-      //   apellido: data.personal.apellido,
-      //   documento: data.personal.dni,
-      //   perfil: data.personal.role,
-      //   avatar: user.user?.user_metadata['avatar'],
-      // });
 
       await this._navCtrl.navigateRoot('/admin/employees', {
         animated: true,
         animationDirection: 'back',
         replaceUrl: true,
       });
-      // await this._router.navigate(['/admin/employees']);
     } catch (error) {
       await this._vibracion.error();
       console.error('Error durante el registro:', error);

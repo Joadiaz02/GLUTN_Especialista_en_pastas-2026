@@ -91,6 +91,12 @@ export class PersonalStepPage {
         formats: [BarcodeFormat.Pdf417],
       });
 
+      console.log("personal-step.page.ts 90")
+      console.log(barcodes)
+      console.log(barcodes[0])
+      console.log(barcodes[0]?.rawValue)
+      console.log("personal-step.page.ts 90")
+
       if (barcodes.length === 0) {
         const toast = await this._toastController.create({
           message: 'No se detectó ningún código. Probá de nuevo.',
