@@ -22,6 +22,7 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
 - 🔗 [Tareas complementarias y extras](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#tareas-complementarias-y-extras)
 - 🔗 [Tecnologías y funcionalidades nativas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#tecnologías-y-funcionalidades-nativas)
 - 🔗 [Cronología de avances](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#cronología-de-avances)
+- 🔗 [Códigos QR](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#códigos-qr-del-restaurante)
 - 🔗 [Capturas de la aplicación](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#capturas-de-la-aplicación)
   - 🔗 [Logo del proyecto](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#logo-del-proyecto)
   - 🔗 [Splash Screen](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#splash-screen)
@@ -547,6 +548,72 @@ Además, se utilizan funcionalidades nativas de los dispositivos móviles, como:
 | Confirmación del pedido | Lucas Ponte | 15/09/2026 | 02/10/2026 | Realizado |
 
 ---
+---
+
+## Códigos QR del restaurante
+
+La aplicación utiliza códigos QR para permitir el ingreso de los clientes y asociarlos a una mesa determinada.
+
+### QR de ingreso
+
+QR utilizado para el ingreso general de los clientes al restaurante.
+
+<p align="center">
+  <img src="images/qr-ingreso.png" alt="QR de ingreso" width="250">
+</p>
+
+---
+
+### QR Mesa 1
+
+QR correspondiente a la Mesa 1.
+
+<p align="center">
+  <img src="images/qr-mesa-1.png" alt="QR Mesa 1" width="250">
+</p>
+
+---
+
+### QR Mesa 2
+
+QR correspondiente a la Mesa 2.
+
+<p align="center">
+  <img src="images/qr-mesa-2.png" alt="QR Mesa 2" width="250">
+</p>
+
+---
+
+### QR Mesa 3
+
+QR correspondiente a la Mesa 3.
+
+<p align="center">
+  <img src="images/qr-mesa-3.png" alt="QR Mesa 3" width="250">
+</p>
+
+---
+
+### QR Mesa 4
+
+QR correspondiente a la Mesa 4.
+
+<p align="center">
+  <img src="images/qr-mesa-4.png" alt="QR Mesa 4" width="250">
+</p>
+
+---
+
+### QR Mesa 5
+
+QR correspondiente a la Mesa 5.
+
+<p align="center">
+  <img src="images/qr-mesa-5.png" alt="QR Mesa 5" width="250">
+</p>
+
+---
+
 
 # 📸 Capturas de la aplicación
 
