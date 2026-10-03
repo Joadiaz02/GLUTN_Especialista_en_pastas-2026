@@ -341,19 +341,25 @@ export class Waitlist {
     }
   }
 
-  async remove(
-    entryId: string
-  ): Promise<void> {
-    const { error } =
-      await this._db.client
-        .from(this._tableName)
-        .delete()
-        .eq('id', entryId);
+async remove(
+  entryId: string
+): Promise<void> {
+  const { data, error } =
+    await this._db.client
+      .from(this._tableName)
+      .delete()
+      .eq('id', entryId)
+      .select('id');
 
-    if (error) {
-      throw error;
-    }
+  if (error) {
+    throw error;
   }
+  if (!data || data.length === 0) {
+    throw new Error(
+      'No se pudo eliminar el cliente de la lista de espera.'
+    );
+  }
+}
 
   async getPosition(
     usuarioId: string

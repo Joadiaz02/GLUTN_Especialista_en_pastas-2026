@@ -100,6 +100,12 @@ export class WaitlistPage {
         entry.id
       );
 
+      this.users.update((users) =>
+        users.filter(
+          (user) => user.id !== entry.id
+        )
+      );
+
       const toast =
         await this._toastController.create({
           message:
