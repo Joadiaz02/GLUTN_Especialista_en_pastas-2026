@@ -36,6 +36,7 @@ import { EstadoPedidoComponent } from '@app/components/ui/estado-pedido/estado-p
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import { parseTableQr } from '@app/utils';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
 
@@ -330,25 +331,21 @@ export class HomePage implements OnInit, OnDestroy {
       
       if (barcodes.length === 0) return;
 
-      console.log(barcodes)
+      const valor = barcodes[0].rawValue ?? '';
 
-      if (barcodes[0].rawValue !== 'ingreso-local') {
-      
-        await this.mostrarToast('Ese código QR no corresponde al ingreso del local.');
-      
+      if (valor === 'ingreso-local') {
+        await this.procesarCodigo({ tipo: 'ingreso-local' });
         return;
       }
 
-      // const codigo = await this.escanerQr.escanear();
+      // el cliente con mesa asignada también puede escanearla desde acá
+      if (parseTableQr(valor)) {
+        await this.vincularMesa(valor);
+        return;
+      }
 
-      // console.log("home.page.ts 354");
-      // console.log(codigo);
-      
-      // if (codigo) await this.procesarCodigo(codigo);
-      
-      await this.procesarCodigo({
-        tipo: 'ingreso-local'
-      });
+      await this.vibracion.error();
+      await this.mostrarToast('Ese código QR no corresponde al ingreso del local ni a una mesa.');
     } finally {
       this.escaneando.set(false);
     }
@@ -360,18 +357,57 @@ export class HomePage implements OnInit, OnDestroy {
         // await this.mostrarToast('La lista de espera todavía no está disponible.');
         try {
           const currentUser = this.authService.usuarioActual();
-          
-          await this._waitlistService.add({
-            usuario_id: currentUser.id,
-            estado: "esperando"
-          });
-          
+
+          // si ya está anotado no lo agrega de nuevo
+          const entrada = await this._waitlistService.getMyEntry(currentUser.id);
+
+          if (!entrada) {
+            const nueva = await this._waitlistService.add({
+              usuario_id: currentUser.id,
+              estado: 'esperando',
+            });
+
+            // avisa al metre que hay un cliente nuevo
+            try {
+              await this._waitlistService.notifyNewWaitlist(nueva.id);
+            } catch (error) {
+              console.warn('No se pudo notificar al metre:', error);
+            }
+          }
+
           this.router.navigate(['/waiting-room']);
         } catch {
+          await this.vibracion.error();
           await this.mostrarToast('No pudimos anotarte en la lista de espera. Probá de nuevo.');
         }
 
         break;
+    }
+  }
+
+  // vincula al cliente con la mesa escaneada
+  private async vincularMesa(valor: string): Promise<void> {
+    try {
+      const usuario = this.authService.usuarioActual();
+      const resultado = await this._waitlistService.linkTable(usuario.id, valor);
+
+      if (resultado.ok) {
+        await this.mesaCliente.actualizar();
+        await this.router.navigateByUrl('/carta');
+        return;
+      }
+
+      await this.vibracion.error();
+
+      if (resultado.reason === 'wrong_table') {
+        await this.mostrarToast(`Esta no es tu mesa. Tenés asignada la mesa ${resultado.correctTableNumber}.`);
+      } else {
+        await this.mostrarToast('Todavía no tenés una mesa asignada. Pedile una al metre.');
+      }
+    } catch (error) {
+      console.error('Error vinculando mesa:', error);
+      await this.vibracion.error();
+      await this.mostrarToast('No pudimos vincularte con la mesa. Intentá nuevamente.');
     }
   }
 
