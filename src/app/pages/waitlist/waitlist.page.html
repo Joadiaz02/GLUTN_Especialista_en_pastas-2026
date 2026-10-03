@@ -1,5 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
+
     <ion-buttons slot="start">
       <app-confirm-volver
         (confirmadoVolver)="volver()"
@@ -9,12 +10,20 @@
     <ion-title>
       Lista de espera
     </ion-title>
+
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content
+  [fullscreen]="true"
+  class="waitlist-content"
+>
 
   <div class="waitlist">
+
+    <!-- =========================
+         ENCABEZADO
+    ========================== -->
 
     <div class="waitlist__header">
 
@@ -23,6 +32,7 @@
       </h1>
 
       <p class="waitlist__subtitle">
+
         {{ users().length }}
 
         {{
@@ -30,9 +40,14 @@
             ? 'persona esperando una mesa.'
             : 'personas esperando una mesa.'
         }}
+
       </p>
 
     </div>
+
+    <!-- =========================
+         FILTROS
+    ========================== -->
 
     <div
       class="waitlist-filters"
@@ -52,6 +67,7 @@
           "
           (click)="seleccionarFiltro(filtro)"
         >
+
           {{
             filtro === 'todos'
               ? 'Todos'
@@ -59,11 +75,16 @@
                 ? '5+'
                 : filtro
           }}
+
         </button>
 
       }
 
     </div>
+
+    <!-- =========================
+         LOADING
+    ========================== -->
 
     @if (cargando()) {
 
@@ -74,6 +95,10 @@
       </div>
 
     }
+
+    <!-- =========================
+         SIN RESULTADOS
+    ========================== -->
 
     @else if (
       usuariosFiltrados().length === 0
@@ -89,6 +114,10 @@
       </div>
 
     }
+
+    <!-- =========================
+         LISTA
+    ========================== -->
 
     @else {
 
@@ -109,6 +138,8 @@
               [routerLink]="entry.id"
             >
 
+              <!-- Avatar -->
+
               @if (entry.usuarios?.avatar) {
 
                 <img
@@ -122,16 +153,23 @@
               @else {
 
                 <div
-                  class="waitlist-card__avatar waitlist-card__avatar--empty"
+                  class="
+                    waitlist-card__avatar
+                    waitlist-card__avatar--empty
+                  "
                 >
+
                   {{
                     entry.usuarios?.nombre
                       ?.charAt(0)
                       ?.toUpperCase() || '?'
                   }}
+
                 </div>
 
               }
+
+              <!-- Información -->
 
               <div
                 class="waitlist-card__info"
@@ -140,20 +178,21 @@
                 <p
                   class="waitlist-card__name"
                 >
+
                   {{
-                    entry.usuarios?.nombre
-                      || ''
+                    entry.usuarios?.nombre || ''
                   }}
 
                   {{
-                    entry.usuarios?.apellido
-                      || ''
+                    entry.usuarios?.apellido || ''
                   }}
+
                 </p>
 
                 <p
                   class="waitlist-card__details"
                 >
+
                   {{ entry.comensales ?? 1 }}
 
                   {{
@@ -168,6 +207,7 @@
                     entry.created_at
                       | date: 'HH:mm'
                   }}
+
                 </p>
 
                 @if (
@@ -207,6 +247,8 @@
               </div>
 
             </button>
+
+            <!-- Eliminar -->
 
             <button
               type="button"

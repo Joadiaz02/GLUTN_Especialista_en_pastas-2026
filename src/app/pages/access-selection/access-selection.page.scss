@@ -17,21 +17,30 @@ ion-toolbar {
 }
 
 .access-content::part(scroll) {
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .access-page {
   width: 100%;
-  height: 100%;
-  min-height: 0;
+  min-height: 100%;
   max-width: 520px;
   margin: 0 auto;
+
   box-sizing: border-box;
-  padding: 16px 20px max(16px, env(safe-area-inset-bottom));
+
+  padding:
+    8px
+    20px
+    max(16px, env(safe-area-inset-bottom));
+
   display: flex;
   flex-direction: column;
+
   justify-content: center;
+
   gap: 14px;
+
   color: #f2e8d0;
 }
 
@@ -244,5 +253,12 @@ h1 {
 
   .option-copy small {
     font-size: 10px;
+  }
+}
+
+@media (min-height: 750px) {
+  .access-page {
+    justify-content: flex-start;
+    padding-top: 12px;
   }
 }
