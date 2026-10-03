@@ -17,6 +17,8 @@ import {
   IonFooter,
   ToastController,
   IonModal,
+  IonRouterOutlet,
+  NavController,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { PersonalStepPage } from './steps/personal-step/personal-step.page';
@@ -30,6 +32,7 @@ import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confir
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { Vibracion } from '@app/services';
 import { employeeRoleValidator } from '@app/validators';
+import { cuilValidator } from '@app/validators/cuil-validator';
 
 const NAME_PATTERN =
   /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/;
@@ -65,6 +68,8 @@ export class CreateEmployeePage {
   private _userRepository = inject(User);
   private _storageService = inject(Storage);
   private _router = inject(Router);
+  private _routerOutlet = inject(IonRouterOutlet, { optional: true });
+  private _navCtrl = inject(NavController);
 
   form = new FormGroup({
     personal: new FormGroup({
@@ -84,7 +89,7 @@ export class CreateEmployeePage {
 
       role: new FormControl<any | null>(null, Validators.required),
       
-      cuil: new FormControl('', Validators.required),
+      cuil: new FormControl('', [Validators.required]),
 
       dni: new FormControl('', [
         Validators.required,
@@ -172,6 +177,14 @@ export class CreateEmployeePage {
     }
   }
 
+  async onBack() {
+    if (this._routerOutlet?.canGoBack()) {
+      this._navCtrl.back();
+    } else {
+      await this._navCtrl.navigateBack("/");
+    }
+  }
+
   async register(): Promise<void> {
     if (this.isLoading()) {
       return;
@@ -184,24 +197,36 @@ export class CreateEmployeePage {
 
       this.form.markAsPending();
 
+      console.log("CREAR EMPLEADOOOOO")
       console.log(data)
-
+      
       const user = await this.authService.registerEmployee(
         data,
         data.personal.role
-      );
+      ) as any;
 
-      await this._userRepository.add({
-        id: user.user?.id,
-        nombre: data.personal.nombre,
-        apellido: data.personal.apellido,
+      console.log("USER EMPLEADOOOOO CREADOOO")
+      console.log(user)
+
+      await this._userRepository.update(user.user?.id, {
         cuil: data.personal.cuil,
-        documento: data.personal.dni,
-        perfil: data.personal.role,
-        avatar: user.user?.user_metadata['avatar'],
-      });
+      })
 
-      await this._router.navigate(['/admin/employees']);
+      // await this._userRepository.add({
+      //   id: user.user?.id,
+      //   nombre: data.personal.nombre,
+      //   apellido: data.personal.apellido,
+      //   documento: data.personal.dni,
+      //   perfil: data.personal.role,
+      //   avatar: user.user?.user_metadata['avatar'],
+      // });
+
+      await this._navCtrl.navigateRoot('/admin/employees', {
+        animated: true,
+        animationDirection: 'back',
+        replaceUrl: true,
+      });
+      // await this._router.navigate(['/admin/employees']);
     } catch (error) {
       await this._vibracion.error();
       console.error('Error durante el registro:', error);

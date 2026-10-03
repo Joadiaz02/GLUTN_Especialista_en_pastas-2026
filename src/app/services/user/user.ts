@@ -95,4 +95,17 @@ export class User {
 
     return data;
   }
+
+  async update(id: string, changes: any): Promise<any> {
+    const { data, error } = await this._db.client
+      .from(this._tableName)
+      .update(changes)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw new Error(`Failed to update user: ${error.message}`);
+
+    return data;
+  }
 }

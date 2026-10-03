@@ -43,8 +43,9 @@ export class ConfirmVolverComponent {
         esContenidoModal: true,
       },
 
-      breakpoints: [0, 0.4],
-      initialBreakpoint: 0.4,
+      cssClass: 'confirm-modal',
+      // breakpoints: [0, 0.4],
+      // initialBreakpoint: 0.4,
     });
 
     await modal.present();

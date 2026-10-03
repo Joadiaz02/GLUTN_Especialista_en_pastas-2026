@@ -43,6 +43,7 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
 import { GtnUploader } from '@app/components';
 
 import { LoadingOverlayComponent } from '@app/components/ui/loading-overlay/loading-overlay.component';
+import { HeaderComponent } from '@app/components/ui';
 
 
 @Component({
@@ -67,6 +68,7 @@ import { LoadingOverlayComponent } from '@app/components/ui/loading-overlay/load
     ConfirmVolverComponent,
     VibrarErrores,
     LoadingOverlayComponent,
+    HeaderComponent
   ],
 })
 export class CreateDrinkPage {

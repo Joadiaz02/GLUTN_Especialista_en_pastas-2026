@@ -12,12 +12,13 @@ import {
 } from '@capacitor-mlkit/barcode-scanning';
 import { DniFormat } from '@app/directives/dni-format/dni-format';
 import { Vibracion } from '@app/services';
+import { CuilFormat } from '@app/directives';
 
 @Component({
   selector: 'app-personal-step',
   templateUrl: './personal-step.page.html',
   styleUrls: ['./personal-step.page.scss'],
-  imports: [CommonModule, ReactiveFormsModule, IonInput, DniFormat, IonIcon],
+  imports: [CommonModule, ReactiveFormsModule, IonInput, DniFormat, CuilFormat, IonIcon],
 })
 export class PersonalStepPage {
   @Input() control!: AbstractControl;

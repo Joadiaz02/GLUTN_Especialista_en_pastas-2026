@@ -63,10 +63,12 @@ export class WaitingRoomPage {
     signal<number>(1);
 
   isTableAssigned =
-    signal(false);
+    signal(true);
 
   table =
-    signal<any>(null);
+    signal<any>({
+      numero: 1
+    });
 
   private _unsubscribe:
     (() => void) | null = null;
@@ -226,13 +228,13 @@ export class WaitingRoomPage {
               miEntrada.mesa_id
             );
 
-        this.isTableAssigned.set(
-          true
-        );
+        // this.isTableAssigned.set(
+        //   true
+        // );
 
-        this.table.set(
-          mesa
-        );
+        // this.table.set(
+        //   mesa
+        // );
 
         return;
       }

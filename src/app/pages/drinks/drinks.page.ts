@@ -28,6 +28,7 @@ import {
   trashOutline,
 } from 'ionicons/icons';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { HeaderComponent } from '@app/components/ui';
 
 @Component({
   selector: 'app-drinks',
@@ -48,7 +49,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
     IonSearchbar,
     SpinnerLogoComponent,
     ConfirmVolverComponent,
-  ],
+    HeaderComponent
+],
 })
 export class DrinksPage implements OnInit {
   textoBusqueda = signal('');

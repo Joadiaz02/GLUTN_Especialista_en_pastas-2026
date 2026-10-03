@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
 import { IonButton, IonIcon, ModalController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -10,10 +10,11 @@ import {
   starOutline,
   helpCircleOutline,
 } from 'ionicons/icons';
+import { SpinnerLogoComponent } from '../spinner-logo/spinner-logo.component';
 
 @Component({
   selector: 'app-confirm-dialog',
-  imports: [IonButton, IonIcon],
+  imports: [IonButton, IonIcon, SpinnerLogoComponent],
   templateUrl: './confirm-cartel.component.html',
   styleUrl: './confirm-cartel.component.scss',
 })
@@ -44,9 +45,26 @@ export class ConfirmDialogComponent {
   }
 
   async abrirConfirmacion() {
+    // const modal = await this.modalController.create({
+    //   component: ConfirmDialogComponent,
+
+    //   componentProps: {
+    //     titulo: this.titulo,
+    //     mensaje: this.mensaje,
+    //     textoCancelar: this.textoCancelar,
+    //     textoConfirmar: this.textoConfirmar,
+    //     colorConfirmar: this.colorConfirmar,
+    //     icono: this.icono,
+
+    //     esContenidoModal: true,
+    //   },
+
+    //   breakpoints: [0, 0],
+    //   initialBreakpoint: 0.4,
+    // });
+
     const modal = await this.modalController.create({
       component: ConfirmDialogComponent,
-
       componentProps: {
         titulo: this.titulo,
         mensaje: this.mensaje,
@@ -54,12 +72,9 @@ export class ConfirmDialogComponent {
         textoConfirmar: this.textoConfirmar,
         colorConfirmar: this.colorConfirmar,
         icono: this.icono,
-
         esContenidoModal: true,
       },
-
-      breakpoints: [0, 0.4],
-      initialBreakpoint: 0.4,
+      cssClass: 'confirm-modal',
     });
 
     await modal.present();

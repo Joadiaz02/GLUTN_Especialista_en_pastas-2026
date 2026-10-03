@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border">
+<!-- <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
@@ -15,7 +15,13 @@
       ></app-confirm-dialog>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+
+<app-header
+  title="Administración"
+  action="logout"
+  backHref="/seleccion-acceso"
+/>
 
 <ion-content>
   <div class="admin-container">
@@ -29,13 +35,13 @@
 
     <div class="modules-container">
       @for (modulo of modulosVisibles; track modulo.id) {
-        <app-admin-module-card
-          [module]="modulo"
-          (selected)="seleccionarModulo($event)"
-          [routerLink]="modulo.path"
-          [icon]="modulo.icon"
-        >
-        </app-admin-module-card>
+      <app-admin-module-card
+        [module]="modulo"
+        (selected)="seleccionarModulo($event)"
+        [routerLink]="modulo.path"
+        [icon]="modulo.icon"
+      >
+      </app-admin-module-card>
       }
     </div>
   </div>

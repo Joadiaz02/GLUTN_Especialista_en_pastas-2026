@@ -1,4 +1,4 @@
-<ion-header
+<!-- <ion-header
   class="ion-no-border glutn-header"
 >
 
@@ -52,4 +52,42 @@
 
   </ion-toolbar>
 
+</ion-header> -->
+
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver (confirmadoVolver)="onBack()"></app-confirm-volver>
+    </ion-buttons>
+
+    <ion-title>{{ title() }}</ion-title>
+
+    <ion-buttons slot="end">
+      @switch (action()) { @case ('logout') {
+      <app-confirm-dialog
+        titulo="¿Cerrar sesión?"
+        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+        textoConfirmar="Cerrar sesión"
+        icono="log-out-outline"
+        (confirmado)="logout()"
+      />
+      } @case ('add') {
+      <ion-button
+        fill="outline"
+        shape="round"
+        size="small"
+        [routerLink]="routeName()"
+      >
+        <ion-icon slot="icon-only" src="assets/icons/add.svg"></ion-icon>
+      </ion-button>
+      } }
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
+
+@if (loading()) {
+<div class="quick-loading">
+  <app-spinner-logo />
+  <span>Cerrando sesión</span>
+</div>
+}

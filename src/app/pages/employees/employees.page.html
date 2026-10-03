@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border">
+<!-- <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
@@ -12,7 +12,21 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+<!-- <app-header title="Empleados" [mostrarCerrarSesion]="true">
+  <ion-buttons slot="end">
+    <ion-button fill="outline" shape="round" size="small" routerLink="create">
+      <ion-icon slot="icon-only" src="assets/icons/add.svg"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</app-header> -->
+
+<app-header
+  title="Empleados"
+  action="add"
+  routeName="create"
+  backHref="/admin"
+/>
 
 <ion-content [fullscreen]="true">
   <section class="users-grid" aria-label="Usuarios de acceso rápido">
@@ -97,6 +111,14 @@
       </div>
     </button>
 
-    }
+    } @empty { @if (!isLoading()) {
+    <p class="empty-state">Todavía no hay empleados cargados.</p>
+    } }
   </section>
 </ion-content>
+
+@if (isLoading()) {
+<div class="quick-loading">
+  <app-spinner-logo />
+</div>
+}

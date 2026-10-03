@@ -1,63 +1,109 @@
-:host {
-  display: block;
-}
+// :host {
+//   display: block;
+// }
+
+// .confirm-dialog {
+//   padding:
+//     24px
+//     20px
+//     max(24px, env(safe-area-inset-bottom));
+//   text-align: center;
+//   background: var(--ion-background-color);
+//   box-sizing: border-box;
+// }
+
+// .drag-handle {
+//   width: 36px;
+//   height: 4px;
+//   margin: 0 auto 16px;
+//   border-radius: 2px;
+//   background: var(--border);
+// }
+
+// .icono-circulo {
+//   width: 56px;
+//   height: 56px;
+//   margin: 0 auto 16px;
+//   border-radius: 50%;
+//   background: var(--ion-color-danger);
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+
+//   ion-icon {
+//     font-size: 28px;
+//     color: #ffffff;
+//   }
+// }
+
+// .mensaje {
+//   margin: 0 0 24px;
+//   color: var(--text-secondary);
+// }
+
+// .botones {
+//   display: flex;
+//   gap: 12px;
+
+//   ion-button {
+//     flex: 1;
+//     min-height: 46px;
+//     margin: 0;
+//   }
+// }
+
+// @media (max-width: 360px) {
+//   .confirm-dialog {
+//     padding-inline: 16px;
+//   }
+
+//   .botones {
+//     gap: 8px;
+//   }
+// }
 
 .confirm-dialog {
-  padding:
-    24px
-    20px
-    max(24px, env(safe-area-inset-bottom));
-  text-align: center;
-  background: var(--ion-background-color);
-  box-sizing: border-box;
+  padding: 24px 24px calc(24px + env(safe-area-inset-bottom)) 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
 }
 
-.drag-handle {
-  width: 36px;
-  height: 4px;
-  margin: 0 auto 16px;
-  border-radius: 2px;
-  background: var(--border);
+.confirm-dialog__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
-.icono-circulo {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 16px;
-  border-radius: 50%;
-  background: var(--ion-color-danger);
+.confirm-dialog__icon-circle {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  ion-icon {
-    font-size: 28px;
-    color: #ffffff;
-  }
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ion-color-danger);
 }
 
-.mensaje {
-  margin: 0 0 24px;
-  color: var(--text-secondary);
+ion-icon {
+  font-size: 28px;
+  color: #ffffff;
 }
 
-.botones {
+.confirm-dialog__description {
+  text-align: center;
+  color: #D5E0C9;
+}
+
+.confirm-dialog__actions {
+  width: 100%;
   display: flex;
   gap: 12px;
 
   ion-button {
-    flex: 1;
-    min-height: 46px;
-    margin: 0;
-  }
-}
-
-@media (max-width: 360px) {
-  .confirm-dialog {
-    padding-inline: 16px;
-  }
-
-  .botones {
-    gap: 8px;
+    width: 100%;
   }
 }

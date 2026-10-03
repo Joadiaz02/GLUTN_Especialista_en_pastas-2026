@@ -1,5 +1,7 @@
 <div class="progress">
-  @for (step of stepsArray(); track step) {
+  <div class="progress-wrapper">
+    @for (step of stepsArray(); track step) {
     <div class="progress-fill" [class.active]="isStepActive(step)"></div>
-  }
+    }
+  </div>
 </div>

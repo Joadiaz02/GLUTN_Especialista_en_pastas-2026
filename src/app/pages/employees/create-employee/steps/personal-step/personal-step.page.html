@@ -1,6 +1,8 @@
 <div [formGroup]="formGroup">
-  <h1 class="step__title">Identificalo</h1>
-  <p class="step__subtitle">Escaneá el DNI o completá sus datos manualmente.</p>
+  <h1 class="step__title">Datos del empleado</h1>
+  <p class="step__subtitle">
+    Escaneá el DNI para completar los datos automáticamente o ingresalos a mano.
+  </p>
 
   <div class="fields">
     <div class="field">
@@ -69,8 +71,8 @@
         }
       </div>
 
-      @if (getFormControl('type')?.invalid && (getFormControl('type')?.touched
-      || getFormControl('type')?.dirty)) {
+      @if (getFormControl('role')?.invalid && (getFormControl('role')?.touched
+      || getFormControl('role')?.dirty)) {
       <p class="field__error">Debe seleccionar un puesto.</p>
       }
     </div>
@@ -83,14 +85,17 @@
         inputmode="numeric"
         fill="outline"
         class="field__input"
-        placeholder="CUIL"
+        placeholder="XX-XXXXXXXX-X"
         formControlName="cuil"
+        appCuilFormat
       />
 
       @if ( getFormControl('cuil')?.invalid && ( getFormControl('cuil')?.touched
       || getFormControl('cuil')?.dirty ) ) { @if (
       getFormControl('cuil')?.hasError('required') ) {
       <p class="field__error">El campo es obligatorio.</p>
+      } @if ( getFormControl('cuil')?.hasError('cuil') ) {
+      <p class="field__error">El CUIL es inválido.</p>
       } }
     </div>
 
@@ -103,7 +108,7 @@
         maxlength="10"
         class="field__input"
         fill="outline"
-        placeholder="00.000.000"
+        placeholder="XX.XXX.XXX"
         formControlName="dni"
         appDniFormat
       />

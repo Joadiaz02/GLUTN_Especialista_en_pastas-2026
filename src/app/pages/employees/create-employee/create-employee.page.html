@@ -1,14 +1,12 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <app-confirm-dialog
+      <app-confirm-volver
         titulo="¿Salir del registro?"
         mensaje="Si salís ahora, vas a perder los datos ingresados."
-        textoCancelar="Cancelar"
         textoConfirmar="Salir"
-        icono="log-out-outline"
-        (confirmado)="cancelarRegistro()"
-      ></app-confirm-dialog>
+        (confirmadoVolver)="onBack()"
+      />
     </ion-buttons>
 
     <ion-title> {{ getStepTitle() }} </ion-title>
@@ -59,9 +57,18 @@
       Continuar
     </ion-button>
 
-    <app-confirm-volver
+    <ion-button
+      expand="block"
+      fill="outline"
+      shape="round"
+      (click)="previousStep()"
+    >
+      Volver
+    </ion-button>
+
+    <!-- <app-confirm-volver
       (confirmadoVolver)="previousStep()"
-    ></app-confirm-volver>
+    ></app-confirm-volver> -->
 
     } @else {
 
@@ -80,9 +87,18 @@
       } @else { Crear empleado }
     </ion-button>
 
-    <app-confirm-volver
+    <ion-button
+      expand="block"
+      fill="outline"
+      shape="round"
+      (click)="previousStep()"
+    >
+      Volver
+    </ion-button>
+
+    <!-- <app-confirm-volver
       (confirmadoVolver)="previousStep()"
-    ></app-confirm-volver>
+    ></app-confirm-volver> -->
 
     }
   </div>

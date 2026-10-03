@@ -27,6 +27,7 @@ import { ConfirmDialogComponent } from '../../components/ui/confirm-cartel/confi
 import { addIcons } from 'ionicons';
 import { logOutOutline } from 'ionicons/icons';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { HeaderComponent } from '@app/components/ui';
 
 @Component({
   selector: 'app-admin',
@@ -41,7 +42,8 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
     RouterLink,
     ConfirmDialogComponent,
     ConfirmVolverComponent,
-  ],
+    HeaderComponent
+],
   templateUrl: './admin.page.html',
   styleUrls: ['./admin.page.scss'],
 })
