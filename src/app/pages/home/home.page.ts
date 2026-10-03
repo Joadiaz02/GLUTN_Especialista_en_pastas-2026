@@ -145,8 +145,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   estadoPedido = signal<string | null>(null);
 
-  // temporal: el pedido cuenta como recibido cuando el mozo lo acepta
-  pedidoRecibido = computed(() => this.estadoPedido() === 'confirmado');
+  // el mozo ya confirmó el pedido, en cualquier etapa posterior
+  pedidoRecibido = computed(() =>
+    ['confirmado', 'en_preparacion', 'listo', 'entregado'].includes(this.estadoPedido() ?? '')
+  );
 
   // botones que ve cada perfil
   botones = computed(() => {
