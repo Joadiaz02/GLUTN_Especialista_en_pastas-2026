@@ -17,47 +17,125 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  @if (cargando()) {
-    <div class="loading-container">
+<ion-content class="cocina-content" [scrollY]="false">
+  <div class="cocina-wrapper">
+    @if (cargando()) {
+      <div class="cocina-loading">
+        <app-spinner-logo />
+        <span>Cargando pedidos...</span>
+      </div>
+    } @else if (pedidos().length === 0) {
+      <div class="cocina-vacio">
+        <p class="sin-pedidos">No hay pedidos pendientes.</p>
+      </div>
+    } @else {
+      <!-- Carrusel de tarjetas -->
+      <div #viewport class="carrusel" (scroll)="alDesplazar()">
+        @for (pedido of pedidos(); track pedido.id_pedido; let i = $index) {
+          <article class="slide" [class.slide--activo]="i === indiceActual()">
+            <div class="pedido">
+              
+              <header class="pedido__mesa">
+                <h2>Mesa: {{ pedido.mesas.numero }}</h2>
+                <span>Pedido: {{ pedido.id_pedido.slice(0, 8) }}</span>
+              </header>
+              <div class="pedido__encabezado">
+                <div class="pedido__momento">
+                  <span class="pedido__hora">
+                    {{ pedido.fecha_emision_pedido | date: 'HH:mm' }}
+                  </span>
+                  <span class="pedido__fecha">
+                    {{ pedido.fecha_emision_pedido | date: 'dd/MM/yyyy' }}
+                  </span>
+                </div>
 
-    <app-spinner-logo />
+                <span class="pedido__estado">
+                  {{ pedido.estado_pedido }}
+                </span>
+              </div>
 
-    <p>
-      Cargando pedidos...
-    </p>
+              <!-- DETALLE DE PRODUCTOS INTEGRADO DENTRO DE LA TARJETA -->
+              <div class="pedido__items-container">
+                <span class="usuario-txt">Usuario: {{ pedido.usuarios?.nombre }} </span>
+                
+                @if (pedido.items && pedido.items.length > 0) {
+                  <div class="lista-productos">
+                    @for (item of pedido.items; track item.id_item) {
+                      <div class="producto-card">
+                        <div class="card-header-item">
+                          <span class="item-nombre">{{ item.carta.nombre }}</span>
+                          <span class="item-descripcion">{{ item.cantidad }} x {{ item.precio_unitario | currency:'ARS':'symbol':'1.0-0' }}</span>
+                        </div>
+                        <span class="item-precio">{{ item.subtotal | currency:'ARS':'symbol':'1.0-0' }}</span>
+                      </div>
+                    }
+                  </div>
+                  
+                  <div class="producto-card total-card">
+                    <div class="resumen-fila">
+                      <span>Total a pagar:</span>
+                      <span class="item-precio">{{ pedido.subtotal | currency:'ARS':'symbol':'1.0-0' }}</span>
+                    </div>
+                  </div>
+                } @else {
+                  <p class="sin-items">Cargando detalles...</p>
+                }
+              </div>
 
+              <!-- Botones de acción (Rechazar y Aceptar sin el botón de detalles) -->
+              <div class="pedido__acciones">
+                <ion-button
+                  class="pedido__boton"
+                  fill="outline"
+                  color="danger"
+                  shape="round"
+                  [disabled]="estado() === pedido.id_pedido"
+                  (click)="rechazar(pedido.id_pedido)"
+                >
+                  Rechazar
+                </ion-button>
+
+                <ion-button
+                  class="pedido__boton"
+                  shape="round"
+                  [disabled]="estado() === pedido.id_pedido"
+                  (click)="confirmar(pedido.id_pedido)"
+                >
+                  Aceptar
+                </ion-button>
+              </div>
+
+            </div>
+          </article>
+        }
+      </div>
+
+      <!-- Controles de navegación de flechas inferior -->
+      <div class="contador">
+        <button
+          type="button"
+          class="contador__flecha"
+          aria-label="Pedido anterior"
+          [disabled]="indiceActual() === 0"
+          (click)="irA(indiceActual() - 1)"
+        >
+          ‹
+        </button>
+
+        <span>
+          Pedido {{ indiceActual() + 1 }} de {{ pedidos().length }}
+        </span>
+
+        <button
+          type="button"
+          class="contador__flecha"
+          aria-label="Pedido siguiente"
+          [disabled]="indiceActual() === pedidos().length - 1"
+          (click)="irA(indiceActual() + 1)"
+        >
+          ›
+        </button>
+      </div>
+    }
   </div>
-
-  } @else if (pedidos().length === 0) {
-    <p class="sin-pedidos">No hay pedidos pendientes.</p>
-  } @else {
-    <div class="lista-pedidos">
-      @for (pedido of pedidos(); track pedido.id_pedido) {
-        <div class="pedido-card">
-          <div class="pedido-card__info">
-            <span class="body-hight weight-bold">Mesa: {{ pedido.id_mesa.slice(0, 8) }}</span>
-            <span class="body-hight weight-bold">Usuario: {{ pedido.id_usuario.slice(0, 8) }}</span>
-            <span class="body-hight weight-bold">Pedido: {{ pedido.id_pedido.slice(0, 8) }}</span>
-            <span class="body-ultra-small">fecha:{{pedido.fecha_emision_pedido | date:'d/M/yy:h:mm' }}</span>
-            <span class="body-ultra-small">Estado:{{pedido.estado_pedido}}</span>
-          </div>
-          
-
-          <div class="pedido-card__acciones">
-            <ion-button class="boton_rechazar" shape="round" fill="outline" color="danger" size="small" [disabled]="estado() === pedido.id_pedido" (click)="rechazar(pedido.id_pedido)">
-              Rechazar
-            </ion-button>
-            <ion-button class="boton_aceptar" shape="round" size="small" [disabled]="estado() === pedido.id_pedido" (click)="confirmar(pedido.id_pedido)">
-              Aceptar
-            </ion-button>
-            <ion-button   [routerLink]="['/admin/orders/orders-detalles', pedido.id_pedido]" class="boton_aceptar" shape="round" size="small">
-              Detalles
-            </ion-button>
-          </div>
-        </div>
-      }
-    </div>
-  }
 </ion-content>
-

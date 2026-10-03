@@ -4,6 +4,8 @@ import {
   inject,
   OnInit,
   signal,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import {
   IonHeader,
@@ -39,22 +41,24 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     IonContent,
     CommonModule,
     IonButton,
-    IonRouterLink,
-    RouterLink,
     SpinnerLogoComponent
-  ],
+],
 })
 export class OrdersComponent implements OnInit {
   private auth = inject(Auth);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
-  pedido = inject(Pedido);
+  pedidoService = inject(Pedido); // Renombrado para evitar conflicto con la variable tipada si existiera
   carrito = inject(Carrito);
-  root = inject(Router);
   estado = signal<string | null>(null);
   pedidos = signal<any[]>([]);
   cargando = signal(false);
+
+  // Variables y señales para el carrusel de tarjetas
+  indiceActual = signal<number>(0);
+  @ViewChild('viewport') viewport!: ElementRef<HTMLDivElement>;
+
   constructor() {
     addIcons({
       'log-out-outline': logOutOutline,
@@ -63,36 +67,47 @@ export class OrdersComponent implements OnInit {
 
   async cargarpedido() {
     this.cargando.set(true);
-    const pedidos = await this.pedido.traer_pedido();
+    const listaPedidos = await this.pedidoService.traer_pedido();
 
-    this.pedidos.set(pedidos);
+    // Consultamos los detalles/items para cada pedido en paralelo usando la lógica de obtenerPedidoConItems
+    const pedidosConDetalle = await Promise.all(
+      listaPedidos.map(async (p: any) => {
+        try {
+          const detalle = await this.pedidoService.obtenerPedidoConItems(p.id_pedido);
+          return { ...p, ...detalle };
+        } catch (e) {
+          return p;
+        }
+      })
+    );
+
+    this.pedidos.set(pedidosConDetalle);
     this.cargando.set(false);
   }
 
   async confirmar(idPedido: string): Promise<void> {
-  const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
-  if (!pedidoActual) return;
-  this.estado.set(idPedido);
-  await this.pedido.actualizarEstado(idPedido, pedidoActual.id_usuario, 'confirmado');
-  await this.cargarpedido();
-  this.estado.set(null);
-}
+    const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
+    if (!pedidoActual) return;
+    this.estado.set(idPedido);
+    await this.pedidoService.actualizarEstado(idPedido, pedidoActual.id_usuario, 'confirmado');
+    await this.cargarpedido();
+    this.estado.set(null);
+  }
 
-async rechazar(idPedido: string): Promise<void> {
-  const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
-  if (!pedidoActual) return;
-  this.estado.set(idPedido);
-  await this.pedido.actualizarEstado(idPedido, pedidoActual.id_usuario, 'rechazado');
-  await this.cargarpedido();
-  this.estado.set(null);
-}
+  async rechazar(idPedido: string): Promise<void> {
+    const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
+    if (!pedidoActual) return;
+    this.estado.set(idPedido);
+    await this.pedidoService.actualizarEstado(idPedido, pedidoActual.id_usuario, 'rechazado');
+    await this.cargarpedido();
+    this.estado.set(null);
+  }
 
   async ngOnInit(): Promise<void> {
     await this.cargarpedido();
   }
 
   volver(): void {
-    console.log('qwe');
     void this.router.navigate(['/admin']);
   }
 
@@ -102,5 +117,36 @@ async rechazar(idPedido: string): Promise<void> {
 
     await this.auth.logout();
     await this.router.navigate(['/login']);
+  }
+
+  // Métodos para mover el carrusel de tarjetas y calcular el scroll
+  irA(indice: number) {
+    this.indiceActual.set(indice);
+    const el = this.viewport.nativeElement;
+    const slide = el.children[indice] as HTMLElement;
+    if (slide) {
+      slide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }
+
+  alDesplazar() {
+    const el = this.viewport.nativeElement;
+    const children = Array.from(el.children) as HTMLElement[];
+    const scrollLeft = el.scrollLeft;
+    
+    let closestIndex = 0;
+    let minDistance = Infinity;
+
+    children.forEach((slide, index) => {
+      const distance = Math.abs(slide.offsetLeft - scrollLeft - (el.clientWidth - slide.clientWidth) / 2);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    if (closestIndex !== this.indiceActual()) {
+      this.indiceActual.set(closestIndex);
+    }
   }
 }
