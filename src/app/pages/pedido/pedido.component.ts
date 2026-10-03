@@ -6,7 +6,7 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
 import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { CurrencyPipe } from '@angular/common';
-import { Auth } from '@app/services';
+import { Auth, MesaCliente } from '@app/services';
 import { Vibracion } from '@app/services';
 import { CartaItem } from '@app/models/carta.model';
 
@@ -25,6 +25,7 @@ export class PedidoComponent  {
   private authService = inject(Auth);
   private toastController = inject(ToastController);
   private vibracion = inject(Vibracion);
+  private mesaCliente = inject(MesaCliente);
 
 
   continuarPedido() {
@@ -39,10 +40,16 @@ export class PedidoComponent  {
   async solicitarPedido(): Promise<void> {
     try {
       const idEnEdicion = this.pedido.idPedidoEnEdicion();
-      const idMesa = localStorage.getItem('mesa');
+      // vuelve a buscar la mesa por si la asignaron recién
+      if (!this.mesaCliente.id()) {
+        await this.mesaCliente.actualizar();
+      }
+
+      const idMesa = this.mesaCliente.id();
 
       if (!idMesa) {
-        console.error('No hay mesa asociada a esta sesión');
+        await this.vibracion.error();
+        await this.mostrarToast('Todavía no tenés una mesa asignada. Pedile una al metre.', 'warning');
         return;
       }
 
@@ -59,7 +66,13 @@ export class PedidoComponent  {
     } catch (error) {
       await this.vibracion.error();
       console.error('Error al confirmar el pedido:', error);
+      await this.mostrarToast('No pudimos enviar el pedido. Intentá de nuevo.', 'danger');
     }
+  }
+
+  private async mostrarToast(message: string, color: string): Promise<void> {
+    const toast = await this.toastController.create({ message, duration: 3000, position: 'top', color });
+    await toast.present();
   }
 
   constructor() {
