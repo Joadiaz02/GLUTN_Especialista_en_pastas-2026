@@ -13,7 +13,6 @@
   font-size: 18px;
   font-weight: 700;
   margin: 0;
- 
   text-align: center;
   flex: 1;
 }
@@ -36,12 +35,9 @@
   background: var(--ion-color-light, #f4ebdd);
   border-radius: 16px;
   padding: 16px;
-  
 }
 
-
 .card-header-item {
-  align-items: flex-start;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -87,6 +83,7 @@
   font-size: 15px;
   color: #6b5c4e;
 }
+
 .resumen-fila strong {
   margin-left: 12px;
   text-align: right;
@@ -103,7 +100,7 @@
 /* Footer fijo abajo para el botón */
 .footer-pedido {
   background: transparent;
-  padding: 0 12px 8px 12px; /* Bien pegado al borde inferior */
+  padding: 0 12px 8px 12px;
 }
 
 .footer-pedido ion-toolbar {
@@ -112,10 +109,78 @@
 }
 
 .btn-confirmar {
---background: var(--ion-color-primary, #e76f45);
+  --background: var(--ion-color-primary, #e76f45);
   font-size: 17px;
   font-weight: 700;
   height: 48px;
   margin: 0;
   --box-shadow: 0 4px 10px rgba(231, 111, 69, 0.4);
+}
+
+
+.item-controles {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.controles-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 4px; 
+}
+
+.item-derecha {
+  display: flex;
+  align-items: center;
+  gap:8px; 
+}
+
+.boton-agregar,
+.boton-quitar {
+  width: 44px;
+  height: 44px;
+  min-width: 34px;
+  min-height: 34px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--ion-color-primary, #e76f45);
+  color: #ffffff;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.producto-cantidad {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* El botón de eliminar se alinea automáticamente a la derecha por el justify-content: space-between */
+.boton-eliminar {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--ion-color-danger, #e74c3c);
+  padding: 4px 8px;
+  margin-left: 0;  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-subtotal {
+  font-weight: 700;
+  margin-left: 0;
 }
