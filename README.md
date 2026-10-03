@@ -32,7 +32,11 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Registro completado](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#registro-completado)
   - 🔗 [Gestión de clientes](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-clientes)
   - 🔗 [Rechazo de cliente](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#rechazo-de-cliente)
-  - 🔗 [Menú principal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#menú-principal)
+  - 🔗 [Lista de espera](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#lista-de-espera)
+  - 🔗 [Asinación de mesa](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#asignación-de-mesa)
+  - 🔗 [Administración de empleados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-empleados)
+  - 🔗 [Gestión de pedidos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos)
+  - 🔗 [Gestión de pedidos de cocina](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-cocina)
   - 🔗 [Modales del menú principal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#modales-del-menú-principal)
   - 🔗 [Carta](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#carta)
   - 🔗 [Platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#platos)
@@ -693,6 +697,58 @@ QR correspondiente a la Mesa 5.
 
 ---
 
+## Lista de espera
+
+<p align="center">
+  <img src="images/lista-espera.jpg" alt="Lista de espera" width="250">
+</p>
+
+---
+
+## Asignación de mesa
+
+<p align="center">
+  <img src="images/asignacion-mesa-cliente.jpg" alt="Asignación de mesa - Selección de cliente" width="250">
+</p>
+
+
+<p align="center">
+  <img src="images/asignacion-mesa.jpg" alt="Asignación de mesa - Mesas disponibles" width="250">
+</p>
+
+---
+
+## Administración de empleados
+
+<p align="center">
+  <img src="images/administracion-empleados.jpg" alt="Administración de empleados" width="250">
+</p>
+
+---
+
+## Gestión de pedidos
+
+### Pedidos generales
+
+<p align="center">
+  <img src="images/gestion-pedidos.jpg" alt="Gestión general de pedidos" width="250">
+</p>
+
+### Pedidos pendientes
+
+<p align="center">
+  <img src="images/gestion-pedidos-pendientes.jpg" alt="Gestión de pedidos pendientes" width="250">
+</p>
+
+---
+
+## Gestión de pedidos de cocina
+
+<p align="center">
+  <img src="images/gestion-pedidos-cocina.jpg" alt="Gestión de pedidos de cocina" width="250">
+</p>
+
+---
 ## Menú principal
 
 <p align="center">
