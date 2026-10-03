@@ -442,7 +442,7 @@ async remove(
     }
 
     if (entry.estado === 'asignado') {
-      const { error: updateError } =
+      const { data: actualizadas, error: updateError } =
         await this._db.client
           .from('lista_espera')
           .update({
@@ -450,10 +450,16 @@ async remove(
             updated_at:
               new Date().toISOString(),
           })
-          .eq('id', entry.id);
+          .eq('id', entry.id)
+          .select('id');
 
       if (updateError) {
         throw updateError;
+      }
+
+      // si la base no dejó actualizar, no devuelve error pero tampoco filas
+      if (!actualizadas || actualizadas.length === 0) {
+        throw new Error('No se pudo vincular al cliente con la mesa.');
       }
     }
 
