@@ -797,11 +797,6 @@ QR correspondiente a la Mesa 5.
   <img src="images/pedido-sheet.jpg" alt="Resumen del pedido" width="250">
 </p>
 
-### Confirmación del pedido
-
-<p align="center">
-  <img src="images/pedido.jpg" alt="Pedido" width="250">
-</p>
 
 ---
 
