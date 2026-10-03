@@ -72,18 +72,23 @@ export class Pedido {
     }
 
     async obtenerPedidoConItems(idPedido: string): Promise<any> {
-    const { data: pedido, error: errorPedido } = await this.sup.client.from('pedido').select('*').eq('id_pedido', idPedido).single();
+      const { data: pedido, error: errorPedido } = await this.sup.client
+        .from('pedido')
+        .select('*, mesas(numero), usuarios(nombre, apellido)')
+        .eq('id_pedido', idPedido)
+        .single();
 
-    if (errorPedido) throw errorPedido;
+      if (errorPedido) throw errorPedido;
 
-    const { data: items, error: errorItems } = await this.sup.client.from('pedido_item').select('*, carta(*)').eq('id_pedido', idPedido );
+      const { data: items, error: errorItems } = await this.sup.client
+        .from('pedido_item')
+        .select('*, carta(*)')
+        .eq('id_pedido', idPedido);
 
-    if (errorItems) {
-        throw errorItems
-    };
+      if (errorItems) throw errorItems;
 
-    return { ...pedido, items: items ?? [] };
-  }
+      return { ...pedido, items: items ?? [] };
+    }
 
     async actualizarEstado(idPedido: string,idUsuario: string ,nuevoEstado: string): Promise<void> {
     const {data: pedidoActualizado , error } = await this.sup.client

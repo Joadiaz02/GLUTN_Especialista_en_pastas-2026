@@ -36,10 +36,9 @@
             <div class="pedido">
               
               <header class="pedido__mesa">
-                <h2>Mesa: {{ pedido.id_mesa.slice(0, 8) }}</h2>
+                <h2>Mesa: {{ pedido.mesas.numero }}</h2>
                 <span>Pedido: {{ pedido.id_pedido.slice(0, 8) }}</span>
               </header>
-
               <div class="pedido__encabezado">
                 <div class="pedido__momento">
                   <span class="pedido__hora">
@@ -57,7 +56,7 @@
 
               <!-- DETALLE DE PRODUCTOS INTEGRADO DENTRO DE LA TARJETA -->
               <div class="pedido__items-container">
-                <span class="usuario-txt">Usuario: {{ pedido.id_usuario.slice(0, 8) }}</span>
+                <span class="usuario-txt">Usuario: {{ pedido.usuarios?.nombre }} </span>
                 
                 @if (pedido.items && pedido.items.length > 0) {
                   <div class="lista-productos">

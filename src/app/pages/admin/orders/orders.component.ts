@@ -41,10 +41,8 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     IonContent,
     CommonModule,
     IonButton,
-    IonRouterLink,
-    RouterLink,
     SpinnerLogoComponent
-  ],
+],
 })
 export class OrdersComponent implements OnInit {
   private auth = inject(Auth);

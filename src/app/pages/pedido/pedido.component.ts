@@ -37,16 +37,21 @@ export class PedidoComponent  {
 
 
   async solicitarPedido(): Promise<void> {
-    
-     try {
+    try {
       const idEnEdicion = this.pedido.idPedidoEnEdicion();
-      const idMesaPrueba = 'b63469cd-404d-460c-a193-4eb153b9dec1'
+      const idMesa = localStorage.getItem('mesa');
+
+      if (!idMesa) {
+        console.error('No hay mesa asociada a esta sesión');
+        return;
+      }
+
       if (idEnEdicion) {
         await this.pedido.actualizar_pedido(idEnEdicion);
         console.log('Pedido modificado y reenviado');
       } else {
         const usuario = this.authService.usuarioActual();
-        const idPedido = await this.pedido.crear_pedido(idMesaPrueba, usuario.id, '');
+        const idPedido = await this.pedido.crear_pedido(idMesa, usuario.id, '');
         console.log('Pedido creado:', idPedido);
       }
 
