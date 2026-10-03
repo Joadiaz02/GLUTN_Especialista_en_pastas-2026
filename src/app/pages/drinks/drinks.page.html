@@ -17,90 +17,85 @@
 <app-header title="Bebidas" action="add" routeName="create" />
 
 <ion-content [fullscreen]="true">
-  <div class="drinks-content">
-    <button routerLink="create" class="drink-placeholder">
-      <ion-icon src="assets/icons/plus.svg"></ion-icon>
-    </button>
+  <div>
+    <div class="drinks-content">
+      <ion-searchbar
+        class="drinks-search"
+        placeholder="Buscar Bebidas"
+        [debounce]="200"
+        (ionInput)="onBuscar($event.detail.value ?? '')"
+      ></ion-searchbar>
 
-    <ion-content [fullscreen]="true">
-      <div class="drinks-content">
-        <ion-searchbar
-          placeholder="Buscar Bebidas"
-          [debounce]="200"
-          (ionInput)="onBuscar($event.detail.value ?? '')"
-        ></ion-searchbar>
+      <!-- El spinner va solo en la carga inicial: al recargar después de una
+       acción, el carrusel se queda en el producto en el que estaba. -->
+      @if (isLoading() && drinks().length === 0) {
+      <div class="drinks-vacio">
+        <app-spinner-logo />
+      </div>
+      } @else if (drinksFiltrados().length === 0) {
+      <div class="drinks-vacio">
+        <p>
+          {{ drinks().length === 0 ? 'Todavía no cargaste ningúna Bebida.' : 'No
+          encontramos nada que coincida con tu búsqueda.' }}
+        </p>
+      </div>
+      } @else {
+      <app-producto-carrusel
+        [productos]="drinksFiltrados()"
+        etiqueta="drinks"
+        [acciones]="accionesProducto"
+      ></app-producto-carrusel>
+      }
+    </div>
 
-        <!-- El spinner va solo en la carga inicial: al recargar después de una
-         acción, el carrusel se queda en el producto en el que estaba. -->
-        @if (isLoading() && drinks().length === 0) {
-        <div class="drinks-vacio">
-          <app-spinner-logo />
-        </div>
-        } @else if (drinksFiltrados().length === 0) {
-        <div class="drinks-vacio">
-          <p>
-            {{ drinks().length === 0 ? 'Todavía no cargaste ningúna Bebida.' :
-            'No encontramos nada que coincida con tu búsqueda.' }}
-          </p>
-        </div>
+    <!-- Botones del pie de cada tarjeta: destacar, editar y baja/reactivar -->
+    <ng-template #accionesProducto let-item>
+      <div class="acciones">
+        @if (item.baja_logica) {
+        <span class="acciones__baja">Baja</span>
         } @else {
-        <app-producto-carrusel
-          [productos]="drinksFiltrados()"
-          etiqueta="drinks"
-          [acciones]="accionesProducto"
-        ></app-producto-carrusel>
+        <button
+          type="button"
+          class="acciones__boton"
+          [class.acciones__boton--activo]="item.sugerencia"
+          [attr.aria-label]="item.sugerencia ? 'Quitar de destacados' : 'Destacar'"
+          (click)="destacar(item); $event.stopPropagation()"
+        >
+          <ion-icon
+            [name]="item.sugerencia ? 'star' : 'star-outline'"
+          ></ion-icon>
+        </button>
+        }
+
+        <button
+          type="button"
+          class="acciones__boton"
+          aria-label="Editar"
+          (click)="editar(item); $event.stopPropagation()"
+        >
+          <ion-icon name="create-outline"></ion-icon>
+        </button>
+
+        @if (item.baja_logica) {
+        <button
+          type="button"
+          class="acciones__boton acciones__boton--activo"
+          aria-label="Reactivar"
+          (click)="reactivar(item); $event.stopPropagation()"
+        >
+          <ion-icon name="refresh-outline"></ion-icon>
+        </button>
+        } @else {
+        <button
+          type="button"
+          class="acciones__boton acciones__boton--peligro"
+          aria-label="Dar de baja"
+          (click)="darDeBaja(item); $event.stopPropagation()"
+        >
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
         }
       </div>
-
-      <!-- Botones del pie de cada tarjeta: destacar, editar y baja/reactivar -->
-      <ng-template #accionesProducto let-item>
-        <div class="acciones">
-          @if (item.baja_logica) {
-          <span class="acciones__baja">Baja</span>
-          } @else {
-          <button
-            type="button"
-            class="acciones__boton"
-            [class.acciones__boton--activo]="item.sugerencia"
-            [attr.aria-label]="item.sugerencia ? 'Quitar de destacados' : 'Destacar'"
-            (click)="destacar(item); $event.stopPropagation()"
-          >
-            <ion-icon
-              [name]="item.sugerencia ? 'star' : 'star-outline'"
-            ></ion-icon>
-          </button>
-          }
-
-          <button
-            type="button"
-            class="acciones__boton"
-            aria-label="Editar"
-            (click)="editar(item); $event.stopPropagation()"
-          >
-            <ion-icon name="create-outline"></ion-icon>
-          </button>
-
-          @if (item.baja_logica) {
-          <button
-            type="button"
-            class="acciones__boton acciones__boton--activo"
-            aria-label="Reactivar"
-            (click)="reactivar(item); $event.stopPropagation()"
-          >
-            <ion-icon name="refresh-outline"></ion-icon>
-          </button>
-          } @else {
-          <button
-            type="button"
-            class="acciones__boton acciones__boton--peligro"
-            aria-label="Dar de baja"
-            (click)="darDeBaja(item); $event.stopPropagation()"
-          >
-            <ion-icon name="trash-outline"></ion-icon>
-          </button>
-          }
-        </div>
-      </ng-template>
-    </ion-content>
-  </div></ion-content
->
+    </ng-template>
+  </div>
+</ion-content>

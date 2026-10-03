@@ -32,8 +32,16 @@
 
       @if ( getFormControl('fullName')?.invalid && (
       getFormControl('fullName')?.touched || getFormControl('fullName')?.dirty
-      )) { @if ( getFormControl('fullName')?.hasError('required') ) {
+      )) { @if (getFormControl('fullName')?.hasError('required')) {
       <p class="field__error">El nombre completo es obligatorio.</p>
+      } @else if (getFormControl('fullName')?.hasError('invalidCharacters')) {
+      <p class="field__error">Usá solo letras, sin números ni símbolos.</p>
+      } @else if (getFormControl('fullName')?.hasError('missingLastName')) {
+      <p class="field__error">Ingresá tu nombre y apellido.</p>
+      } @else if (getFormControl('fullName')?.hasError('wordTooShort')) {
+      <p class="field__error">Cada nombre debe tener al menos 2 letras.</p>
+      } @else if (getFormControl('fullName')?.hasError('maxlength')) {
+      <p class="field__error">Es demasiado largo (máximo 60 caracteres).</p>
       } }
     </div>
   </div>

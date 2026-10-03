@@ -1,23 +1,23 @@
-:host {
-  display: block;
-  height: 100%;
-  --bg: #657a4d;
-  --input-bg: rgba(255, 255, 255, 0.22);
-  --input-placeholder: rgba(255, 255, 255, 0.75);
-  --accent: #e76f45;
-}
+// :host {
+//   display: block;
+//   height: 100%;
+//   --bg: #657a4d;
+//   --input-bg: rgba(255, 255, 255, 0.22);
+//   --input-placeholder: rgba(255, 255, 255, 0.75);
+//   --accent: #e76f45;
+// }
 
-ion-toolbar {
-  --background: var(--bg);
-  --color: #fff;
-}
+// ion-toolbar {
+//   --background: var(--bg);
+//   --color: #fff;
+// }
 
-ion-content {
-  --padding-start: 20px;
-  --padding-end: 20px;
-  --padding-top: 8px;
-  --padding-bottom: 8px;
-}
+// ion-content {
+//   --padding-start: 20px;
+//   --padding-end: 20px;
+//   --padding-top: 8px;
+//   --padding-bottom: 8px;
+// }
 
 ion-content::part(scroll) {
   overflow: hidden;
@@ -26,37 +26,39 @@ ion-content::part(scroll) {
 
 .upload-container {
   width: 100%;
-  height: clamp(105px, 30vw, 145px);
-  margin-bottom: 8px;
-  box-sizing: border-box;
+  height: 180px;
+  // height: clamp(105px, 30vw, 145px);
+  // margin-bottom: 8px;
+  // box-sizing: border-box;
 }
 
-.upload-container app-uploader {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+// .upload-container app-uploader {
+//   display: block;
+//   width: 100%;
+//   height: 100%;
+// }
 
 .fields {
-  gap: 8px;
+  margin-top: 16px;
+  // gap: 8px;
 }
 
-.field {
-  margin: 0;
-  gap: 4px;
+// .field {
+//   margin: 0;
+//   gap: 4px;
 
-  .field__label {
-    font-size: 14px;
-  }
+//   .field__label {
+//     font-size: 14px;
+//   }
 
-  .field__input {
-    min-height: 48px;
-  }
+//   .field__input {
+//     min-height: 48px;
+//   }
 
-  .field__error {
-    font-size: 10px;
-  }
-}
+//   .field__error {
+//     font-size: 10px;
+//   }
+// }
 
 .chips {
   display: flex;
@@ -75,11 +77,12 @@ ion-content::part(scroll) {
   background-color: var(--color-surface-muted);
   color: #fff;
   font-size: 14px;
+  
+  &.chip-activo {
+    background-color: #E76F45;
+  }
 }
 
-.chip-activo {
-  background: var(--accent);
-}
 
 .stepper {
   width: 100%;
@@ -130,45 +133,45 @@ ion-content::part(scroll) {
   font-weight: 700;
 }
 
-ion-footer .footer-actions {
-  padding: 8px 20px max(8px, env(safe-area-inset-bottom));
-}
+// ion-footer .footer-actions {
+//   padding: 8px 20px max(8px, env(safe-area-inset-bottom));
+// }
 
-ion-footer ion-button {
-  margin: 0;
-  min-height: 50px;
-}
+// ion-footer ion-button {
+//   margin: 0;
+//   min-height: 50px;
+// }
 
-@media (max-height: 720px) {
-  .upload-container {
-    height: 92px;
-    margin-bottom: 6px;
-  }
+// @media (max-height: 720px) {
+//   .upload-container {
+//     height: 92px;
+//     margin-bottom: 6px;
+//   }
 
-  .fields {
-    gap: 6px;
-  }
+//   .fields {
+//     gap: 6px;
+//   }
 
-  .field {
-    .field__label {
-      font-size: 13px;
-    }
+//   .field {
+//     .field__label {
+//       font-size: 13px;
+//     }
 
-    .field__input {
-      min-height: 44px !important;
-    }
-  }
+//     .field__input {
+//       min-height: 44px !important;
+//     }
+//   }
 
-  .stepper {
-    height: 46px;
+//   .stepper {
+//     height: 46px;
 
-    .stepper__button {
-      height: 46px;
-    }
-  }
+//     .stepper__button {
+//       height: 46px;
+//     }
+//   }
 
-  .chip {
-    min-height: 38px;
-    font-size: 13px;
-  }
-}
+//   .chip {
+//     min-height: 38px;
+//     font-size: 13px;
+//   }
+// }

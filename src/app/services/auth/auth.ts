@@ -252,8 +252,9 @@ export class Auth {
   async loginAnonymous(fullName: string, file: File): Promise<string> {
     const avatar = await this.storageService.uploadImage(file);
 
+    console.log("auth.ts 255");
     console.log(avatar);
-
+    
     const { data: authData, error: authError } =
       await this.supabaseService.client.auth.signInAnonymously({
         options: {
@@ -265,6 +266,12 @@ export class Auth {
           },
         },
       });
+      
+    console.log("auth.ts 270");
+    console.log(authData);
+
+    console.log("auth.ts 273");
+    console.log(authError);
 
     if (authError) throw authError;
 

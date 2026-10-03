@@ -69,9 +69,7 @@ export class TablesPage {
     const modal = await this._modalController.create({
       component: TableQrModalComponent,
       componentProps: { table },
-      breakpoints: [0, 0.8],
-      initialBreakpoint: 0.8,
-      handle: true,
+      cssClass: 'confirm-modal',
     });
 
     await modal.present();

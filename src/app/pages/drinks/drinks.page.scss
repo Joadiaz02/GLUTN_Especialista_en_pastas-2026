@@ -10,13 +10,9 @@
   box-sizing: border-box;
 }
 
-ion-searchbar {
-  --background: var(--ion-color-light, #f4ebdd);
-  --color: #2F3D24;
-  --placeholder-color: #6b5c4e;
-  --border-radius: 12px;
-  padding: 0 0 12px;
-  flex-shrink: 0;
+ion-content {
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
 }
 
 .drinks-vacio {
@@ -115,4 +111,44 @@ app-producto-carrusel {
 
 .drinks-scroll::-webkit-scrollbar-thumb:active {
   background: #e76f45;
+}
+
+ion-searchbar.drinks-search {
+  --background: #8ca273;
+  --border-radius: 12px;
+  --box-shadow: none;
+  --color: #fff;
+  --placeholder-color: #FFFFFF;
+  --placeholder-opacity: 0.85;
+  --icon-color: #FFFFFF;
+  --clear-button-color: #FFFFFF;
+
+  height: 60px;
+  padding: 0 20px;
+  font-size: 16px;
+}
+
+:host ::ng-deep ion-searchbar.drinks-search {
+  .searchbar-input-container {
+    height: 100%;
+  }
+
+  .searchbar-input {
+    height: 100%;
+    font-size: 16px;
+    padding-inline-start: 48px;
+    padding-inline-end: 16px;
+    border-radius: 12px;
+  }
+
+  .searchbar-search-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    inset-inline-start: 16px;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    font-size: 20px;
+  }
 }

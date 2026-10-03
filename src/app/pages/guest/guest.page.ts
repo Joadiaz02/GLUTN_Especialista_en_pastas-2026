@@ -23,6 +23,7 @@ import { LocationStepPage } from './steps/location-step/location-step.page';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { Router } from '@angular/router';
 import { Auth, Waitlist } from '@app/services';
+import { fullNameValidator } from '@app/validators';
 
 @Component({
   selector: 'app-guest',
@@ -57,7 +58,11 @@ export class GuestPage {
 
     fullName: new FormControl(
       '',
-      Validators.required
+      [
+  Validators.required,
+  Validators.maxLength(60),
+  fullNameValidator(),
+]
     ),
 
     comensales: new FormControl(
@@ -143,38 +148,41 @@ export class GuestPage {
   }
 
   async scanQR(): Promise<void> {
-    const { camera } =
-      await BarcodeScanner.requestPermissions();
+    // const { camera } =
+    //   await BarcodeScanner.requestPermissions();
 
-    if (
-      camera !== 'granted' &&
-      camera !== 'limited'
-    ) {
-      await this._showError(
-        'Necesitamos permiso de cámara para escanear el código.'
-      );
+    // if (
+    //   camera !== 'granted' &&
+    //   camera !== 'limited'
+    // ) {
+    //   await this._showError(
+    //     'Necesitamos permiso de cámara para escanear el código.'
+    //   );
 
-      return;
-    }
+    //   return;
+    // }
 
-    const { barcodes } =
-      await BarcodeScanner.scan();
+    // const { barcodes } =
+    //   await BarcodeScanner.scan();
 
-    if (barcodes.length === 0) {
-      return;
-    }
+    // if (barcodes.length === 0) {
+    //   return;
+    // }
 
-    const rawValue =
-      barcodes[0].rawValue;
+    // const rawValue =
+    //   barcodes[0].rawValue;
 
-    if (rawValue !== 'ingreso-local') {
-      await this._showError(
-        'Ese código QR no corresponde al ingreso del local.'
-      );
+    // if (rawValue !== 'ingreso-local') {
+    //   await this._showError(
+    //     'Ese código QR no corresponde al ingreso del local.'
+    //   );
 
-      return;
-    }
+    //   return;
+    // }
 
+    // console.log("guest.page.ts 178")
+    // console.log("ESCANEO CORRECTO")
+    
     this.scanning.set(true);
 
     try {
@@ -194,13 +202,16 @@ export class GuestPage {
       }
 
       /*
-       * 1. Crear / iniciar sesión como invitado
-       */
+      * 1. Crear / iniciar sesión como invitado
+      */
       const usuarioId =
         await this._authService.loginAnonymous(
           fullName,
           file
         );
+
+      console.log("guest.page.ts 208")
+      console.log(usuarioId)
 
       /*
        * 2. Agregar el cliente a la lista de espera
@@ -213,6 +224,9 @@ export class GuestPage {
           consideraciones:
             consideraciones ?? [],
         });
+
+      console.log("guest.page.ts 223")
+      console.log(entry)
 
       /*
        * 3. Avisar al metre

@@ -228,13 +228,13 @@ export class WaitingRoomPage {
               miEntrada.mesa_id
             );
 
-        // this.isTableAssigned.set(
-        //   true
-        // );
+        this.isTableAssigned.set(
+          true
+        );
 
-        // this.table.set(
-        //   mesa
-        // );
+        this.table.set(
+          mesa
+        );
 
         return;
       }
