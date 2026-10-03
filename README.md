@@ -10,6 +10,72 @@
 
 ---
 
+---
+
+## 📲 Códigos QR del restaurante
+
+La aplicación utiliza códigos QR para permitir el ingreso de los clientes y asociarlos a una mesa determinada.
+
+###  QR de ingreso
+
+QR utilizado para el ingreso general de los clientes al restaurante.
+
+<p align="center">
+  <img src="images/qr-ingreso.png" alt="QR de ingreso" width="250">
+</p>
+
+---
+
+###  QR Mesa 1
+
+QR correspondiente a la Mesa 1.
+
+<p align="center">
+  <img src="images/qr-mesa-1.png" alt="QR Mesa 1" width="250">
+</p>
+
+---
+
+###  QR Mesa 2
+
+QR correspondiente a la Mesa 2.
+
+<p align="center">
+  <img src="images/qr-mesa-2.png" alt="QR Mesa 2" width="250">
+</p>
+
+---
+
+###  QR Mesa 3
+
+QR correspondiente a la Mesa 3.
+
+<p align="center">
+  <img src="images/qr-mesa-3.png" alt="QR Mesa 3" width="250">
+</p>
+
+---
+
+###  QR Mesa 4
+
+QR correspondiente a la Mesa 4.
+
+<p align="center">
+  <img src="images/qr-mesa-4.png" alt="QR Mesa 4" width="250">
+</p>
+
+---
+
+###  QR Mesa 5
+
+QR correspondiente a la Mesa 5.
+
+<p align="center">
+  <img src="images/qr-mesa-5.png" alt="QR Mesa 5" width="250">
+</p>
+
+---
+
 # 📸 Capturas de la aplicación
 
 ## Splash Screen
