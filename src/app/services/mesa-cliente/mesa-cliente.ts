@@ -15,6 +15,9 @@ export class MesaCliente {
   // número de mesa visible
   numero = signal<string | null>(null);
 
+  // id de la mesa en la base
+  id = signal<string | null>(null);
+
   // compara por id para no repetir la consulta
   private _idCliente = computed<string | null>(() => {
     const usuario = this._auth.usuarioActual();
@@ -34,14 +37,16 @@ export class MesaCliente {
 
     if (!idCliente) {
       this.numero.set(null);
+      this.id.set(null);
       return;
     }
 
-    const numero = await this.buscarNumero(idCliente);
+    const mesa = await this.buscarMesa(idCliente);
 
     // descarta la respuesta si cambió el usuario
     if (this._idCliente() === idCliente) {
-      this.numero.set(numero);
+      this.numero.set(mesa?.numero ?? null);
+      this.id.set(mesa?.id ?? null);
     }
   }
 
@@ -52,6 +57,7 @@ export class MesaCliente {
     }
 
     this.numero.set(null);
+    this.id.set(null);
 
     if (!idCliente) {
       return;
@@ -74,7 +80,7 @@ export class MesaCliente {
     await this.actualizar();
   }
 
-  private async buscarNumero(idCliente: string): Promise<string | null> {
+  private async buscarMesa(idCliente: string): Promise<{ id: string; numero: string } | null> {
     const { data: entrada } = await this._db.client
       .from('lista_espera')
       .select('mesa_id')
@@ -94,6 +100,6 @@ export class MesaCliente {
       .eq('id', entrada.mesa_id)
       .maybeSingle();
 
-    return mesa ? String(mesa.numero) : null;
+    return mesa ? { id: String(entrada.mesa_id), numero: String(mesa.numero) } : null;
   }
 }

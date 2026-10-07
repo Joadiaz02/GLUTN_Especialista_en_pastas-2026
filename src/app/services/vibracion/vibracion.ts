@@ -39,7 +39,7 @@ export class Vibracion {
 
   sonidoCierre(): void {
     this.reproducir(
-      'assets/sounds/cierre.wav'
+      'assets/sounds/cierre.mp3'
     );
   }
 

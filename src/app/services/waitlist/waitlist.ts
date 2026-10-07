@@ -415,6 +415,9 @@ async remove(
           'asignado',
           'en_mesa',
         ])
+        // toma la última por si quedó anotado más de una vez
+        .order('created_at', { ascending: false })
+        .limit(1)
         .maybeSingle();
 
     if (error) {
@@ -442,18 +445,15 @@ async remove(
     }
 
     if (entry.estado === 'asignado') {
-      const { error: updateError } =
-        await this._db.client
-          .from('lista_espera')
-          .update({
-            estado: 'en_mesa',
-            updated_at:
-              new Date().toISOString(),
-          })
-          .eq('id', entry.id);
+      // la base valida la mesa y pasa al cliente a en_mesa
+      const { error: rpcError } =
+        await this._db.client.rpc(
+          'vincular_mesa',
+          { p_mesa_id: scannedTableId }
+        );
 
-      if (updateError) {
-        throw updateError;
+      if (rpcError) {
+        throw rpcError;
       }
     }
 
@@ -483,6 +483,9 @@ async remove(
           'esperando',
           'asignado',
         ])
+        // toma la última por si quedó anotado más de una vez
+        .order('created_at', { ascending: false })
+        .limit(1)
         .maybeSingle();
 
     if (error) {

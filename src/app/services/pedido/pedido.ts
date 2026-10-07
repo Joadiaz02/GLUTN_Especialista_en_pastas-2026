@@ -41,12 +41,19 @@ export class Pedido {
         const {error: error_items} = await this.sup.client.from('pedido_item').insert(itemsAInsertar)
 
         if(error_items){
+            // borra el pedido sin productos para que no le llegue vacío al mozo
+            await this.sup.client.from('pedido').delete().eq('id_pedido', pedido.id_pedido);
             throw error_items;
         };
 
-        await this.sup.client.functions.invoke('notify-new-pedido', {
+        // el pedido ya quedó guardado aunque falle el aviso al mozo
+        const { error: errorAviso } = await this.sup.client.functions.invoke('notify-new-pedido', {
             body: { idPedido: pedido.id_pedido, idMesa: id_mesa }
         });
+
+        if (errorAviso) {
+            console.warn('No se pudo avisar al mozo del pedido nuevo:', errorAviso);
+        }
 
         
         this.carrito.vaciar();
