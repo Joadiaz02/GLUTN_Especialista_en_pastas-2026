@@ -14,13 +14,12 @@
   </ion-toolbar>
 </ion-header> -->
 <!-- <app-header title="Bebidas" [mostrarCerrarSesion]="false" routeName="create" /> -->
-<app-header title="Bebidas" action="add" routeName="create" />
+<app-header title="Bebidas" action="add" routeName="create" backHref="/admin" />
 
 <ion-content [fullscreen]="true">
   <div>
     <div class="drinks-content">
       <ion-searchbar
-        class="drinks-search"
         placeholder="Buscar Bebidas"
         [debounce]="200"
         (ionInput)="onBuscar($event.detail.value ?? '')"

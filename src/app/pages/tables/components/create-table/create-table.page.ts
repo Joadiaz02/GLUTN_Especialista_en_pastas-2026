@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonFooter, IonButton, IonInput, IonSpinner, ToastController } from '@ionic/angular';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonFooter, IonButton, IonInput, IonSpinner, ToastController, NavController } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Router } from '@angular/router';
 import { GtnUploader } from '@app/components';
@@ -40,6 +40,7 @@ export class CreateTablePage {
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
   private _vibracion = inject(Vibracion);
+   private _navCtrl = inject(NavController); 
   isLoading = signal<boolean>(false);
 
   form = new FormGroup({
@@ -111,7 +112,12 @@ export class CreateTablePage {
 
       await toast.present();
 
-      await this._router.navigate(['/admin/tables']);
+      // await this._router.navigate(['/admin/tables']);
+      await this._navCtrl.navigateRoot('/admin/tables', {
+        animated: true,
+        animationDirection: 'back',
+        replaceUrl: true,
+      });
     } catch {
       await this._vibracion.error();
       const toast = await this._toastController.create({

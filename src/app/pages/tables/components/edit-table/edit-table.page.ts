@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonHeader, IonTitle, IonToolbar, IonButtons, IonContent, IonInput, IonFooter, IonButton, IonSpinner, ToastController } from '@ionic/angular';
+import { IonHeader, IonTitle, IonToolbar, IonButtons, IonContent, IonInput, IonFooter, IonButton, IonSpinner, ToastController, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Storage, Table } from '@app/services';
@@ -9,6 +9,7 @@ import { GtnUploader } from '@app/components';
 import { Vibracion } from '@app/services/vibracion';
 import { VibrarErrores } from '@app/directives';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { HeaderComponent } from '@app/components/ui';
 @Component({
   selector: 'app-edit-table',
   templateUrl: './edit-table.page.html',
@@ -28,7 +29,8 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     IonButton,
     IonSpinner,
     VibrarErrores,
-    SpinnerLogoComponent
+    SpinnerLogoComponent,
+    HeaderComponent
 ],
 })
 export class EditTablePage implements OnInit {
@@ -38,6 +40,7 @@ export class EditTablePage implements OnInit {
   private _toastController = inject(ToastController);
   private _storageService = inject(Storage);
   private _vibracion = inject(Vibracion);
+ private _navCtrl = inject(NavController); 
   isLoading = signal<boolean>(false);
 
   image = signal<string | null>(null);
@@ -135,7 +138,12 @@ export class EditTablePage implements OnInit {
 
       await toast.present();
 
-      this._router.navigateByUrl('/admin/tables');
+      // this._router.navigateByUrl('/admin/tables');
+      await this._navCtrl.navigateRoot('/admin/tables', {
+        animated: true,
+        animationDirection: 'back',
+        replaceUrl: true,
+      });
     } catch (error) {
       await this._vibracion.error();
       const toast = await this._toastController.create({
