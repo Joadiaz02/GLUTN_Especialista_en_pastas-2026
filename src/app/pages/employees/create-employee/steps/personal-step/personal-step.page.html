@@ -5,6 +5,11 @@
   </p>
 
   <div class="fields">
+    <button (click)="scanDNI()" class="button-scan">
+      <ion-icon src="assets/icons/scan.svg"></ion-icon>
+      Escanear DNI
+    </button>
+
     <div class="field">
       <label class="field__label">Nombre</label>
 
@@ -55,7 +60,7 @@
       } }
     </div>
 
-    <div class="field">
+    <!-- <div class="field">
       <label class="field__label">Puesto</label>
 
       <div class="chips">
@@ -75,55 +80,52 @@
       || getFormControl('role')?.dirty)) {
       <p class="field__error">Debe seleccionar un puesto.</p>
       }
-    </div>
+    </div> -->
 
-    <div class="field">
-      <label class="field__label">CUIL</label>
+    <div class="fields__row">
+      <div class="field">
+        <label class="field__label">CUIL</label>
 
-      <ion-input
-        type="text"
-        inputmode="numeric"
-        fill="outline"
-        class="field__input"
-        placeholder="XX-XXXXXXXX-X"
-        formControlName="cuil"
-        appCuilFormat
-      />
+        <ion-input
+          type="text"
+          inputmode="numeric"
+          fill="outline"
+          class="field__input"
+          placeholder="XX-XXXXXXXX-X"
+          formControlName="cuil"
+          appCuilFormat
+        />
 
-      @if ( getFormControl('cuil')?.invalid && ( getFormControl('cuil')?.touched
-      || getFormControl('cuil')?.dirty ) ) { @if (
-      getFormControl('cuil')?.hasError('required') ) {
-      <p class="field__error">El campo es obligatorio.</p>
-      } @if ( getFormControl('cuil')?.hasError('cuil') ) {
-      <p class="field__error">El CUIL es inválido.</p>
-      } }
-    </div>
+        @if ( getFormControl('cuil')?.invalid && (
+        getFormControl('cuil')?.touched || getFormControl('cuil')?.dirty ) ) {
+        @if ( getFormControl('cuil')?.hasError('required') ) {
+        <p class="field__error">El campo es obligatorio.</p>
+        } @if ( getFormControl('cuil')?.hasError('cuil') ) {
+        <p class="field__error">El CUIL es inválido.</p>
+        } }
+      </div>
 
-    <div class="field">
-      <label class="field__label">DNI</label>
+      <div class="field">
+        <label class="field__label">DNI</label>
 
-      <ion-input
-        type="text"
-        inputmode="numeric"
-        maxlength="10"
-        class="field__input"
-        fill="outline"
-        placeholder="XX.XXX.XXX"
-        formControlName="dni"
-        appDniFormat
-      />
-      @if ( getFormControl('dni')?.invalid && ( getFormControl('dni')?.touched
-      || getFormControl('dni')?.dirty ) ) { @if (
-      getFormControl('dni')?.hasError('required') ) {
-      <p class="field__error">El DNI es obligatorio.</p>
-      } @if ( getFormControl('dni')?.hasError('pattern') ) {
-      <p class="field__error">Ingresá un DNI válido.</p>
-      } }
+        <ion-input
+          type="text"
+          inputmode="numeric"
+          maxlength="10"
+          class="field__input"
+          fill="outline"
+          placeholder="XX.XXX.XXX"
+          formControlName="dni"
+          appDniFormat
+        />
+        @if ( getFormControl('dni')?.invalid && ( getFormControl('dni')?.touched
+        || getFormControl('dni')?.dirty ) ) { @if (
+        getFormControl('dni')?.hasError('required') ) {
+        <p class="field__error">El DNI es obligatorio.</p>
+        } @if ( getFormControl('dni')?.hasError('pattern') ) {
+        <p class="field__error">Ingresá un DNI válido.</p>
+        } }
+      </div>
     </div>
   </div>
-
-  <button (click)="scanDNI()" class="button-scan">
-    <ion-icon src="assets/icons/scan.svg"></ion-icon>
-    Escanear DNI
-  </button>
 </div>

@@ -105,6 +105,12 @@ export class CreateEmployeePage {
         Validators.minLength(8),
         Validators.pattern(PASSWORD_PATTERN),
       ]),
+
+      confirmPassword: new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(PASSWORD_PATTERN),
+      ]),
     }),
 
     profile: new FormGroup({
