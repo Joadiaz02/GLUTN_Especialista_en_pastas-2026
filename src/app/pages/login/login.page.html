@@ -14,7 +14,7 @@
     <div class="campo">
   <label class="field__label label-centrado">Correo electrónico</label>
   <ion-item  lines="none">
-    <ion-input class="field__input" fill="outline" [(ngModel)]="email" #emailInput="ngModel" name="email" type="email" placeholder="jperez@ejemplo.com" required></ion-input>
+    <ion-input class="field__input" fill="outline" (ionInput)="email = $event.detail.value ?? ''" [(ngModel)]="email" #emailInput="ngModel" name="email" type="email" placeholder="jperez@ejemplo.com" required></ion-input>
   </ion-item>
   <p class="texto-error label-centrado">
     {{ emailInput.touched && !email ? 'Correo electrónico requerido' : '' }}
@@ -22,11 +22,23 @@
 </div>
 
 <div class="campo">
-  <label class="field__label label-centrado" >Contraseña</label>
-  <ion-item  lines="none">
-    <ion-input class="field__input" fill="outline" [(ngModel)]="contrasena" #contraInput="ngModel" name="contrasena" type="password" placeholder="Contraseña" required></ion-input>
+  <label class="field__label label-centrado">Contraseña</label>
+
+  <ion-item lines="none">
+    <ion-input
+      class="field__input"
+      fill="outline"
+      [(ngModel)]="contrasena"
+      #contraInput="ngModel"
+      name="contrasena"
+      type="password"
+      placeholder="Contraseña"
+      autocomplete="current-password"
+      required>
+    </ion-input>
   </ion-item>
-   <p class="texto-error label-centrado" >
+
+  <p class="texto-error label-centrado">
     {{ contraInput.touched && !contrasena ? 'Contraseña requerida' : '' }}
   </p>
 </div>
