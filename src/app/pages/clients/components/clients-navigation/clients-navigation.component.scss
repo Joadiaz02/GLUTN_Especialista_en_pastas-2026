@@ -1,186 +1,113 @@
 :host {
   display: block;
-
   width: 100%;
 }
-
-
-/* =========================================
-   NAVEGACIÓN
-   ========================================= */
 
 .navigation-section {
-  width: 100%;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 25px;
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 36px;
 }
 
-
-/* =========================================
-   BOTONES
-   ========================================= */
-
 .navigation-button {
-  width: 55px;
-  height: 55px;
-
-  padding: 0;
-
-  border: none;
-
-  border-radius: 50%;
-
-  background: #8ca273;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 7px 17px
-    rgba(0, 0, 0, 0.17);
-
-  transition:
-    transform 0.15s ease,
-    opacity 0.15s ease;
+width: 58px;
+height: 58px;
+flex: 0 0 58px;
+padding: 0;
+border: none;
+border-radius: 50%;
+background: #8ca273;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+box-shadow: 0 7px 17px rgba(0, 0, 0, 0.17);
+transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
 .navigation-button:active {
-  transform: scale(0.90);
+  transform: scale(0.9);
 }
 
 .navigation-button:disabled {
-  opacity: 0.40;
-
+  opacity: 0.4;
   cursor: default;
 }
 
-
-/* =========================================
-   CHEVRON
-   ========================================= */
-
 .nav-chevron {
-  width: 14px;
-  height: 14px;
-
-  border-top:
-    3px solid
-    #ffffff;
-
-  border-right:
-    3px solid
-    #ffffff;
+  width: 15px;
+  height: 15px;
+  border-top: 3px solid #fff;
+  border-right: 3px solid #fff;
 }
 
 .nav-left {
   transform: rotate(-135deg);
-
   margin-left: 5px;
 }
 
 .nav-right {
   transform: rotate(45deg);
-
   margin-right: 5px;
 }
 
-
-/* =========================================
-   CONTADOR
-   ========================================= */
-
+/* CONTADOR */
 .counter {
   min-width: 110px;
-
   display: flex;
-
   align-items: baseline;
   justify-content: center;
-
   gap: 7px;
-
-  color: #ffffff;
+  color: #fff;
 }
 
 .counter-current {
-  font-size: 31px;
-
+  font-size: 34px;
   font-weight: 900;
 }
 
 .counter-separator {
-  font-size: 16px;
-
-  opacity: 0.8;
+  font-size: 17px;
+  opacity: 0.85;
 }
 
 .counter-total {
-  font-size: 21px;
-
+  font-size: 22px;
   font-weight: 800;
 }
 
-
-/* =========================================
-   AYUDA
-   ========================================= */
-
+/* INSTRUCCIÓN */
 .swipe-hint {
-  margin:
-    7px
-    0
-    0;
-
-  color:
-    rgba(255, 255, 255, 0.72);
-
-  font-size: 13px;
-
+  margin: 13px 0 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 18px;
+  line-height: 1.4;
   text-align: center;
 }
 
-
-/* =========================================
-   CELULAR
-   ========================================= */
-
+/* CELULARES */
 @media (max-width: 600px) {
-
   .navigation-section {
-    gap: 20px;
+    gap: clamp(16px, 5vw, 24px);
   }
 
   .navigation-button {
-    width: 51px;
-    height: 51px;
-  }
-
-  .counter {
-    min-width: 100px;
+    width: 54px;
+    height: 54px;
+    flex-basis: 54px;
   }
 
   .counter-current {
-    font-size: 29px;
-  }
-
-  .counter-separator {
-    font-size: 15px;
+    font-size: 32px;
   }
 
   .counter-total {
-    font-size: 20px;
+    font-size: 21px;
   }
 
   .swipe-hint {
-    font-size: 12px;
+    font-size: 25px;
   }
 }

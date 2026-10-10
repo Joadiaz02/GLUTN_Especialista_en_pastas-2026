@@ -155,76 +155,59 @@ export class QuickAccessPage {
 
   }
 
-  async ingresar(
-    usuario: UsuarioAccesoRapido
-  ): Promise<void> {
+  
 
-    if (
-      this.usuarioIngresando !== null
-    ) {
-      return;
-    }
 
-    this.usuarioIngresando =
-      usuario.email;
+async ingresar(
+  usuario: UsuarioAccesoRapido
+): Promise<void> {
+  if (this.usuarioIngresando !== null) {
+    return;
+  }
 
-    try {
+  this.usuarioIngresando = usuario.email;
 
-      const usuarioAutenticado =
-        await this.auth.iniciarsecion({
-          email: usuario.email,
-          password: usuario.password,
-        });
+  try {
+    // Mostrar el spinner antes de iniciar la navegación.
+    await new Promise<void>(resolve => {
+      setTimeout(resolve, 100);
+    });
 
-      await this.pushNotificationService
-        .inicializar();
-
-      this.auth.registrarPantallaIngreso(
-        '/acceso_rapido'
-      );
-
-      const perfil =
-        this.auth.obtenerPerfil(
-          usuarioAutenticado
-        );
-
-      this.usuarioIngresando = null;
-
-      if (
-        perfil ===
-          EPerfilUsuario.ClienteRegistrado ||
-        perfil ===
-          EPerfilUsuario.ClienteAnonimo
-      ) {
-
-        await this.router.navigate(
-          ['/home'],
-          { replaceUrl: true }
-        );
-
-        return;
+    const navegacionExitosa = await this.router.navigate(
+      ['/login'],
+      {
+        state: {
+          credencialesAccesoRapido: {
+            email: usuario.email,
+            password: usuario.password,
+          },
+        },
+        replaceUrl: true,
       }
+    );
 
-      await this.router.navigate(
-        ['/seleccion-acceso'],
-        { replaceUrl: true }
-      );
-
-    } catch {
-
+    if (!navegacionExitosa) {
       this.usuarioIngresando = null;
 
       await this.mostrarError(
-        'No se pudo iniciar sesión con este usuario. Verificá que el usuario de prueba exista.'
+        'No se pudo abrir el inicio de sesión.'
       );
-
-      await Haptics.vibrate({
-        duration: 300
-      });
-
     }
+  } catch (error) {
+    console.error('Error al abrir el login:', error);
 
+    this.usuarioIngresando = null;
+
+    await this.mostrarError(
+      'No se pudo abrir el inicio de sesión.'
+    );
+
+    await Haptics.vibrate({ duration: 300 });
   }
+}
+
+
+
 
   private async mostrarError(
     message: string

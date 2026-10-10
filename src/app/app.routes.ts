@@ -43,16 +43,6 @@ export const routes: Routes = [
       import('./pages/guest/guest.page').then((m) => m.GuestPage),
   },
 
-  {
-    path: 'seleccion-acceso',
-
-    canActivate: [staffGuard],
-
-    loadComponent: () =>
-      import('./pages/access-selection/access-selection.page').then(
-        (m) => m.AccessSelectionPage
-      ),
-  },
 
   {
     path: 'admin',

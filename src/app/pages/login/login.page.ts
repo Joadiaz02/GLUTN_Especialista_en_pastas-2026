@@ -56,6 +56,21 @@ export class LoginPage {
 
   cargando = signal<boolean>(false);
 
+  
+constructor() {
+  const navigationState =
+    this.router.getCurrentNavigation()?.extras.state
+    ?? history.state;
+
+  const credenciales = navigationState?.['credencialesAccesoRapido'];
+
+  if (credenciales) {
+    this.email = credenciales.email ?? '';
+    this.contrasena = credenciales.password ?? '';
+  }
+}
+
+  
   get formularioValido(): boolean {
     const emailValido =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -109,7 +124,8 @@ export class LoginPage {
           .esPersonal(usuario)
       ) {
         await this.router.navigate(
-          ['/seleccion-acceso']
+        ['/admin'],
+        { replaceUrl: true }
         );
 
         return;
