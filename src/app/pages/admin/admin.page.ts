@@ -47,7 +47,7 @@ import { HeaderComponent } from '@app/components/ui';
   templateUrl: './admin.page.html',
   styleUrls: ['./admin.page.scss'],
 })
-export class AdminPage implements OnInit {
+export class AdminPage  {
   private auth = inject(Auth);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
@@ -60,42 +60,38 @@ export class AdminPage implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    void this.cargarModulos();
+  ionViewWillEnter(): void {
+  void this.cargarModulos();
+}
+
+private async cargarModulos(): Promise<void> {
+  // Evitar mostrar módulos del usuario anterior
+  this.modulosVisibles = [];
+
+  const usuario = await this.auth.obtenerUsuarioActual();
+
+  if (!usuario) {
+    await this.router.navigate(['/login'], {
+      replaceUrl: true,
+    });
+    return;
   }
 
-  private async cargarModulos(): Promise<void> {
-    const usuario = await this.auth.obtenerUsuarioActual();
+  const perfil = this.auth.obtenerPerfil(usuario);
 
-    console.log('========== ADMIN ==========');
-    console.log('Usuario:', usuario);
-    console.log('Metadata:', usuario?.user_metadata);
-
-    if (!usuario) {
-      console.log('NO HAY USUARIO');
-      await this.router.navigate(['/login']);
-      return;
-    }
-
-    const perfil = this.auth.obtenerPerfil(usuario);
-
-    console.log('Perfil obtenido:', perfil);
-    console.log('Módulos disponibles:', ADMIN_MODULES);
-
-    if (!perfil) {
-      console.log('NO HAY PERFIL');
-      await this.router.navigate(['/login']);
-      return;
-    }
-
-    this.modulosVisibles = ADMIN_MODULES.filter((modulo) =>
-      modulo.roles.includes(perfil)
-    );
-
-    console.log('Módulos visibles:', this.modulosVisibles);
-
-    this.cdr.detectChanges();
+  if (!perfil) {
+    await this.router.navigate(['/login'], {
+      replaceUrl: true,
+    });
+    return;
   }
+
+  this.modulosVisibles = ADMIN_MODULES.filter(
+    modulo => modulo.roles.includes(perfil)
+  );
+
+  this.cdr.detectChanges();
+}
 
   seleccionarModulo(modulo: AdminModule): void {
     console.log('Módulo seleccionado:', modulo);
@@ -106,11 +102,18 @@ export class AdminPage implements OnInit {
     void this.router.navigate(['/seleccion-acceso']);
   }
 
-  async cerrarSesion(): Promise<void> {
-    localStorage.removeItem('token');
-    localStorage.removeItem('mesa');
+async cerrarSesion(): Promise<void> {
+  localStorage.removeItem('token');
+  localStorage.removeItem('mesa');
 
+  try {
     await this.auth.logout();
-    await this.router.navigate(['/login']);
+
+    await this.router.navigate(['/login'], {
+      replaceUrl: true,
+    });
+  } catch (error) {
+    console.error('Error al cerrar sesión:', error);
   }
+}
 }
