@@ -9,7 +9,7 @@
     <ion-title>Editar Mesa</ion-title>
   </ion-toolbar>
 </ion-header> -->
-<app-header title="Editar Mesa" />
+<app-header title="Editar Mesa" routeBackName="/admin/tables" />
 
 <ion-content>
   @if (table()) {
@@ -34,8 +34,26 @@
 
       @if ( getFormControl('number')?.invalid && (
       getFormControl('number')?.touched || getFormControl('number')?.dirty ) ) {
+      @if ( getFormControl('number')?.hasError('required') ) {
       <p class="field__error">El campo es obligatorio.</p>
-      }
+      } @if ( getFormControl('number')?.hasError('numberTaken') ) {
+      <p class="field__error">
+        La mesa {{ getFormControl('number')?.value }} ya existe. Elegí otro
+        número.
+      </p>
+      } }
+
+      <!-- @if ( getFormControl('number')?.invalid && (
+      getFormControl('number')?.touched || getFormControl('number')?.dirty ) ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } 
+      
+      @if (getFormControl('number')?.hasError('numberTaken')) {
+      <p class="field__error">
+        La mesa {{ getFormControl('number')?.value }} ya existe. Elegí otro
+        número.
+      </p>
+      } -->
     </div>
 
     <div class="field">
@@ -87,13 +105,6 @@
   }
 </ion-content>
 
-@if (isLoading()) {
-<div class="page-loading">
-  <app-spinner-logo />
-  <span>Actualizando mesa...</span>
-</div>
-}
-
 <ion-footer class="ion-no-border">
   <div class="footer-actions">
     <ion-button expand="block" shape="round" (click)="edit()">
@@ -101,3 +112,10 @@
     </ion-button>
   </div>
 </ion-footer>
+
+@if (isLoading()) {
+<div class="quick-loading">
+  <app-spinner-logo />
+  <span>Cargando...</span>
+</div>
+}

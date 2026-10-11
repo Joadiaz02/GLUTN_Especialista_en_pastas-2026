@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border">
+<!-- <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
@@ -12,22 +12,22 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+<app-header
+  title="Mesas"
+  action="add"
+  routeName="create"
+  routeBackName="/admin"
+/>
 
 <ion-content [fullscreen]="true">
   <div class="container-full-center">
-    @if (isLoading()) {
-    <div class="page-loading">
-      <app-spinner-logo />
-      <span>Cargando mesas...</span>
-    </div>
-    } @else {
     <div class="table__list">
       @for (table of tables(); track table.id) {
       <article
         class="table-card"
         [class.table-card--out]="table.baja_logica"
-        [routerLink]="['edit', table.id]"
+        (click)="onOpenSheet(table)"
       >
         <div class="table-card__media">
           @if (table.foto) {
@@ -95,7 +95,7 @@
                 'Personas' }}
               </p>
 
-              <div class="right-content-group">
+              <!-- <div class="right-content-group">
                 <button
                   type="button"
                   class="button__qr"
@@ -179,13 +179,19 @@
                   (ionChange)="onToggle(table, $event)"
                   (click)="$event.stopPropagation()"
                 ></ion-toggle>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
       </article>
       }
     </div>
-    }
   </div>
 </ion-content>
+
+@if (isLoading()) {
+<div class="quick-loading">
+  <app-spinner-logo />
+  <span>Cargando...</span>
+</div>
+}

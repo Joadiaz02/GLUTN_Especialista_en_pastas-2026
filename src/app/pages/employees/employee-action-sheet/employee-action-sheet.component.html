@@ -1,0 +1,30 @@
+<div class="employee-sheet">
+  <div class="employee-sheet__header">
+    <span class="employee-sheet__avatar">
+      <img class="employee-sheet__image" [src]="employee.avatar" />
+    </span>
+
+    <div class="employee-sheet__identity">
+      <h2 class="employee-sheet__name">
+        {{ employee.nombre }} {{ employee.apellido }}
+      </h2>
+      <span class="employee-sheet__role">{{ employee.perfil }}</span>
+    </div>
+  </div>
+
+  <div class="employee-sheet__actions">
+    @if (employee.is_active) {
+    <ion-button shape="round" fill="outline" (click)="select('edit')">
+      Editar empleado
+    </ion-button>
+
+    <ion-button shape="round" color="danger" (click)="select('deactivate')">
+      Dar de baja
+    </ion-button>
+    } @else {
+    <ion-button shape="round" (click)="select('reactivate')">
+      Reactivar empleado
+    </ion-button>
+    }
+  </div>
+</div>

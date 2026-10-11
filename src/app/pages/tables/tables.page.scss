@@ -6,9 +6,15 @@
   justify-content: center;
 }
 
+ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
 .table__list {
   display: flex;
   gap: 24px;
+  // height: calc(100% - 72px - 48px);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-padding-inline: 0;
@@ -31,7 +37,7 @@
   }
 
   overflow: hidden;
-  border-radius: 24px;
+  border-radius: 8px;
   background: #A8B68A;
 
   .table-card__media {

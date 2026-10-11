@@ -43,7 +43,6 @@ export const routes: Routes = [
       import('./pages/guest/guest.page').then((m) => m.GuestPage),
   },
 
-
   {
     path: 'admin',
 
@@ -202,12 +201,11 @@ export const routes: Routes = [
       ).then((m) => m.OrdersDetallesComponent),
   },
   {
-  path: 'admin/bar',
-  canActivate: [authGuard, roleGuard],
-  data: { roles: [EPerfilUsuario.Cantinero] },
-  loadComponent: () =>
-    import('./pages/bar/bar.page').then((m) => m.BarPage),
-},
+    path: 'admin/bar',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cantinero] },
+    loadComponent: () => import('./pages/bar/bar.page').then((m) => m.BarPage),
+  },
   {
     path: 'juegos',
 
@@ -345,6 +343,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/employees/create-employee/create-employee.page').then(
         (m) => m.CreateEmployeePage
+      ),
+  },
+  {
+    path: 'admin/employees/edit/:id',
+    loadComponent: () =>
+      import('./pages/employees/edit-employee/edit-employee.page').then(
+        (m) => m.EditEmployeePage
       ),
   },
 ];

@@ -5,82 +5,77 @@
   </p>
 
   <div class="fields">
-    <button (click)="scanDNI()" class="button-scan">
-      <ion-icon src="assets/icons/scan.svg"></ion-icon>
-      Escanear DNI
+    <button type="button" class="scan-card" (click)="scanDNI()">
+      <span class="scan-card__icon-wrapper">
+        <ion-icon
+          class="scan-card__icon"
+          src="assets/icons/scan.svg"
+        ></ion-icon>
+      </span>
+
+      <span class="scan-card__content">
+        <span class="scan-card__title">Escanear DNI</span>
+        <span class="scan-card__subtitle"
+          >Completá tus datos automáticamente</span
+        >
+      </span>
     </button>
 
-    <div class="field">
-      <label class="field__label">Nombre</label>
+    <div class="fields__row">
+      <div class="field">
+        <label class="field__label">Nombre</label>
 
-      <ion-input
-        type="text"
-        fill="outline"
-        class="field__input"
-        placeholder="Nombre"
-        formControlName="name"
-      />
+        <ion-input
+          type="text"
+          fill="outline"
+          class="field__input"
+          placeholder="Nombre"
+          formControlName="name"
+        />
 
-      @if ( getFormControl('name')?.invalid && ( getFormControl('name')?.touched
-      || getFormControl('name')?.dirty ) ) { @if (
-      getFormControl('name')?.hasError('required') ) {
-      <p class="field__error">El nombre es obligatorio.</p>
-      } @if ( getFormControl('name')?.hasError('minlength') ) {
-      <p class="field__error">El nombre debe tener al menos 2 caracteres.</p>
-      } @if ( getFormControl('name')?.hasError('maxlength') ) {
-      <p class="field__error">El nombre no puede superar los 50 caracteres.</p>
-      } @if ( getFormControl('name')?.hasError('pattern') ) {
-      <p class="field__error">El nombre solo puede contener letras.</p>
-      } }
-    </div>
-
-    <div class="field">
-      <label class="field__label">Apellido</label>
-
-      <ion-input
-        type="text"
-        fill="outline"
-        class="field__input"
-        placeholder="Apellido"
-        formControlName="lastName"
-      />
-
-      @if ( getFormControl('lastName')?.invalid && (
-      getFormControl('lastName')?.touched || getFormControl('lastName')?.dirty )
-      ) { @if ( getFormControl('lastName')?.hasError('required') ) {
-      <p class="field__error">El apellido es obligatorio.</p>
-      } @if ( getFormControl('lastName')?.hasError('minlength') ) {
-      <p class="field__error">El apellido debe tener al menos 2 caracteres.</p>
-      } @if ( getFormControl('lastName')?.hasError('maxlength') ) {
-      <p class="field__error">
-        El apellido no puede superar los 50 caracteres.
-      </p>
-      } @if ( getFormControl('lastName')?.hasError('pattern') ) {
-      <p class="field__error">El apellido solo puede contener letras.</p>
-      } }
-    </div>
-
-    <!-- <div class="field">
-      <label class="field__label">Puesto</label>
-
-      <div class="chips">
-        @for (t of types; track t.type) {
-        <button
-          type="button"
-          class="chip"
-          [class.chip-activo]="typeSelected() === t.type"
-          (click)="selectType(t.type)"
-        >
-          {{ t.type }}
-        </button>
-        }
+        @if ( getFormControl('name')?.invalid && (
+        getFormControl('name')?.touched || getFormControl('name')?.dirty ) ) {
+        @if ( getFormControl('name')?.hasError('required') ) {
+        <p class="field__error">El nombre es obligatorio.</p>
+        } @if ( getFormControl('name')?.hasError('minlength') ) {
+        <p class="field__error">El nombre debe tener al menos 2 caracteres.</p>
+        } @if ( getFormControl('name')?.hasError('maxlength') ) {
+        <p class="field__error">
+          El nombre no puede superar los 50 caracteres.
+        </p>
+        } @if ( getFormControl('name')?.hasError('pattern') ) {
+        <p class="field__error">El nombre solo puede contener letras.</p>
+        } }
       </div>
 
-      @if (getFormControl('role')?.invalid && (getFormControl('role')?.touched
-      || getFormControl('role')?.dirty)) {
-      <p class="field__error">Debe seleccionar un puesto.</p>
-      }
-    </div> -->
+      <div class="field">
+        <label class="field__label">Apellido</label>
+
+        <ion-input
+          type="text"
+          fill="outline"
+          class="field__input"
+          placeholder="Apellido"
+          formControlName="lastName"
+        />
+
+        @if ( getFormControl('lastName')?.invalid && (
+        getFormControl('lastName')?.touched || getFormControl('lastName')?.dirty
+        ) ) { @if ( getFormControl('lastName')?.hasError('required') ) {
+        <p class="field__error">El apellido es obligatorio.</p>
+        } @if ( getFormControl('lastName')?.hasError('minlength') ) {
+        <p class="field__error">
+          El apellido debe tener al menos 2 caracteres.
+        </p>
+        } @if ( getFormControl('lastName')?.hasError('maxlength') ) {
+        <p class="field__error">
+          El apellido no puede superar los 50 caracteres.
+        </p>
+        } @if ( getFormControl('lastName')?.hasError('pattern') ) {
+        <p class="field__error">El apellido solo puede contener letras.</p>
+        } }
+      </div>
+    </div>
 
     <div class="fields__row">
       <div class="field">
@@ -126,6 +121,28 @@
         <p class="field__error">Ingresá un DNI válido.</p>
         } }
       </div>
+    </div>
+
+    <div class="field">
+      <label class="field__label">Puesto</label>
+
+      <div class="chips">
+        @for (t of types; track t.type) {
+        <button
+          type="button"
+          class="chip"
+          [class.chip-activo]="typeSelected() === t.type"
+          (click)="selectType(t.type)"
+        >
+          {{ t.type }}
+        </button>
+        }
+      </div>
+
+      @if (getFormControl('role')?.invalid && (getFormControl('role')?.touched
+      || getFormControl('role')?.dirty)) {
+      <p class="field__error">Debe seleccionar un puesto.</p>
+      }
     </div>
   </div>
 </div>
