@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   TemplateRef,
   ViewChild,
@@ -31,7 +32,7 @@ import { Carrito } from '@app/pages/carrito/carrito';
     './producto-carrusel.component.scss',
 })
 export class ProductoCarruselComponent
-  implements AfterViewInit, OnDestroy {
+  implements AfterViewInit, OnChanges, OnDestroy {
 
   @Input()
   productos: CartaItem[] = [];
@@ -58,24 +59,6 @@ export class ProductoCarruselComponent
 
   indiceImagen =
     signal(0);
-
-  /* =====================================================
-     SWIPE PRODUCTOS
-  ===================================================== */
-
-  private inicioProductoX = 0;
-
-  private inicioProductoY = 0;
-
-  /* =====================================================
-     SWIPE IMÁGENES
-  ===================================================== */
-
-  private inicioImagenX = 0;
-
-  private inicioImagenY = 0;
-
-  private readonly UMBRAL_SWIPE = 45;
 
   /* =====================================================
      SCROLL
@@ -128,6 +111,10 @@ export class ProductoCarruselComponent
       this.iniciarAutoplay();
 
     });
+  }
+
+  ngOnChanges(): void {
+    requestAnimationFrame(() => this.actualizarProductoPorCentro());
   }
 
   /* =====================================================
@@ -248,74 +235,6 @@ export class ProductoCarruselComponent
         this.indiceImagen()
       ] ?? fotos[0]
     );
-  }
-
-  /* =====================================================
-     SWIPE PRODUCTO
-  ===================================================== */
-
-  comenzarSwipeProducto(
-    evento: TouchEvent
-  ): void {
-
-    this.inicioProductoX =
-      evento.touches[0]?.clientX ?? 0;
-
-    this.inicioProductoY =
-      evento.touches[0]?.clientY ?? 0;
-  }
-
-  terminarSwipeProducto(
-    evento: TouchEvent
-  ): void {
-
-    const finX =
-      evento.changedTouches[0]?.clientX ?? 0;
-
-    const finY =
-      evento.changedTouches[0]?.clientY ?? 0;
-
-    const deltaX =
-      finX -
-      this.inicioProductoX;
-
-    const deltaY =
-      finY -
-      this.inicioProductoY;
-
-    /*
-     * Si el gesto fue principalmente
-     * vertical, no cambiamos producto.
-     */
-    if (
-      Math.abs(deltaY) >
-      Math.abs(deltaX)
-    ) {
-
-      return;
-    }
-
-    /*
-     * No alcanzó el mínimo necesario.
-     */
-    if (
-      Math.abs(deltaX) <
-      this.UMBRAL_SWIPE
-    ) {
-
-      return;
-    }
-
-    if (
-      deltaX < 0
-    ) {
-
-      this.siguienteProducto();
-
-      return;
-    }
-
-    this.anteriorProducto();
   }
 
   /* =====================================================
@@ -511,74 +430,6 @@ export class ProductoCarruselComponent
       this.indiceImagen.set(0);
 
       this.reiniciarAutoplay();
-    }
-  }
-
-  /* =====================================================
-     SWIPE IMAGEN
-  ===================================================== */
-
-  comenzarSwipeImagen(
-    evento: TouchEvent
-  ): void {
-
-    evento.stopPropagation();
-
-    this.inicioImagenX =
-      evento.touches[0]?.clientX ?? 0;
-
-    this.inicioImagenY =
-      evento.touches[0]?.clientY ?? 0;
-  }
-
-  terminarSwipeImagen(
-    evento: TouchEvent
-  ): void {
-
-    evento.stopPropagation();
-
-    const finX =
-      evento.changedTouches[0]?.clientX ?? 0;
-
-    const finY =
-      evento.changedTouches[0]?.clientY ?? 0;
-
-    const deltaX =
-      finX -
-      this.inicioImagenX;
-
-    const deltaY =
-      finY -
-      this.inicioImagenY;
-
-    /*
-     * Movimiento vertical:
-     * dejamos que la página haga scroll.
-     */
-    if (
-      Math.abs(deltaY) >
-      Math.abs(deltaX)
-    ) {
-
-      return;
-    }
-
-    if (
-      deltaX >
-      this.UMBRAL_SWIPE
-    ) {
-
-      this.anteriorImagen();
-
-      return;
-    }
-
-    if (
-      deltaX <
-      -this.UMBRAL_SWIPE
-    ) {
-
-      this.siguienteImagen();
     }
   }
 

@@ -17,9 +17,12 @@ ion-content {
   // height: calc(100% - 72px - 48px);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: 0;
+  // scroll-padding-inline: 0;
+    padding-inline: 16px;
+  scroll-padding-inline: 16px;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
+  // padding: 0 16px;
   scrollbar-width: none;
 
   &::-webkit-scrollbar {

@@ -1,8 +1,10 @@
-<app-header
+<!-- <app-header
   mensajeVolver="Vas a salir de la consulta al mozo."
   (volver)="volver()"
   (cerrarSesion)="cerrarSesion()"
-></app-header>
+></app-header> -->
+
+<app-header routeBackName="/admin" />
 
 <!-- logo y título fijos, solo se mueven los mensajes -->
 <div class="chat-cabecera">
@@ -19,90 +21,90 @@
 
 <ion-content class="chat-bg">
   @if (chat.cargando() && chat.mensajes().length === 0) {
-    <div class="chat-estado">
-      <app-spinner-logo />
-    </div>
+  <div class="chat-estado">
+    <app-spinner-logo />
+  </div>
   } @else if (chat.mensajes().length === 0) {
-    <div class="chat-estado">
-      <p class="chat-estado__texto">
-        @if (chat.esMozo()) {
-          Todavía no hay consultas de los clientes.
-        } @else {
-          Todavía no hay mensajes. ¡Hacé tu consulta al mozo!
-        }
-      </p>
-    </div>
+  <div class="chat-estado">
+    <p class="chat-estado__texto">
+      @if (chat.esMozo()) { Todavía no hay consultas de los clientes. } @else {
+      Todavía no hay mensajes. ¡Hacé tu consulta al mozo! }
+    </p>
+  </div>
   } @else {
-    <div class="mensajes">
-      @for (mensaje of chat.mensajes(); track mensaje.id) {
-        <div
-          class="mensaje"
-          [class.mensaje--propio]="esPropio(mensaje)"
-          [class.mensaje--mozo]="esDeMozo(mensaje)"
+  <div class="mensajes">
+    @for (mensaje of chat.mensajes(); track mensaje.id) {
+    <div
+      class="mensaje"
+      [class.mensaje--propio]="esPropio(mensaje)"
+      [class.mensaje--mozo]="esDeMozo(mensaje)"
+    >
+      <div class="mensaje__encabezado">
+        <app-avatar
+          class="mensaje__avatar"
+          [image]="avatarUrl(mensaje)"
+          [fallback]="iniciales(mensaje.nombre)"
+          size="sm"
+        />
+
+        <span class="mensaje__nombre">{{ mensaje.nombre }}</span>
+
+        @if (esDeMozo(mensaje)) {
+        <span class="mensaje__etiqueta">Mozo</span>
+        } @else if (mensaje.numero_mesa) {
+        <span class="mensaje__etiqueta">Mesa {{ mensaje.numero_mesa }}</span>
+        }
+
+        <span class="mensaje__hora"
+          >{{ mensaje.created_at | date: 'dd/MM HH:mm' }}</span
         >
-          <div class="mensaje__encabezado">
-            <app-avatar
-              class="mensaje__avatar"
-              [image]="avatarUrl(mensaje)"
-              [fallback]="iniciales(mensaje.nombre)"
-              size="sm"
-            />
+      </div>
 
-            <span class="mensaje__nombre">{{ mensaje.nombre }}</span>
+      @if (citado(mensaje); as cita) {
+      <div class="mensaje__cita">
+        <strong>{{ cita.nombre }}:</strong> {{ resumen(cita.texto) }}
+      </div>
+      }
 
-            @if (esDeMozo(mensaje)) {
-              <span class="mensaje__etiqueta">Mozo</span>
-            } @else if (mensaje.numero_mesa) {
-              <span class="mensaje__etiqueta">Mesa {{ mensaje.numero_mesa }}</span>
-            }
+      <div class="mensaje__texto">{{ mensaje.texto }}</div>
 
-            <span class="mensaje__hora">{{ mensaje.created_at | date: 'dd/MM HH:mm' }}</span>
-          </div>
-
-          @if (citado(mensaje); as cita) {
-            <div class="mensaje__cita">
-              <strong>{{ cita.nombre }}:</strong> {{ resumen(cita.texto) }}
-            </div>
-          }
-
-          <div class="mensaje__texto">{{ mensaje.texto }}</div>
-
-          @if (puedeResponder(mensaje)) {
-            <button type="button" class="mensaje__responder" (click)="responder(mensaje)">
-              Responder
-            </button>
-          }
-        </div>
+      @if (puedeResponder(mensaje)) {
+      <button
+        type="button"
+        class="mensaje__responder"
+        (click)="responder(mensaje)"
+      >
+        Responder
+      </button>
       }
     </div>
+    }
+  </div>
   }
 </ion-content>
 
 <ion-footer class="chat-pie">
   @if (sinMesa()) {
-    <p class="chat-aviso">
-      Todavía no tenés una mesa asignada, por eso no podés enviar consultas.
-    </p>
-  }
-
-  @if (respondiendoA(); as destino) {
-    <div class="chat-respondiendo">
-      <span class="chat-respondiendo__texto">
-        Respondiendo a <strong>{{ destino.nombre }}</strong>: {{ resumen(destino.texto) }}
-      </span>
-      <button
-        type="button"
-        class="chat-respondiendo__cerrar"
-        aria-label="Cancelar respuesta"
-        (click)="cancelarRespuesta()"
-      >
-        ✕
-      </button>
-    </div>
-  }
-
-  @if (error()) {
-    <p class="chat-error">{{ error() }}</p>
+  <p class="chat-aviso">
+    Todavía no tenés una mesa asignada, por eso no podés enviar consultas.
+  </p>
+  } @if (respondiendoA(); as destino) {
+  <div class="chat-respondiendo">
+    <span class="chat-respondiendo__texto">
+      Respondiendo a <strong>{{ destino.nombre }}</strong>: {{
+      resumen(destino.texto) }}
+    </span>
+    <button
+      type="button"
+      class="chat-respondiendo__cerrar"
+      aria-label="Cancelar respuesta"
+      (click)="cancelarRespuesta()"
+    >
+      ✕
+    </button>
+  </div>
+  } @if (error()) {
+  <p class="chat-error">{{ error() }}</p>
   }
 
   <form class="chat-input" (ngSubmit)="enviar()">
@@ -117,12 +119,14 @@
       placeholder="Escribí tu mensaje..."
     />
 
-    <ion-button type="submit" shape="round" [disabled]="sinMesa() || enviando()">
+    <ion-button
+      type="submit"
+      shape="round"
+      [disabled]="sinMesa() || enviando()"
+    >
       @if (enviando()) {
-        <app-spinner-logo size="sm" />
-      } @else {
-        Enviar
-      }
+      <app-spinner-logo size="sm" />
+      } @else { Enviar }
     </ion-button>
   </form>
 
