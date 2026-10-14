@@ -36,7 +36,7 @@ ion-content {
   width: 100%;
   
   font-weight: 600;
-  font-size: clamp(14px, 2.2vh, 18px);
+  font-size: clamp(20px, 2.2vh, 24px);
   text-align: center;
   line-height: 150%;
   margin-bottom: 16px;
@@ -44,7 +44,7 @@ ion-content {
 
 .texto-error {
   color: var(--ion-color-danger);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600;
   margin: 2px 0 0 4px;
   min-height: 14px;
@@ -64,6 +64,7 @@ ion-content {
   --padding-top: 22px;
   --padding-bottom: 22px;
   font-weight: 600;
+  
 }
 .boton_c{
     margin-top: 6px;
@@ -116,13 +117,14 @@ ion-content {
   text-align: center;
   display: block;   
   width: 100%;
+  font-size: 22px;
 }
 
 
 .registrate_spam {
   color: var(--ion-color-primary);
   font-weight: 500;
-  font-size: 18px;
+  font-size: 22px;
 }
 
 .campo {
