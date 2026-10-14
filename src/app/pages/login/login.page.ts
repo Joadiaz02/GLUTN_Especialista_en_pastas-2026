@@ -2,6 +2,7 @@ import {
   Component,
   inject,
   signal,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router,RouterLink} from '@angular/router';
@@ -45,7 +46,7 @@ export class LoginPage {
   private readonly toastController = inject(ToastController);
   private readonly pushNotificationService = inject(PushNotificationService);
   private readonly supabaseService = inject(SupabaseService);
-
+  private readonly cdr = inject(ChangeDetectorRef);
   email = '';
 
   contrasena = '';
@@ -56,6 +57,37 @@ export class LoginPage {
 
   cargando = signal<boolean>(false);
 
+  
+ionViewWillEnter(): void {
+const navigationState =
+  this.router.currentNavigation()?.extras.state
+  ?? history.state;
+
+  const credenciales =
+    navigationState?.['credencialesAccesoRapido'];
+
+  if (credenciales?.email && credenciales?.password) {
+    this.email = credenciales.email;
+    this.contrasena = credenciales.password;
+
+    // Actualizar el formulario inmediatamente,
+    // sin esperar a que el usuario toque un campo.
+    this.cdr.detectChanges();
+
+    // Limpiar las credenciales del historial después
+    // de haberlas recibido.
+    const estadoActual = { ...history.state };
+    delete estadoActual['credencialesAccesoRapido'];
+
+    history.replaceState(
+      estadoActual,
+      '',
+      window.location.href
+    );
+  }
+}
+
+  
   get formularioValido(): boolean {
     const emailValido =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -70,105 +102,108 @@ export class LoginPage {
     );
   }
 
-  async iniciarSesion(): Promise<void> {
+async iniciarSesion(): Promise<void> {
+  if (this.cargando()) {
+    return;
+  }
 
-    if (!this.formularioValido) {
-      await this.vibracion.errorValidacion();
-      return;
-    }
+  const email = this.email.trim();
+  const password = this.contrasena;
 
-    this.cargando.set(true);
+  if (
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+    password.length === 0
+  ) {
+    await this.vibracion.errorValidacion();
+    return;
+  }
 
-    this.credencialesinvalidas.set(null);
+  this.cargando.set(true);
+  this.credencialesinvalidas.set(null);
+
+  try {
+    // 1. AUTENTICACIÓN
+    let usuario: any;
 
     try {
-
-      const usuario =
-        await this.authService
-          .iniciarsecion({
-            email: this.email,
-            password: this.contrasena,
-          });
-
-      this.credencialesinvalidas.set(false);
-
-      await this.pushNotificationService
-        .inicializar();
-
-      if (
-        this.authService
-          .esPersonal(usuario)
-      ) {
-        await this.probarPush(
-          usuario.id
-        );
-      }
-
-      if (
-        this.authService
-          .esPersonal(usuario)
-      ) {
-        await this.router.navigate(
-          ['/seleccion-acceso']
-        );
-
-        return;
-      }
-
-      await this.router.navigate(
-        ['/home']
-      );
-
+      usuario = await this.authService.iniciarsecion({
+        email,
+        password,
+      });
     } catch (error) {
-
       const mensaje =
-        error instanceof Error
-          ? error.message
-          : '';
+        error instanceof Error ? error.message : '';
 
-      if (
-        mensaje ===
-        'CUENTA_PENDIENTE'
-      ) {
+      console.error('Error de autenticación:', error);
 
+      if (mensaje === 'CUENTA_PENDIENTE') {
         await this.mostrarToast(
           'Tu cuenta está pendiente de aprobación. Te avisaremos cuando puedas ingresar.'
         );
-
         await this.vibracion.error();
-
         return;
       }
 
-      if (
-        mensaje ===
-        'CUENTA_RECHAZADA'
-      ) {
-
+      if (mensaje === 'CUENTA_RECHAZADA') {
         await this.mostrarToast(
           'Tu cuenta fue rechazada. Revisá el correo enviado para conocer el motivo.'
         );
-
         await this.vibracion.error();
-
         return;
       }
 
-      this.credencialesinvalidas
-        .set(true);
+      this.credencialesinvalidas.set(true);
 
       await this.mostrarToast(
-        'Correo o contraseña incorrectos. Verificá tus datos e intentá nuevamente.'
+        'No se pudo iniciar sesión. Verificá tus credenciales e intentá nuevamente.'
       );
 
       await this.vibracion.error();
-
-    } finally {
-
-      this.cargando.set(false);
-
+      return;
     }
+
+    this.credencialesinvalidas.set(false);
+
+    // 2. NOTIFICACIONES PUSH
+    // Un error de Push no debe presentarse como un error de contraseña.
+    try {
+      await this.pushNotificationService.inicializar();
+
+      if (this.authService.esPersonal(usuario)) {
+        await this.probarPush(usuario.id);
+      }
+    } catch (error) {
+      console.error(
+        'La autenticación fue correcta, pero falló la inicialización de Push:',
+        error
+      );
+    }
+
+    // 3. REDIRECCIÓN SEGÚN EL PERFIL
+    if (this.authService.esPersonal(usuario)) {
+      await this.router.navigate(['/admin'], {
+        replaceUrl: true,
+      });
+    } else {
+      await this.router.navigate(['/home'], {
+        replaceUrl: true,
+      });
+    }
+  } catch (error) {
+    // Los errores posteriores a la autenticación se registran
+    // por separado y no se etiquetan como credenciales incorrectas.
+    console.error(
+      'Error posterior a la autenticación:',
+      error
+    );
+
+    await this.mostrarToast(
+      'La sesión se inició, pero ocurrió un problema al continuar. Revisá la consola.'
+    );
+  } finally {
+    this.cargando.set(false);
   }
+}
 
   private async mostrarToast(
     message: string

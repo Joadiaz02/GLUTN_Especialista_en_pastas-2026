@@ -36,44 +36,30 @@
 
       <!-- CLIENTE -->
 
-      <div class="modal-client">
+<div class="modal-client">
+  @if (avatarUrl) {
+    <img
+      [src]="avatarUrl"
+      [alt]="'Foto de ' + cliente.nombre"
+      class="modal-avatar"
+    />
+  } @else {
+    <div class="modal-avatar-placeholder">
+      👤
+    </div>
+  }
 
-        @if (avatarUrl) {
+  <div class="modal-client-info">
+    <strong>
+      {{ cliente.apellido }}, {{ cliente.nombre }}
+    </strong>
 
-          <img
-            [src]="avatarUrl"
-            [alt]="
-              'Foto de ' +
-              cliente.nombre
-            "
-            class="modal-avatar"
-          />
+<span>
+  DNI {{ cliente.documento }}
+</span>
 
-        } @else {
-
-          <div
-            class="modal-avatar-placeholder"
-          >
-            👤
-          </div>
-
-        }
-
-
-        <div class="modal-client-info">
-
-          <strong>
-            {{ cliente.apellido }},
-            {{ cliente.nombre }}
-          </strong>
-
-          <span>
-            DNI {{ cliente.documento }}
-          </span>
-
-        </div>
-
-      </div>
+  </div>
+</div>
 
 
       <!-- MOTIVO -->

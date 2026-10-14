@@ -1,26 +1,34 @@
-* {
-  font-family: 'Francus', sans-serif;
-  font-weight: 600;
-  font-style: normal;
-}
 
 :host {
   display: block;
   width: 100%;
   height: 100%;
+  font-family: 'Frances', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 .splash-container {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
+
   background-color: #657A4D;
+  color: #ffffff;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 
-  padding: 30px;
+  padding:
+    max(20px, env(safe-area-inset-top))
+    22px
+    max(18px, env(safe-area-inset-bottom));
+
+  overflow: hidden;
 
   opacity: 1;
   transition: opacity 0.5s ease;
@@ -28,6 +36,64 @@
 
 .splash-container.fade-out {
   opacity: 0;
+  pointer-events: none;
+}
+
+/* =========================
+   ENCABEZADO
+========================= */
+
+.splash-header {
+  width: 100%;
+  text-align: center;
+
+  opacity: 0;
+  animation: fadeInUp 0.7s ease forwards;
+  animation-delay: 0.1s;
+}
+
+.universidad {
+  margin: 0 0 14px;
+
+  color: #F0F2E9;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.5;
+}
+
+.splash-header h1 {
+  margin: 0;
+
+  color: #ffffff;
+  font-family: 'Frances', sans-serif;
+  font-size: clamp(20px, 5.5vw, 27px);
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  line-height: 1.35;
+}
+
+.titulo-decoracion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  margin: 18px auto 0;
+}
+
+.titulo-decoracion span {
+  width: 42px;
+  height: 2px;
+  background-color: #D9A441;
+}
+
+.titulo-decoracion .decoracion-centro {
+  width: 8px;
+  height: 8px;
+
+  background-color: #D9A441;
+  border-radius: 50%;
 }
 
 /* =========================
@@ -36,18 +102,19 @@
 
 .logo-container {
   width: 100%;
-  max-width: 300px;
-
-  margin-bottom: 60px;
+  max-width: 350px;
+  flex-shrink: 0;
 
   opacity: 0;
-
   animation: logoEntrance 1.2s ease forwards;
+  animation-delay: 0.2s;
 }
 
 .logo {
-  width: 100%;
   display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 /* =========================
@@ -57,32 +124,31 @@
 .integrantes-container {
   width: 100%;
   text-align: center;
-  color: white;
+  color: #ffffff;
 }
 
 .integrantes-container h2 {
-  margin: 0 0 20px;
+  margin: 0 0 22px;
 
+  color: #ffffff;
   font-family: 'Frances', sans-serif;
-  font-weight: 600;
-  font-size: 32px;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1.3;
 
   opacity: 0;
-
-  animation:
-    fadeInUp 0.6s ease forwards;
-
+  animation: fadeInUp 0.6s ease forwards;
   animation-delay: 1s;
 }
 
 .integrante {
-  margin: 8px 0;
+  margin: 12px 0;
 
+  color: #ffffff;
   font-family: 'Frances', sans-serif;
-  font-weight: 600;
-  font-size: 20px;
-
-  color: white;
+  font-weight: 1000;
+  font-size: clamp(18px, 4.8vw, 22px);
+  line-height: 1.4;
 
   opacity: 0;
 }
@@ -110,54 +176,168 @@
 }
 
 /* =========================
+   PIE DE PANTALLA
+========================= */
+
+.splash-footer {
+  width: 100%;
+  max-width: 340px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  opacity: 0;
+  animation: fadeInUp 0.7s ease forwards;
+  animation-delay: 2.5s;
+}
+
+.footer-icon {
+  width: 66px;
+  height: 66px;
+  margin-bottom: 6px;
+
+  color: #D9A441;
+}
+
+.footer-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.footer-frase {
+  max-width: 340px;
+  margin: 0;
+
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 1000;
+  line-height: 1.5;
+  letter-spacing: 0.1px;
+}
+
+.footer-anio {
+  margin: 12px 0 0;
+
+  color: #FFD36B;
+  font-size: 18px;
+  font-weight: 1000;
+  letter-spacing: 5px;
+}
+
+/* =========================
    ANIMACIONES
 ========================= */
 
 @keyframes logoEntrance {
-
   0% {
     opacity: 0;
-    transform: translateY(-40px) scale(0.85);
+    transform: translateY(-30px) scale(0.88);
   }
 
   60% {
     opacity: 1;
-    transform: translateY(0) scale(1.05);
+    transform: translateY(0) scale(1.04);
   }
 
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-
 }
 
-
 @keyframes fadeInUp {
-
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(16px);
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
   }
-
 }
 
-
 @keyframes integranteEntrance {
-
   from {
     opacity: 0;
-    transform: translateX(-25px);
+    transform: translateX(-20px);
   }
 
   to {
     opacity: 1;
     transform: translateX(0);
   }
+}
 
+/* =========================
+   CELULARES CON POCA ALTURA
+========================= */
+
+@media (max-height: 700px) {
+  .splash-container {
+    justify-content: center;
+    gap: 16px;
+
+    padding-top: max(18px, env(safe-area-inset-top));
+    padding-bottom: max(18px, env(safe-area-inset-bottom));
+  }
+
+  .universidad {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .splash-header h1 {
+    font-size: 21px;
+  }
+
+  .titulo-decoracion {
+    margin-top: 10px;
+  }
+
+  .logo-container {
+    max-width: 270px;
+  }
+
+  .integrantes-container h2 {
+    font-size: 27px;
+    margin-bottom: 12px;
+  }
+
+  .integrante {
+    font-size: 18px;
+    margin: 7px 0;
+  }
+
+  .footer-icon {
+    width: 34px;
+    height: 34px;
+    margin-bottom: 6px;
+  }
+
+  .footer-frase {
+    font-size: 14px;
+  }
+
+  .footer-anio {
+    margin-top: 6px;
+    font-size: 14px;
+  }
+}
+
+/* =========================
+   ACCESIBILIDAD
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -229,12 +229,19 @@ export class Auth {
     throw new Error('No se pudo verificar el estado de la cuenta.');
   }
 
-  async logout(): Promise<void> {
-    this.vibracion.sonidoCierre();
-    this.carrito.vaciar();
+async logout(): Promise<void> {
+  this.vibracion.sonidoCierre();
+  this.carrito.vaciar();
+
+  const { error } =
     await this.supabaseService.client.auth.signOut();
-    this.usuarioActual.set(null);
+
+  if (error) {
+    throw error;
   }
+
+  this.usuarioActual.set(null);
+}
 
   estaLogueado(): boolean {
     return this.usuarioActual() !== null;
