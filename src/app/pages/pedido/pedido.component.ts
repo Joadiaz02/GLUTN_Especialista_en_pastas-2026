@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal , computed} from '@angular/core';
 import { Pedido } from '@app/services/pedido/pedido';
 import { Carrito } from '../carrito/carrito';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSearchbar, IonButton, ToastController, IonFooter, IonSpinner, IonIcon } from '@ionic/angular';
@@ -28,6 +28,18 @@ export class PedidoComponent  {
   private vibracion = inject(Vibracion);
   private mesaCliente = inject(MesaCliente);
 
+
+  relleno = computed(() => {
+    const resto = this.carrito.items().length % 3;
+    const faltan = resto === 0 ? 0 : 3 - resto;
+    const lista: number[] = [];
+
+    for (let i = 0; i < faltan; i++) {
+      lista.push(i);
+    }
+
+    return lista;
+  });
 
   continuarPedido() {
     return {
