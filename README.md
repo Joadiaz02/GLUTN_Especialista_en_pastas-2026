@@ -367,134 +367,6 @@ Los módulos se documentan individualmente indicando:
 
 ---
 
-# 4. Tareas complementarias y extras
-
-Además de los puntos funcionales principales, se desarrollaron tareas complementarias necesarias para la integración y el funcionamiento general de la aplicación.
-
-## Correos electrónicos y notificaciones Push
-
-**Responsable:** Joaquín Díaz
-
-Implementación del sistema de comunicación para informar el estado de las solicitudes de clientes registrados.
-
-Incluye:
-
-- Envío de correo electrónico cuando un cliente se registra.
-- Notificación del estado de la solicitud.
-- Comunicación automática de aprobación.
-- Comunicación automática de rechazo.
-- Notificación Push a los usuarios correspondientes cuando existe un nuevo cliente pendiente de aprobación.
-- Integración mediante Supabase Edge Functions.
-
-**Inicio:** 21/09/2026  
-**Finalización:** 23/09/2026  
-**Estado:** Finalizado
-
-## ↩️ Modales de volver y cerrar sesión
-
-**Responsable:** Lucas Ponte
-
-Desarrollo de modales reutilizables para confirmar:
-
-- Volver.
-- Cerrar sesión.
-
-**Inicio:** 05/09/2026  
-**Finalización:** 15/09/2026  
-**Estado:** Finalizado
-
-## 💬 Chat / Consulta al mozo
-
-Implementación del sistema de consulta entre cliente y mozo como parte del Punto 11.
-
-**Inicio:** 07/09/2026  
-**Finalización:** No informada  
-**Estado:** En desarrollo
-
-## 🏠 Home / Menú principal
-
-Desarrollo del menú principal de la aplicación, incluyendo los accesos a las diferentes funcionalidades disponibles para el cliente.
-
-**Inicio:** 24/08/2026  
-**Finalización:** No informada  
-**Estado:** En desarrollo
-
-## 📷 Escáner QR del Home
-
-Implementación del escáner QR desde el menú principal para funcionalidades relacionadas con:
-
-- Ingreso.
-- Mesa.
-- Propinas.
-
-**Inicio:** 23/09/2026  
-**Finalización:** No informada  
-**Estado:** En desarrollo
-
-> La implementación completa depende de funcionalidades relacionadas con la lista de espera, asignación de mesas y propinas.
-
-## 🍝 Carta conectada a datos
-
-Integración de la carta con los datos de los productos.
-
-**Inicio:** 12/09/2026  
-**Finalización:** 18/09/2026  
-**Estado:** Finalizado
-
-## 📅 Reservas
-
-Implementación de la interfaz visual correspondiente al módulo de reservas.
-
-**Inicio:** 14/09/2026  
-**Finalización:** 18/09/2026  
-**Estado:** Finalizado
-
-> La implementación de la lógica restante depende de las funcionalidades correspondientes a las etapas posteriores del proyecto.
-
-## ⏳ Spinner con logo y feedback compartido
-
-Implementación de un sistema reutilizable de espera y feedback para la aplicación, incluyendo:
-
-- Spinner con logo.
-- Vibración.
-- Sonidos.
-
-**Inicio:** 11/09/2026  
-**Finalización:** 12/09/2026  
-**Estado:** Finalizado
-
-## 🟢 Logo unificado y optimizado
-
-Optimización y unificación del logo utilizado en las distintas secciones de la aplicación.
-
-**Inicio:** 18/09/2026  
-**Finalización:** 22/09/2026  
-**Estado:** Finalizado
-
-## 🧭 Header reutilizable
-
-Implementación de un header reutilizable para las distintas pantallas de la aplicación.
-
-Incluye:
-
-- Botón volver.
-- Botón cerrar sesión.
-- Confirmación de acciones.
-
-**Inicio:** 23/09/2026  
-**Finalización:** 24/09/2026  
-**Estado:** Finalizado
-
-## 📱 Ícono y Splash de la aplicación
-
-Actualización del ícono y Splash Screen de la aplicación utilizando la identidad visual en verde.
-
-**Inicio:** 24/09/2026  
-**Finalización:** 24/09/2026  
-**Estado:** Finalizado
-
----
-
 # 5. 🛠️ Tecnologías y funcionalidades nativas
 
 El proyecto fue desarrollado utilizando:
@@ -529,9 +401,10 @@ Además, se utilizan funcionalidades nativas de los dispositivos móviles, como:
 | Logo | Mariano Pastor | 23/08/2026 | 24/08/2026 | Realizado |
 | Splash Screen | Joaquín Díaz | 23/08/2026 | 24/08/2026 | Realizado |
 | Registro de usuarios | Javier Vilchez | 24/08/2026 | 28/08/2026 | Realizado |
-| Login de usuarios registrados y personal | Lucas Ponte | 25/08/2026 | 03/09/2026 | Realizado |
 | Menú principal | Mariano Pastor | 24/08/2026 | — | En desarrollo |
+| Login de usuarios registrados y personal | Lucas Ponte | 25/08/2026 | 03/09/2026 | Realizado |
 | Panel administrativo | Joaquín Díaz | 01/09/2026 | 03/09/2026 | Realizado |
+| Administración de bebidas | Javier Vilchez | 04/09/2026 | 15/09/2026 | Realizado |
 | Modales volver/cerrar sesión | Lucas Ponte | 05/09/2026 | 15/09/2026 | Realizado |
 | Chat / consulta al mozo | Mariano Pastor | 07/09/2026 | — | En desarrollo |
 | Spinner, vibración y sonido | Mariano Pastor | 11/09/2026 | 12/09/2026 | Realizado |
@@ -540,18 +413,25 @@ Además, se utilizan funcionalidades nativas de los dispositivos móviles, como:
 | Juegos | Mariano Pastor | 13/09/2026 | 21/09/2026 | Realizado |
 | Reservas - interfaz | Mariano Pastor | 14/09/2026 | 18/09/2026 | Realizado |
 | Puntos 5, 6, 7 y 8 - Clientes registrados | Joaquín Díaz | 15/09/2026 | 21/09/2026 | Realizado |
-| Administración de bebidas | Javier Vilchez | 04/09/2026 | 15/09/2026 | Realizado |
 | Realización del pedido | Lucas Ponte | 15/09/2026 | 23/09/2026 | Realizado |
 | Rechazo del pedido | Lucas Ponte | 15/09/2026 | 23/09/2026 | Realizado |
-| Correos y Push - clientes pendientes | Joaquín Díaz | 21/09/2026 | 23/09/2026 | Realizado |
-| Logo unificado | Mariano Pastor | 18/09/2026 | 22/09/2026 | Realizado |
-| Escáner QR del Home | Javier Vilchez | 23/09/2026 | — | En desarrollo |
-| Header reutilizable | Lucas Ponte | 23/09/2026 | 24/09/2026 | Realizado |
-| Administración de mesas | Javier Vilchez | 20/09/2026 | 24/09/2026 | Realizado |
-| Ícono y Splash en verde | Mariano Pastor | 24/09/2026 | 24/09/2026 | Realizado |
 | Confirmación del pedido | Lucas Ponte | 15/09/2026 | 02/10/2026 | Realizado |
+| Logo unificado | Mariano Pastor | 18/09/2026 | 22/09/2026 | Realizado |
+| Administración de mesas | Javier Vilchez | 20/09/2026 | 24/09/2026 | Realizado |
+| Correos y Push - Configuración inicial | Joaquín Díaz | 21/09/2026 | 23/09/2026 | Realizado |
+| Header reutilizable | Lucas Ponte | 23/09/2026 | 24/09/2026 | Realizado |
+| Escáner QR del Home | Javier Vilchez | 23/09/2026 | — | En desarrollo |
+| Ícono y Splash en verde | Mariano Pastor | 24/09/2026 | 24/09/2026 | Realizado |
+| Agregado de sonidos | Joaquín Díaz | 26/09/2026 | 26/09/2026 | Realizado |
+| Colocación de vibraciones ante errores en toda la app | Joaquín Díaz | 28/09/2026 | 28/09/2026 | Realizado |
+| Colocación de spinner en toda la app | Joaquín Díaz | 29/09/2026 | 29/09/2026 | Realizado |
+| Agregado de push notifications módulo 9 | Joaquín Díaz | 30/09/2026 | 02/10/2026 | Realizado |
+| Mejoras UX lista de espera | Joaquín Díaz | 30/09/2026 | 02/10/2026 | Realizado |
+| Agregado de scroll bar | Joaquín Díaz | 01/10/2026 | 02/10/2026 | Realizado |
+| Lógica funcional para eliminar clientes en lista de espera | Joaquín Díaz | 01/10/2026 | 02/10/2026 | Realizado |
+| Correcciones visuales de Splash Screen y clientes pendientes | Joaquín Díaz | 07/10/2026 | 09/10/2026 | Realizado |
+| Correcciones de acceso rápido | Joaquín Díaz | 07/10/2026 | 09/10/2026 | Realizado |
 
----
 ---
 
 ## Códigos QR del restaurante
