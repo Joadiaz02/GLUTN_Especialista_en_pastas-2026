@@ -155,7 +155,8 @@ export class HomePage implements OnInit, OnDestroy {
     const pedidoRecibido = this.pedidoRecibido();
 
     return {
-      reservas: perfil === EPerfilUsuario.ClienteRegistrado,
+      // reservas oculto hasta la segunda entrega
+      reservas: false,
       carta: cliente ? enMesa : perfil !== null,
       juegos: cliente && pedidoRecibido,
       solicitarCuenta: cliente && pedidoRecibido,
