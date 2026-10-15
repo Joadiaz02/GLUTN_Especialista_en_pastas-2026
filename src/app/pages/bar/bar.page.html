@@ -1,11 +1,4 @@
-<app-header
-  tituloVolver="¿Salir de Cocina?"
-  mensajeVolver="Vas a volver al panel de administración."
-  textoConfirmarVolver="Salir"
-  colorConfirmarVolver="primary"
-  (volver)="volver()"
-  (cerrarSesion)="cerrarSesion()"
-></app-header>
+<app-header routeBackName="/admin" />
 
 <ion-content class="cocina-content" [scrollY]="false">
   <div class="cocina-wrapper">
@@ -16,7 +9,7 @@
         class="logo"
       />
     </div>
-    <h1 class="titulo-pagina">Cocina</h1>
+    <h1 class="titulo-pagina">Bar</h1>
 
     <div class="vistas" role="tablist">
       <button
