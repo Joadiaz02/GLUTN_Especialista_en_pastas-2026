@@ -1,7 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonHeader, IonTitle, IonToolbar, IonButtons, IonContent, IonInput, IonFooter, IonButton, IonSpinner, ToastController } from '@ionic/angular';
+import { IonHeader, IonTitle, IonToolbar, IonButtons, IonContent, IonInput, IonFooter, IonButton, IonSpinner, ToastController, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Storage, Table } from '@app/services';
@@ -9,6 +9,8 @@ import { GtnUploader } from '@app/components';
 import { Vibracion } from '@app/services/vibracion';
 import { VibrarErrores } from '@app/directives';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { HeaderComponent } from '@app/components/ui';
+import { uniqueTableNumberValidator } from '@app/validators';
 @Component({
   selector: 'app-edit-table',
   templateUrl: './edit-table.page.html',
@@ -28,7 +30,8 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     IonButton,
     IonSpinner,
     VibrarErrores,
-    SpinnerLogoComponent
+    SpinnerLogoComponent,
+    HeaderComponent
 ],
 })
 export class EditTablePage implements OnInit {
@@ -38,14 +41,23 @@ export class EditTablePage implements OnInit {
   private _toastController = inject(ToastController);
   private _storageService = inject(Storage);
   private _vibracion = inject(Vibracion);
+ private _navCtrl = inject(NavController); 
   isLoading = signal<boolean>(false);
 
   image = signal<string | null>(null);
 
   table = signal<any>(null);
 
+  private readonly _takenNumbers = signal<ReadonlySet<number>>(new Set());
+
+  readonly nextNumber = computed(() => Math.max(0, ...this._takenNumbers()) + 1);
+
+
   form = new FormGroup({
-    number: new FormControl('', Validators.required),
+    number: new FormControl('', [
+    Validators.required,
+    uniqueTableNumberValidator(() => this._takenNumbers()),
+  ]),
     diners: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(20)]),
     type: new FormControl<any | null>(null, Validators.required),
     file: new FormControl<File | null>(null, Validators.required)
@@ -59,10 +71,15 @@ export class EditTablePage implements OnInit {
   ];
 
   async ngOnInit() {
+    this._takenNumbers.set(new Set(await this._tableService.getTableNumbers()));
+
+    console.log(this._takenNumbers())
+
+    this.isLoading.set(true)
     const id = this._route.snapshot.paramMap.get('id') ?? '';
     
     const table = await this._tableService.getTableById(id)!;
-
+    
     this.table.set(table);
     this.image.set(table.foto);
 
@@ -72,6 +89,8 @@ export class EditTablePage implements OnInit {
       type: table.tipo,
       file: null
     });
+
+    this.isLoading.set(false)
   }
 
   getFormControl(controlName: string) {
@@ -136,6 +155,11 @@ export class EditTablePage implements OnInit {
       await toast.present();
 
       this._router.navigateByUrl('/admin/tables');
+      // await this._navCtrl.navigateRoot('/admin/tables', {
+      //   animated: true,
+      //   animationDirection: 'back',
+      //   replaceUrl: true,
+      // });
     } catch (error) {
       await this._vibracion.error();
       const toast = await this._toastController.create({

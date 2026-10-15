@@ -9,13 +9,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonFooter, ToastController, IonInput, IonToggle, IonTextarea } from '@ionic/angular';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonFooter, ToastController, IonInput, IonToggle, IonTextarea, IonRouterOutlet, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Drink, Storage } from '@app/services';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { GtnUploader } from '@app/components';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { VibrarErrores } from '@app/directives';
+import { HeaderComponent } from '@app/components/ui';
 
 @Component({
   selector: 'app-edit-drink',
@@ -38,7 +39,8 @@ import { VibrarErrores } from '@app/directives';
     GtnUploader,
     SpinnerLogoComponent,
     IonTextarea,
-    VibrarErrores
+    VibrarErrores,
+    HeaderComponent
 ],
 })
 export class EditDrinkPage implements OnInit {
@@ -60,6 +62,8 @@ export class EditDrinkPage implements OnInit {
   private _toastController = inject(ToastController);
   private _vibracion = inject(Vibracion);
   private _drinkService = inject(Drink);
+  private _routerOutlet = inject(IonRouterOutlet, { optional: true });
+  private _navCtrl = inject(NavController);
 
   form = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -178,7 +182,12 @@ export class EditDrinkPage implements OnInit {
 
       await toast.present();
 
-      this._router.navigateByUrl('/admin/drinks');
+      // this._router.navigateByUrl('/admin/drinks');
+      await this._navCtrl.navigateRoot('/admin/drinks', {
+        animated: true,
+        animationDirection: 'back',
+        replaceUrl: true,
+      });
     } catch (error) {
       await this._vibracion.error();
       const toast = await this._toastController.create({

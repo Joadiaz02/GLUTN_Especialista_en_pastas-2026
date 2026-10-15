@@ -37,6 +37,8 @@ export class HeaderComponent implements OnInit {
   action = input<'none' | 'logout' | 'add'>('none');
   routeName = input('');
 
+  routeBackName = input('');
+
   mostrarVolver = input(true);
   tituloVolver = input('¿Quieres volver?');
   mensajeVolver = input('');
@@ -74,7 +76,7 @@ export class HeaderComponent implements OnInit {
     if (!perfil) {
       console.log('NO HAY PERFIL');
       await this._router.navigate(['/login']);
-
+      
       return;
     }
 
@@ -86,13 +88,14 @@ export class HeaderComponent implements OnInit {
 
     // this.cdr.detectChanges();
   }
-
+  
   async onBack() {
-    if (this._routerOutlet?.canGoBack()) {
-      this._navCtrl.back();
-    } else {
-      await this._navCtrl.navigateBack(this.backHref());
-    }
+    await this._router.navigate([this.routeBackName()]);
+    // if (this._routerOutlet?.canGoBack()) {
+    //   this._navCtrl.back();
+    // } else {
+    //   await this._navCtrl.navigateBack(this.backHref());
+    // }
   }
 
   async logout(): Promise<void> {

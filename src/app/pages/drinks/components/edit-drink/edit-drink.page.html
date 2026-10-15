@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border">
+<!-- <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <app-confirm-volver
@@ -8,235 +8,162 @@
 
     <ion-title>Editar Bebida</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+
+<!-- <app-header title="Editar Bebida" /> -->
+<app-header title="Editar Bebida" routeBackName="/admin/drinks" />
 
 <ion-content>
   @if (drink()) {
-    <div class="upload-container">
-      <app-uploader
-        [image]="drink().foto_1"
-        (fileSelected)="onPhotoSelected(0, $event)"
+  <div class="upload-container">
+    <app-uploader
+      [image]="drink().foto_1"
+      (fileSelected)="onPhotoSelected(0, $event)"
+    />
+
+    <app-uploader
+      [image]="drink().foto_2"
+      (fileSelected)="onPhotoSelected(1, $event)"
+    />
+
+    <app-uploader
+      [image]="drink().foto_3"
+      (fileSelected)="onPhotoSelected(2, $event)"
+    />
+  </div>
+
+  <form [formGroup]="form" class="fields" appVibrarErrores>
+    <div class="field">
+      <label class="field__label"> Nombre </label>
+
+      <ion-input
+        fill="outline"
+        class="field__input"
+        placeholder="Nombre"
+        formControlName="title"
       />
 
-      <app-uploader
-        [image]="drink().foto_2"
-        (fileSelected)="onPhotoSelected(1, $event)"
-      />
-
-      <app-uploader
-        [image]="drink().foto_3"
-        (fileSelected)="onPhotoSelected(2, $event)"
-      />
+      @if ( getFormControl('title')?.invalid && (
+      getFormControl('title')?.touched || getFormControl('title')?.dirty ) ) {
+      @if ( getFormControl('title')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
     </div>
 
-    <form
-      [formGroup]="form"
-      class="fields"
-      appVibrarErrores
-    >
+    <div class="field">
+      <label class="field__label"> Descripción </label>
+
+      <ion-input
+        fill="outline"
+        class="field__input"
+        placeholder="Descripción"
+        formControlName="description"
+      />
+
+      @if ( getFormControl('description')?.invalid && (
+      getFormControl('description')?.touched ||
+      getFormControl('description')?.dirty ) ) { @if (
+      getFormControl('description')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
+    </div>
+
+    <div class="fields__row">
       <div class="field">
-        <label class="field__label">
-          Nombre
-        </label>
-
-        <ion-input
-          fill="outline"
-          class="field__input"
-          placeholder="Nombre"
-          formControlName="title"
-        />
-
-        @if (
-          getFormControl('title')?.invalid &&
-          (
-            getFormControl('title')?.touched ||
-            getFormControl('title')?.dirty
-          )
-        ) {
-          @if (
-            getFormControl('title')?.hasError('required')
-          ) {
-            <p class="field__error">
-              El campo es obligatorio.
-            </p>
-          }
-        }
-      </div>
-
-      <div class="field">
-        <label class="field__label">
-          Descripción
-        </label>
-
-        <ion-input
-          fill="outline"
-          class="field__input"
-          placeholder="Descripción"
-          formControlName="description"
-        />
-
-        @if (
-          getFormControl('description')?.invalid &&
-          (
-            getFormControl('description')?.touched ||
-            getFormControl('description')?.dirty
-          )
-        ) {
-          @if (
-            getFormControl('description')?.hasError('required')
-          ) {
-            <p class="field__error">
-              El campo es obligatorio.
-            </p>
-          }
-        }
-      </div>
-
-      <div class="fields__row">
-        <div class="field">
-          <label class="field__label">
-            Elaboración
-          </label>
-
-          <ion-input
-            type="text"
-            inputmode="numeric"
-            maxlength="3"
-            fill="outline"
-            class="field__input"
-            placeholder="Elaboración"
-            formControlName="preparation"
-          />
-
-          @if (
-            getFormControl('preparation')?.invalid &&
-            (
-              getFormControl('preparation')?.touched ||
-              getFormControl('preparation')?.dirty
-            )
-          ) {
-            @if (
-              getFormControl('preparation')?.hasError('required')
-            ) {
-              <p class="field__error">
-                El campo es obligatorio.
-              </p>
-            }
-          }
-        </div>
-
-        <div class="field">
-          <label class="field__label">
-            Precio
-          </label>
-
-          <ion-input
-            type="text"
-            inputmode="numeric"
-            maxlength="6"
-            fill="outline"
-            class="field__input"
-            placeholder="Precio"
-            formControlName="price"
-          />
-
-          @if (
-            getFormControl('price')?.invalid &&
-            (
-              getFormControl('price')?.touched ||
-              getFormControl('price')?.dirty
-            )
-          ) {
-            @if (
-              getFormControl('price')?.hasError('required')
-            ) {
-              <p class="field__error">
-                El campo es obligatorio.
-              </p>
-            }
-          }
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="field__label">
-          Mililitros
-        </label>
+        <label class="field__label"> Elaboración </label>
 
         <ion-input
           type="text"
           inputmode="numeric"
-          maxlength="5"
+          maxlength="3"
           fill="outline"
           class="field__input"
-          placeholder="Mililitros"
-          formControlName="ml"
+          placeholder="Elaboración"
+          formControlName="preparation"
         />
 
-        @if (
-          getFormControl('ml')?.invalid &&
-          (
-            getFormControl('ml')?.touched ||
-            getFormControl('ml')?.dirty
-          )
-        ) {
-          @if (
-            getFormControl('ml')?.hasError('required')
-          ) {
-            <p class="field__error">
-              El campo es obligatorio.
-            </p>
-          }
-        }
+        @if ( getFormControl('preparation')?.invalid && (
+        getFormControl('preparation')?.touched ||
+        getFormControl('preparation')?.dirty ) ) { @if (
+        getFormControl('preparation')?.hasError('required') ) {
+        <p class="field__error">El campo es obligatorio.</p>
+        } }
       </div>
 
-      <div class="toggle-group">
-        <h3 class="toggle-group__title">
-          Contiene alcohol
-        </h3>
+      <div class="field">
+        <label class="field__label"> Precio </label>
 
-        <div class="toggle-group__row">
-          <span class="toggle-group__row-label">
-            Bebida con alcohol
-          </span>
+        <ion-input
+          type="text"
+          inputmode="numeric"
+          maxlength="6"
+          fill="outline"
+          class="field__input"
+          placeholder="Precio"
+          formControlName="price"
+        />
 
-          <ion-toggle
-            formControlName="contieneAlcohol"
-          />
-        </div>
+        @if ( getFormControl('price')?.invalid && (
+        getFormControl('price')?.touched || getFormControl('price')?.dirty ) ) {
+        @if ( getFormControl('price')?.hasError('required') ) {
+        <p class="field__error">El campo es obligatorio.</p>
+        } }
       </div>
+    </div>
 
-      <div class="toggle-group">
-        <h3 class="toggle-group__title">
-          Sugerencia de la casa
-        </h3>
+    <div class="field">
+      <label class="field__label"> Mililitros </label>
 
-        <div class="toggle-group__row">
-          <span class="toggle-group__row-label">
-            Mostrar como recomendada
-          </span>
+      <ion-input
+        type="text"
+        inputmode="numeric"
+        maxlength="5"
+        fill="outline"
+        class="field__input"
+        placeholder="Mililitros"
+        formControlName="ml"
+      />
 
-          <ion-toggle
-            formControlName="sugerencia"
-          />
-        </div>
+      @if ( getFormControl('ml')?.invalid && ( getFormControl('ml')?.touched ||
+      getFormControl('ml')?.dirty ) ) { @if (
+      getFormControl('ml')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } }
+    </div>
+
+    <div class="toggle-group">
+      <h3 class="toggle-group__title">Contiene alcohol</h3>
+
+      <div class="toggle-group__row">
+        <span class="toggle-group__row-label"> Bebida con alcohol </span>
+
+        <ion-toggle formControlName="contieneAlcohol" />
       </div>
-    </form>
+    </div>
+
+    <div class="toggle-group">
+      <h3 class="toggle-group__title">Sugerencia de la casa</h3>
+
+      <div class="toggle-group__row">
+        <span class="toggle-group__row-label"> Mostrar como recomendada </span>
+
+        <ion-toggle formControlName="sugerencia" />
+      </div>
+    </div>
+  </form>
   }
 </ion-content>
 
 @if (isLoadingDrink()) {
-  <div class="page-loading">
-    <app-spinner-logo />
-    <span>Cargando bebida...</span>
-  </div>
-}
-
-@if (isLoading()) {
-  <div class="page-loading">
-    <app-spinner-logo />
-    <span>Guardando cambios...</span>
-  </div>
+<div class="page-loading">
+  <app-spinner-logo />
+  <span>Cargando bebida...</span>
+</div>
+} @if (isLoading()) {
+<div class="page-loading">
+  <app-spinner-logo />
+  <span>Guardando cambios...</span>
+</div>
 }
 
 <ion-footer class="ion-no-border">

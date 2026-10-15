@@ -9,15 +9,7 @@ import {
   untracked,
 } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import {
-  IonContent,
-  IonFooter,
-  IonButton,
-  IonIcon,
-  IonModal,
-  ToastController,
-  ModalController,
-} from '@ionic/angular';
+import { IonContent, IonFooter, IonButton, IonIcon, IonModal, ToastController, ModalController, IonHeader, IonToolbar, IonButtons } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   chevronBackOutline,
@@ -37,6 +29,7 @@ import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { parseTableQr } from '@app/utils';
+import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
 
@@ -54,7 +47,11 @@ const DEMORA_FOTO_DESTACADO_MS = 3000;
     IonModal,
     CurrencyPipe,
     SpinnerLogoComponent,
-  ],
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    ConfirmDialogComponent
+],
 })
 export class HomePage implements OnInit, OnDestroy {
   private router = inject(Router);

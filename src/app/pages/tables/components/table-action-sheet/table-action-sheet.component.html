@@ -1,0 +1,59 @@
+<div class="qr-modal">
+  <h2 class="qr-modal__title">Mesa N° {{ table.numero }}</h2>
+  <p class="qr-modal__subtitle">
+    <span>
+      @switch (table.tipo) { @case ('movilidad_reducida') { Movilidad Reducida }
+      @case ('vip_movilidad_reducida') { VIP con Movilidad Reducida } @default {
+      {{ table.tipo }}
+      } } ·
+
+      {{ table.capacidad }} personas
+    </span>
+  </p>
+  <ion-button
+    expand="block"
+    shape="round"
+    fill="outline"
+    (click)="onShowQRSheet()"
+  >
+    Ver codigo QR
+  </ion-button>
+  @if (!table.baja_logica) {
+  <ion-button expand="block" shape="round" fill="outline" (click)="onClick()">
+    Editar mesa
+  </ion-button>
+  <ion-button
+    expand="block"
+    shape="round"
+    color="danger"
+    (click)="darDeBaja(table)"
+  >
+    Dar de baja
+  </ion-button>
+  } @else {
+  <ion-button expand="block" shape="round" (click)="reactivar(table)">
+    Reactivar mesa
+  </ion-button>
+  }
+
+  <!-- <div class="qr-modal__frame">
+    @if (qrDataUrl(); as src) {
+    <img
+      class="qr-modal__img"
+      [src]="src"
+      [alt]="'Código QR de la mesa N° ' + table.numero"
+    />
+    } @else {
+    <app-spinner-logo />
+    }
+  </div>
+
+  <ion-button
+    expand="block"
+    shape="round"
+    [disabled]="!qrDataUrl() || isDownloading()"
+    (click)="download()"
+  >
+    Descargar código QR
+  </ion-button> -->
+</div>

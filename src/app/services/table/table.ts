@@ -22,6 +22,16 @@ export class Table {
     return data ?? [];
   }
 
+async getTableNumbers(): Promise<number[]> {
+  const { data, error } = await this._db.client
+    .from(this._tableName)
+    .select('numero');
+
+  if (error) throw error;
+
+  return (data ?? []).map((row) => Number(row.numero));
+}
+
   async getTableById(tableId: string) {
     const { data } = await this._db.client
       .from(this._tableName)

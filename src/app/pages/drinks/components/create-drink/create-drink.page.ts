@@ -28,6 +28,7 @@ import {
   ToastController,
   IonInput,
   IonToggle,
+  NavController,
 } from '@ionic/angular';
 
 import {
@@ -76,6 +77,7 @@ export class CreateDrinkPage {
   photoPreview = signal<string | null>(null);
   isLoading = signal<boolean>(false);
 
+   private _navCtrl = inject(NavController); 
 
   private readonly _router = inject(Router);
 
@@ -273,11 +275,15 @@ export class CreateDrinkPage {
       await toast.present();
 
 
-      await this._router.navigateByUrl(
-        '/admin/drinks'
-      );
+      // await this._router.navigateByUrl(
+      //   '/admin/drinks'
+      // );
 
-
+      await this._navCtrl.navigateRoot('/admin/drinks', {
+        animated: true,
+        animationDirection: 'back',
+        replaceUrl: true,
+      });
     } catch (error) {
 
       console.error(

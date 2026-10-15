@@ -9,7 +9,13 @@
     <ion-title>Crear Bebida</ion-title>
   </ion-toolbar>
 </ion-header> -->
-<app-header title="Crear Bebida" [mostrarCerrarSesion]="true" />
+<!-- <app-header title="Crear Bebida" [mostrarCerrarSesion]="true" /> -->
+
+<app-header
+  title="Crear Bebida"
+  [mostrarCerrarSesion]="true"
+  routeBackName="/admin/drinks"
+/>
 
 <ion-content [fullscreen]="true">
   <div class="upload-container">

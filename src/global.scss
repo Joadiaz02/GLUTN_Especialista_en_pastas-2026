@@ -117,3 +117,59 @@ ion-footer.ion-no-border {
 ion-buttons {
   margin: 0;
 }
+
+.scan-card {
+  margin-top: 16px;
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px dashed var(--ion-color-primary);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.14);
+    transform: scale(0.98);
+  }
+
+  &__icon-wrapper {
+    flex-shrink: 0;
+    width: 56px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(232, 114, 69, 0.15);
+  }
+
+  &__icon {
+    font-size: 28px;
+    color: var(--ion-color-primary);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFF;
+  }
+
+  &__subtitle {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 400;
+    color: #FFF;
+  }
+}
