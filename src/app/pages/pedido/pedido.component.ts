@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal , computed} from '@angular/core';
+import { Component, effect, inject, OnInit, signal , computed, viewChild, ElementRef, afterNextRender} from '@angular/core';
 import { Pedido } from '@app/services/pedido/pedido';
 import { Carrito } from '../carrito/carrito';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonContent, IonSearchbar, IonButton, ToastController, IonFooter, IonSpinner, IonIcon } from '@ionic/angular';
@@ -28,18 +28,54 @@ export class PedidoComponent  {
   private vibracion = inject(Vibracion);
   private mesaCliente = inject(MesaCliente);
 
+  private lista = viewChild<ElementRef<HTMLElement>>('lista');
+  private observador?: ResizeObserver;
+  porPagina = signal(3);
+  alturaCard = signal(0);
+
 
   relleno = computed(() => {
-    const resto = this.carrito.items().length % 3;
-    const faltan = resto === 0 ? 0 : 3 - resto;
-    const lista: number[] = [];
+      const resto = this.carrito.items().length % 3;
+      const faltan = resto === 0 ? 0 : this.porPagina() - resto;
+      const lista: number[] = [];
 
-    for (let i = 0; i < faltan; i++) {
-      lista.push(i);
+      for (let i = 0; i < faltan; i++) {
+        lista.push(i);
+      }
+
+      return lista;
+    });
+
+    private calcularPorPagina(): void {
+    const lista = this.lista()?.nativeElement;
+
+    if (!lista) {
+      return;
     }
 
-    return lista;
-  });
+    const cards = lista.querySelectorAll<HTMLElement>('.producto-card:not(.producto-card--relleno)');
+
+    let masAlta = 0;
+    for (const card of Array.from(cards)) {
+      if (card.offsetHeight > masAlta) {
+        masAlta = card.offsetHeight;
+      }
+    }
+
+    if (masAlta === 0) {
+      return;
+    }
+
+    const GAP = 12;
+    const entran = Math.floor((lista.clientHeight + GAP) / (masAlta + GAP));
+
+    this.alturaCard.set(masAlta);
+    this.porPagina.set(Math.max(1, Math.min(3, entran)));
+  }
+
+  ngOnDestroy(): void {
+    this.observador?.disconnect();
+  }
 
   continuarPedido() {
     return {
@@ -113,12 +149,20 @@ export class PedidoComponent  {
   }
 
   constructor() {
-    effect(() => {
-      // si el carrito se vació por el envío, la navegación la hace solicitarPedido
-      if (this.carrito.totalItems() === 0 && !this.enviado) {
-        this.root.navigate(['/carta']);
-      }
-    });
+      effect(() => {
+    this.carrito.items();
+    setTimeout(() => this.calcularPorPagina());
+  });
+
+  // y cuando cambia el tamaño de la pantalla
+  afterNextRender(() => {
+    const lista = this.lista()?.nativeElement;
+
+    if (lista) {
+      this.observador = new ResizeObserver(() => this.calcularPorPagina());
+      this.observador.observe(lista);
+    }
+  });
   }
 
   agregarProducto(producto: CartaItem): void {
