@@ -13,8 +13,8 @@
     
   
     <div class="lista-productos">
-      @for (item of carrito.items(); track item.producto.id_carta) {
-        <div class="producto-card">
+      @for (item of carrito.items(); track item.producto.id_carta; let i = $index) {
+        <div class="producto-card" [class.producto-card--ancla]="i % porPagina() === 0">
           <div class="card-header-item">
             <span class="item-nombre">{{item.producto.nombre}}</span>
             <span class="item-precio " >{{ item.cantidad }} x {{ item.producto.precio | currency:'ARS':'symbol':'1.0-0' }}</span>
@@ -41,7 +41,7 @@
       }
 
       @for (vacia of relleno(); track vacia) {
-        <div class="producto-card producto-card--relleno"></div>
+        <div class="producto-card producto-card--relleno" [style.height.px]="alturaCard()"></div>
       }
     </div>
 

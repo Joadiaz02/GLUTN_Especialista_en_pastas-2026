@@ -1,6 +1,6 @@
 .cocina-content {
   --background: var(--ion-background-color);
-  --padding-top: min(16px, 2vh);
+  --padding-top: calc(14px + env(safe-area-inset-top));
   --padding-start: 16px;
   --padding-end: 16px;
   --padding-bottom: calc(min(16px, 2vh) + env(safe-area-inset-bottom));
@@ -41,13 +41,13 @@
 .vistas__boton {
   flex: 1;
   min-width: 0;
-  min-height: 44px;
+  min-height: 58px;
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--ion-text-color);
   font-family: inherit;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -61,13 +61,13 @@
 }
 
 .vistas__cantidad {
-  min-width: 24px;
-  height: 24px;
-  padding: 0 6px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
   border-radius: 999px;
   background: #ffffff;
   color: #2f3d24;
-  font-size: 13px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,11 +76,12 @@
 
 // carrusel de pedidos
 .carrusel {
-  --ancho-tarjeta: min(360px, calc(100vw - 72px));
+  --ancho-tarjeta: min(420px, calc(100vw - 32px));
   flex: 1;
   min-height: 0;
   display: flex;
-  gap: 16px;
+  // separación suficiente para que no se asomen las tarjetas de al lado
+  gap: calc(100vw - var(--ancho-tarjeta));
   margin: 0 -16px;
   // padding para que la tarjeta quede centrada
   padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 12px;
@@ -115,25 +116,25 @@
 
 .contador {
   flex-shrink: 0;
-  min-height: 44px;
+  min-height: 54px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 20px;
   padding-bottom: 2px;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--ion-text-color);
 }
 
 .contador__flecha {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border: 0;
   border-radius: 50%;
   background: var(--ion-color-primary);
   color: #ffffff;
-  font-size: 28px;
+  font-size: 32px;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -300,7 +301,7 @@
 
 @media (max-height: 720px) {
   .cocina-content {
-    --padding-top: 7px;
+    --padding-top: calc(8px + env(safe-area-inset-top));
   }
 
   .logo-container {
@@ -317,18 +318,18 @@
   }
 
   .vistas__boton {
-    min-height: 38px;
-    font-size: 13px;
+    min-height: 48px;
+    font-size: 16px;
   }
 
   .vistas__cantidad {
-    min-width: 21px;
-    height: 21px;
-    font-size: 11px;
+    min-width: 26px;
+    height: 26px;
+    font-size: 14px;
   }
 
   .carrusel {
-    --ancho-tarjeta: min(340px, calc(100vw - 62px));
+    --ancho-tarjeta: min(420px, calc(100vw - 32px));
     padding-bottom: 7px;
   }
 
@@ -363,13 +364,37 @@
   }
 
   .contador {
-    min-height: 38px;
-    font-size: 13px;
+    min-height: 46px;
+    font-size: 17px;
   }
 
   .contador__flecha {
-    width: 36px;
-    height: 36px;
-    font-size: 23px;
+    width: 44px;
+    height: 44px;
+    font-size: 28px;
   }
+}
+// logo más arriba, pegado al encabezado
+.logo-container.logo-fijo {
+  margin: 0 auto 8px;
+}
+
+// el encabezado flota sobre la pantalla para que el logo suba a su altura
+app-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+app-header ::ng-deep ion-buttons {
+  pointer-events: auto;
+}
+
+// barra transparente para que no tape el logo
+app-header ::ng-deep ion-toolbar {
+  --background: transparent;
+  --border-width: 0;
 }

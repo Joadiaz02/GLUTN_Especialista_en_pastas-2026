@@ -27,7 +27,16 @@ Deno.serve(async (req) => {
 
     const supabaseAdmin = crearClienteAdmin();
 
-    // Buscar a los mozos (y opcionalmente dueño/supervisor)
+    // el pedido manda el UUID de la mesa, acá buscamos su número
+    const { data: mesa } = await supabaseAdmin
+      .from('mesas')
+      .select('numero')
+      .eq('id', idMesa)
+      .maybeSingle();
+
+    const numeroMesa = mesa ? String(mesa.numero) : 'sin número';
+
+    // Buscar a los mozos (y al metre)
     const { data: mozos, error: errorMozos } = await supabaseAdmin
       .from('usuarios')
       .select('id, perfil')
@@ -35,7 +44,7 @@ Deno.serve(async (req) => {
 
     if (errorMozos) throw new Error('No se pudieron obtener los mozos.');
 
-    const mozoIds = (mozos ?? []).map((m) => m.id);
+    const mozoIds = (mozos ?? []).map((m: { id: any; }) => m.id);
 
     if (mozoIds.length === 0) {
       return new Response(
@@ -60,7 +69,7 @@ Deno.serve(async (req) => {
     }
 
     const titulo = 'Nuevo pedido';
-    const cuerpo = `Llegó un pedido nuevo de la mesa ${idMesa}.`;
+    const cuerpo = `Llegó un pedido nuevo de la mesa ${numeroMesa}.`;
 
     let enviados = 0;
     let errores = 0;
@@ -84,7 +93,7 @@ Deno.serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error en notify-new-order:', error);
+    console.error('Error en notify-new-pedido:', error);
     return new Response(
       JSON.stringify({ ok: false, error: error instanceof Error ? error.message : 'Error desconocido.' }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
