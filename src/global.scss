@@ -59,8 +59,6 @@ ion-content {
   --padding-bottom: calc(24px + env(safe-area-inset-bottom));
   --padding-start: 24px;
   --padding-end: 24px;
-
-  --keyboard-offset: 0px !important;
 }
 
 // logo
@@ -172,4 +170,46 @@ ion-buttons {
     font-weight: 400;
     color: #FFF;
   }
+}
+@media (max-height: 780px) {
+  :host > div {
+    padding-bottom: 0;
+  }
+
+  .scan-card {
+    margin-top: 8px;
+    
+    gap: 10px;
+    border-radius: 14px;
+  }
+
+  .scan-card__icon-wrapper {
+    width: 42px;
+    flex: 0 0 42px;
+  }
+
+  .scan-card__icon {
+    font-size: 30px;
+  }
+
+  .scan-card__content {
+    gap: 2px;
+  }
+
+  .scan-card__title {
+    font-size: 15px;
+    line-height: 18px;
+  }
+
+  .scan-card__subtitle {
+    font-size: 13px;
+    line-height: 17px;
+  }
+
+  .step__subtitle {
+    margin: 0px 0 18px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
 }

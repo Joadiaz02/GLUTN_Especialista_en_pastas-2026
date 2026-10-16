@@ -48,13 +48,14 @@
 
 .logo-container {
   width: 100%;
-  max-width: 78px;
-  margin: 3px auto 3px;
+  max-width: 125px;
+  margin: 3px auto;
   flex: 0 0 auto;
 }
 
 .logo {
   width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -88,27 +89,29 @@
 
 .users-grid {
   flex: 1 1 auto;
-  min-height: 0;
+  min-height: 2;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 
+
 .user-card {
   min-width: 0;
   min-height: 0;
+  box-sizing: border-box;
   border: 0;
   border-radius: 18px;
-  padding: 7px 6px;
+  padding: 3px 5px;
   background: #a8b68a;
   color: #2f3d24;
   box-shadow: 0 7px 14px rgba(35, 48, 24, 0.16);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
+  justify-content: flex-start;
+  gap: 0;
   font: inherit;
   cursor: pointer;
   opacity: 0;
@@ -127,19 +130,25 @@
   opacity: 0.72;
 }
 
+
 .photo-wrapper {
   position: relative;
-  width: clamp(48px, 16vw, 70px);
-  aspect-ratio: 1;
-  flex: 0 0 auto;
+  width: 58px;
+  height: 58px;
+  min-width: 58px;
+  min-height: 58px;
+  flex: 0 0 58px;
+  margin: 0 0 6px;
 }
 
 .photo-wrapper img {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
+  box-sizing: border-box;
   border-radius: 50%;
   object-fit: cover;
+  object-position: center;
   border: 2px solid #f2e8d0;
   background: #657a4d;
 }
@@ -147,29 +156,44 @@
 .user-info {
   min-width: 0;
   width: 100%;
+  flex: 1 1 auto;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .user-info strong,
 .user-info span {
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  width: 100%;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: break-word;
+  word-break: normal;
+  text-align: center;
 }
 
 .user-info strong {
-  font-size: 16px;
-  line-height: 1.15;
+  min-height: 34px;
+  font-size: 15px;
+  line-height: 17px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-info span {
+  min-height: 17px;
   margin-top: 2px;
   color: #e76f45;
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 15px;
   font-weight: 800;
 }
-
 .quick-footer {
   min-height: 22px;
   padding-top: 5px;
@@ -187,36 +211,35 @@
   font-size: 14px;
 }
 
-
 .quick-loading {
   position: fixed;
   inset: 0;
   z-index: 100000;
-
-  width: 100%;
-  height: 100%;
-  min-height: 100dvh;
-
+  width: 100vw;
+  height: 100dvh;
   box-sizing: border-box;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 14px;
-
   padding: 24px;
-
   background: rgba(31, 45, 24, 0.55);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   color: #fff;
   font-size: 18px;
   font-weight: 700;
-  text-align: center;
 }
 
+.quick-header {
+  padding-top: 10px;
+  box-sizing: border-box;
+}
+
+.back-button {
+  transform: translateY(20px);
+}
 
 @keyframes card-in {
   to {
@@ -231,9 +254,10 @@
     padding-bottom: max(7px, env(safe-area-inset-bottom));
   }
 
-  .logo-container {
-    max-width: 64px;
-  }
+.logo-container {
+  max-width: 95px;
+  
+}
 
   .quick-titulo {
     font-size: 19px;
@@ -248,27 +272,105 @@
     gap: 6px;
   }
 
-  .user-card {
-    padding: 5px;
-    border-radius: 15px;
-    gap: 3px;
-  }
 
-  .photo-wrapper {
-    width: clamp(42px, 14vw, 58px);
-  }
+.photo-wrapper {
+  width: clamp(38px, 12vw, 50px);
+}
 
-  .user-info strong {
-    font-size: 10px;
-  }
+.user-info strong {
+  font-size: 12px;
+  line-height: 1.1;
+}
 
-  .user-info span {
-    font-size: 8px;
-  }
+.user-info span {
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.user-card {
+  padding: 5px 4px;
+  gap: 3px;
+}
+
 
   .quick-footer {
     min-height: 18px;
     padding-top: 3px;
     font-size: 8px;
+  }
+}
+
+/* Ajustes exclusivos para celulares con poca altura */
+@media (max-height: 800px) {
+  .quick-page {
+    padding-top: max(6px, env(safe-area-inset-top));
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+  }
+
+.logo-container {
+  width: 100%;
+  max-width: 125px;
+  margin: 3px auto;
+  flex: 0 0 auto;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+   .quick-eyebrow {
+    font-size: 14px;
+  }
+
+  .quick-titulo {
+    font-size: 21px;
+    line-height: 1.1;
+  }
+
+   .instruction {
+    margin: 4px 2px 6px;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+  .users-grid {
+    gap: 6px;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+  }
+
+  .user-card {
+    padding: 4px;
+    gap: 0;
+    border-radius: 15px;
+    min-height: 0;
+  }
+
+  .photo-wrapper {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    flex: 0 0 48px;
+    margin-bottom: 3px;
+  }
+
+   .user-info strong {
+    min-height: 30px;
+    font-size: 15px;
+    line-height: 16px;
+  }
+
+  .user-info span {
+    min-height: 16px;
+    margin-top: 1px;
+    font-size: 13px;
+    line-height: 14px;
+  }
+
+  .quick-footer {
+    min-height: 18px;
+    padding-top: 3px;
+    font-size: 11px;
   }
 }

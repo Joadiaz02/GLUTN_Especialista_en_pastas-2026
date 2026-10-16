@@ -1,4 +1,3 @@
-
 :host {
   display: block;
   width: 100%;
@@ -24,9 +23,9 @@
   justify-content: space-evenly;
 
   padding:
-    max(20px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-top))
     22px
-    max(18px, env(safe-area-inset-bottom));
+    max(12px, env(safe-area-inset-bottom));
 
   overflow: hidden;
 
@@ -39,9 +38,7 @@
   pointer-events: none;
 }
 
-/* =========================
-   ENCABEZADO
-========================= */
+/* ENCABEZADO */
 
 .splash-header {
   width: 100%;
@@ -53,24 +50,22 @@
 }
 
 .universidad {
-  margin: 0 0 14px;
-
+  margin: 0 0 10px;
   color: #F0F2E9;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 1px;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .splash-header h1 {
   margin: 0;
-
   color: #ffffff;
   font-family: 'Frances', sans-serif;
   font-size: clamp(20px, 5.5vw, 27px);
   font-weight: 700;
   letter-spacing: 0.8px;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 .titulo-decoracion {
@@ -78,8 +73,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-
-  margin: 18px auto 0;
+  margin: 12px auto 0;
 }
 
 .titulo-decoracion span {
@@ -91,19 +85,19 @@
 .titulo-decoracion .decoracion-centro {
   width: 8px;
   height: 8px;
-
   background-color: #D9A441;
   border-radius: 50%;
 }
 
-/* =========================
-   LOGO
-========================= */
+/* LOGO */
 
 .logo-container {
   width: 100%;
-  max-width: 350px;
+  max-width: 330px;
   flex-shrink: 0;
+
+  /* Sube visualmente el logo sin alterar el orden de los bloques */
+  transform: translateY(-8px);
 
   opacity: 0;
   animation: logoEntrance 1.2s ease forwards;
@@ -117,9 +111,7 @@
   object-fit: contain;
 }
 
-/* =========================
-   INTEGRANTES
-========================= */
+/* INTEGRANTES */
 
 .integrantes-container {
   width: 100%;
@@ -128,13 +120,12 @@
 }
 
 .integrantes-container h2 {
-  margin: 0 0 22px;
-
+  margin: 0 0 16px;
   color: #ffffff;
   font-family: 'Frances', sans-serif;
   font-weight: 700;
-  font-size: 36px;
-  line-height: 1.3;
+  font-size: 32px;
+  line-height: 1.2;
 
   opacity: 0;
   animation: fadeInUp 0.6s ease forwards;
@@ -142,18 +133,14 @@
 }
 
 .integrante {
-  margin: 12px 0;
-
+  margin: 9px 0;
   color: #ffffff;
   font-family: 'Frances', sans-serif;
   font-weight: 1000;
   font-size: clamp(18px, 4.8vw, 22px);
-  line-height: 1.4;
-
+  line-height: 1.3;
   opacity: 0;
 }
-
-/* Animación escalonada */
 
 .integrante-1 {
   animation: integranteEntrance 0.5s ease forwards;
@@ -175,18 +162,19 @@
   animation-delay: 2.3s;
 }
 
-/* =========================
-   PIE DE PANTALLA
-========================= */
+/* PIE DE PANTALLA */
 
 .splash-footer {
   width: 100%;
   max-width: 340px;
+  flex-shrink: 0;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+
+  padding-bottom: 4px;
 
   opacity: 0;
   animation: fadeInUp 0.7s ease forwards;
@@ -194,10 +182,9 @@
 }
 
 .footer-icon {
-  width: 66px;
-  height: 66px;
-  margin-bottom: 6px;
-
+  width: 48px;
+  height: 48px;
+  margin-bottom: 4px;
   color: #D9A441;
 }
 
@@ -210,26 +197,25 @@
 .footer-frase {
   max-width: 340px;
   margin: 0;
-
   color: #FFFFFF;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 1000;
-  line-height: 1.5;
+  line-height: 1.35;
   letter-spacing: 0.1px;
 }
 
 .footer-anio {
-  margin: 12px 0 0;
+  margin: 6px 0 0;
+  padding-bottom: 2px;
 
   color: #FFD36B;
   font-size: 18px;
   font-weight: 1000;
   letter-spacing: 5px;
+  line-height: 1.4;
 }
 
-/* =========================
-   ANIMACIONES
-========================= */
+/* ANIMACIONES */
 
 @keyframes logoEntrance {
   0% {
@@ -239,12 +225,12 @@
 
   60% {
     opacity: 1;
-    transform: translateY(0) scale(1.04);
+    transform: translateY(-8px) scale(1.04);
   }
 
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(-8px) scale(1);
   }
 }
 
@@ -272,65 +258,111 @@
   }
 }
 
-/* =========================
-   CELULARES CON POCA ALTURA
-========================= */
+/* CELULARES CON POCA ALTURA */
 
 @media (max-height: 700px) {
   .splash-container {
-    justify-content: center;
-    gap: 16px;
+    justify-content: flex-start;
+    gap: 0;
 
-    padding-top: max(18px, env(safe-area-inset-top));
-    padding-bottom: max(18px, env(safe-area-inset-bottom));
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
   }
 
   .universidad {
     font-size: 12px;
-    margin-bottom: 8px;
-  }
-
-  .splash-header h1 {
-    font-size: 21px;
-  }
-
-  .titulo-decoracion {
-    margin-top: 10px;
-  }
-
-  .logo-container {
-    max-width: 270px;
-  }
-
-  .integrantes-container h2 {
-    font-size: 27px;
-    margin-bottom: 12px;
-  }
-
-  .integrante {
-    font-size: 18px;
-    margin: 7px 0;
-  }
-
-  .footer-icon {
-    width: 34px;
-    height: 34px;
     margin-bottom: 6px;
   }
 
+  .splash-header h1 {
+    font-size: 20px;
+  }
+
+  .titulo-decoracion {
+    margin-top: 8px;
+  }
+
+  .logo-container {
+    max-width: 220px;
+    margin: 4px 0 8px;
+  }
+
+  .integrantes-container h2 {
+    font-size: 25px;
+    margin-bottom: 8px;
+  }
+
+  .integrante {
+    font-size: 17px;
+    margin: 5px 0;
+    line-height: 1.2;
+  }
+
+  .splash-footer {
+    margin-top: 10px;
+    padding-bottom: 4px;
+  }
+
+  .footer-icon {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 3px;
+  }
+
   .footer-frase {
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.25;
   }
 
   .footer-anio {
-    margin-top: 6px;
+    margin-top: 4px;
     font-size: 14px;
+    line-height: 1.3;
   }
 }
 
-/* =========================
-   ACCESIBILIDAD
-========================= */
+/* PANTALLAS MUY BAJAS */
+
+@media (max-height: 580px) {
+  .splash-container {
+    padding-top: max(6px, env(safe-area-inset-top));
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+  }
+
+  .logo-container {
+    max-width: 160px;
+    margin: 0 0 4px;
+  }
+
+  .integrantes-container h2 {
+    font-size: 21px;
+    margin-bottom: 5px;
+  }
+
+  .integrante {
+    font-size: 15px;
+    margin: 3px 0;
+  }
+
+  .splash-footer {
+    margin-top: 5px;
+  }
+
+  .footer-icon {
+    display: none;
+  }
+
+  .footer-frase {
+    font-size: 12px;
+  }
+
+  .footer-anio {
+    font-size: 13px;
+    margin-top: 3px;
+  }
+}
+
+/* ACCESIBILIDAD */
 
 @media (prefers-reduced-motion: reduce) {
   *,

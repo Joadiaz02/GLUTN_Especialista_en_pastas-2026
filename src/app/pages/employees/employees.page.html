@@ -5,31 +5,33 @@
   routeBackName="/admin"
 />
 
-<ion-content [fullscreen]="true">
-  <ion-segment
-    mode="ios"
-    aria-label="Filtrar empleados"
-    [value]="filter()"
-    (ionChange)="onFilterChange($event)"
-  >
-    <ion-segment-button value="active">
-      <ion-label> Activos ({{ activeCount() }}) </ion-label>
-    </ion-segment-button>
+<ion-content class="employees-content" [scrollY]="false">
+  <div class="employees__layout" #layout>
+    <ion-segment
+      mode="ios"
+      aria-label="Filtrar empleados"
+      [value]="filter()"
+      (ionChange)="onFilterChange($event)"
+    >
+      <ion-segment-button value="active">
+        <ion-label> Activos ({{ activeCount() }}) </ion-label>
+      </ion-segment-button>
 
-    <ion-segment-button value="inactive">
-      <ion-label> Dados de baja ({{ inactiveCount() }}) </ion-label>
-    </ion-segment-button>
-  </ion-segment>
+      <ion-segment-button value="inactive">
+        <ion-label> Dados de baja ({{ inactiveCount() }}) </ion-label>
+      </ion-segment-button>
+    </ion-segment>
 
-  <section class="employees__grid" aria-label="Lista de empleados">
-    @for (employee of visibleEmployees(); track employee.email; let i = $index)
-    {
-    <button
-      type="button"
-      class="employee-card"
-      [class.employee-card--inactive]="!employee.isActive"
-      [style.animation-delay.ms]="i * 70"
-      [attr.aria-label]="
+    <div class="employees__scroller" [style.height.px]="scrollerHeight()">
+      <section class="employees__grid" aria-label="Lista de empleados">
+        @for (employee of visibleEmployees(); track employee.email; let i = $index)
+        {
+        <button
+          type="button"
+          class="employee-card"
+          [class.employee-card--inactive]="!employee.isActive"
+          [style.animation-delay.ms]="i * 70"
+          [attr.aria-label]="
             employee.nombre +
             ' ' +
             employee.apellido +
@@ -38,39 +40,41 @@
             (employee.isActive ? '' : ', dado de baja') +
             '. Ver acciones'
           "
-      (click)="openActions(employee)"
-    >
-      <span class="employee-card__photo">
-        @if (employee.avatar) {
-        <img
-          class="employee-card__image"
-          [src]="employee.avatar"
-          [alt]="'Foto de ' + employee.nombre"
-        />
-        } @else {
-        <span class="employee-card__initials" aria-hidden="true">
-          {{ employee.initials }}
-        </span>
-        }
-      </span>
+          (click)="openActions(employee)"
+        >
+          <span class="employee-card__photo">
+            @if (employee.avatar) {
+            <img
+              class="employee-card__image"
+              [src]="employee.avatar"
+              [alt]="'Foto de ' + employee.nombre"
+            />
+            } @else {
+            <span class="employee-card__initials" aria-hidden="true">
+              {{ employee.initials }}
+            </span>
+            }
+          </span>
 
-      <span class="employee-card__name">
-        {{ employee.nombre }} {{ employee.apellido }}
-      </span>
+          <span class="employee-card__name">
+            {{ employee.nombre }} {{ employee.apellido }}
+          </span>
 
-      <span class="employee-card__role">{{ employee.perfil }}</span>
+          <span class="employee-card__role">{{ employee.perfil }}</span>
 
-      @if (!employee.is_active) {
-      <span class="employee-card__date"> Dado de Baja </span>
-      }
-    </button>
-    }@empty { @if (!isLoading()) {
-    <p class="employees__empty">
-      @if (filter() === 'active') { Todavía no hay empleados cargados. } @else {
-      No hay empleados dados de baja. }
-    </p>
-    }}
-  </section>
+          @if (!employee.is_active) {
+          <span class="employee-card__date"> Dado de Baja </span>
+          }
+        </button>
+        }@empty { @if (!isLoading()) {
+        <p class="employees__empty">
+          @if (filter() === 'active') { Todavía no hay empleados cargados. } @else {
+          No hay empleados dados de baja. }
+        </p>
+        }}
+      </section>
+    </div>
+  </div>
 </ion-content>
 
 @if (isLoading()) {

@@ -134,6 +134,16 @@
       </div>
     </div>
 
+    @if ( form.hasError('cuilDniMismatch') && (
+    getFormControl('cuil')?.touched || getFormControl('cuil')?.dirty ||
+    getFormControl('dni')?.touched || getFormControl('dni')?.dirty ) ) {
+    <div class="field">
+      <p class="field__error">
+        El CUIL y DNI deben coincidir
+      </p>
+    </div>
+    }
+
     <div class="field">
       <label class="field__label">Puesto</label>
 
