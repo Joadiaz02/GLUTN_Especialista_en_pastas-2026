@@ -31,47 +31,49 @@ export class PedidoComponent  {
   private lista = viewChild<ElementRef<HTMLElement>>('lista');
   private observador?: ResizeObserver;
   porPagina = signal(3);
-  alturaCard = signal(0);
+  
 
 
   relleno = computed(() => {
-      const resto = this.carrito.items().length % 3;
-      const faltan = resto === 0 ? 0 : this.porPagina() - resto;
-      const lista: number[] = [];
+    const resto = this.carrito.items().length % this.porPagina();
+    const faltan = resto === 0 ? 0 : this.porPagina() - resto;
+    const lista: number[] = [];
 
-      for (let i = 0; i < faltan; i++) {
-        lista.push(i);
-      }
+    for (let i = 0; i < faltan; i++) {
+      lista.push(i);
+    }
 
-      return lista;
-    });
+    return lista;
+  });
 
     private calcularPorPagina(): void {
-    const lista = this.lista()?.nativeElement;
+  const lista = this.lista()?.nativeElement;
 
-    if (!lista) {
-      return;
-    }
-
-    const cards = lista.querySelectorAll<HTMLElement>('.producto-card:not(.producto-card--relleno)');
-
-    let masAlta = 0;
-    for (const card of Array.from(cards)) {
-      if (card.offsetHeight > masAlta) {
-        masAlta = card.offsetHeight;
-      }
-    }
-
-    if (masAlta === 0) {
-      return;
-    }
-
-    const GAP = 12;
-    const entran = Math.floor((lista.clientHeight + GAP) / (masAlta + GAP));
-
-    this.alturaCard.set(masAlta);
-    this.porPagina.set(Math.max(1, Math.min(3, entran)));
+  if (!lista) {
+    return;
   }
+
+  lista.classList.add('lista--midiendo');
+
+  const cards = lista.querySelectorAll<HTMLElement>('.producto-card:not(.producto-card--relleno)');
+
+  let masAlta = 0;
+  for (const card of Array.from(cards)) {
+    if (card.offsetHeight > masAlta) {
+      masAlta = card.offsetHeight;
+    }
+  }
+
+  const altoLista = lista.clientHeight;
+  lista.classList.remove('lista--midiendo');
+
+  if (masAlta === 0) {
+    return;
+  }
+
+  
+  this.porPagina.set(3); 
+}
 
   ngOnDestroy(): void {
     this.observador?.disconnect();
@@ -161,7 +163,7 @@ export class PedidoComponent  {
     if (lista) {
       this.observador = new ResizeObserver(() => this.calcularPorPagina());
       this.observador.observe(lista);
-    }
+    } 
   });
   }
 
