@@ -166,18 +166,14 @@ async iniciarSesion(): Promise<void> {
 
     // 2. NOTIFICACIONES PUSH
     // Un error de Push no debe presentarse como un error de contraseña.
-    try {
-      await this.pushNotificationService.inicializar();
-
-      if (this.authService.esPersonal(usuario)) {
-        await this.probarPush(usuario.id);
+      try {
+        await this.pushNotificationService.inicializar();
+      } catch (error) {
+        console.error(
+          'La autenticación fue correcta, pero falló la inicialización de Push:',
+          error
+        );
       }
-    } catch (error) {
-      console.error(
-        'La autenticación fue correcta, pero falló la inicialización de Push:',
-        error
-      );
-    }
 
     // 3. REDIRECCIÓN SEGÚN EL PERFIL
     if (this.authService.esPersonal(usuario)) {

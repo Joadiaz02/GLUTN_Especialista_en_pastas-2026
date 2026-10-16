@@ -32,3 +32,21 @@ ion-input {
     --border-radius: 12px !important;
   }
 }
+
+
+// "$" y "min" dentro de los campos de precio y elaboración
+ion-input.field__input {
+  .field__prefix,
+  .field__suffix {
+    font-weight: 700;
+    opacity: 0.85;
+  }
+
+  .field__prefix {
+    margin-inline-end: 6px;
+  }
+
+  .field__suffix {
+    margin-inline-start: 6px;
+  }
+}

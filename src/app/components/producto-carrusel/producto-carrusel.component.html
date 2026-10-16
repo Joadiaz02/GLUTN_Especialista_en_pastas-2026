@@ -1,4 +1,7 @@
-<section class="producto-carrusel">
+<section
+  class="producto-carrusel"
+  [class.producto-carrusel--con-nav]="mostrarNavegacion"
+>
   <div #productosViewport class="productos-viewport">
     @for (producto of productos; track producto.id_carta) {
     <article
@@ -62,7 +65,10 @@
 
             <div class="producto-footer">
               <strong class="producto-precio">
-                {{ producto.precio | currency : "ARS" : "$" : "1.0-0" }}
+                {{
+                  producto.precio
+                    | currency : "ARS" : "$" : (decimales ? "1.2-2" : "1.0-0")
+                }}
               </strong>
 
               @if (acciones) {
@@ -120,7 +126,7 @@
           </div>
 
           <div class="contador-productos">
-            @if (esProductoActivo(producto)) {
+            @if (esProductoActivo(producto) && !mostrarNavegacion) {
             {{ indiceProducto() + 1 }} de {{ cantidadProductos }} {{ etiqueta }}
             }
           </div>
@@ -129,4 +135,16 @@
     </article>
     }
   </div>
+  @if (mostrarNavegacion && cantidadProductos > 0) {
+  <app-clients-navigation
+    class="producto-navegacion"
+    [posicionActual]="indiceProducto() + 1"
+    [totalClientes]="cantidadProductos"
+    [mostrarAyuda]="false"
+    etiquetaAnterior="Producto anterior"
+    etiquetaSiguiente="Producto siguiente"
+    (anterior)="irAlProductoAnteriorCircular()"
+    (siguiente)="irAlProductoSiguienteCircular()"
+  />
+  }
 </section>

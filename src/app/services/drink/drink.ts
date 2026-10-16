@@ -57,6 +57,11 @@ export class Drink {
     return data;
   }
 
+    // Vuelve a pedir la lista (por ejemplo, al volver a la pantalla)
+  async refresh(): Promise<void> {
+    this._list$.next(await this.getList());
+  }
+
   getListChanges(): Observable<any[] | null> {
     this._init();
 
@@ -96,8 +101,15 @@ export class Drink {
           const currentList = this._list$.getValue() ?? [];
 
           switch (payload.eventType) {
-            case 'INSERT':
-              this._list$.next([...currentList, payload.new]);
+              case 'INSERT':
+              // si ya está en la lista (porque se recargó antes), no se duplica
+              this._list$.next(
+                currentList.some((item) => item.id_carta === payload.new.id_carta)
+                  ? currentList.map((item) =>
+                      item.id_carta === payload.new.id_carta ? payload.new : item
+                    )
+                  : [...currentList, payload.new]
+              );
 
               break;
 

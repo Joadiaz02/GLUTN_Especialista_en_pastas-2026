@@ -17,6 +17,7 @@ import { GtnUploader } from '@app/components';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { VibrarErrores } from '@app/directives';
 import { HeaderComponent } from '@app/components/ui';
+import { PrecioInput } from '@app/directives';
 
 @Component({
   selector: 'app-edit-drink',
@@ -35,6 +36,7 @@ import { HeaderComponent } from '@app/components/ui';
     IonInput,
     ReactiveFormsModule,
     IonToggle,
+    PrecioInput,
     ConfirmVolverComponent,
     GtnUploader,
     SpinnerLogoComponent,
@@ -111,7 +113,7 @@ export class EditDrinkPage implements OnInit {
         title: drink.nombre,
         description: drink.descripcion,
         preparation: String(drink.tiempo_elaboracion),
-        price: String(drink.precio),
+        price: Number(drink.precio).toFixed(2),
         ml: String(drink.medida_ml),
         contieneAlcohol: drink.tiene_alcohol ?? false,
         sugerencia: drink.sugerencia,
