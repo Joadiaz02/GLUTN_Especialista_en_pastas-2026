@@ -742,6 +742,14 @@ QR correspondiente a la Mesa 5.
   <img src="images/administracion-platos.jpg" alt="Administración de platos" width="250">
 </p>
 
+<p align="center">
+  <img src="images/administracion-platos-dos.jpg" alt="Administración de platos" width="250">
+</p>
+
+<p align="center">
+  <img src="images/administracion-platos-tres.jpg" alt="Administración de platos" width="250">
+</p>
+
 ---
 
 ## Administración de bebidas
@@ -758,8 +766,5 @@ QR correspondiente a la Mesa 5.
   <img src="images/creacion_bebidas_tres.jpg" alt="Creación de bebidas - Paso 3" width="250">
 </p>
 
-<p align="center">
-  <img src="images/Creacion_bebidas_cuatro.jpg" alt="Creación de bebidas - Paso 4" width="250">
-</p>
 
 ---
