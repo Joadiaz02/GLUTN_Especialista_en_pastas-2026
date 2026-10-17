@@ -112,12 +112,13 @@ export class CreateTablePage {
         capacidad: data.diners,
         foto: image,
         tipo: data.type,
-        baja_logica: false
+        baja_logica: false,
+        disponibilidad: true,
       })
 
       const toast = await this._toastController.create({
         message:
-          'La mesa se creo correctamente',
+          'La mesa se creó correctamente.',
         duration: 5000,
         position: 'bottom',
       });
