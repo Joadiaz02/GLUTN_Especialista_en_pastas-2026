@@ -20,6 +20,12 @@ export class ClientsNavigationComponent {
 
   @Input()
   deshabilitada = false;
+  
+  @Input()
+  showButtons = true;
+  
+  @Input()
+  message = 'Deslizá para cambiar de cliente';
 
   
   // Textos configurables (por defecto, los de Clientes)

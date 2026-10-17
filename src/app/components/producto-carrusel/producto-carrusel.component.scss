@@ -20,7 +20,8 @@
   min-width: 0;
   display: flex;
   gap: 24px;
-  padding-block: 48px calc(48px + env(safe-area-inset-bottom, 0px));
+  // padding-block: env(safe-area-inset-bottom, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-inline: 16px;
   scroll-padding-inline: 16px;
   box-sizing: border-box;

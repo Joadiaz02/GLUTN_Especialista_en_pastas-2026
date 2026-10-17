@@ -1,11 +1,15 @@
-<app-header
+<!-- <app-header
   mensajeVolver="Vas a volver al menú principal."
   (volver)="volver()"
   (cerrarSesion)="cerrarSesion()"
-></app-header>
+></app-header> -->
+<app-header routeBackName="/home" />
 
 <ion-content class="carta-content">
-  <div class="carta-wrapper" [class.carta-wrapper--con-barra]="carrito.totalItems() > 0">
+  <div
+    class="carta-wrapper"
+    [class.carta-wrapper--con-barra]="carrito.totalItems() > 0"
+  >
     <div class="logo-container logo-fijo">
       <img
         src="assets/images/LOGO-GLUTN.png"
@@ -16,19 +20,34 @@
     <h1 class="titulo-pagina">Nuestra Carta</h1>
 
     <div class="carta-botones">
-      <ion-button class="carta-boton" expand="block" shape="round" (click)="irA('plato')">
+      <ion-button
+        class="carta-boton"
+        expand="block"
+        shape="round"
+        (click)="irA('plato')"
+      >
         <span class="carta-boton__texto">Platos</span>
       </ion-button>
 
-      <ion-button class="carta-boton" expand="block" shape="round" (click)="irA('bebida')">
+      <ion-button
+        class="carta-boton"
+        expand="block"
+        shape="round"
+        (click)="irA('bebida')"
+      >
         <span class="carta-boton__texto">Bebidas</span>
       </ion-button>
 
-      <ion-button class="carta-boton" expand="block" shape="round" (click)="irA('postre')">
+      <ion-button
+        class="carta-boton"
+        expand="block"
+        shape="round"
+        (click)="irA('postre')"
+      >
         <span class="carta-boton__texto">Postres</span>
       </ion-button>
     </div>
   </div>
 
-  <app-barra-pedido ></app-barra-pedido>
+  <app-barra-pedido></app-barra-pedido>
 </ion-content>

@@ -1,44 +1,28 @@
 <ion-header class="ion-no-border">
-
   <ion-toolbar>
-
     <ion-buttons slot="start">
-
-      <app-confirm-volver
-        (confirmadoVolver)="volver()"
-      ></app-confirm-volver>
-
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
 
-
-    <h1 class="titulo-toolbar">
-      {{ titulo() }}
-    </h1>
-
+    <h1 class="titulo-toolbar">{{ titulo() }}</h1>
 
     <app-confirm-dialog
       slot="end"
       (confirmado)="cerrarSesion()"
     ></app-confirm-dialog>
-
   </ion-toolbar>
-
 </ion-header>
 
-
-<ion-content class="productos-content">
-
+<ion-content class="products-content">
   <div
-    class="productos-wrapper"
+    class="products-wrapper"
     [class.con-barra-pedido]="
       carrito.totalItems() > 0
     "
   >
-
-
     <!-- BUSCADOR -->
 
-    <ion-searchbar
+    <!-- <ion-searchbar
       [placeholder]="
         'Buscar en ' + (titulo() | lowercase)
       "
@@ -47,76 +31,63 @@
       (ionInput)="
         onBuscar($event.detail.value ?? '')
       "
-    ></ion-searchbar>
-
+    ></ion-searchbar> -->
 
     <!-- LOADING -->
 
     @if (isLoading()) {
 
-      <div class="sin-resultados">
-
-        <app-spinner-logo />
-
-      </div>
+    <div class="sin-resultados">
+      <app-spinner-logo />
+    </div>
 
     }
-
 
     <!-- SIN PRODUCTOS -->
 
     @else if (productos().length === 0) {
 
-      <div class="sin-resultados">
-
-        <p>
-          Todavía no hay productos cargados
-          en esta sección.
-        </p>
-
-      </div>
+    <div class="sin-resultados">
+      <p>Todavía no hay productos cargados en esta sección.</p>
+    </div>
 
     }
-
 
     <!-- SIN RESULTADOS -->
 
     @else if (productosFiltrados().length === 0) {
 
-      <div class="sin-resultados">
-
-        <p>
-          No encontramos nada que coincida
-          con tu búsqueda.
-        </p>
-
-      </div>
+    <div class="sin-resultados">
+      <p>No encontramos nada que coincida con tu búsqueda.</p>
+    </div>
 
     }
-
 
     <!-- CARRUSEL -->
 
     @else {
 
-      <app-producto-carrusel
-        [productos]="productosFiltrados()"
-        [etiqueta]="
+    <app-producto-carrusel
+      [productos]="productosFiltrados()"
+      [etiqueta]="
           tipo() === 'plato'
             ? 'platos'
             : tipo() === 'bebida'
               ? 'bebidas'
               : 'postres'
         "
-      ></app-producto-carrusel>
+    ></app-producto-carrusel>
 
+    <!-- <app-clients-navigation
+      [posicionActual]="posicionVisible"
+      [totalClientes]="totalClientes"
+      [showButtons]="false"
+      message="Deslizá para cambiar de producto"
+    /> -->
     }
-
   </div>
-
 
   <!-- BARRA DEL PEDIDO -->
 
   <app-barra-pedido></app-barra-pedido>
-
 </ion-content>
