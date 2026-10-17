@@ -138,6 +138,7 @@ export class RegisterPage {
 
       if (personalForm.invalid) {
         personalForm.markAllAsTouched();
+        void this._vibracion.errorValidacion();
 
         return;
       }
@@ -148,6 +149,7 @@ export class RegisterPage {
 
       if (credentialsForm.invalid) {
         credentialsForm.markAllAsTouched();
+        void this._vibracion.errorValidacion();
 
         return;
       }
@@ -166,6 +168,23 @@ export class RegisterPage {
 
   async register(): Promise<void> {
     if (this.isLoading()) {
+      return;
+    }
+
+    // Falta algún dato (por ejemplo la foto): vibra y avisa en vez de quedarse mudo.
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      void this._vibracion.errorValidacion();
+
+      const toast = await this.toastController.create({
+        message: this.getFormGroup('profile').invalid
+          ? 'Sumá tu foto para completar el registro.'
+          : 'Revisá los datos ingresados antes de registrarte.',
+        duration: 3000,
+        position: 'top',
+      });
+
+      await toast.present();
       return;
     }
 

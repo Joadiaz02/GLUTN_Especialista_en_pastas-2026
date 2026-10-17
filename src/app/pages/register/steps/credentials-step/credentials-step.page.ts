@@ -7,12 +7,13 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { IonInput } from '@ionic/angular';
+import { VibrarErrores } from '@app/directives/vibrar-errores';
 
 @Component({
   selector: 'app-credentials-step',
   templateUrl: './credentials-step.page.html',
   styleUrls: ['./credentials-step.page.scss'],
-  imports: [CommonModule, ReactiveFormsModule, IonInput],
+  imports: [CommonModule, ReactiveFormsModule, VibrarErrores, IonInput],
 })
 export class CredentialsStepPage {
   @Input() control!: AbstractControl;

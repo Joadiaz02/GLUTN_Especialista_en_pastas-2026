@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-
+import { PushNotificationService } from '../push-notification.service';
 import { SupabaseService } from '../supabase.service';
 import { EPerfilUsuario } from '@app/enums';
 import type { PerfilUsuario } from '@app/models/usuario.model';
@@ -19,7 +19,7 @@ export class Auth {
   private readonly carrito = inject(Carrito);
   private readonly storageService = inject(Storage);
   private readonly vibracion = inject(Vibracion);
-
+  private readonly pushNotificationService = inject(PushNotificationService);
   usuarioActual = signal<any>(null);
 
   constructor() {
@@ -232,6 +232,15 @@ export class Auth {
 async logout(): Promise<void> {
   this.vibracion.sonidoCierre();
   this.carrito.vaciar();
+
+  try {
+    await this.pushNotificationService.desvincularDispositivo();
+  } catch (error) {
+    console.error(
+      'No se pudo desvincular el dispositivo push:',
+      error
+    );
+  }
 
   const { error } =
     await this.supabaseService.client.auth.signOut();
