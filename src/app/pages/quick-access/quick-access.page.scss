@@ -301,7 +301,7 @@
 }
 
 /* Ajustes exclusivos para celulares con poca altura */
-@media (max-height: 800px) {
+@media (max-height: 780px) {
   .quick-page {
     padding-top: max(6px, env(safe-area-inset-top));
     padding-bottom: max(6px, env(safe-area-inset-bottom));
