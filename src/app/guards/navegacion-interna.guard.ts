@@ -8,7 +8,10 @@ export const navegacionInternaGuard: CanActivateFn = () => {
   const navegacion = router.getCurrentNavigation();
   const origenValido = navegacion?.extras?.state?.['origenValido'] === true;
 
-  if (origenValido) {
+  // si ya se venía navegando dentro de la app, no es una entrada por url
+  const desdeLaApp = navegacion?.previousNavigation != null;
+
+  if (origenValido || desdeLaApp) {
     return true;
   }
 
