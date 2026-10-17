@@ -64,7 +64,7 @@ export class Pedido {
             id_usuario:id_usuario,
             detalles,
             subtotal:this.carrito.importeTotal(),
-            estado_pedido:'pendiente'
+            estado_pedido:'Pendiente'
         }).select().single();
 
         if (error) {
@@ -88,13 +88,16 @@ export class Pedido {
         };
 
         // el pedido ya quedó guardado aunque falle el aviso al mozo
-        const { error: errorAviso } = await this.sup.client.functions.invoke('notify-new-pedido', {
+         this.sup.client.functions.invoke('notify-new-pedido', {
             body: { idPedido: pedido.id_pedido, idMesa: id_mesa }
+        }).then(({error:errorAviso})=>{
+          if (errorAviso) {
+            console.log('No se pudo avisar al mozo del pedido nuevo:', errorAviso)
+          }
+          
         });
 
-        if (errorAviso) {
-            console.warn('No se pudo avisar al mozo del pedido nuevo:', errorAviso);
-        }
+        
 
         
         this.carrito.vaciar();
@@ -105,7 +108,7 @@ export class Pedido {
 
     async traer_pedido( ): Promise<any[]> {
 
-        const { data, error } = await this.sup.client.from('pedido').select('*').eq('estado_pedido', 'pendiente').order('fecha_emision_pedido', { ascending: true });
+        const { data, error } = await this.sup.client.from('pedido').select('*').eq('estado_pedido', 'Pendiente').order('fecha_emision_pedido', { ascending: true });
 
         if (error) {
             throw error;   
@@ -122,7 +125,7 @@ export class Pedido {
     async obtenerPedidoConItems(idPedido: string): Promise<any> {
       const { data: pedido, error: errorPedido } = await this.sup.client
         .from('pedido')
-        .select('*, mesas(numero), usuarios(nombre, apellido)')
+        .select('*, mesas(numero), usuarios:id_usuario(nombre, apellido)')
         .eq('id_pedido', idPedido)
         .single();
 
@@ -191,7 +194,7 @@ export class Pedido {
 
   const { data: pedidoActualizado, error: error_modificacion } = await this.sup.client
     .from('pedido')
-    .update({ subtotal: this.carrito.importeTotal(), estado_pedido: 'pendiente' })
+    .update({ subtotal: this.carrito.importeTotal(), estado_pedido: 'Pendiente' })
     .eq('id_pedido', id_pedido)
     .select()
     .single();

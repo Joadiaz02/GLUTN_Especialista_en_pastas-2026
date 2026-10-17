@@ -17,7 +17,7 @@
         <div class="producto-card" [class.producto-card--ancla]="i % porPagina() === 0">
           <div class="card-header-item">
             <span class="item-nombre">{{item.producto.nombre}}</span>
-            <span class="item-precio " >{{ item.cantidad }} x {{ item.producto.precio | currency:'ARS':'symbol':'1.0-0' }}</span>
+            <span class="item-precio " >{{ item.cantidad }} x {{ item.producto.precio | currency:'ARS':'$':'1.0-0' }}</span>
           </div>
           <p class="item-descripcion">{{item.producto.descripcion}}</p>
           <div class="item-controles">
@@ -33,7 +33,7 @@
                 <button class="boton-eliminar" (click)="eliminarProducto(item.producto)">
                   <ion-icon name="trash-outline"></ion-icon>
                 </button>
-                <span class="item-precio" style="color: #000;">{{ item.producto.precio * item.cantidad | currency:'ARS':'symbol':'1.0-0' }}</span>
+                <span class="item-precio" style="color: #000;">{{ item.producto.precio * item.cantidad | currency:'ARS':'$':'1.0-0' }}</span>
               </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
       </div>
       <div class="resumen-fila total-pagar">
         <span>Total a pagar:</span>
-        <strong >{{this.carrito.importeTotal() | currency:'ARS':'symbol':'1.0-0'}}</strong>
+        <strong >{{this.carrito.importeTotal() | currency:'ARS':'$':'1.0-0'}}</strong>
       </div>
     </div>
 
