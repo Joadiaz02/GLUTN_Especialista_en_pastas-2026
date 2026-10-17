@@ -128,8 +128,13 @@ export class Pedido {
     throw new Error('El carrito está vacío');
   }
 
-  const { error: errorBorrar } = await this.sup.client.from('pedido_item').delete().eq('id_pedido', id_pedido);
+  const { data: borrados, error: errorBorrar } = await this.sup.client.from('pedido_item').delete().eq('id_pedido', id_pedido).select('id_pedido');
   if (errorBorrar) throw errorBorrar;
+
+  // si no se borró nada no sigue, así no se duplican los productos
+  if (!borrados || borrados.length === 0) {
+    throw new Error('No se pudieron reemplazar los productos del pedido.');
+  }
 
   const itemsAInsertar = items.map(item => ({
     id_pedido: id_pedido,
@@ -158,6 +163,8 @@ export class Pedido {
 
   this.carrito.vaciar();
   this.idPedidoEnEdicion.set(null);
+  // el home sigue el pedido modificado
+  this.idUltimoPedido.set(id_pedido);
 }
 
 async obtenerPedidosConfirmados(): Promise<any[]> {
