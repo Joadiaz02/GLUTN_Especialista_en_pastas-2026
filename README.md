@@ -36,6 +36,8 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Lista de espera](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#lista-de-espera)
   - 🔗 [Asinación de mesa](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#asignación-de-mesa)
   - 🔗 [Administración de empleados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-empleados)
+  - 🔗 [Creación de empleados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#creación-de-empleados)
+  - 🔗 [Administración de mesas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-mesas)
   - 🔗 [Gestión de pedidos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos)
   - 🔗 [Gestión de pedidos de cocina](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-cocina)
   - 🔗 [Modales del menú principal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#modales-del-menú-principal)
@@ -616,6 +618,34 @@ QR correspondiente a la Mesa 5.
 
 ---
 
+## Creación de empleados
+
+<p align="center">
+  <img src="images/creacion-empleado-uno.jpg" alt="Creación de empleados - Paso 1" width="250">
+</p>
+
+<p align="center">
+  <img src="images/creacion-empleado-dos.jpg" alt="Creación de empleados - Paso 2" width="250">
+</p>
+
+<p align="center">
+  <img src="images/creacion-empleado-tres.jpg" alt="Creación de empleados - Paso 3" width="250">
+</p>
+
+---
+
+## Administración de mesas
+
+<p align="center">
+  <img src="images/editar-mesa.jpg" alt="Edición de mesa" width="250">
+</p>
+
+<p align="center">
+  <img src="images/crear-mesa.jpg" alt="Creación de mesa" width="250">
+</p>
+
+---
+
 ## Gestión de pedidos
 
 ### Pedidos generales
@@ -731,15 +761,5 @@ QR correspondiente a la Mesa 5.
 <p align="center">
   <img src="images/Creacion_bebidas_cuatro.jpg" alt="Creación de bebidas - Paso 4" width="250">
 </p>
-
----
-
-# 10. 🗂️ Estructura de imágenes
-
-Las capturas utilizadas en este README se encuentran dentro de la carpeta:
-
-```text
-images/
-
 
 ---
