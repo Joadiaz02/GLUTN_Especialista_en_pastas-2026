@@ -1,4 +1,4 @@
-import { Component, computed, HostListener, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, HostListener, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, ToastController, IonSegment, IonSegmentButton, IonLabel, ModalController } from '@ionic/angular';
@@ -34,7 +34,7 @@ import { EmployeeActionSheetComponent } from './employee-action-sheet/employee-a
     IonLabel
 ],
 })
-export class EmployeesPage {
+export class EmployeesPage implements OnDestroy {
   private readonly _router = inject(Router);
   private readonly _modalController = inject(ModalController);
   private readonly _toastController = inject(ToastController);
@@ -46,6 +46,13 @@ export class EmployeesPage {
     initialValue: null,
   });
  
+  private readonly _layout = viewChild<ElementRef<HTMLElement>>('layout');
+  private _resizeObserver?: ResizeObserver;
+
+  // Alto (px) del área de scroll: siempre un número entero de filas.
+  // null = sin límite (pocas tarjetas o lista vacía).
+  readonly scrollerHeight = signal<number | null>(null);
+
   readonly filter = signal<any>('active');
   readonly isSaving = signal(false);
  
@@ -72,6 +79,70 @@ export class EmployeesPage {
     return this.employees().filter((employee) => employee.is_active === showActive);
   });
  
+  constructor() {
+    // Al cambiar la lista (carga inicial o filtro) se recalcula el alto.
+    effect(() => {
+      this.visibleEmployees();
+      requestAnimationFrame(() => this.updateScrollerHeight());
+    });
+
+    // Recalcula si cambia el tamaño de la pantalla o del contenido
+    // (rotación, tamaño de fuente del sistema, etc.).
+    effect(() => {
+      const layout = this._layout()?.nativeElement;
+      if (!layout || typeof ResizeObserver === 'undefined') return;
+      this._resizeObserver?.disconnect();
+      this._resizeObserver = new ResizeObserver(() => this.updateScrollerHeight());
+      this._resizeObserver.observe(layout);
+      const grid = layout.querySelector('.employees__grid');
+      if (grid) this._resizeObserver.observe(grid);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._resizeObserver?.disconnect();
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.updateScrollerHeight();
+  }
+
+  /**
+   * Ajusta el alto del área de scroll para que entren filas completas.
+   * Como todas las filas miden lo mismo y el scroll frena al ras de cada fila,
+   * nunca se ve una tarjeta cortada, ni arriba ni abajo.
+   */
+  private updateScrollerHeight(): void {
+    const layout = this._layout()?.nativeElement;
+    if (!layout) return;
+
+    const grid = layout.querySelector<HTMLElement>('.employees__grid');
+    const segment = layout.querySelector<HTMLElement>('ion-segment');
+    const cards = grid?.querySelectorAll<HTMLElement>('.employee-card');
+    if (!grid || !segment || !cards || cards.length === 0) {
+      this.scrollerHeight.set(null);
+      return;
+    }
+
+    const gap = parseFloat(getComputedStyle(grid).rowGap) || 0;
+    const rowHeight = cards[0].getBoundingClientRect().height + gap;
+    if (rowHeight <= gap) return; // todavía sin medidas (no renderizó)
+
+    const segmentBlock =
+      segment.offsetHeight + (parseFloat(getComputedStyle(segment).marginBottom) || 0);
+    const available = layout.clientHeight - segmentBlock;
+    if (available <= 0) return;
+
+    const totalRows = Math.ceil(cards.length / 2);
+    const fitRows = Math.floor((available + gap) / rowHeight);
+    const rows = Math.min(Math.max(fitRows, 1), totalRows);
+
+    this.scrollerHeight.set(
+      rows >= totalRows ? null : Math.ceil(rows * rowHeight - gap),
+    );
+  }
+
   onFilterChange(event: any): void {
     const value = event.detail.value;
  

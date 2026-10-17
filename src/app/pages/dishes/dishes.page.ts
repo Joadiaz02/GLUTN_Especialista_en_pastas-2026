@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -49,7 +49,7 @@ import {
     ConfirmVolverComponent,
   ],
 })
-export class DishesPage implements OnInit {
+export class DishesPage  {
   dishes = signal<CartaItem[]>([]);
 
   isLoading = signal<boolean>(false);
@@ -81,7 +81,7 @@ export class DishesPage implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  async ionViewWillEnter(): Promise<void> {
     await this.cargarPlatos();
   }
 

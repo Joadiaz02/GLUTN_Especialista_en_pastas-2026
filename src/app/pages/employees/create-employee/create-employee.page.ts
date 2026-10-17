@@ -31,7 +31,7 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { Vibracion } from '@app/services';
-import { employeeRoleValidator, passwordMatchValidator } from '@app/validators';
+import { cuilDniMatchValidator, employeeRoleValidator, passwordMatchValidator } from '@app/validators';
 import { cuilValidator } from '@app/validators/cuil-validator';
 
 const NAME_PATTERN =
@@ -95,7 +95,7 @@ export class CreateEmployeePage {
       ]),
 
       role: new FormControl<any | null>(null, Validators.required),
-    }),
+    }, { validators: cuilDniMatchValidator }),
 
 
 

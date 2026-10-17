@@ -18,6 +18,8 @@ import {
 
 import { CartaItem } from '@app/models/carta.model';
 import { Carrito } from '@app/pages/carrito/carrito';
+import { ClientsNavigationComponent } from 
+'@app/pages/clients/components/clients-navigation/clients-navigation.component';
 
 @Component({
   selector: 'app-producto-carrusel',
@@ -25,6 +27,7 @@ import { Carrito } from '@app/pages/carrito/carrito';
   imports: [
     CommonModule,
     CurrencyPipe,
+    ClientsNavigationComponent,
   ],
   templateUrl:
     './producto-carrusel.component.html',
@@ -39,6 +42,15 @@ export class ProductoCarruselComponent
 
   @Input()
   etiqueta = 'productos';
+
+  
+  // flechas y contador "1 de N" debajo de la tarjeta (igual que en Clientes)
+  @Input()
+  mostrarNavegacion = false;
+
+  // precios con 2 decimales (listados de gestión)
+  @Input()
+  decimales = false;
 
   // botones propios para el pie de la tarjeta en las pantallas de gestión
   @Input()
@@ -356,6 +368,27 @@ export class ProductoCarruselComponent
   /* =====================================================
      DETECTAR PRODUCTO ACTIVO
   ===================================================== */
+
+    // Flechas del contador: dan la vuelta (del último vuelve al primero)
+  irAlProductoAnteriorCircular(): void {
+    const total = this.productos.length;
+
+    if (total < 2) {
+      return;
+    }
+
+    this.irAlProducto((this.indiceProducto() - 1 + total) % total);
+  }
+
+  irAlProductoSiguienteCircular(): void {
+    const total = this.productos.length;
+
+    if (total < 2) {
+      return;
+    }
+
+    this.irAlProducto((this.indiceProducto() + 1) % total);
+  }
 
   private actualizarProductoPorCentro(): void {
 

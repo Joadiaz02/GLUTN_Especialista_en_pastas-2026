@@ -9,6 +9,7 @@ import { GtnUploader } from '@app/components';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { CuilFormat, DniFormat } from '@app/directives';
+import { cuilDniMatchValidator } from '@app/validators';
 
 const NAME_PATTERN =
   /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(?:[ '-][A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)*$/;
@@ -109,13 +110,34 @@ export class EditEmployeePage {
     ]),
 
     role: new FormControl<any | null>(null, Validators.required),
-  });
+  }, { validators: cuilDniMatchValidator });
 
     get formGroup(): FormGroup {
     return this.form as FormGroup;
   }
 
   async edit() {
+    // El botón no depende de form.valid (la foto es opcional al editar),
+    // por eso se revisan acá solo los datos del CUIL y el DNI.
+    if (
+      this.getFormControl('cuil')?.invalid ||
+      this.getFormControl('dni')?.invalid ||
+      this.form.hasError('cuilDniMismatch')
+    ) {
+      this.form.markAllAsTouched();
+      await this._vibracion.error();
+
+      const toast = await this._toastController.create({
+        message: 'Revisá el CUIL y el DNI antes de guardar.',
+        duration: 5000,
+        position: 'top',
+      });
+
+      await toast.present();
+
+      return;
+    }
+
     try {
       const data = this.form.getRawValue();
 

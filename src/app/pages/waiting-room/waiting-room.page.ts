@@ -62,14 +62,11 @@ export class WaitingRoomPage {
   total =
     signal<number>(1);
 
-  isTableAssigned =
-    signal(true);
+loading = signal(true);
 
-  table =
-    signal<any>({
-      numero: 1
-    });
+isTableAssigned = signal(false);
 
+table = signal<any | null>(null);
   private _unsubscribe:
     (() => void) | null = null;
 
@@ -101,6 +98,8 @@ export class WaitingRoomPage {
     }
 
     await this._refrescar();
+
+    this.loading.set(false);
 
     this._unsubscribe =
       this._waitlistService.subscribeToChanges(
@@ -204,6 +203,10 @@ export class WaitingRoomPage {
       );
     }
   }
+
+  irAEncuestas(): void {
+  void this._router.navigate(['/encuestas']);
+}
 
   private async _refrescar(): Promise<void> {
     if (!this._userId) {

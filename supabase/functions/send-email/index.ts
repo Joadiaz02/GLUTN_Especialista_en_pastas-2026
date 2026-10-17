@@ -1,7 +1,6 @@
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
 
-const GMAIL_SEND_URL =
-  'https://gmail.googleapis.com/gmail/v1/users/me/messages/send';
+const GMAIL_SEND_URL = 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send';
 
 function base64UrlEncode(value: string): string {
   const bytes = new TextEncoder().encode(value);
