@@ -119,9 +119,8 @@ Deno.serve(async (req) => {
           '¡Tu mesa está lista!',
           `Te asignaron la mesa ${mesaNumero}.`,
           {
-            tipo:
-              'mesa_asignada',
-            mesaNumero,
+            tipo: 'mesa_asignada',
+            mesaNumero: String(mesaNumero),
           }
         );
 

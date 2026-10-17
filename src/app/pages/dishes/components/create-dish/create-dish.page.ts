@@ -20,6 +20,7 @@ import {
   ToastController,
   IonInput,
   IonCheckbox,
+  IonToggle,
 } from '@ionic/angular';
 import { UploaderComponent } from './uploader/uploader.component';
 import { Storage, Plato, Confirm, Vibracion } from '@app/services';
@@ -45,11 +46,11 @@ import { textoValido } from '@app/validators/texto';
     IonButton,
     IonFooter,
     IonInput,
-    PrecioInput,
     ReactiveFormsModule,
     UploaderComponent,
     SpinnerLogoComponent,
     IonCheckbox,
+    IonToggle,
     ConfirmVolverComponent,
   ],
 })
