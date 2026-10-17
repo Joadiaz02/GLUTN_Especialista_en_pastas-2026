@@ -27,6 +27,7 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Logo del proyecto](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#logo-del-proyecto)
   - 🔗 [Splash Screen](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#splash-screen)
   - 🔗 [Login](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#login)
+  - 🔗 [Acceso rápido](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#acceso-rápido)
   - 🔗 [Registro de clientes](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#registro-de-clientes)
   - 🔗 [Registro de invitados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#registro-de-invitados)
   - 🔗 [Registro completado](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#registro-completado)
@@ -41,7 +42,6 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Carta](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#carta)
   - 🔗 [Platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#platos)
   - 🔗 [Pedido](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#pedido)
-  - 🔗 [Acceso de personal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#acceso-de-personal)
   - 🔗 [Panel administrativo](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#panel-administrativo)
   - 🔗 [Consultas al mozo](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#consultas-al-mozo)
   - 🔗 [Administración de platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-platos)
@@ -75,8 +75,8 @@ La siguiente distribución corresponde al estado del proyecto luego de las modif
 |---|---|
 | **Joaquín Díaz** | 5, 6, 7, 8, **9 y 10 (en conjunto con Javier)**, 17 y 20 |
 | **Javier Vilchez** | 1, 3, 4, **9 y 10 (en conjunto con Joaquín)**, 22 |
-| **Lucas Ponte** | 11, 12, 13, 14, 19 y 21 |
-| **Mariano Pastor** | 2, 15, 16 y 18 |
+| **Lucas Ponte** |  12, 13, 14, 19 y 21 |
+| **Mariano Pastor** | 2, 11, 15, 16 y 18 |
 
 > **Nota:** Los puntos **9 y 10** son responsabilidad conjunta de **Joaquín Díaz y Javier Vilchez**. Se decidió trabajarlos en conjunto porque son módulos de mayor tamaño que integran varias funcionalidades relacionadas y requieren coordinación entre distintos flujos de la aplicación.
 
@@ -162,9 +162,9 @@ Los módulos se documentan individualmente indicando:
 **Qué se realiza:** registro de clientes anónimos, ingreso mediante QR del local, incorporación a la lista de espera, actualización del listado del metre, eliminación de clientes de la lista y restricciones de acceso hasta recibir una mesa.
 
 **Responsables:** Joaquín Díaz + Javier Vilchez  
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** En construcción  
+**Inicio:** 23/09/2026  
+**Finalización:** 26/09/2026 
+**Estado:** Finalizado
 **Branches:** `Joaquin-Diaz` + `Javier-Vilchez`
 
 > **Cambio:** desde el 27/09/2026 este módulo se desarrolla en conjunto debido a su tamaño y a la cantidad de funcionalidades que integra.
@@ -174,9 +174,9 @@ Los módulos se documentan individualmente indicando:
 **Qué se realiza:** asignación de una mesa por parte del metre, notificación al cliente, lectura del QR de la mesa asignada y validación para impedir que el cliente se vincule con otra mesa o que la misma mesa sea asignada a otro cliente.
 
 **Responsables:** Joaquín Díaz + Javier Vilchez  
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** En construcción  
+**Inicio:** 26/09/2026  
+**Finalización:** 17/10/2026  
+**Estado:** Finalizado 
 **Branches:** `Joaquin-Diaz` + `Javier-Vilchez`
 
 > **Cambio:** desde el 27/09/2026 este módulo se desarrolla en conjunto debido a su tamaño y a la cantidad de funcionalidades que integra.
@@ -209,9 +209,9 @@ Los módulos se documentan individualmente indicando:
 
 **Qué se realiza:** alta de empleados por parte del dueño o supervisor, incluyendo datos personales, DNI/CUIL, correo, contraseña, perfil, fotografía tomada desde el dispositivo, lectura de QR del DNI y validación de todos los campos.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
+**Inicio:** 30/09/2026 
+**Finalización:** 05/10/2026 
+**Estado:** Finalizado  
 **Branch:** `Javier-Vilchez`
 
 > **Reasignación:** originalmente correspondía a Joaquín Díaz. El 27/09/2026 fue cedido a Javier como parte del intercambio de módulos.
@@ -239,9 +239,9 @@ Los módulos se documentan individualmente indicando:
 **Qué se realiza:** registro de clientes anónimos, ingreso mediante QR del local, incorporación a la lista de espera, actualización del listado del metre, eliminación de clientes de la lista y restricciones de acceso hasta recibir una mesa.
 
 **Responsables:** Joaquín Díaz + Javier Vilchez  
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** En construcción  
+**Inicio:** 23/09/2026  
+**Finalización:** 26/09/2026 
+**Estado:** Finalizado  
 **Branches:** `Joaquin-Diaz` + `Javier-Vilchez`
 
 ### Punto 10 - Asignación de mesa a un cliente
@@ -249,9 +249,9 @@ Los módulos se documentan individualmente indicando:
 **Qué se realiza:** asignación de una mesa por parte del metre, notificación al cliente, lectura del QR de la mesa asignada y validación para impedir que el cliente se vincule con otra mesa o que la misma mesa sea asignada a otro cliente.
 
 **Responsables:** Joaquín Díaz + Javier Vilchez  
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** En construcción  
+**Inicio:** 26/09/2026  
+**Finalización:** 17/10/2026  
+**Estado:** Finalizado  
 **Branches:** `Joaquin-Diaz` + `Javier-Vilchez`
 
 ### Punto 22 - Confirmación del pago y liberación de la mesa
@@ -269,14 +269,7 @@ Los módulos se documentan individualmente indicando:
 
 **Branch principal de trabajo:** `Lucas-ponte`
 
-### Punto 11 - Visualización del menú y consulta al mozo
 
-**Qué se realiza:** visualización del menú mediante el QR de la mesa y sistema de consultas al mozo, incluyendo sala de conversación y notificaciones para clientes y mozos.
-
-**Inicio:** 07/09/2026  
-**Finalización:** No informada  
-**Estado:** En desarrollo  
-**Branch:** `Lucas-ponte`
 
 ### Punto 12 - Realización del pedido
 
@@ -336,6 +329,15 @@ Los módulos se documentan individualmente indicando:
 **Inicio:** 11/09/2026  
 **Finalización:** 22/09/2026  
 **Estado:** Finalizado  
+**Branch:** `Mariano-Pastor`
+
+### Punto 11 - Visualización del menú y consulta al mozo
+
+**Qué se realiza:** visualización del menú mediante el QR de la mesa y sistema de consultas al mozo, incluyendo sala de conversación y notificaciones para clientes y mozos.
+
+**Inicio:** 07/09/2026  
+**Finalización:** 25/09/2026  
+**Estado:** Finalizado 
 **Branch:** `Mariano-Pastor`
 
 ### Punto 15 - Juegos y descuentos
@@ -525,6 +527,14 @@ QR correspondiente a la Mesa 5.
 
 ---
 
+## Acceso rápido
+
+<p align="center">
+  <img src="images/seleccion-acceso.jpg" alt="Selección de acceso del personal" width="250">
+</p>
+
+---
+
 ## Registro de clientes
 
 <p align="center">
@@ -677,14 +687,6 @@ QR correspondiente a la Mesa 5.
   <img src="images/pedido-sheet.jpg" alt="Resumen del pedido" width="250">
 </p>
 
-
----
-
-## Acceso de personal
-
-<p align="center">
-  <img src="images/seleccion-acceso.jpg" alt="Selección de acceso del personal" width="250">
-</p>
 
 ---
 
