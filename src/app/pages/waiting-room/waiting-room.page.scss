@@ -1,26 +1,86 @@
+
 .waiting-room {
+  --padding-start: 22px;
+  --padding-end: 22px;
+  --padding-top: max(20px, env(safe-area-inset-top));
+  --padding-bottom: max(20px, env(safe-area-inset-bottom));
+
   &__body {
-    height: 100%;
+    box-sizing: border-box;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 32px;
+    gap: clamp(18px, 4vh, 32px);
+    padding: 8px 0;
     text-align: center;
   }
-  
+
+  &__logo {
+    display: block;
+    width: clamp(112px, 32vw, 168px);
+    max-height: 90px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
   .info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+    width: 100%;
+    max-width: 440px;
   }
 
-  &__title { margin: 0; color: #fff; font-size: 28px; font-weight: 700; }
-  &__subtitle { margin: 0; color: #D5E0C9; font-size: 16px; }
-  &__footer { margin: 0; color: #D5E0C9; font-size: 16px; }
+  &__title {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(24px, 6vw, 30px);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__subtitle,
+  &__footer {
+    margin: 0;
+    color: #D5E0C9;
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 440px;
+  }
+
+  &__loading {
+    margin: 0;
+    color: #D5E0C9;
+    font-size: 15px;
+  }
 }
 
 .button-expand {
   width: 100%;
+  max-width: 440px;
+  margin-inline: 0;
+}
+
+@media (max-height: 680px) {
+  .waiting-room__body {
+    gap: 14px;
+    justify-content: flex-start;
+  }
+
+  .waiting-room__logo {
+    width: 104px;
+    max-height: 60px;
+  }
+
+  .waiting-room__title {
+    font-size: 24px;
+  }
+
+  .waiting-room__subtitle,
+  .waiting-room__footer {
+    font-size: 14px;
+  }
 }

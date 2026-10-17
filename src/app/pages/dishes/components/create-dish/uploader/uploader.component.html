@@ -1,9 +1,12 @@
 <button
+  type="button"
   (click)="open()"
   class="upload-placeholder"
   [disabled]="uploading()"
+  [attr.aria-label]="
+    photoPreview() || initialPreview() ? 'Cambiar foto' : 'Subir foto'
+  "
 >
-
   @if (uploading()) {
 
     <app-spinner-logo size="sm" />
@@ -21,6 +24,33 @@
       alt="Preview"
       class="upload-preview"
     />
+
+    <!-- lápiz: indica que la foto se puede cambiar -->
+    <span class="upload-edit-badge" aria-hidden="true">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="#fff"
+        stroke-width="1.25"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M9.166 1.667H7.499c-4.166 0-5.833 1.666-5.833 5.833v5c0 4.166 1.667 5.833 5.833 5.833h5c4.167 0 5.834-1.666 5.834-5.833v-1.667"
+        />
+        <path
+          d="M13.366 2.516 6.799 9.083c-.25.25-.5.741-.55 1.1L5.89 12.69c-.134.908.508 1.542 1.416 1.417l2.509-.359c.35-.05.841-.3 1.1-.55l6.566-6.566c1.134-1.134 1.667-2.45 0-4.117-1.666-1.667-2.983-1.133-4.116 0"
+          stroke-miterlimit="10"
+        />
+        <path
+          d="M12.424 3.459a5.95 5.95 0 0 0 4.117 4.116"
+          stroke-miterlimit="10"
+        />
+      </svg>
+    </span>
 
   } @else {
 

@@ -75,7 +75,7 @@ export class CreatePostrePage {
       Validators.required,
       Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/),
       Validators.min(1),
-    ]),
+      ]),
     sugerencia: new FormControl(false),
     images: new FormArray([
       new FormControl<File | null>(null, Validators.required),

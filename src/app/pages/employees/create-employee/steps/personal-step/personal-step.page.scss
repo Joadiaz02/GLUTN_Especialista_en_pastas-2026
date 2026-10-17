@@ -32,3 +32,55 @@
 .scan-card {
   margin: 0;
 }
+
+
+@media (max-height: 780px) {
+  :host > div {
+    padding-bottom: 4px;
+  }
+
+  .scan-card {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .scan-card__icon-wrapper {
+    width: 40px;
+    flex: 0 0 40px;
+  }
+
+  .scan-card__icon {
+    font-size: 22px;
+  }
+
+  .scan-card__subtitle {
+    font-size: 13px;
+    line-height: 16px;
+  }
+
+  .fields {
+    gap: 8px;
+  }
+
+  .fields__row {
+    gap: 8px;
+  }
+
+  .field {
+    min-width: 0;
+  }
+
+  .field__label {
+    margin-bottom: 4px;
+  }
+
+  .chips {
+    gap: 8px;
+  }
+
+  .chip {
+    height: 42px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+}

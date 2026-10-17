@@ -1,8 +1,15 @@
-.carga-plato {
+.create-dish-content {
+  --background: var(--ion-background-color);
+}
+
+.create-dish-wrapper {
+  width: 100%;
+  height: 100dvh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 60vh;
+  flex-direction: column;
+  padding: 16px 20px 0;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .upload-container {
@@ -12,6 +19,13 @@
   gap: 16px;
   width: 100%;
   height: 160px;
+  flex-shrink: 0;
+
+  app-uploader {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100%;
+  }
 }
 
 .fields {
@@ -36,6 +50,7 @@
   font-size: 12px;
   opacity: 0.75;
 }
+
 .page-loading {
   position: fixed;
   inset: 0;
@@ -58,4 +73,22 @@
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
+}
+
+@media (max-height: 780px) {
+.upload-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  height: 125px;
+  flex-shrink: 0;
+
+  app-uploader {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100%;
+  }
+}
 }

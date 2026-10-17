@@ -378,6 +378,39 @@
   font-weight: 800;
 }
 
+
+/* =====================================================
+   CON NAVEGACIÓN (flechas + contador debajo de la tarjeta)
+   Solo en las pantallas de gestión (platos y bebidas).
+===================================================== */
+.producto-carrusel--con-nav {
+  display: flex;
+  flex-direction: column;
+
+  .productos-viewport {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+    padding-block: 12px 8px;
+  }
+
+  // el contador "1 de N" pasa a la barra de flechas
+  .contador-productos {
+    display: none;
+  }
+
+  .producto-pie {
+    flex-basis: 237px;
+    height: 237px;
+  }
+
+  .producto-navegacion {
+    flex: 0 0 auto;
+    padding: 4px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+  }
+}
+
 @media (max-width: 360px) {
   .producto-titulo {
     font-size: 21px;

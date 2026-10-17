@@ -136,4 +136,21 @@ export const ADMIN_MODULES: AdminModule[] = [
     roles: [EPerfilUsuario.Mozo],
     path: 'payments',
   },
+  {
+  id: 'menu-principal',
+  title: 'Menú principal',
+  description: 'Volver al menú principal de GLUTN',
+  icon: 'spoon-and-fork',
+  roles: [
+    EPerfilUsuario.Dueno,
+    EPerfilUsuario.Supervisor,
+    EPerfilUsuario.Metre,
+    EPerfilUsuario.Mozo,
+    EPerfilUsuario.Cocinero,
+    EPerfilUsuario.Cantinero,
+    EPerfilUsuario.ClienteRegistrado,
+    EPerfilUsuario.ClienteAnonimo,
+  ],
+  path: '/home',
+},
 ];

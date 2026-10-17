@@ -103,3 +103,9 @@
     }
   </div>
 </ion-footer>
+@if (isLoading()) {
+  <div class="quick-loading">
+    <app-spinner-logo />
+    <span>Creando empleado...</span>
+  </div>
+}

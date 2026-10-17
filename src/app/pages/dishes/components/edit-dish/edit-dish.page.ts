@@ -8,6 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { PrecioInput } from '@app/directives';
 import {
   IonContent,
   IonHeader,
@@ -48,6 +49,7 @@ import { textoValido } from '@app/validators/texto';
     UploaderComponent,
     SpinnerLogoComponent,
     IonCheckbox,
+    PrecioInput,
     ConfirmVolverComponent,
   ],
 })
@@ -114,7 +116,7 @@ export class EditDishPage implements OnInit {
       title: plato.nombre,
       description: plato.descripcion,
       preparation: String(plato.tiempo_elaboracion),
-      price: String(plato.precio),
+      price: Number(plato.precio).toFixed(2),
       sugerencia: plato.sugerencia,
       images: [null, null, null],
     });

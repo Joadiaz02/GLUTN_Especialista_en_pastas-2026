@@ -8,6 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { PrecioInput } from '@app/directives';
 import {
   IonContent,
   IonHeader,
@@ -44,6 +45,7 @@ import { textoValido } from '@app/validators/texto';
     IonButton,
     IonFooter,
     IonInput,
+    PrecioInput,
     ReactiveFormsModule,
     UploaderComponent,
     SpinnerLogoComponent,
@@ -51,7 +53,7 @@ import { textoValido } from '@app/validators/texto';
     ConfirmVolverComponent,
   ],
 })
-export class CreateDishPage {
+export class CreateDishPage  {
   uploading = signal(false);
   photoPreview = signal<string | null>(null);
   isLoading = signal<boolean>(false);

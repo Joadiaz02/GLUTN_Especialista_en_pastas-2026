@@ -1,34 +1,58 @@
+
 <ion-content class="waiting-room" [fullscreen]="true">
   <div class="waiting-room__body">
-    @if (!isTableAssigned()) {
-    <div class="info">
-      <h1 class="waiting-room__title">¡Ya estás en la fila!</h1>
-      <p class="waiting-room__subtitle">
-        El metre ya te tiene anotado. Relajate que tu mesa te está esperando.
-      </p>
-    </div>
+    <img
+      class="waiting-room__logo"
+      src="assets/images/LOGO-GLUTN.png"
+      alt="GLUTN - Especialista en Pastas"
+    />
 
-    <app-turn-ring [position]="position() ?? 0" [total]="total()" />
+    @if (loading()) {
+      <p class="waiting-room__loading">Cargando tu turno...</p>
+    } @else if (!isTableAssigned()) {
+      <div class="info">
+        <h1 class="waiting-room__title">¡Ya estás en la fila!</h1>
+        <p class="waiting-room__subtitle">
+          El metre ya te tiene anotado. Relajate que tu mesa te está esperando.
+        </p>
+      </div>
 
-    <p class="waiting-room__footer">
-      Te avisaremos cuando tu mesa esté lista. Mantené las notificaciones
-      activadas.
-    </p>
-    } @else {
-    <div class="info">
-      <h1 class="waiting-room__title">Tu mesa es la N° {{ table().numero }}</h1>
-      <p class="waiting-room__subtitle">
-        Escanea el codigo QR para poder continuar.
+      <app-turn-ring
+        [position]="position() ?? 0"
+        [total]="total()"
+      />
+
+      <p class="waiting-room__footer">
+        Te avisaremos cuando tu mesa esté lista. Mantené las notificaciones activadas.
       </p>
+
       <ion-button
         expand="block"
         shape="round"
         class="button-expand"
-        (click)="scanQR()"
+        (click)="irAEncuestas()"
       >
-        Escanear QR
+        Ir a encuestas
       </ion-button>
-    </div>
+    } @else {
+      <div class="info">
+        <h1 class="waiting-room__title">
+          Tu mesa es la N° {{ table()?.numero }}
+        </h1>
+
+        <p class="waiting-room__subtitle">
+          Escaneá el código QR de tu mesa para poder continuar.
+        </p>
+
+        <ion-button
+          expand="block"
+          shape="round"
+          class="button-expand"
+          (click)="scanQR()"
+        >
+          Escanear QR
+        </ion-button>
+      </div>
     }
   </div>
 </ion-content>

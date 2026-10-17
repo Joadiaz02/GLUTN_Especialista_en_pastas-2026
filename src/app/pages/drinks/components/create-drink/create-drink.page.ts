@@ -30,7 +30,7 @@ import {
   IonToggle,
   NavController,
 } from '@ionic/angular';
-
+import { PrecioInput } from '@app/directives';
 import {
   Storage,
   Drink,
@@ -68,6 +68,7 @@ import { HeaderComponent } from '@app/components/ui';
     IonToggle,
     ConfirmVolverComponent,
     VibrarErrores,
+    PrecioInput,
     LoadingOverlayComponent,
     HeaderComponent
   ],
@@ -110,11 +111,11 @@ export class CreateDrinkPage {
           Validators.required
         ),
 
-      price:
-        new FormControl(
-          '',
-          Validators.required
-        ),
+      price: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/),
+        Validators.min(1),
+      ]),
 
       ml:
         new FormControl(

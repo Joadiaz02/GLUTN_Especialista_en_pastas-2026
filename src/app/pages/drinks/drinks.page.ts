@@ -91,6 +91,11 @@ export class DrinksPage implements OnInit {
     // No hace falta cargar nada acá: toSignal ya se suscribe solo
   }
 
+  
+  ionViewWillEnter(): void {
+    void this._drinkService.refresh();
+  }
+
   onBuscar(texto: string): void {
     this.textoBusqueda.set(texto);
   }

@@ -29,3 +29,48 @@
   width: 100%;
   height: 180px;
 }
+
+
+@media (max-height: 780px) {
+  .upload-container {
+    height: 130px;
+  }
+
+  .fields {
+    gap: 8px;
+  }
+
+  .fields__row {
+    gap: 8px;
+  }
+
+  .field {
+    min-width: 0;
+  }
+
+  .chips {
+    gap: 8px;
+  }
+
+  .chip {
+    height: 42px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  .scan-card {
+    margin-top: 8px;
+    padding: 20px 10px;
+    gap: 8px;
+  }
+
+  .scan-card__icon-wrapper {
+    width: 40px;
+    flex: 0 0 40px;
+  }
+
+  .scan-card__subtitle {
+    font-size: 13px;
+    line-height: 16px;
+  }
+}

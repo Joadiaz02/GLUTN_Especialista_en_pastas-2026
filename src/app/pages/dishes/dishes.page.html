@@ -29,10 +29,8 @@
     ></ion-searchbar> -->
 
     <!-- spinner solo en la carga inicial -->
-    @if (isLoading() && dishes().length === 0) {
-    <div class="dishes-vacio">
-      <app-spinner-logo />
-    </div>
+        @if (isLoading() && dishes().length === 0) {
+    <!-- el cartel "Cargando..." está al final de la página -->
     } @else if (dishesFiltrados().length === 0) {
     <div class="dishes-vacio">
       <p>
@@ -44,6 +42,8 @@
     <app-producto-carrusel
       [productos]="dishesFiltrados()"
       etiqueta="platos"
+      [mostrarNavegacion]="true"
+      [decimales]="true"
       [acciones]="accionesProducto"
     ></app-producto-carrusel>
     }
@@ -97,3 +97,9 @@
     </div>
   </ng-template>
 </ion-content>
+@if (isLoading() && dishes().length === 0) {
+<div class="quick-loading">
+  <app-spinner-logo />
+  <span>Cargando...</span>
+</div>
+}
