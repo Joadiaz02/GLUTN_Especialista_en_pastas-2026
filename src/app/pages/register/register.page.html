@@ -86,10 +86,7 @@
       expand="block"
       shape="round"
       (click)="register()"
-      [disabled]="
-          (form.statusChanges | async) !== 'VALID' ||
-          isLoading()
-        "
+      [disabled]="isLoading()"
     >
       Registrarse
     </ion-button>
