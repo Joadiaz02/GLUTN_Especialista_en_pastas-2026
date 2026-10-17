@@ -28,8 +28,9 @@ import {
   ToastController,
   IonInput,
   IonToggle,
+  NavController,
 } from '@ionic/angular';
-
+import { PrecioInput } from '@app/directives';
 import {
   Storage,
   Drink,
@@ -67,6 +68,7 @@ import { HeaderComponent } from '@app/components/ui';
     IonToggle,
     ConfirmVolverComponent,
     VibrarErrores,
+    PrecioInput,
     LoadingOverlayComponent,
     HeaderComponent
   ],
@@ -76,6 +78,7 @@ export class CreateDrinkPage {
   photoPreview = signal<string | null>(null);
   isLoading = signal<boolean>(false);
 
+   private _navCtrl = inject(NavController); 
 
   private readonly _router = inject(Router);
 
@@ -108,11 +111,11 @@ export class CreateDrinkPage {
           Validators.required
         ),
 
-      price:
-        new FormControl(
-          '',
-          Validators.required
-        ),
+      price: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/),
+        Validators.min(1),
+      ]),
 
       ml:
         new FormControl(
@@ -273,11 +276,15 @@ export class CreateDrinkPage {
       await toast.present();
 
 
-      await this._router.navigateByUrl(
-        '/admin/drinks'
-      );
+      // await this._router.navigateByUrl(
+      //   '/admin/drinks'
+      // );
 
-
+      await this._navCtrl.navigateRoot('/admin/drinks', {
+        animated: true,
+        animationDirection: 'back',
+        replaceUrl: true,
+      });
     } catch (error) {
 
       console.error(

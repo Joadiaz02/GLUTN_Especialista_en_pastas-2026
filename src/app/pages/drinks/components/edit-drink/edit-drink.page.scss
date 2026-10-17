@@ -1,72 +1,79 @@
-:host {
-  display: block;
-  height: 100%;
-}
+// :host {
+//   display: block;
+//   height: 100%;
+// }
 
-ion-content {
-  --padding-start: 20px;
-  --padding-end: 20px;
-  --padding-top: 8px;
-  --padding-bottom: 8px;
-}
+// ion-content {
+//   --padding-start: 20px;
+//   --padding-end: 20px;
+//   --padding-top: 8px;
+//   --padding-bottom: 8px;
+// }
 
-ion-content::part(scroll) {
-  overflow: hidden;
-  box-sizing: border-box;
-}
+// ion-content::part(scroll) {
+//   overflow: hidden;
+//   box-sizing: border-box;
+// }
 
 .upload-container {
   width: 100%;
-  height: clamp(82px, 24vw, 118px);
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(7px, 2.5vw, 12px);
-  box-sizing: border-box;
+  height: 160px;
+  display: flex;
+  gap: 16px;
+  // height: clamp(82px, 24vw, 118px);
+  // display: grid;
+  // grid-template-columns: repeat(3, minmax(0, 1fr));
+  // gap: clamp(7px, 2.5vw, 12px);
+  // box-sizing: border-box;
 }
 
-.upload-container app-uploader {
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-}
+// .upload-container app-uploader {
+//   display: block;
+//   width: 100%;
+//   height: 100%;
+//   min-width: 0;
+//   min-height: 0;
+// }
 
 .fields {
-  margin-top: 8px;
-  gap: 7px;
-
-  .fields__row {
-    gap: 8px;
-  }
+  margin-top: 16px;
 }
 
-.field {
-  margin: 0;
-  gap: 4px;
+// .fields {
+//   margin-top: 8px;
+//   gap: 7px;
 
-  .field__label {
-    font-size: 14px;
-    line-height: 1.15;
-  }
+//   .fields__row {
+//     gap: 8px;
+//   }
+// }
 
-  .field__error {
-    font-size: 10px;
-    line-height: 1.1;
-  }
+// .field {
+//   margin: 0;
+//   gap: 4px;
 
-  .field__input {
-    width: 100%;
-    min-height: 48px;
-  }
-}
+//   .field__label {
+//     font-size: 14px;
+//     line-height: 1.15;
+//   }
+
+//   .field__error {
+//     font-size: 10px;
+//     line-height: 1.1;
+//   }
+
+//   .field__input {
+//     width: 100%;
+//     min-height: 48px;
+//   }
+// }
 
 .toggle-group {
   margin: 2px 0 0;
 
   &__title {
     margin: 0 0 3px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
   }
 
@@ -79,7 +86,7 @@ ion-content::part(scroll) {
   }
 
   &__row-label {
-    font-size: 13px;
+    font-size: 16px;
     color: #d5e0c9;
   }
 }
@@ -105,53 +112,101 @@ ion-content::part(scroll) {
   font-weight: 700;
 }
 
-ion-footer .footer-actions {
-  padding: 8px 20px max(8px, env(safe-area-inset-bottom));
+// ion-footer .footer-actions {
+//   padding: 8px 20px max(8px, env(safe-area-inset-bottom));
+// }
+
+// ion-footer ion-button {
+//   margin: 0;
+//   min-height: 50px;
+// }
+
+// @media (max-height: 720px) {
+//   .upload-container {
+//     height: 76px;
+//     gap: 7px;
+//   }
+
+//   .fields {
+//     margin-top: 5px;
+//     gap: 5px;
+
+//     .fields__row {
+//       gap: 7px;
+//     }
+//   }
+
+//   .field {
+//     gap: 2px;
+
+//     .field__label {
+//       font-size: 13px;
+//     }
+
+//     .field__input {
+//       min-height: 44px !important;
+//     }
+//   }
+
+//   .toggle-group {
+//     &__title {
+//       font-size: 13px;
+//     }
+
+//     &__row {
+//       min-height: 30px;
+//     }
+
+//     &__row-label {
+//       font-size: 12px;
+//     }
+//   }
+// }
+
+
+.upload-hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.75;
 }
 
-ion-footer ion-button {
+// ===== Todo entra en la pantalla (360x740 aprox.) sin scroll de más =====
+.fields {
+  margin-top: 12px;
+  gap: 10px;
+}
+
+.field {
+  gap: 4px;
+}
+
+ion-input.field__input {
+  min-height: 48px !important;
+}
+
+.toggle-group {
   margin: 0;
-  min-height: 50px;
+
+  &__row {
+    min-height: 32px;
+  }
 }
 
-@media (max-height: 720px) {
-  .upload-container {
-    height: 76px;
-    gap: 7px;
+@media (max-height: 780px) {
+.upload-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  height: 125px;
+  flex-shrink: 0;
+
+  app-uploader {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100%;
   }
-
-  .fields {
-    margin-top: 5px;
-    gap: 5px;
-
-    .fields__row {
-      gap: 7px;
-    }
-  }
-
-  .field {
-    gap: 2px;
-
-    .field__label {
-      font-size: 13px;
-    }
-
-    .field__input {
-      min-height: 44px !important;
-    }
-  }
-
-  .toggle-group {
-    &__title {
-      font-size: 13px;
-    }
-
-    &__row {
-      min-height: 30px;
-    }
-
-    &__row-label {
-      font-size: 12px;
-    }
-  }
+}
 }

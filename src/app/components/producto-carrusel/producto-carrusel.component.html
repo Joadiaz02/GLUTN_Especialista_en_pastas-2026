@@ -1,393 +1,150 @@
-<section class="producto-carrusel">
-
-  <div
-    #productosViewport
-    class="productos-viewport"
-
-    (touchstart)="
-      comenzarSwipeProducto($event)
-    "
-
-    (touchend)="
-      terminarSwipeProducto($event)
-    "
-  >
-
-    @for (
-      producto of productos;
-      track producto.id_carta;
-      let i = $index
-    ) {
-
-      <article
-        class="producto-slide"
-
-        [class.producto-slide--activo]="
-          esProductoActivo(producto)
-        "
+<section
+  class="producto-carrusel"
+  [class.producto-carrusel--con-nav]="mostrarNavegacion"
+>
+  <div #productosViewport class="productos-viewport">
+    @for (producto of productos; track producto.id_carta) {
+    <article
+      class="producto-slide"
+      [class.producto-slide--activo]="esProductoActivo(producto)"
+    >
+      <div
+        class="producto-card"
+        [class.producto-card--baja]="producto.baja_logica"
       >
+        <div class="producto-imagen-container">
+          <img
+            class="producto-imagen"
+            [src]="fotoActualDe(producto)"
+            [alt]="producto.nombre"
+          />
 
-        <div
-          class="producto-card"
-          [class.producto-card--baja]="producto.baja_logica"
-        >
-
-          <!-- =================================================
-               IMAGEN
-          ================================================== -->
-
-          <div
-            class="producto-imagen-container"
-
-            (touchstart)="
-              comenzarSwipeImagen($event)
-            "
-
-            (touchend)="
-              terminarSwipeImagen($event)
-            "
-          >
-
-            <img
-              class="producto-imagen"
-
-              [src]="
-                fotoActualDe(producto)
-              "
-
-              [alt]="
-                producto.nombre
-              "
-            />
-
-            <!-- CONTADOR DE IMÁGENES -->
-
-            @if (
-              esProductoActivo(producto) &&
-              cantidadImagenes(producto) > 0
-            ) {
-
-              <div
-                class="contador-imagenes"
-              >
-
-                {{
-                  indiceImagen() + 1
-                }}
-
-                /
-
-                {{
-                  cantidadImagenes(
-                    producto
-                  )
-                }}
-
-              </div>
-
-            }
-
-            <!-- FLECHAS -->
-
-            @if (
-              esProductoActivo(producto) &&
-              cantidadImagenes(producto) > 1
-            ) {
-
-              <button
-                type="button"
-
-                class="
-                  flecha-imagen
-                  flecha-imagen--izquierda
-                "
-
-                (click)="
-                  anteriorImagen();
-                  $event.stopPropagation()
-                "
-
-                aria-label="Imagen anterior"
-              >
-
-                <span>
-                  ‹
-                </span>
-
-              </button>
-
-              <button
-                type="button"
-
-                class="
-                  flecha-imagen
-                  flecha-imagen--derecha
-                "
-
-                (click)="
-                  siguienteImagen();
-                  $event.stopPropagation()
-                "
-
-                aria-label="Imagen siguiente"
-              >
-
-                <span>
-                  ›
-                </span>
-
-              </button>
-
-            }
-
+          @if (esProductoActivo(producto) && cantidadImagenes(producto) > 0) {
+          <div class="contador-imagenes">
+            {{ indiceImagen() + 1 }} / {{ cantidadImagenes(producto) }}
           </div>
+          } @if (esProductoActivo(producto) && cantidadImagenes(producto) > 1) {
+          <button
+            type="button"
+            class="flecha-imagen flecha-imagen--izquierda"
+            aria-label="Imagen anterior"
+            (click)="anteriorImagen(); $event.stopPropagation()"
+          >
+            <span>‹</span>
+          </button>
 
-          <!-- =================================================
-               INFORMACIÓN
-          ================================================== -->
+          <button
+            type="button"
+            class="flecha-imagen flecha-imagen--derecha"
+            aria-label="Imagen siguiente"
+            (click)="siguienteImagen(); $event.stopPropagation()"
+          >
+            <span>›</span>
+          </button>
+          }
+        </div>
 
+        <div class="producto-pie">
           <div class="producto-info">
+            <h2 class="producto-titulo">{{ producto.nombre }}</h2>
 
-            <h2 class="producto-titulo">
-              {{
-                producto.nombre
-              }}
-            </h2>
-
-            <p class="producto-descripcion">
-              {{
-                producto.descripcion
-              }}
-            </p>
+            <p class="producto-descripcion">{{ producto.descripcion }}</p>
 
             <div class="producto-datos">
-
               <div class="producto-dato">
-
-                <span class="dato-icono">
-                  ◷
-                </span>
-
-                <span>
-                  {{
-                    producto
-                      .tiempo_elaboracion
-                  }}
-                  minutos
-                </span>
-
+                <span class="dato-icono">◷</span>
+                <span>{{ producto.tiempo_elaboracion }}</span>
               </div>
 
-              @if (
-                producto.medida_ml
-              ) {
-
-                <span
-                  class="producto-medida"
-                >
-
-                  {{
-                    producto.medida_ml
-                  }}
-
-                  mililitros
-
-                </span>
-
+              @if (producto.medida_ml) {
+              <span class="producto-medida">
+                {{ producto.medida_ml }} mililitros
+              </span>
               }
-
             </div>
-
-            <!-- =================================================
-                 PRECIO + CONTROLES
-            ================================================== -->
 
             <div class="producto-footer">
-
-            <strong class="producto-precio">
+              <strong class="producto-precio">
                 {{
-                producto.precio
-                    | currency:
-                    'ARS':
-                    '$':
-                    '1.0-0'
+                  producto.precio
+                    | currency : "ARS" : "$" : (decimales ? "1.2-2" : "1.0-0")
                 }}
-            </strong>
+              </strong>
 
-            @if (acciones) {
-
-                <!-- acciones propias de las pantallas de gestión -->
-
-                <ng-container
-                *ngTemplateOutlet="
-                    acciones;
-                    context: { $implicit: producto }
-                "
-                ></ng-container>
-
-            } @else if (
-                cantidadActual(producto) === 0
-            ) {
-
-                <!-- ESTADO SIN PRODUCTOS -->
-
-                <button
+              @if (acciones) {
+              <ng-container
+                *ngTemplateOutlet="acciones; context: { $implicit: producto }"
+              ></ng-container>
+              } @else if (cantidadActual(producto) === 0) {
+              <button
                 type="button"
                 class="boton-agregar"
-                (click)="
-                    agregar(producto);
-                    $event.stopPropagation()
-                "
-                >
-
-                <span
-                    class="boton-agregar__icono"
-                >
-                    +
-                </span>
-
-                <span>
-                    Agregar
-                </span>
-
-                </button>
-
-            } @else {
-
-                <!-- ESTADO CON PRODUCTOS -->
-
-                <div
-                class="selector-cantidad"
-                >
-
+                (click)="agregar(producto); $event.stopPropagation()"
+              >
+                <span class="boton-agregar__icono">+</span>
+                <span>Agregar</span>
+              </button>
+              } @else {
+              <div class="selector-cantidad">
                 <button
-                    type="button"
-                    class="boton-control"
-                    (click)="
-                    quitar(producto);
-                    $event.stopPropagation()
-                    "
-                    aria-label="Disminuir cantidad"
+                  type="button"
+                  class="boton-control"
+                  aria-label="Disminuir cantidad"
+                  (click)="quitar(producto); $event.stopPropagation()"
                 >
-                    −
+                  −
                 </button>
 
-                <span
-                    class="cantidad-producto"
-                >
-                    {{
-                    cantidadActual(producto)
-                    }}
+                <span class="cantidad-producto">
+                  {{ cantidadActual(producto) }}
                 </span>
-
-                <button
-                    type="button"
-                    class="boton-control boton-mas"
-                    (click)="
-                    agregar(producto);
-                    $event.stopPropagation()
-                    "
-                    aria-label="Aumentar cantidad"
-                >
-                    +
-                </button>
-
-                </div>
-
-            }
-
-            </div>
-
-          </div>
-
-          <!-- =================================================
-               PUNTOS DE IMÁGENES
-          ================================================== -->
-
-          @if (
-            esProductoActivo(producto) &&
-            cantidadImagenes(producto) > 1
-          ) {
-
-            <div
-              class="
-                paginacion-imagenes
-              "
-            >
-
-              @for (
-                foto of fotosDe(producto);
-                track $index;
-                let fotoIndex = $index
-              ) {
 
                 <button
                   type="button"
-
-                  class="
-                    punto-imagen
-                  "
-
-                  [class.punto-imagen--activo]="
-                    fotoIndex ===
-                    indiceImagen()
-                  "
-
-                  (click)="
-                    seleccionarImagen(
-                      fotoIndex
-                    );
-                    $event.stopPropagation()
-                  "
-
-                  [attr.aria-label]="
-                    'Ver imagen ' +
-                    (fotoIndex + 1)
-                  "
-                ></button>
-
+                  class="boton-control"
+                  aria-label="Aumentar cantidad"
+                  (click)="agregar(producto); $event.stopPropagation()"
+                >
+                  +
+                </button>
+              </div>
               }
-
             </div>
+          </div>
 
-          }
+          <div class="paginacion-imagenes">
+            @if (esProductoActivo(producto) && cantidadImagenes(producto) > 1) {
+            @for (foto of fotosDe(producto); track $index) {
+            <button
+              type="button"
+              class="punto-imagen"
+              [class.punto-imagen--activo]="$index === indiceImagen()"
+              [attr.aria-label]="'Ver imagen ' + ($index + 1)"
+              (click)="seleccionarImagen($index); $event.stopPropagation()"
+            ></button>
+            } }
+          </div>
 
-          <!-- =================================================
-               CONTADOR DE PRODUCTOS
-          ================================================== -->
-
-          @if (
-            esProductoActivo(producto)
-          ) {
-
-            <div
-              class="
-                contador-productos
-              "
-            >
-
-              {{
-                indiceProducto() + 1
-              }}
-
-              de
-
-              {{
-                cantidadProductos
-              }}
-
-              {{ etiqueta }}
-
-            </div>
-
-          }
-
+          <div class="contador-productos">
+            @if (esProductoActivo(producto) && !mostrarNavegacion) {
+            {{ indiceProducto() + 1 }} de {{ cantidadProductos }} {{ etiqueta }}
+            }
+          </div>
         </div>
-
-      </article>
-
+      </div>
+    </article>
     }
-
   </div>
-
+  @if (mostrarNavegacion && cantidadProductos > 0) {
+  <app-clients-navigation
+    class="producto-navegacion"
+    [posicionActual]="indiceProducto() + 1"
+    [totalClientes]="cantidadProductos"
+    [mostrarAyuda]="false"
+    etiquetaAnterior="Producto anterior"
+    etiquetaSiguiente="Producto siguiente"
+    (anterior)="irAlProductoAnteriorCircular()"
+    (siguiente)="irAlProductoSiguienteCircular()"
+  />
+  }
 </section>

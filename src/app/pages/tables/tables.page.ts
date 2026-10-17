@@ -18,6 +18,8 @@ import { Confirm, Table, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TableQrModalComponent } from './components/table-qr-modal/table-qr-modal.component';
+import { HeaderComponent } from '@app/components/ui';
+import { TableActionSheetComponent } from './components/table-action-sheet/table-action-sheet.component';
 
 @Component({
   selector: 'app-tables',
@@ -36,7 +38,8 @@ import { TableQrModalComponent } from './components/table-qr-modal/table-qr-moda
     SpinnerLogoComponent,
     IonIcon,
     IonToggle,
-  ],
+    HeaderComponent
+],
 })
 export class TablesPage {
   private _router = inject(Router);
@@ -68,6 +71,16 @@ export class TablesPage {
 
     const modal = await this._modalController.create({
       component: TableQrModalComponent,
+      componentProps: { table },
+      cssClass: 'confirm-modal',
+    });
+
+    await modal.present();
+  }
+
+  async onOpenSheet(table: any) {
+    const modal = await this._modalController.create({
+      component: TableActionSheetComponent,
       componentProps: { table },
       cssClass: 'confirm-modal',
     });

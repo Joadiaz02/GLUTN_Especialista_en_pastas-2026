@@ -24,4 +24,13 @@ export class CredentialsStepPage {
   getFormControl(controlName: string) {
     return this.formGroup.get(controlName);
   }
+
+  get passwordMismatch(): boolean {
+    const confirm = this.formGroup.get('confirmPassword');
+
+    return (
+      !!this.formGroup?.hasError('passwordMismatch') &&
+      !!(confirm?.touched || confirm?.dirty)
+    );
+  }
 }

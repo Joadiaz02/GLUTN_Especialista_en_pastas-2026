@@ -22,27 +22,30 @@
 
 <ion-content [fullscreen]="true" class="dishes-content">
   <div class="dishes-wrapper">
-    <ion-searchbar
+    <!-- <ion-searchbar
       placeholder="Buscar postre"
       [debounce]="200"
       (ionInput)="onBuscar($event.detail.value ?? '')"
-    ></ion-searchbar>
+    ></ion-searchbar> -->
 
     <!-- spinner solo en la carga inicial -->
-    @if (isLoading() && postres().length === 0) {
-      <div class="dishes-vacio">
-        <app-spinner-logo />
-      </div>
-    } @else if (postresFiltrados().length === 0) {
-      <div class="dishes-vacio">
-        <p>{{ postres().length === 0 ? 'Todavía no cargaste ningún postre.' : 'No encontramos nada que coincida con tu búsqueda.' }}</p>
-      </div>
+          @if (isLoading() && postres().length === 0) {
+      <!-- el cartel "Cargando..." está al final de la página -->
+      } @else if (postresFiltrados().length === 0) {
+    <div class="dishes-vacio">
+      <p>
+        {{ postres().length === 0 ? 'Todavía no cargaste ningún postre.' : 'No
+        encontramos nada que coincida con tu búsqueda.' }}
+      </p>
+    </div>
     } @else {
-      <app-producto-carrusel
-        [productos]="postresFiltrados()"
-        etiqueta="postres"
-        [acciones]="accionesProducto"
-      ></app-producto-carrusel>
+    <app-producto-carrusel
+      [productos]="postresFiltrados()"
+      etiqueta="postres"
+       [mostrarNavegacion]="true"
+        [decimales]="true"
+      [acciones]="accionesProducto"
+    ></app-producto-carrusel>
     }
   </div>
 
@@ -50,17 +53,17 @@
   <ng-template #accionesProducto let-item>
     <div class="acciones">
       @if (item.baja_logica) {
-        <span class="acciones__baja">Baja</span>
+      <span class="acciones__baja">Baja</span>
       } @else {
-        <button
-          type="button"
-          class="acciones__boton"
-          [class.acciones__boton--activo]="item.sugerencia"
-          [attr.aria-label]="item.sugerencia ? 'Quitar de destacados' : 'Destacar'"
-          (click)="destacar(item); $event.stopPropagation()"
-        >
-          <ion-icon [name]="item.sugerencia ? 'star' : 'star-outline'"></ion-icon>
-        </button>
+      <button
+        type="button"
+        class="acciones__boton"
+        [class.acciones__boton--activo]="item.sugerencia"
+        [attr.aria-label]="item.sugerencia ? 'Quitar de destacados' : 'Destacar'"
+        (click)="destacar(item); $event.stopPropagation()"
+      >
+        <ion-icon [name]="item.sugerencia ? 'star' : 'star-outline'"></ion-icon>
+      </button>
       }
 
       <button
@@ -73,24 +76,31 @@
       </button>
 
       @if (item.baja_logica) {
-        <button
-          type="button"
-          class="acciones__boton acciones__boton--activo"
-          aria-label="Reactivar"
-          (click)="reactivar(item); $event.stopPropagation()"
-        >
-          <ion-icon name="refresh-outline"></ion-icon>
-        </button>
+      <button
+        type="button"
+        class="acciones__boton acciones__boton--activo"
+        aria-label="Reactivar"
+        (click)="reactivar(item); $event.stopPropagation()"
+      >
+        <ion-icon name="refresh-outline"></ion-icon>
+      </button>
       } @else {
-        <button
-          type="button"
-          class="acciones__boton acciones__boton--peligro"
-          aria-label="Dar de baja"
-          (click)="darDeBaja(item); $event.stopPropagation()"
-        >
-          <ion-icon name="trash-outline"></ion-icon>
-        </button>
+      <button
+        type="button"
+        class="acciones__boton acciones__boton--peligro"
+        aria-label="Dar de baja"
+        (click)="darDeBaja(item); $event.stopPropagation()"
+      >
+        <ion-icon name="trash-outline"></ion-icon>
+      </button>
       }
     </div>
   </ng-template>
 </ion-content>
+
+@if (isLoading() && postres().length === 0) {
+<div class="quick-loading">
+  <app-spinner-logo />
+  <span>Cargando...</span>
+</div>
+}

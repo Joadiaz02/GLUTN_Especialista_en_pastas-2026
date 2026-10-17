@@ -49,7 +49,7 @@ import {
     ConfirmVolverComponent,
   ],
 })
-export class PostresPage implements OnInit {
+export class PostresPage  {
   postres = signal<CartaItem[]>([]);
 
   isLoading = signal<boolean>(false);
@@ -81,7 +81,8 @@ export class PostresPage implements OnInit {
     });
   }
 
-  async ngOnInit() {
+
+  async ionViewWillEnter(): Promise<void> {
     await this.cargarPostres();
   }
 

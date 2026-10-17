@@ -20,6 +20,7 @@ const RUTA_POR_TIPO: Record<string, string> = {
   respuesta_mozo: '/chat',
   lista_espera: '/admin/waitlist',
   mesa_asignada: '/waiting-room',
+  cliente_pendiente: '/admin/clients',
 };
 
 @Injectable({

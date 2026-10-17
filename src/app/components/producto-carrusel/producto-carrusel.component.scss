@@ -1,286 +1,144 @@
 :host {
   display: block;
-
+  flex: 1 1 auto;
   width: 100%;
+  height: 100%;
   min-width: 0;
+  min-height: 0;
 }
 
 .producto-carrusel {
-  /*
-   * La página tiene un padding lateral.
-   * Sacamos el carrusel de ese padding para que
-   * las tarjetas laterales lleguen hasta los bordes.
-   */
-  width: calc(100% + 70px);
-
-  margin-left: -35px;
-
-  margin-right: -35px;
-
-  padding: 0;
-
-  overflow: visible;
-
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
 }
-
-/* =========================================================
-   VIEWPORT
-========================================================= */
 
 .productos-viewport {
+  position: relative;
   width: 100%;
-
+  height: 100%;
   min-width: 0;
-
   display: flex;
-
-  gap: 20px;
-
-  overflow-x: auto;
-
-  overflow-y: hidden;
-
-  scroll-snap-type: x mandatory;
-
-  scroll-behavior: smooth;
-
-  scrollbar-width: none;
-
-  -ms-overflow-style: none;
-
-  padding-top: 6px;
-
-  padding-bottom: 20px;
-
-  /*
-   * El ancho de la tarjeta se calcula automáticamente.
-   *
-   * La tarjeta queda centrada en la pantalla y las tarjetas
-   * vecinas aparecen a ambos lados.
-   */
-  padding-left: max(
-    10px,
-    calc(
-      (
-        100% -
-        min(
-          300px,
-          calc(100vw - 140px)
-        )
-      ) / 2
-    )
-  );
-
-  padding-right: max(
-    10px,
-    calc(
-      (
-        100% -
-        min(
-          300px,
-          calc(100vw - 140px)
-        )
-      ) / 2
-    )
-  );
-
+  gap: 24px;
+  padding-block: 48px calc(48px + env(safe-area-inset-bottom, 0px));
+  padding-inline: 16px;
+  scroll-padding-inline: 16px;
   box-sizing: border-box;
-
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   touch-action: pan-x pan-y;
-}
 
-.productos-viewport::-webkit-scrollbar {
-  display: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
-
-/* =========================================================
-   TARJETAS
-========================================================= */
 
 .producto-slide {
-  flex: 0 0 min(
-    300px,
-    calc(100vw - 140px)
-  );
-
-  width: min(
-    300px,
-    calc(100vw - 140px)
-  );
-
-  min-width: min(
-    300px,
-    calc(100vw - 140px)
-  );
-
-  max-width: 300px;
-
-  // alto de la tarjeta configurable desde la pantalla
-  height: var(--carrusel-alto-tarjeta, 535px);
-
-  scroll-snap-align: center;
-
-  scroll-snap-stop: always;
-
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
   box-sizing: border-box;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
-
-/* =========================================================
-   CARD
-========================================================= */
 
 .producto-card {
+  --card-fondo: #8a5a44;
+  --card-texto: #fffaf2;
+  --card-texto-suave: #f0e4d3;
+  --card-verde: #e3f0cf;
+  --card-acento: #ffc983;
+  --card-acento-texto: #3a2417;
+  --card-superficie: rgba(0, 0, 0, 0.22);
+
   position: relative;
-
   width: 100%;
-
   height: 100%;
-
   display: flex;
-
   flex-direction: column;
-
-  background: #f7f5f1;
-
-  border-radius: 24px;
-
-  overflow: hidden;
-
-  color: #3a2a1e;
-
-  box-shadow:
-    0 8px 24px
-    rgba(0, 0, 0, 0.14);
-
   box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--card-fondo);
+  color: var(--card-texto);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
 }
 
-/* =========================================================
-   IMAGEN
-========================================================= */
+.producto-card--baja {
+  .producto-imagen,
+  .producto-titulo,
+  .producto-descripcion,
+  .producto-datos,
+  .producto-precio {
+    opacity: 0.5;
+  }
+}
 
+/* Imagen: ocupa todo el alto que deja el pie fijo */
 .producto-imagen-container {
   position: relative;
-
+  flex: 1 1 0;
+  min-height: 0;
   width: 100%;
-
-  height: var(--carrusel-alto-imagen, 255px);
-
-  min-height: var(--carrusel-alto-imagen, 255px);
-
-  max-height: var(--carrusel-alto-imagen, 255px);
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
   overflow: hidden;
-
-  background: #ebe8e2;
-
-  touch-action: pan-y;
-
-  flex-shrink: 0;
+  background: var(--card-superficie);
 }
 
 .producto-imagen {
+  position: absolute;
+  inset: 0;
   display: block;
-
   width: 100%;
-
   height: 100%;
-
   object-fit: cover;
-
-  object-position: center center;
+  object-position: center;
 }
-
-/* =========================================================
-   CONTADOR DE IMAGEN
-========================================================= */
 
 .contador-imagenes {
   position: absolute;
-
   top: 12px;
-
   right: 12px;
-
   z-index: 20;
-
-  min-width: 44px;
-
-  padding: 7px 10px;
-
+  min-width: 56px;
+  padding: 6px 12px;
   border-radius: 18px;
-
-  background:
-    rgba(
-      45,
-      45,
-      45,
-      0.75
-    );
-
+  background: rgba(45, 45, 45, 0.75);
   color: #fff;
-
   text-align: center;
-
-  font-size: 13px;
-
+  font-size: 16px;
   font-weight: 800;
-
   line-height: 1;
 }
 
-/* =========================================================
-   FLECHAS DE IMAGEN
-========================================================= */
-
 .flecha-imagen {
   position: absolute;
-
   top: 50%;
-
   z-index: 30;
-
   width: 40px;
-
   height: 40px;
-
-  transform:
-    translateY(-50%);
-
   padding: 0;
-
   border: 0;
-
   border-radius: 50%;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  background:
-    rgba(
-      55,
-      55,
-      55,
-      0.68
-    );
-
+  transform: translateY(-50%);
+  background: rgba(55, 55, 55, 0.68);
   color: #fff;
-
   font-size: 32px;
-
   line-height: 1;
-
   cursor: pointer;
+
+  span {
+    display: block;
+    margin-top: -3px;
+  }
 }
 
 .flecha-imagen--izquierda {
@@ -291,456 +149,211 @@
   right: 12px;
 }
 
-.flecha-imagen span {
-  display: block;
-
-  margin-top: -3px;
+/* Pie fijo: info (217px) + puntos (20px) + contador (31px) = 268px */
+.producto-pie {
+  flex: 0 0 268px;
+  height: 268px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
-/* =========================================================
-   INFORMACIÓN
-========================================================= */
-
 .producto-info {
-  flex: 1;
-
+  flex: 1 1 0;
+  min-height: 0;
   width: 100%;
-
   min-width: 0;
-
   display: flex;
-
   flex-direction: column;
-
-  padding:
-    16px
-    17px
-    0;
-
-  box-sizing: border-box;
-
   gap: 8px;
-
+  padding: 16px 17px 0;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
 .producto-titulo {
   margin: 0;
-
-  min-height: 58px;
-
-  color: #352a23;
-
-  font-size: 22px;
-
-  line-height: 29px;
-
-  font-weight: 800;
-
-  white-space: normal;
-
-  overflow: visible;
-
-  overflow-wrap: break-word;
-
-  word-break: normal;
-
   display: -webkit-box;
-
   -webkit-box-orient: vertical;
-
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden;
+  color: var(--card-texto);
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 800;
+  overflow-wrap: break-word;
 }
 
 .producto-descripcion {
+  flex: 0 0 66px;
+  height: 66px;
   margin: 0;
-
-  height: 42px;
-
-  min-height: 42px;
-
-  color: #6d645c;
-
-  font-size: 15px;
-
-  line-height: 21px;
-
-  display: -webkit-box;
-
-  -webkit-box-orient: vertical;
-
-  -webkit-line-clamp: 2;
-
-  overflow: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+  color: var(--card-texto-suave);
+  font-size: 16px;
+  line-height: 22px;
 }
 
-/* =========================================================
-   DATOS
-========================================================= */
-
 .producto-datos {
-  height: 25px;
-
-  min-height: 25px;
-
+  flex: 0 0 28px;
+  height: 28px;
+  min-width: 0;
   display: flex;
-
+  flex-wrap: nowrap;
   align-items: center;
-
   gap: 8px;
 }
 
 .producto-dato {
   display: flex;
-
   align-items: center;
-
   gap: 6px;
-
-  color: #526c3e;
-
-  font-size: 14px;
-
+  color: var(--card-verde);
+  font-size: 16px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .dato-icono {
   width: 20px;
-
   height: 20px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   font-size: 19px;
-
   line-height: 1;
 }
 
 .producto-medida {
   display: inline-flex;
-
   align-items: center;
-
-  padding:
-    5px
-    9px;
-
+  padding: 3px 10px;
   border-radius: 10px;
-
-  background:
-    rgba(
-      101,
-      122,
-      77,
-      0.13
-    );
-
-  color: #526c3e;
-
-  font-size: 13px;
-
+  background: var(--card-superficie);
+  color: var(--card-texto);
+  font-size: 16px;
   font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
 }
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-/* =========================================================
-   FOOTER PRODUCTO
-========================================================= */
 
 .producto-footer {
+  flex: 0 0 55px;
   width: 100%;
-
-  height: 58px;
-  min-height: 58px;
-
+  height: 55px;
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
   gap: 8px;
-
-  padding:
-    0
-    7px
-    8px
-    0;
-
+  padding: 0 7px 8px 0;
   box-sizing: border-box;
 }
-
-/* =========================================================
-   PRECIO
-========================================================= */
 
 .producto-precio {
   display: block;
-
-  color: #e76f45;
-
-  font-size: 24px;
-
-  line-height: 1;
-
-  font-weight: 800;
-
-  white-space: nowrap;
-
   flex-shrink: 0;
+  color: var(--card-acento);
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 800;
+  white-space: nowrap;
 }
-
-/* =========================================================
-   BOTÓN AGREGAR
-========================================================= */
 
 .boton-agregar {
-  height: 42px;
-
-  min-width: 104px;
-
-  padding:
-    0
-    13px;
-
+  min-width: 112px;
+  height: 40px;
+  padding: 0 14px;
   border: 0;
-
-  border-radius: 22px;
-
+  border-radius: 21px;
   display: flex;
-
   align-items: center;
   justify-content: center;
-
-  gap: 5px;
-
-  background: #e76f45;
-
-  color: #fff;
-
-  font-size: 14px;
-
-  font-weight: 800;
-
-  white-space: nowrap;
-
-  box-sizing: border-box;
-
+  gap: 4px;
   flex-shrink: 0;
+  box-sizing: border-box;
+  background: var(--card-acento);
+  color: var(--card-acento-texto);
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 
-  box-shadow:
-    0 4px 10px
-    rgba(
-      231,
-      111,
-      69,
-      0.20
-    );
-}
-
-.boton-agregar:active {
-  transform: scale(0.96);
+  &:active {
+    transform: scale(0.96);
+  }
 }
 
 .boton-agregar__icono {
+  flex-shrink: 0;
   font-size: 20px;
-
   line-height: 1;
 }
 
-/* =========================================================
-   SELECTOR DE CANTIDAD
-========================================================= */
-
 .selector-cantidad {
+  min-width: 112px;
   height: 40px;
-
-  min-width: 94px;
-
-  padding:
-    0
-    5px;
-
+  padding: 0 5px;
   border-radius: 21px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   gap: 5px;
-
-  background: #e7e4de;
-
-  box-sizing: border-box;
-
   flex-shrink: 0;
+  box-sizing: border-box;
+  background: var(--card-superficie);
 }
-
-/* =========================================================
-   BOTONES + / -
-========================================================= */
 
 .boton-control {
   width: 30px;
-
-  height: 30px;
-
   min-width: 30px;
-
+  height: 30px;
   padding: 0;
-
   border: 0;
-
   border-radius: 50%;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  background: #ffffff;
-
-  color: #4a4038;
-
+  background: var(--card-texto);
+  color: var(--card-acento-texto);
   font-size: 19px;
-
-  line-height: 1;
-
   font-weight: 500;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 
-  box-shadow:
-    0 1px 3px
-    rgba(
-      0,
-      0,
-      0,
-      0.08
-    );
+  &:active {
+    transform: scale(0.9);
+  }
 }
-
-.boton-control:active {
-  transform: scale(0.90);
-}
-
-/* =========================================================
-   CANTIDAD
-========================================================= */
 
 .cantidad-producto {
-  min-width: 20px;
-
+  min-width: 24px;
   text-align: center;
-
-  color: #403830;
-
-  font-size: 14px;
-
+  color: var(--card-texto);
+  font-size: 16px;
   font-weight: 800;
 }
-
-/* =========================================================
-   AGREGAR
-========================================================= */
-
-.boton-agregar {
-  height: 40px;
-
-  width: 94px;
-
-  min-width: 94px;
-
-  padding:
-    0
-    8px;
-
-  border: 0;
-
-  border-radius: 21px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 4px;
-
-  background: #e76f45;
-
-  color: #fff;
-
-  font-size: 14px;
-
-  font-weight: 800;
-
-  white-space: nowrap;
-
-  box-sizing: border-box;
-
-  flex-shrink: 0;
-
-  box-shadow:
-    0 4px 10px
-    rgba(
-      231,
-      111,
-      69,
-      0.22
-    );
-}
-
-.boton-agregar__icono {
-  font-size: 20px;
-
-  line-height: 1;
-
-  flex-shrink: 0;
-}
-
-/* =========================================================
-   PUNTOS DE IMAGEN
-========================================================= */
 
 .paginacion-imagenes {
+  flex: 0 0 20px;
   height: 20px;
-
-  min-height: 20px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 7px;
 }
 
 .punto-imagen {
   width: 8px;
-
   height: 8px;
-
   padding: 0;
-
   border: 0;
-
   border-radius: 50%;
-
-  background: #b8c0b0;
-
+  background: rgba(255, 255, 255, 0.6);
   transition:
     width 180ms ease,
     background 180ms ease;
@@ -748,75 +361,57 @@
 
 .punto-imagen--activo {
   width: 20px;
-
   border-radius: 10px;
-
-  background: #e76f45;
+  background: var(--card-acento);
 }
-
-/* =========================================================
-   CONTADOR DE PRODUCTOS
-========================================================= */
 
 .contador-productos {
+  flex: 0 0 31px;
   height: 31px;
-
-  min-height: 31px;
-
+  padding: 0 10px;
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  padding:
-    0
-    10px;
-
-  color: #526c3e;
-
-  font-size: 14px;
-
-  font-weight: 800;
-
   box-sizing: border-box;
+  color: var(--card-verde);
+  font-size: 16px;
+  font-weight: 800;
 }
 
-/* =========================================================
-   TELÉFONOS MUY CHICOS
-========================================================= */
 
-@media (max-width: 360px) {
-
-  .producto-carrusel {
-    /*
-     * En pantallas pequeñas el padding de la página
-     * suele ser un poco menor.
-     */
-    width: calc(100% + 62px);
-
-    margin-left: -31px;
-
-    margin-right: -31px;
-  }
-
-  .producto-slide {
-    flex-basis:
-      calc(100vw - 100px);
-
-    width:
-      calc(100vw - 100px);
-
-    min-width:
-      calc(100vw - 100px);
-
-    max-width: 290px;
-  }
+/* =====================================================
+   CON NAVEGACIÓN (flechas + contador debajo de la tarjeta)
+   Solo en las pantallas de gestión (platos y bebidas).
+===================================================== */
+.producto-carrusel--con-nav {
+  display: flex;
+  flex-direction: column;
 
   .productos-viewport {
-    gap: 12px;
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+    padding-block: 12px 8px;
   }
 
+  // el contador "1 de N" pasa a la barra de flechas
+  .contador-productos {
+    display: none;
+  }
+
+  .producto-pie {
+    flex-basis: 237px;
+    height: 237px;
+  }
+
+  .producto-navegacion {
+    flex: 0 0 auto;
+    padding: 4px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 360px) {
   .producto-titulo {
     font-size: 21px;
   }
@@ -824,76 +419,4 @@
   .producto-precio {
     font-size: 22px;
   }
-
-  .boton-agregar {
-    width: 90px;
-
-    min-width: 90px;
-
-    padding:
-      0
-      6px;
-
-    font-size: 13px;
-  }
-}
-
-/* =========================================================
-   TABLET / PC
-========================================================= */
-
-@media (min-width: 600px) {
-
-  .producto-carrusel {
-    /*
-     * En pantallas grandes no necesitamos sacar tanto
-     * el carrusel del contenedor.
-     */
-    width: 100%;
-
-    margin-left: 0;
-
-    margin-right: 0;
-  }
-
-  .producto-slide {
-    flex-basis: 400px;
-
-    width: 400px;
-
-    min-width: 400px;
-
-    max-width: 400px;
-
-    height: 600px;
-  }
-
-  .productos-viewport {
-    padding-left:
-      calc(
-        (100% - 400px) / 2
-      );
-
-    padding-right:
-      calc(
-        (100% - 400px) / 2
-      );
-  }
-
-  .producto-imagen-container {
-    height: 300px;
-
-    min-height: 300px;
-
-    max-height: 300px;
-  }
-}
-// producto dado de baja
-
-.producto-card--baja .producto-imagen,
-.producto-card--baja .producto-titulo,
-.producto-card--baja .producto-descripcion,
-.producto-card--baja .producto-datos,
-.producto-card--baja .producto-precio {
-  opacity: 0.5;
 }

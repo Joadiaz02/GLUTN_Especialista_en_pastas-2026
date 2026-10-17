@@ -1,6 +1,7 @@
-import {  inject, Injectable, signal } from '@angular/core';
+import {  effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 import { Carrito } from '@app/pages/carrito/carrito';
+import { MesaCliente } from '../mesa-cliente/mesa-cliente';
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +12,46 @@ export class Pedido {
     public estado_pedido = signal<boolean>(false);
     public idUltimoPedido = signal<string | null>(null);
     public idPedidoEnEdicion = signal<string | null>(null);
+    private mesaCliente = inject(MesaCliente);
+
+    constructor() {
+        // al entrar o cambiar de mesa recupera el pedido de la estadía
+        effect(() => {
+            const idMesa = this.mesaCliente.id();
+            const desde = this.mesaCliente.desde();
+            untracked(() => void this.recuperarPedidoActual(idMesa, desde));
+        });
+    }
+
+    // último pedido del cliente en su mesa desde que se anotó
+    private async recuperarPedidoActual(idMesa: string | null, desde: string | null): Promise<void> {
+        if (!idMesa || !desde) {
+            this.idUltimoPedido.set(null);
+            return;
+        }
+
+        const { data: sesion } = await this.sup.client.auth.getSession();
+        const idUsuario = sesion.session?.user.id;
+
+        if (!idUsuario) return;
+
+        const { data, error } = await this.sup.client
+            .from('pedido')
+            .select('id_pedido')
+            .eq('id_usuario', idUsuario)
+            .eq('id_mesa', idMesa)
+            .gte('fecha_emision_pedido', desde)
+            .order('fecha_emision_pedido', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+        // descarta la respuesta si mientras tanto cambió la mesa
+        if (error || this.mesaCliente.id() !== idMesa) return;
+
+        if (data?.id_pedido) {
+            this.idUltimoPedido.set(data.id_pedido);
+        }
+    }
 
     async crear_pedido(id_mesa:string,id_usuario:string , detalles:string  ) : Promise<string> {
         const item = this.carrito.items();
@@ -128,8 +169,13 @@ export class Pedido {
     throw new Error('El carrito está vacío');
   }
 
-  const { error: errorBorrar } = await this.sup.client.from('pedido_item').delete().eq('id_pedido', id_pedido);
+  const { data: borrados, error: errorBorrar } = await this.sup.client.from('pedido_item').delete().eq('id_pedido', id_pedido).select('id_pedido');
   if (errorBorrar) throw errorBorrar;
+
+  // si no se borró nada no sigue, así no se duplican los productos
+  if (!borrados || borrados.length === 0) {
+    throw new Error('No se pudieron reemplazar los productos del pedido.');
+  }
 
   const itemsAInsertar = items.map(item => ({
     id_pedido: id_pedido,
@@ -158,6 +204,8 @@ export class Pedido {
 
   this.carrito.vaciar();
   this.idPedidoEnEdicion.set(null);
+  // el home sigue el pedido modificado
+  this.idUltimoPedido.set(id_pedido);
 }
 
 async obtenerPedidosConfirmados(): Promise<any[]> {

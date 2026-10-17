@@ -72,7 +72,8 @@
 
     <div class="fields__row">
       <div class="field">
-        <label class="field__label">Elaboración (minutos)</label>
+        <label class="field__label" type="text"
+          >Elaboración</label>
 
         <ion-input
           type="text"
@@ -80,9 +81,11 @@
           maxlength="3"
           fill="outline"
           class="field__input"
-          placeholder="Elaboración"
+          placeholder="0"
           formControlName="preparation"
-        />
+        >
+          <span slot="end" class="field__suffix">min</span>
+        </ion-input>
 
         @if ( getFormControl('preparation')?.invalid &&
         (getFormControl('preparation')?.touched ||
@@ -101,13 +104,16 @@
 
         <ion-input
           type="text"
-          inputmode="numeric"
+          inputmode="decimal"
           maxlength="9"
           fill="outline"
           class="field__input"
-          placeholder="Precio"
+          placeholder="0.00"
           formControlName="price"
-        />
+          appPrecioInput
+        >
+          <span slot="start" class="field__prefix">$</span>
+        </ion-input>
 
         @if ( getFormControl('price')?.invalid &&
         (getFormControl('price')?.touched || getFormControl('price')?.dirty ) )

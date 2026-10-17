@@ -31,7 +31,7 @@ import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confir
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { Vibracion } from '@app/services';
-import { employeeRoleValidator } from '@app/validators';
+import { cuilDniMatchValidator, employeeRoleValidator, passwordMatchValidator } from '@app/validators';
 import { cuilValidator } from '@app/validators/cuil-validator';
 
 const NAME_PATTERN =
@@ -86,8 +86,6 @@ export class CreateEmployeePage {
         Validators.maxLength(50),
         Validators.pattern(NAME_PATTERN),
       ]),
-
-      role: new FormControl<any | null>(null, Validators.required),
       
       cuil: new FormControl('', [Validators.required]),
 
@@ -95,7 +93,11 @@ export class CreateEmployeePage {
         Validators.required,
         Validators.pattern(DNI_PATTERN),
       ]),
-    }),
+
+      role: new FormControl<any | null>(null, Validators.required),
+    }, { validators: cuilDniMatchValidator }),
+
+
 
     credentials: new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -105,7 +107,10 @@ export class CreateEmployeePage {
         Validators.minLength(8),
         Validators.pattern(PASSWORD_PATTERN),
       ]),
-    }),
+
+
+      confirmPassword: new FormControl('', [Validators.required]),
+    }, { validators: passwordMatchValidator }),
 
     profile: new FormGroup({
       file: new FormControl<File | null>(null, Validators.required),
@@ -145,9 +150,6 @@ export class CreateEmployeePage {
 
     if (step === 1) {
       const personalForm = this.getFormGroup('personal');
-
-      console.log(personalForm)
-      console.log(personalForm.invalid)
 
       if (personalForm.invalid) {
         personalForm.markAllAsTouched();
