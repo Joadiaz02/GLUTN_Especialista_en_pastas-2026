@@ -116,154 +116,42 @@
     }
 
     <!-- =========================
-         LISTA
+         CARRUSEL
     ========================== -->
 
     @else {
 
-      <div class="waitlist__list">
+      <section
+        class="cards-section"
+        (touchstart)="onTouchStart($event)"
+        (touchmove)="onTouchMove($event)"
+        (touchend)="onTouchEnd($event)"
+        (touchcancel)="onTouchEnd($event)"
+      >
+        <div class="cards-track">
+          @for (
+            entry of usuariosFiltrados();
+            track entry.id;
+            let i = $index
+          ) {
+            <app-waitlist-card
+              [entry]="entry"
+              [posicion]="obtenerClaseCarta(i)"
+              [deshabilitada]="obtenerClaseCarta(i) !== 'activa'"
+              (asignar)="asignarMesa($event)"
+              (quitar)="eliminar($event)"
+            />
+          }
+        </div>
+      </section>
 
-        @for (
-          entry of usuariosFiltrados();
-          track entry.id
-        ) {
-
-          <article
-            class="waitlist-card"
-          >
-
-            <button
-              class="waitlist-card__main"
-              type="button"
-              [routerLink]="entry.id"
-            >
-
-              <!-- Avatar -->
-
-              @if (entry.usuarios?.avatar) {
-
-                <img
-                  [src]="entry.usuarios.avatar"
-                  [alt]="entry.usuarios.nombre"
-                  class="waitlist-card__avatar"
-                />
-
-              }
-
-              @else {
-
-                <div
-                  class="
-                    waitlist-card__avatar
-                    waitlist-card__avatar--empty
-                  "
-                >
-
-                  {{
-                    entry.usuarios?.nombre
-                      ?.charAt(0)
-                      ?.toUpperCase() || '?'
-                  }}
-
-                </div>
-
-              }
-
-              <!-- Información -->
-
-              <div
-                class="waitlist-card__info"
-              >
-
-                <p
-                  class="waitlist-card__name"
-                >
-
-                  {{
-                    entry.usuarios?.nombre || ''
-                  }}
-
-                  {{
-                    entry.usuarios?.apellido || ''
-                  }}
-
-                </p>
-
-                <p
-                  class="waitlist-card__details"
-                >
-
-                  {{ entry.comensales ?? 1 }}
-
-                  {{
-                    (entry.comensales ?? 1) === 1
-                      ? 'comensal'
-                      : 'comensales'
-                  }}
-
-                  ·
-
-                  {{
-                    entry.created_at
-                      | date: 'HH:mm'
-                  }}
-
-                </p>
-
-                @if (
-                  (entry.consideraciones ?? []).length > 0
-                ) {
-
-                  <div
-                    class="waitlist-card__tags"
-                  >
-
-                    @for (
-                      consideracion
-                      of entry.consideraciones;
-                      track consideracion
-                    ) {
-
-                      <span>
-
-                        {{
-                          consideracion ===
-                          'movilidad_reducida'
-                            ? 'Movilidad reducida'
-                            : consideracion ===
-                              'silla_bebe'
-                              ? 'Silla para bebé'
-                              : 'Otra consideración'
-                        }}
-
-                      </span>
-
-                    }
-
-                  </div>
-
-                }
-
-              </div>
-
-            </button>
-
-            <!-- Eliminar -->
-
-            <button
-              type="button"
-              class="waitlist-card__delete"
-              aria-label="Eliminar cliente de la lista"
-              (click)="eliminar(entry)"
-            >
-              ×
-            </button>
-
-          </article>
-
-        }
-
-      </div>
+      <app-clients-navigation
+        [posicionActual]="posicionVisible()"
+        [totalClientes]="usuariosFiltrados().length"
+        [mostrarAyuda]="usuariosFiltrados().length > 1"
+        (anterior)="irAnterior()"
+        (siguiente)="irSiguiente()"
+      />
 
     }
 
