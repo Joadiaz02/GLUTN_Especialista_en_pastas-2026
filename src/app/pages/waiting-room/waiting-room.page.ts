@@ -88,36 +88,36 @@ export class WaitingRoomPage {
   }
 
   async scanQR(): Promise<void> {
-    // const { camera } = await BarcodeScanner.requestPermissions();
+    const { camera } = await BarcodeScanner.requestPermissions();
 
-    // if (camera !== 'granted' && camera !== 'limited') {
-    //   await this._showError(
-    //     'Necesitamos permiso de cámara para escanear el código.'
-    //   );
-
-    //   await this.vibracion.error();
-
-    //   return;
-    // }
-
-    // const { barcodes } = await BarcodeScanner.scan();
-
-    // if (barcodes.length === 0) {
-    //   return;
-    // }
-
-    // const valueBarcode = barcodes[0].rawValue as string;
-
-    try {
-      const result = await this._waitlistService.linkTable(
-        this._userId,
-        "mesa:b63469cd-404d-460c-a193-4eb153b9dec1"
+    if (camera !== 'granted' && camera !== 'limited') {
+      await this._showError(
+        'Necesitamos permiso de cámara para escanear el código.'
       );
 
+      await this.vibracion.error();
+
+      return;
+    }
+
+    const { barcodes } = await BarcodeScanner.scan();
+
+    if (barcodes.length === 0) {
+      return;
+    }
+
+    const valueBarcode = barcodes[0].rawValue as string;
+
+    try {
       // const result = await this._waitlistService.linkTable(
       //   this._userId,
-      //   valueBarcode
+      //   "mesa:b63469cd-404d-460c-a193-4eb153b9dec1"
       // );
+
+      const result = await this._waitlistService.linkTable(
+        this._userId,
+        valueBarcode
+      );
 
       if (result.ok) {
         await this._router.navigateByUrl('/carta', {

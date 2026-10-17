@@ -321,22 +321,22 @@ export class HomePage implements OnInit, OnDestroy {
 
     this.escaneando.set(true);
     try {
-      // const { camera } = await BarcodeScanner.requestPermissions();
+      const { camera } = await BarcodeScanner.requestPermissions();
 
-      // if (camera !== 'granted' && camera !== 'limited') {
-      //   await this.mostrarToast('Necesitamos permiso de cámara para escanear el código.');
+      if (camera !== 'granted' && camera !== 'limited') {
+        await this.mostrarToast('Necesitamos permiso de cámara para escanear el código.');
       
-      //   return;
-      // }
+        return;
+      }
 
-      // const { barcodes } = await BarcodeScanner.scan();
+      const { barcodes } = await BarcodeScanner.scan();
       
-      // if (barcodes.length === 0) return;
+      if (barcodes.length === 0) return;
 
-      // const valor = barcodes[0].rawValue ?? '';
+      const valor = barcodes[0].rawValue ?? '';
 
-      if ('ingreso-local' === 'ingreso-local') {
-      // if (valor === 'ingreso-local') {
+      // if ('ingreso-local' === 'ingreso-local') {
+      if (valor === 'ingreso-local') {
         this.loading.set(true);
 
         await this.procesarCodigo({ tipo: 'ingreso-local' });
@@ -346,15 +346,15 @@ export class HomePage implements OnInit, OnDestroy {
       }
 
       // el cliente con mesa asignada también puede escanearla desde acá
-      if (parseTableQr('ingreso-local')) {
-        await this.vincularMesa('ingreso-local');
-        return;
-      }
-
-      // if (parseTableQr(valor)) {
-      //   await this.vincularMesa(valor);
+      // if (parseTableQr('ingreso-local')) {
+      //   await this.vincularMesa('ingreso-local');
       //   return;
       // }
+
+      if (parseTableQr(valor)) {
+        await this.vincularMesa(valor);
+        return;
+      }
 
       await this.vibracion.error();
       await this.mostrarToast('Ese código QR no corresponde al ingreso del local ni a una mesa.');
