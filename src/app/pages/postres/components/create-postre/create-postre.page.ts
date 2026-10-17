@@ -174,7 +174,8 @@ export class CreatePostrePage {
         sugerencia: data.sugerencia ?? false,
       });
 
-      await this._vibracion.confirmacion();
+      // sin sonido al guardar por ahora
+      // await this._vibracion.confirmacion();
 
       const toastOk = await this._toastController.create({
         message: 'Postre creado correctamente.',
