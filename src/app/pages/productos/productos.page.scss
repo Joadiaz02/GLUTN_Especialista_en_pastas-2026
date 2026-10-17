@@ -1,9 +1,23 @@
+// ion-content {
+//   --height: 100%;
+// }
 ion-content {
-  --height: 100%;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
 }
 
 .productos-content {
   --background: #657a4d;
+}
+
+.products-wrapper {
+  height: 100%;
+}
+
+.products-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .titulo-toolbar {

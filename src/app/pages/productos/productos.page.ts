@@ -43,6 +43,7 @@ import { ConfirmDialogComponent } from
 
 import { ProductoCarruselComponent } from
   '@app/components/producto-carrusel/producto-carrusel.component';
+import { ClientsNavigationComponent } from '../clients/components/clients-navigation/clients-navigation.component';
 
 
 const TITULOS: Record<TipoCarta, string> = {
@@ -63,23 +64,18 @@ const TITULOS: Record<TipoCarta, string> = {
 
   imports: [
     CommonModule,
-
     IonContent,
     IonHeader,
     IonToolbar,
     IonButtons,
     IonSearchbar,
-
     SpinnerLogoComponent,
-
     BarraPedidoComponent,
-
     ConfirmVolverComponent,
-
     ConfirmDialogComponent,
-
     ProductoCarruselComponent,
-  ],
+    ClientsNavigationComponent
+],
 })
 export class ProductosPage implements OnInit {
 
@@ -97,11 +93,25 @@ export class ProductosPage implements OnInit {
 
   private vibracion = inject(Vibracion);
 
+  clientesPendientes =signal<any[]>([]);
+
+  indiceActual = signal(0);
+
 
   tipo = signal<TipoCarta>(
     (this.route.snapshot.paramMap.get('tipo') as TipoCarta)
     ?? 'plato'
   );
+
+  get totalClientes(): number {
+    return this.productos().length;
+  }
+
+  get posicionVisible(): number {
+    return this.totalClientes === 0
+      ? 0
+      : this.indiceActual() + 1;
+  }
 
 
   titulo = computed(() =>
@@ -134,7 +144,6 @@ export class ProductosPage implements OnInit {
     );
 
   });
-
 
   async ngOnInit(): Promise<void> {
 
