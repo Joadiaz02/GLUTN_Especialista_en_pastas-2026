@@ -144,7 +144,36 @@ export class EditDishPage implements OnInit {
     this._router.navigate(['/admin/dishes']);
   }
 
+  // arma el aviso con lo que falta completar
+  private async avisarFaltantes(): Promise<void> {
+    const fotos = this.photosArray.controls.filter((control) => control.invalid).length;
+    const campos = Object.entries(this.form.controls).some(
+      ([nombre, control]) => nombre !== 'images' && control.invalid
+    );
+
+    const partes: string[] = [];
+    if (fotos > 0) partes.push(fotos === 1 ? 'Falta 1 foto.' : `Faltan ${fotos} fotos.`);
+    if (campos) partes.push('Revisá los campos marcados en rojo.');
+
+    const toast = await this._toastController.create({
+      message: partes.join(' '),
+      duration: 4000,
+      position: 'top',
+      color: 'danger',
+    });
+
+    await toast.present();
+  }
+
   async confirmarYGuardar(): Promise<void> {
+    // si falta algo marca los campos, vibra y avisa qué revisar
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      await this._vibracion.error();
+      await this.avisarFaltantes();
+      return;
+    }
+
     const confirmado = await this._confirm.preguntar({
       titulo: '¿Guardar los cambios?',
       mensaje: 'Los cambios van a quedar visibles para los clientes de inmediato.',
@@ -191,7 +220,8 @@ export class EditDishPage implements OnInit {
         sugerencia: data.sugerencia ?? false,
       });
 
-      await this._vibracion.confirmacion();
+      // sin sonido al guardar por ahora
+      // await this._vibracion.confirmacion();
 
       const toastOk = await this._toastController.create({
         message: 'Plato actualizado correctamente.',

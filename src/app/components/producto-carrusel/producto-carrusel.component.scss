@@ -173,13 +173,10 @@
   overflow: hidden;
 }
 
+// el nombre se ve completo, en las líneas que necesite
 .producto-titulo {
+  flex-shrink: 0;
   margin: 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  overflow: hidden;
   color: var(--card-texto);
   font-size: 22px;
   line-height: 28px;
@@ -187,9 +184,10 @@
   overflow-wrap: break-word;
 }
 
+// la descripción ocupa lo que deja el nombre y se desplaza si es larga
 .producto-descripcion {
-  flex: 0 0 66px;
-  height: 66px;
+  flex: 1 1 0;
+  min-height: 22px;
   margin: 0;
   overflow-y: auto;
   overscroll-behavior: contain;

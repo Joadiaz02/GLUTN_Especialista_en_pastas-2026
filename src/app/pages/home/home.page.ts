@@ -340,6 +340,8 @@ export class HomePage implements OnInit, OnDestroy {
         this.loading.set(true);
 
         await this.procesarCodigo({ tipo: 'ingreso-local' });
+
+        this.loading.set(false);
         return;
       }
 

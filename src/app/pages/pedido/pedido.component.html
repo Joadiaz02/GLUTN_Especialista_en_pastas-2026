@@ -4,84 +4,113 @@
       <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
     <h1 class="titulo-toolbar">Pedido</h1>
-    <app-confirm-dialog slot="end" (confirmado)="cerrarSesion()"></app-confirm-dialog>
+    <app-confirm-dialog
+      slot="end"
+      (confirmado)="cerrarSesion()"
+    ></app-confirm-dialog>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="productos-content">
   <div class="pedido-container">
-    
-  
     <div class="lista-productos" #lista [style.--por-pagina]="porPagina()">
-      @for (item of carrito.items(); track item.producto.id_carta; let i = $index) {
-        <div class="producto-card" [class.producto-card--ancla]="i % porPagina() === 0">
-          <div class="card-header-item">
-            <span class="item-nombre">{{item.producto.nombre}}</span>
-            <span class="item-precio " >{{ item.cantidad }} x {{ item.producto.precio | currency:'ARS':'$':'1.0-0' }}</span>
-          </div>
-          <p class="item-descripcion">{{item.producto.descripcion}}</p>
-          <div class="item-controles">
-              
-              <div class="controles-cantidad">
-                <button class="boton-quitar" (click)="quitarProducto(item.producto)">−</button>
-                <span class="producto-cantidad">{{ item.cantidad }}</span>
-                <button class="boton-agregar" (click)="agregarProducto(item.producto)">+</button>
-              </div>
-
-              
-              <div class="item-derecha">
-                <button class="boton-eliminar" (click)="eliminarProducto(item.producto)">
-                  <ion-icon name="trash-outline"></ion-icon>
-                </button>
-                <span class="item-precio" style="color: #000;">{{ item.producto.precio * item.cantidad | currency:'ARS':'$':'1.0-0' }}</span>
-              </div>
-            </div>
+      @for (item of carrito.items(); track item.producto.id_carta; let i =
+      $index) {
+      <div
+        class="producto-card"
+        [class.producto-card--ancla]="i % porPagina() === 0"
+      >
+        <div class="card-header-item">
+          <span class="item-nombre">{{ item.producto.nombre }}</span>
+          <span class="item-precio"
+            >{{ item.cantidad }} x
+            {{ item.producto.precio | currency : "ARS" : "$" : "1.0-0" }}</span
+          >
         </div>
+        <p class="item-descripcion">{{ item.producto.descripcion }}</p>
+        <div class="item-controles">
+          <div class="controles-cantidad">
+            <button
+              class="boton-quitar"
+              (click)="quitarProducto(item.producto)"
+            >
+              −
+            </button>
+            <span class="producto-cantidad">{{ item.cantidad }}</span>
+            <button
+              class="boton-agregar"
+              (click)="agregarProducto(item.producto)"
+            >
+              +
+            </button>
+          </div>
 
-      }
+          <div class="item-derecha">
+            <button
+              class="boton-eliminar"
+              (click)="eliminarProducto(item.producto)"
+            >
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+            <span class="item-precio">{{
+              item.producto.precio * item.cantidad
+                | currency : "ARS" : "$" : "1.0-0"
+            }}</span>
+          </div>
+        </div>
+      </div>
 
-      @for (vacia of relleno(); track vacia) {
-        <div class="producto-card producto-card--relleno"></div>
+      } @for (vacia of relleno(); track vacia) {
+      <div class="producto-card producto-card--relleno"></div>
       }
     </div>
 
     <div class="producto-card resumen-card">
-        <span class="resumen-fila">
-       Tiempo estimado: 
-          @if (carrito.tiempoTotalEstimado() > 60) {
-            <strong class="resumen-fila" >
-              {{ (carrito.tiempoTotalEstimado() - (carrito.tiempoTotalEstimado() % 60)) / 60 }}h:
-              @if (carrito.tiempoTotalEstimado() % 60 > 0) {
-                {{ carrito.tiempoTotalEstimado() % 60 }}min
-              }
-            </strong>
-          } @else {
-            <strong class="resumen-fila">{{ carrito.tiempoTotalEstimado() }} min</strong>
-          }
-       </span>
-      
+      <span class="resumen-fila">
+        Tiempo estimado: @if (carrito.tiempoTotalEstimado() > 60) {
+        <strong class="resumen-fila">
+          {{
+            (carrito.tiempoTotalEstimado() -
+              (carrito.tiempoTotalEstimado() % 60)) /
+              60
+          }}h: @if (carrito.tiempoTotalEstimado() % 60 > 0) {
+          {{ carrito.tiempoTotalEstimado() % 60 }}min }
+        </strong>
+        } @else {
+        <strong class="resumen-fila"
+          >{{ carrito.tiempoTotalEstimado() }} min</strong
+        >
+        }
+      </span>
+
       <div class="resumen-fila">
         <span>Total productos:</span>
-        <strong>{{this.carrito.totalItems()}}</strong>
+        <strong>{{ this.carrito.totalItems() }}</strong>
       </div>
       <div class="resumen-fila total-pagar">
         <span>Total a pagar:</span>
-        <strong >{{this.carrito.importeTotal() | currency:'ARS':'$':'1.0-0'}}</strong>
+        <strong>{{
+          this.carrito.importeTotal() | currency : "ARS" : "$" : "1.0-0"
+        }}</strong>
       </div>
     </div>
-
   </div>
 </ion-content>
 
-
 <ion-footer class="ion-no-border footer-pedido">
   <ion-toolbar>
-    <ion-button expand="block" shape="round" class="btn-confirmar" [disabled]="enviando()" (click)="solicitarPedido()">
-        Confirmar pedido
+    <ion-button
+      expand="block"
+      shape="round"
+      class="btn-confirmar"
+      [disabled]="enviando()"
+      (click)="solicitarPedido()"
+    >
+      Confirmar pedido
     </ion-button>
   </ion-toolbar>
 </ion-footer>
 
 @if (enviando()) {
-  <app-loading-overlay mensaje="Enviando tu pedido..." />
+<app-loading-overlay mensaje="Enviando tu pedido..." />
 }
