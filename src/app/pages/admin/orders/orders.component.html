@@ -36,8 +36,8 @@
             <div class="pedido">
               
               <header class="pedido__mesa">
-                <h2>Mesa: {{ pedido.mesas.numero }}</h2>
-                <span>Pedido: {{ pedido.id_pedido.slice(0, 8) }}</span>
+                <h2>Mesa N°: {{ pedido.mesas?.numero }}</h2>
+                <span>Cliente: {{ pedido.usuarios?.nombre }} {{ pedido.usuarios?.apellido }}</span>
               </header>
               <div class="pedido__encabezado">
                 <div class="pedido__momento">
@@ -64,9 +64,9 @@
                       <div class="producto-card">
                         <div class="card-header-item">
                           <span class="item-nombre">{{ item.carta.nombre }}</span>
-                          <span class="item-descripcion">{{ item.cantidad }} x {{ item.precio_unitario | currency:'ARS':'symbol':'1.0-0' }}</span>
+                          <span class="item-descripcion">{{ item.cantidad }} x {{ item.precio_unitario | currency:'ARS':'$':'1.0-0'}}</span>
                         </div>
-                        <span class="item-precio">{{ item.subtotal | currency:'ARS':'symbol':'1.0-0' }}</span>
+                        <span class="item-precio">{{ item.subtotal | currency:'ARS':'$':'1.0-0' }}</span>
                       </div>
                     }
                   </div>
@@ -74,7 +74,7 @@
                   <div class="producto-card total-card">
                     <div class="resumen-fila">
                       <span>Total a pagar:</span>
-                      <span class="item-precio">{{ pedido.subtotal | currency:'ARS':'symbol':'1.0-0' }}</span>
+                      <span class="item-precio">{{ pedido.subtotal | currency:'ARS':'$':'1.0-0' }}</span>
                     </div>
                   </div>
                 } @else {
@@ -101,7 +101,11 @@
                   [disabled]="estado() === pedido.id_pedido"
                   (click)="confirmar(pedido.id_pedido)"
                 >
-                  Aceptar
+                  @if (estado() === pedido.id_pedido) {
+                      <app-spinner-logo size="sm" />
+                    } @else {
+                      Aceptar
+                    }
                 </ion-button>
               </div>
 
