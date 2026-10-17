@@ -15,6 +15,7 @@ import {
   IonContent,
   IonButton,
   IonRouterLink,
+  ToastController,
 } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
@@ -48,6 +49,7 @@ export class OrdersComponent implements OnInit {
   private auth = inject(Auth);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private toastController = inject(ToastController);
 
   pedidoService = inject(Pedido); // Renombrado para evitar conflicto con la variable tipada si existiera
   carrito = inject(Carrito);
@@ -89,10 +91,28 @@ export class OrdersComponent implements OnInit {
     const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
     if (!pedidoActual) return;
     this.estado.set(idPedido);
-    await this.pedidoService.actualizarEstado(idPedido, pedidoActual.id_usuario, 'confirmado');
-    await this.cargarpedido();
+    try{
+      await this.pedidoService.actualizarEstado(idPedido, pedidoActual.id_usuario, 'confirmado');
+      this.mostrarToast('Pedido confirmado con éxito y derivado a Cocina / Bar.', 'success');
+      await this.cargarpedido();
+    
+    }catch (error){
+      console.error('Error al confirmar el pedido:', error);
+      this.mostrarToast('No se pudo confirmar el pedido. Intentá de nuevo.', 'danger');
+    }finally {
     this.estado.set(null);
+    }
   }
+
+  private async mostrarToast(message: string, color: string): Promise<void> {
+  const toast = await this.toastController.create({ 
+    message, 
+    duration: 3000, 
+    position: 'top', 
+    color 
+  });
+  await toast.present();
+}
 
   async rechazar(idPedido: string): Promise<void> {
     const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
