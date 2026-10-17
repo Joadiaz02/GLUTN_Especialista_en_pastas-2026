@@ -1,5 +1,7 @@
 :host {
   display: block;
+  width: 100%;
+  height: 100%;
 
   --glutn-green: #657a4d;
   --glutn-green-light: #8ca273;
@@ -7,15 +9,7 @@
   --glutn-yellow: #d9a441;
 }
 
-
-/* =========================================
-   FONDO GENERAL
-   ========================================= */
-
-ion-content.clients-content {
-  --background: var(--glutn-green);
-}
-
+/* FONDO */
 ion-header {
   background: var(--glutn-green);
 }
@@ -23,379 +17,214 @@ ion-header {
 ion-toolbar {
   --background: var(--glutn-green);
   --border-width: 0;
-
   padding: 0;
 }
 
+ion-content.clients-content {
+  --background: var(--glutn-green);
+}
 
-/* =========================================
-   TOOLBAR
-   ========================================= */
-
+/* BARRA SUPERIOR */
 .toolbar-content {
   width: 100%;
-  height: 58px;
-
+  height: 56px;
   display: grid;
-
-  grid-template-columns:
-    58px
-    1fr
-    58px;
-
+  grid-template-columns: 52px 1fr 52px;
   align-items: center;
 }
 
-
-/* =========================================
-   TÍTULO
-   ========================================= */
-
 .toolbar-title {
-  width: 100%;
-
-  color: #ffffff;
-
+  color: #fff;
   text-align: center;
-
-  font-size: 19px;
-
+  font-size: 21px;
   font-weight: 800;
-
   line-height: 1;
-
   pointer-events: none;
 }
 
-
-/* =========================================
-   BOTONES SUPERIORES
-   ========================================= */
-
 .toolbar-back-button,
 .toolbar-refresh-button {
-  width: 46px;
-  height: 46px;
-
+  width: 44px;
+  height: 44px;
   margin: auto;
-
   padding: 0;
-
   border: none;
-
   border-radius: 50%;
-
   background: transparent;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
-
   -webkit-tap-highlight-color: transparent;
 }
 
 .toolbar-back-button:active,
 .toolbar-refresh-button:active {
-  background:
-    rgba(
-      255,
-      255,
-      255,
-      0.14
-    );
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .toolbar-back-button:disabled,
 .toolbar-refresh-button:disabled {
   opacity: 0.4;
-
   cursor: default;
 }
-
-
-/* =========================================
-   FLECHA
-   ========================================= */
 
 .toolbar-chevron {
   width: 15px;
   height: 15px;
-
   display: block;
-
-  border-left:
-    3px solid
-    #ffffff;
-
-  border-bottom:
-    3px solid
-    #ffffff;
-
-  transform:
-    rotate(45deg);
-
+  border-left: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+  transform: rotate(45deg);
   margin-left: 5px;
 }
 
-
-/* =========================================
-   ACTUALIZAR
-   ========================================= */
-
 .refresh-icon {
-  display: block;
-
-  color: #ffffff;
-
+  color: #fff;
   font-size: 31px;
-
   line-height: 1;
-
-  font-weight: 400;
 }
 
-
-/* =========================================
-   CONTENEDOR
-   ========================================= */
+/* DISTRIBUCIÓN GENERAL */
+ion-content.clients-content::part(scroll) {
+  display: flex;
+  flex-direction: column;
+}
 
 .clients-container {
-  width: 100%;
-  min-height: 100%;
-
-  box-sizing: border-box;
-
-  padding:
-    14px
-    15px
-    20px;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  gap: 8px;
+width: 100%;
+min-height: 100%;
+box-sizing: border-box;
+padding: 4px 12px 16px;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0;
 }
 
 
-/* =========================================
-   LOADING
-   ========================================= */
 
+/* CARGA */
 .loading-section {
   width: 100%;
-
-  height: 100%;
-
-  min-height: 0;
-
+  flex: 1;
+  min-height: 300px;
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
-
   gap: 14px;
-
-  color: #ffffff;
+  color: #fff;
 }
 
 .loading-section p {
   margin: 0;
-
-  font-size: 16px;
-
+  font-size: 18px;
   font-weight: 700;
 }
 
-
-/* =========================================
-   EMPTY
-   ========================================= */
-
+/* SIN CLIENTES */
 .empty-section {
   width: 100%;
   max-width: 520px;
-
-  margin-top: 35px;
-
-  padding:
-    35px
-    25px;
-
+  margin: auto 0;
+  padding: 35px 25px;
   box-sizing: border-box;
-
   border-radius: 28px;
-
-  background:
-    var(--glutn-green-light);
-
+  background: var(--glutn-green-light);
   text-align: center;
-
-  box-shadow:
-    0 15px 35px
-    rgba(
-      0,
-      0,
-      0,
-      0.16
-    );
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.16);
 }
 
 .empty-icon {
-  width: 64px;
-  height: 64px;
-
-  margin:
-    0
-    auto
-    15px;
-
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 18px;
   border-radius: 50%;
-
-  background:
-    var(--glutn-green);
-
-  color: #ffffff;
-
+  background: var(--glutn-green);
+  color: #fff;
   display: flex;
-
   align-items: center;
   justify-content: center;
-
-  font-size: 36px;
-
+  font-size: 38px;
   font-weight: 800;
 }
 
 .empty-section h2 {
-  margin:
-    0
-    0
-    10px;
-
-  color: #ffffff;
-
-  font-size: 24px;
-
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 25px;
   font-weight: 800;
 }
 
 .empty-section p {
   margin: 0;
-
-  color:
-    rgba(
-      255,
-      255,
-      255,
-      0.90
-    );
-
-  font-size: 16px;
-
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 17px;
   line-height: 1.5;
 }
 
-
-/* =========================================
-   CARRUSEL
-   ========================================= */
-
+/* CARRUSEL */
 .cards-section {
-  position: relative;
-
-  width: 100%;
-  max-width: 760px;
-
-  height:
-    clamp(
-      390px,
-      54vh,
-      510px
-    );
-
-  overflow: hidden;
-
-  flex-shrink: 0;
-
-  touch-action: pan-y;
+position: relative;
+width: 100%;
+max-width: 620px;
+height: 430px;
+flex: 0 0 430px;
+min-height: 0;
+box-sizing: border-box;
+overflow: visible;
+touch-action: pan-y;
 }
 
 .cards-track {
-  position: relative;
-
-  width: 100%;
-  height: 100%;
+position: relative;
+width: 100%;
+height: 100%;
+overflow: visible;
 }
 
+/* NAVEGACIÓN */
+app-clients-navigation {
+display: block;
+width: 100%;
+flex: 0 0 auto;
+padding-top: 0;
+}
 
-/* =========================================
-   CELULAR
-   ========================================= */
-
+/* CELULARES */
 @media (max-width: 600px) {
-
   .toolbar-content {
     height: 54px;
-
-    grid-template-columns:
-      50px
-      1fr
-      50px;
-  }
-
-  .toolbar-title {
-    font-size: 18px;
-  }
-
-  .toolbar-back-button,
-  .toolbar-refresh-button {
-    width: 42px;
-    height: 42px;
   }
 
   .clients-container {
-    padding:
-      7px
-      8px
-      14px;
+    padding: 8px 12px max(24px, env(safe-area-inset-bottom));
+    gap: 8px;
+  }
 
+  .cards-section {
+    flex-basis: 490px;
+    min-height: 490px;
+  }
+}
+
+/* PANTALLAS BAJAS */
+@media (max-height: 700px) {
+  .clients-container {
+    padding-top: 6px;
     gap: 4px;
   }
 
   .cards-section {
-    height: 405px;
+    flex-basis: 440px;
+    min-height: 440px;
   }
 }
 
-
-/* =========================================
-   CELULARES MUY CHICOS
-   ========================================= */
-
-@media (max-width: 380px) {
-
-  .toolbar-content {
-    height: 52px;
-  }
-
-  .toolbar-title {
-    font-size: 17px;
-  }
-
-  .cards-section {
-    height: 390px;
-  }
-
-  .clients-container {
-    padding-left: 6px;
-    padding-right: 6px;
+/* Ajustes para pantalla de 360 x 800 */
+@media (min-width: 350px) and (max-width: 400px) and (min-height: 750px) {
+  app-clients-navigation {
+    margin-top: 24px;
   }
 }

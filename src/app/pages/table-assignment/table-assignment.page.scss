@@ -261,8 +261,8 @@ ion-content {
 
   background: rgba(31, 45, 24, 0.55);
 
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 
   color: #fff;
   font-size: 14px;
