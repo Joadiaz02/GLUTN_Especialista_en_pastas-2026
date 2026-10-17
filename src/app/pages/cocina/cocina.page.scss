@@ -389,6 +389,8 @@ app-header {
   right: 0;
   z-index: 10;
   pointer-events: none;
+  // sin fondo: lo que queda detrás del encabezado (el logo) se ve entero
+  background: transparent;
 }
 
 app-header ::ng-deep ion-buttons {
