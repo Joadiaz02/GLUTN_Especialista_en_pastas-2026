@@ -322,8 +322,8 @@ export class HomePage implements OnInit, OnDestroy {
       const { camera } = await BarcodeScanner.requestPermissions();
 
       if (camera !== 'granted' && camera !== 'limited') {
+        await this.vibracion.error();
         await this.mostrarToast('Necesitamos permiso de cámara para escanear el código.');
-      
         return;
       }
 

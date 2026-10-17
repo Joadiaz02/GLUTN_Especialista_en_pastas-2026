@@ -153,7 +153,7 @@
     <ion-button
       expand="block"
       shape="round"
-      [disabled]="(form.statusChanges | async) !== 'VALID' || isLoading()"
+      [disabled]="isLoading()"
       (click)="confirmarYGuardar()"
     >
       Guardar
