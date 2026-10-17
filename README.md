@@ -541,15 +541,15 @@ QR correspondiente a la Mesa 5.
 ## Registro de clientes
 
 <p align="center">
-  <img src="images/Registro_cliente_uno.jpg" alt="Registro cliente - Paso 1" width="250">
+  <img src="images/Registro-cliente-uno.jpg" alt="Registro cliente - Paso 1" width="250">
 </p>
 
 <p align="center">
-  <img src="images/Registro_cliente_dos.jpg" alt="Registro cliente - Paso 2" width="250">
+  <img src="images/Registro-cliente-dos.jpg" alt="Registro cliente - Paso 2" width="250">
 </p>
 
 <p align="center">
-  <img src="images/Registro_cliente_tres.jpg" alt="Registro cliente - Paso 3" width="250">
+  <img src="images/Registro-cliente-tres.jpg" alt="Registro cliente - Paso 3" width="250">
 </p>
 
 ---
