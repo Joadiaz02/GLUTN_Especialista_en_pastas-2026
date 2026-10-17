@@ -12,7 +12,7 @@
   <div class="pedido-container">
     
   
-    <div class="lista-productos">
+    <div class="lista-productos" #lista [style.--por-pagina]="porPagina()">
       @for (item of carrito.items(); track item.producto.id_carta; let i = $index) {
         <div class="producto-card" [class.producto-card--ancla]="i % porPagina() === 0">
           <div class="card-header-item">
@@ -41,7 +41,7 @@
       }
 
       @for (vacia of relleno(); track vacia) {
-        <div class="producto-card producto-card--relleno" [style.height.px]="alturaCard()"></div>
+        <div class="producto-card producto-card--relleno"></div>
       }
     </div>
 
