@@ -68,6 +68,9 @@ export class HomePage implements OnInit, OnDestroy {
   private _canalPedido: RealtimeChannel | null = null;
   private _waitlistService = inject(Waitlist);
 
+  //punto19
+  recepcionConfirmada = computed(() => this.estadoPedido() === 'recibido');
+
   constructor() {
     addIcons({
       'chevron-back-outline': chevronBackOutline,
@@ -101,6 +104,7 @@ export class HomePage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.detenerCicloFotos();
     this.dejarDeEscucharPedido();
+    
   }
 
   // estados
@@ -144,7 +148,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   // el mozo ya confirmó el pedido, en cualquier etapa posterior
   pedidoRecibido = computed(() =>
-    ['confirmado', 'en_preparacion', 'listo', 'entregado'].includes(this.estadoPedido() ?? '')
+    ['confirmado', 'en_preparacion', 'listo', 'entregado' , 'recibido' ].includes(this.estadoPedido() ?? '')
   );
 
   // botones que ve cada perfil
@@ -153,13 +157,14 @@ export class HomePage implements OnInit, OnDestroy {
     const cliente = this.esCliente();
     const enMesa = this.enMesa();
     const pedidoRecibido = this.pedidoRecibido();
+    const recepcionConfirmada = this.recepcionConfirmada();
 
     return {
       // reservas oculto hasta la segunda entrega
       reservas: false,
       carta: cliente ? enMesa : perfil !== null,
       juegos: cliente && pedidoRecibido,
-      solicitarCuenta: cliente && pedidoRecibido,
+      solicitarCuenta: cliente && recepcionConfirmada,
       encuestas:
         cliente ||
         perfil === EPerfilUsuario.Dueno ||

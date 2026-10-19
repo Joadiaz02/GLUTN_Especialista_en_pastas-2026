@@ -10,6 +10,12 @@
     </ion-button>
   }
 
+  @if (estado() === 'entregado') {
+    <ion-button shape="round" expand="block" [disabled]="confirmando()" (click)="confirmarRecepcion()">
+      Confirmar recepción
+    </ion-button>
+  }
+
   <ion-button shape="round" expand="block" (click)="volver()">
     Volver
   </ion-button>

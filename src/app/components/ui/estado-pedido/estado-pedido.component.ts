@@ -1,10 +1,11 @@
 import { Component, Input, OnInit, OnDestroy, inject, signal } from '@angular/core';
-import { ModalController, IonButton } from '@ionic/angular';
+import { ModalController, IonButton, ToastController } from '@ionic/angular';
 import { SupabaseService } from '../../../services/supabase.service';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Pedido } from '@app/services/pedido/pedido';
 import { Router } from '@angular/router';
 import { Carrito } from '@app/pages/carrito/carrito';
+import { Vibracion } from '@app/services';
 
 const estados_posibles: Record<string, string> = {
   pendiente: 'Esperando confirmación del mozo',
@@ -12,7 +13,8 @@ const estados_posibles: Record<string, string> = {
   rechazado: 'Rechazado, revisá tu pedido',
   en_preparacion: 'Preparando tu pedido',
   listo: 'Tu pedido está listo',
-  entregado: 'Pedido entregado'
+  entregado: 'Pedido entregado',
+  recibido: 'Pedido recibido, ¡buen provecho!'
 };
 
 @Component({
@@ -30,6 +32,12 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
   public pedidoService = inject(Pedido);
   private router = inject(Router);
   private carrito = inject(Carrito);
+
+  //punto19
+  private toastController = inject(ToastController);
+  private vibracion = inject(Vibracion);
+
+  confirmando = signal(false);
 
   estado = signal<string>('pendiente');
 
@@ -77,9 +85,34 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
         this.router.navigate(['/carta']);
       }
 
+    //logica de confirmar 
+    async confirmarRecepcion(): Promise<void> {
+      if (this.confirmando()) return;
+
+      this.confirmando.set(true);
+
+      try {
+        await this.pedidoService.confirmarRecepcion(this.idPedido);
+        this.estado.set('recibido');
+      } catch (error) {
+        void this.vibracion.error();
+
+        const toast = await this.toastController.create({
+          message: 'No pudimos confirmar la recepción. Intentá de nuevo.',
+          duration: 3000,
+          position: 'top',
+          color: 'danger',
+        });
+        await toast.present();
+      } finally {
+        this.confirmando.set(false);
+      }
+    }
+
   ngOnDestroy(): void {
-  
-    this.canal?.unsubscribe();
+    if (this.canal) {
+      void this.supabaseService.client.removeChannel(this.canal);
+    }
   }
 
   volver(): void {

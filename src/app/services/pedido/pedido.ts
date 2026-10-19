@@ -222,6 +222,22 @@ async obtenerPedidosConfirmados(): Promise<any[]> {
   return data ?? [];
 }
 
+async confirmarRecepcion(idPedido: string): Promise<void> {
+  const { data, error } = await this.sup.client
+    .from('pedido')
+    .update({ estado_pedido: 'recibido' })
+    .eq('id_pedido', idPedido)
+    .eq('estado_pedido', 'entregado')   // solo si está entregado: evita el doble toque
+    .select('id_pedido');
+
+  if (error) throw error;
+
+  // si una policy bloquea el update, Supabase no da error pero tampoco actualiza nada
+  if (!data || data.length === 0) {
+    throw new Error('No pudimos confirmar la recepción.');
+  }
+}
+
 }
 
 
