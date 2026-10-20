@@ -115,6 +115,12 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
     }
   }
 
+  //punto 21
+  irACuenta(): void {
+    void this.modalController.dismiss();
+    void this.router.navigate(['/cuenta']);
+  }
+
   volver(): void {
     this.modalController.dismiss();
   }

@@ -238,6 +238,44 @@ async confirmarRecepcion(idPedido: string): Promise<void> {
   }
 }
 
+//punto 21
+async obtenerLineasCuenta(idUsuario: string): Promise<{
+    nombre: string;
+    cantidad: number;
+    precioUnitario: number;
+    importe: number;
+  }[]> {
+    const { data: pedidos, error } = await this.sup.client
+      .from('pedido')
+      .select('id_pedido')
+      .eq('id_usuario', idUsuario)
+      .eq('estado_pedido', 'recibido')
+      .order('fecha_emision_pedido', { ascending: true });
+
+    if (error) throw new Error('No pudimos cargar tu cuenta.');
+    if (!pedidos || pedidos.length === 0) return [];
+
+    const ids = pedidos.map((p) => p.id_pedido);
+
+    const { data: items, error: errorItems } = await this.sup.client
+      .from('pedido_item')
+      .select('id_pedido, cantidad, precio_unitario, subtotal, carta(nombre)')
+      .in('id_pedido', ids);
+
+    if (errorItems) throw new Error('No pudimos cargar tu cuenta.');
+
+    return (items ?? []).map((item) => {
+      const carta = item.carta as unknown as { nombre: string } | null;
+
+      return {
+        nombre: carta?.nombre ?? 'Producto',
+        cantidad: item.cantidad,
+        precioUnitario: item.precio_unitario,
+        importe: item.subtotal,
+      };
+    });
+  }
+
 }
 
 

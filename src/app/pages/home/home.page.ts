@@ -468,7 +468,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   // provisorio hasta que esté la cuenta
   async solicitarCuenta(): Promise<void> {
-    await this.mostrarToast('Pronto vas a poder solicitar la cuenta desde acá.');
+    void this.router.navigate(['/cuenta']);
   }
 
   async verEstadoPedido(idPedido: string) {

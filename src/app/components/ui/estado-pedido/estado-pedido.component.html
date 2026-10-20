@@ -16,6 +16,12 @@
     </ion-button>
   }
 
+  @if (estado() === 'recibido') {
+    <ion-button shape="round" expand="block" (click)="irACuenta()">
+      Solicitar cuenta
+    </ion-button>
+  }
+
   <ion-button shape="round" expand="block" (click)="volver()">
     Volver
   </ion-button>
