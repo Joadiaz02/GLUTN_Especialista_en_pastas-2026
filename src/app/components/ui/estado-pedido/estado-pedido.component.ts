@@ -14,7 +14,9 @@ const estados_posibles: Record<string, string> = {
   en_preparacion: 'Preparando tu pedido',
   listo: 'Tu pedido está listo',
   entregado: 'Pedido entregado',
-  recibido: 'Pedido recibido, ¡buen provecho!'
+  recibido: 'Pedido recibido, ¡buen provecho!',
+  cuenta_solicitada: 'Cuenta solicitada, el mozo te la lleva enseguida',
+  cuenta_entregada: 'Tu cuenta está lista'
 };
 
 @Component({
@@ -116,9 +118,8 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
   }
 
   //punto 21
-  irACuenta(): void {
-    void this.modalController.dismiss();
-    void this.router.navigate(['/cuenta']);
+  solicitarCuenta(): void {
+    void this.modalController.dismiss('solicitar-cuenta');
   }
 
   volver(): void {

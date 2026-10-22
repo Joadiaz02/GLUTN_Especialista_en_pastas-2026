@@ -239,42 +239,28 @@ async confirmarRecepcion(idPedido: string): Promise<void> {
 }
 
 //punto 21
-async obtenerLineasCuenta(idUsuario: string): Promise<{
-    nombre: string;
-    cantidad: number;
-    precioUnitario: number;
-    importe: number;
-  }[]> {
-    const { data: pedidos, error } = await this.sup.client
-      .from('pedido')
-      .select('id_pedido')
-      .eq('id_usuario', idUsuario)
-      .eq('estado_pedido', 'recibido')
-      .order('fecha_emision_pedido', { ascending: true });
 
-    if (error) throw new Error('No pudimos cargar tu cuenta.');
-    if (!pedidos || pedidos.length === 0) return [];
 
-    const ids = pedidos.map((p) => p.id_pedido);
+  async solicitarCuenta(idUsuario: string, porcentaje: number): Promise<void> {
+  const { data, error } = await this.sup.client
+    .from('pedido')
+    .update({ estado_pedido: 'cuenta_solicitada', propina_porcentaje: porcentaje })
+    .eq('id_usuario', idUsuario)
+    .eq('estado_pedido', 'recibido')
+    .select('id_pedido, id_mesa');
 
-    const { data: items, error: errorItems } = await this.sup.client
-      .from('pedido_item')
-      .select('id_pedido, cantidad, precio_unitario, subtotal, carta(nombre)')
-      .in('id_pedido', ids);
+  if (error) throw error;
 
-    if (errorItems) throw new Error('No pudimos cargar tu cuenta.');
-
-    return (items ?? []).map((item) => {
-      const carta = item.carta as unknown as { nombre: string } | null;
-
-      return {
-        nombre: carta?.nombre ?? 'Producto',
-        cantidad: item.cantidad,
-        precioUnitario: item.precio_unitario,
-        importe: item.subtotal,
-      };
-    });
+  // si no hay pedidos recibidos, no se actualizó ninguno
+  if (!data || data.length === 0) {
+    throw new Error('Primero confirmá que recibiste tu pedido.');
   }
+
+  // el aviso al mozo no frena al cliente
+  void this.sup.client.functions.invoke('notify-cuenta-solicitada', {
+    body: { idPedido: data[0].id_pedido, idMesa: data[0].id_mesa },
+  });
+}
 
 }
 
