@@ -28,7 +28,7 @@ import { EstadoPedidoComponent } from '@app/components/ui/estado-pedido/estado-p
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { parseTableQr } from '@app/utils';
+import { parseTableQr, parseTipQr } from '@app/utils';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
@@ -68,6 +68,9 @@ export class HomePage implements OnInit, OnDestroy {
   private _canalPedido: RealtimeChannel | null = null;
   private _waitlistService = inject(Waitlist);
 
+  //punto19
+  recepcionConfirmada = computed(() => this.estadoPedido() === 'recibido');
+
   constructor() {
     addIcons({
       'chevron-back-outline': chevronBackOutline,
@@ -101,6 +104,7 @@ export class HomePage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.detenerCicloFotos();
     this.dejarDeEscucharPedido();
+    
   }
 
   // estados
@@ -146,7 +150,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   // el mozo ya confirmó el pedido, en cualquier etapa posterior
   pedidoRecibido = computed(() =>
-    ['confirmado', 'en_preparacion', 'listo', 'entregado'].includes(this.estadoPedido() ?? '')
+    ['confirmado', 'en_preparacion', 'listo', 'entregado', 'recibido', 'cuenta_solicitada', 'cuenta_entregada']
+      .includes(this.estadoPedido() ?? '')
   );
 
   // botones que ve cada perfil
@@ -155,13 +160,14 @@ export class HomePage implements OnInit, OnDestroy {
     const cliente = this.esCliente();
     const enMesa = this.enMesa();
     const pedidoRecibido = this.pedidoRecibido();
+    const recepcionConfirmada = this.recepcionConfirmada();
 
     return {
       // reservas oculto hasta la segunda entrega
       reservas: false,
       carta: cliente ? enMesa : perfil !== null,
       juegos: cliente && pedidoRecibido,
-      solicitarCuenta: cliente && pedidoRecibido,
+      solicitarCuenta: cliente && recepcionConfirmada,
       encuestas:
         cliente ||
         perfil === EPerfilUsuario.Dueno ||
@@ -356,10 +362,36 @@ export class HomePage implements OnInit, OnDestroy {
         return;
       }
 
+      // QR de propina: el cliente pide la cuenta
+      const porcentaje = parseTipQr(valor);
+      if (porcentaje !== null) {
+        this.pedirCuenta(porcentaje);
+        return;
+      }
+
       await this.vibracion.error();
-      await this.mostrarToast('Ese código QR no corresponde al ingreso del local ni a una mesa.');
+      await this.mostrarToast('Ese código QR no corresponde al ingreso, a una mesa ni a una propina.');
     } finally {
       this.escaneando.set(false);
+    }
+  }
+  private async pedirCuenta(porcentaje: number): Promise<void> {
+    const usuario = this.authService.usuarioActual();
+
+    if (!usuario) {
+      return;
+    }
+
+    try {
+      await this.pedido.solicitarCuenta(usuario.id, porcentaje);
+      await this.vibracion.confirmacion();
+      await this.mostrarToast('Cuenta solicitada. El mozo te la lleva enseguida.', 'success');
+    } catch (error) {
+      await this.vibracion.error();
+      await this.mostrarToast(
+        error instanceof Error ? error.message : 'No pudimos pedir la cuenta. Intentá de nuevo.',
+        'danger'
+      );
     }
   }
 
@@ -473,19 +505,25 @@ export class HomePage implements OnInit, OnDestroy {
 
   // solicitar cuenta
 
-  // provisorio hasta que esté la cuenta
-  async solicitarCuenta(): Promise<void> {
-    await this.mostrarToast('Pronto vas a poder solicitar la cuenta desde acá.');
+  
+  solicitarCuenta(): void {
+    void this.escanear();
   }
 
   async verEstadoPedido(idPedido: string) {
-    const modal = await this.modalController.create({
-      component: EstadoPedidoComponent,
-      componentProps: { idPedido },
-      breakpoints: [0, 0.4],
-      initialBreakpoint: 0.2,
-    });
+  const modal = await this.modalController.create({
+    component: EstadoPedidoComponent,
+    componentProps: { idPedido },
+    breakpoints: [0, 0.4],
+    initialBreakpoint: 0.2,
+  });
 
-    await modal.present();
+  await modal.present();
+
+  const { data } = await modal.onWillDismiss();
+
+  if (data === 'solicitar-cuenta') {
+    await this.escanear();
   }
+}
 }

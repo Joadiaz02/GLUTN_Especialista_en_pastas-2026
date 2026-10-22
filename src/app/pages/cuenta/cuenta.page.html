@@ -1,0 +1,77 @@
+<app-header routeBackName="/home" />
+
+<ion-content class="cuenta-content">
+  <div class="cuenta-wrapper">
+    <div class="logo-container logo-fijo">
+      <img
+        src="assets/images/LOGO-GLUTN.png"
+        alt="GLUTN - Especialista en Pastas"
+        class="logo"
+      />
+    </div>
+
+    <h1 class="titulo-pagina">Tu cuenta</h1>
+
+    @if (cargando()) {
+      <div class="cuenta-vacio">
+        <app-spinner-logo />
+      </div>
+    } @else if (lineas().length === 0) {
+      <div class="cuenta-vacio">
+        <p>No tenés pedidos para pagar.</p>
+      </div>
+    } @else {
+      <section class="cuenta-ticket">
+        <h2 class="cuenta-ticket__titulo">Detalle de tu pedido</h2>
+
+        <ul class="cuenta-lineas">
+          @for (linea of lineas(); track $index) {
+            <li class="cuenta-linea">
+              <div class="cuenta-linea__info">
+                <span class="cuenta-linea__nombre">{{ linea.nombre }}</span>
+                <span class="cuenta-linea__detalle">
+                  {{ linea.cantidad }} x {{ linea.precioUnitario | currency:'ARS':'$':'1.0-0' }}
+                </span>
+              </div>
+              <span class="cuenta-linea__importe">
+                {{ linea.importe | currency:'ARS':'$':'1.0-0' }}
+              </span>
+            </li>
+          }
+        </ul>
+
+        <div class="cuenta-resumen">
+          <div class="cuenta-fila">
+            <span>Subtotal</span>
+            <span>{{ subtotal() | currency:'ARS':'$':'1.0-0' }}</span>
+          </div>
+
+          @if (descuentoPorcentaje() > 0) {
+            <div class="cuenta-fila cuenta-fila--descuento">
+              <span>Descuento por juegos ({{ descuentoPorcentaje() }}%)</span>
+              <span>- {{ descuentoImporte() | currency:'ARS':'$':'1.0-0' }}</span>
+            </div>
+          }
+
+          @if (propina() !== null) {
+            <div class="cuenta-fila">
+              <span>Propina: {{ nivelPropina() }} ({{ propina() }}%)</span>
+              <span>{{ propinaImporte() | currency:'ARS':'$':'1.0-0' }}</span>
+            </div>
+          }
+        </div>
+
+        @if (propina() !== null) {
+          <div class="cuenta-total">
+            <span class="cuenta-total__etiqueta">Total a pagar</span>
+            <span class="cuenta-total__importe">
+              {{ total() | currency:'ARS':'$':'1.0-0' }}
+            </span>
+          </div>
+        } @else {
+          <p class="cuenta-aviso">Escaneá el QR de propina para generar tu cuenta.</p>
+        }
+      </section>
+    }
+  </div>
+</ion-content>

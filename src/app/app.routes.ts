@@ -28,13 +28,11 @@ export const routes: Routes = [
       import('./pages/register/register.page').then((m) => m.RegisterPage),
   },
   {
-  path: 'encuestas',
-  canActivate: [authGuard],
-  loadComponent: () =>
-    import('./pages/encuestas/encuestas.page').then(
-      (m) => m.EncuestasPage
-    ),
-},
+    path: 'encuestas',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/encuestas/encuestas.page').then((m) => m.EncuestasPage),
+  },
 
   {
     path: 'acceso_rapido',
@@ -359,5 +357,11 @@ export const routes: Routes = [
       import('./pages/employees/edit-employee/edit-employee.page').then(
         (m) => m.EditEmployeePage
       ),
+  },
+  {
+    path: 'cuenta',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/cuenta/cuenta.page').then((m) => m.CuentaPage),
   },
 ];

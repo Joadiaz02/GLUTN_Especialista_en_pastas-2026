@@ -1,0 +1,157 @@
+.cuenta-content {
+  --background: var(--ion-background-color);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+.cuenta-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+}
+
+.cuenta-vacio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 24px;
+  color: #ffffff;
+}
+
+/* Tarjeta principal fija que ocupa el espacio restante */
+.cuenta-ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  background: #6b5c4e; // Marrón de la tarjeta de postres
+  color: #ffffff;      // Texto blanco para contraste
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  flex: 1;
+  min-height: 0;        /* Vital para que flexbox permita scroll interno */
+  box-sizing: border-box;
+}
+
+.cuenta-ticket__titulo {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffc983; // Tono destacado cálido
+  flex-shrink: 0;
+}
+
+/* Contenedor con scroll exclusivo para los productos */
+.cuenta-lineas {
+  list-style: none;
+  margin: 0;
+  padding: 0 4px 0 0; /* Pequeño espacio para la barra de scroll */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;     /* Activa el scroll solo aquí */
+  flex: 1;              /* Ocupa el espacio disponible dentro de la card */
+  min-height: 0;
+  
+  /* Estilo personalizado opcional para la barra de scroll */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+}
+
+.cuenta-linea {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(58, 36, 23, 0.4); // Fondo translúcido sutil
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+
+.cuenta-linea__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cuenta-linea__nombre {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  color: #ffffff;
+}
+
+.cuenta-linea__detalle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.cuenta-linea__importe {
+  font-weight: 700;
+  white-space: nowrap;
+  color: #ffc983;
+}
+
+.cuenta-resumen {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.25);
+  flex-shrink: 0; /* Evita que se comprima */
+}
+
+.cuenta-fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cuenta-fila--descuento {
+  color: #81c784; // Verde claro adaptado para descuentos
+  font-weight: 700;
+}
+
+.cuenta-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.cuenta-total__etiqueta {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cuenta-total__importe {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffc983;
+}
+
+.cuenta-aviso {
+  margin: 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: #3a2417; // Marrón oscuro para el aviso
+  color: #ffffff;
+  text-align: center;
+  font-weight: 600;
+  flex-shrink: 0;
+}

@@ -222,6 +222,46 @@ async obtenerPedidosConfirmados(): Promise<any[]> {
   return data ?? [];
 }
 
+async confirmarRecepcion(idPedido: string): Promise<void> {
+  const { data, error } = await this.sup.client
+    .from('pedido')
+    .update({ estado_pedido: 'recibido' })
+    .eq('id_pedido', idPedido)
+    .eq('estado_pedido', 'entregado')   // solo si está entregado: evita el doble toque
+    .select('id_pedido');
+
+  if (error) throw error;
+
+  // si una policy bloquea el update, Supabase no da error pero tampoco actualiza nada
+  if (!data || data.length === 0) {
+    throw new Error('No pudimos confirmar la recepción.');
+  }
+}
+
+//punto 21
+
+
+  async solicitarCuenta(idUsuario: string, porcentaje: number): Promise<void> {
+  const { data, error } = await this.sup.client
+    .from('pedido')
+    .update({ estado_pedido: 'cuenta_solicitada', propina_porcentaje: porcentaje })
+    .eq('id_usuario', idUsuario)
+    .eq('estado_pedido', 'recibido')
+    .select('id_pedido, id_mesa');
+
+  if (error) throw error;
+
+  // si no hay pedidos recibidos, no se actualizó ninguno
+  if (!data || data.length === 0) {
+    throw new Error('Primero confirmá que recibiste tu pedido.');
+  }
+
+  // el aviso al mozo no frena al cliente
+  void this.sup.client.functions.invoke('notify-cuenta-solicitada', {
+    body: { idPedido: data[0].id_pedido, idMesa: data[0].id_mesa },
+  });
+}
+
 }
 
 

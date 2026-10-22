@@ -24,9 +24,11 @@ export interface ParteDelPedido {
 
 export interface PedidoDelMozo {
   idPedido: string;
+  idUsuario: string;
   numeroMesa: string;
   fecha: string;
   completo: boolean;
+  entregado: boolean;
   partes: ParteDelPedido[];
 }
 
@@ -72,8 +74,8 @@ export class PedidosListos {
     try {
       const { data: pedidos, error } = await this._db.client
         .from('pedido')
-        .select('id_pedido, id_mesa, fecha_emision_pedido, estado_pedido, estado_cocina, estado_bar')
-        .in('estado_pedido', ['confirmado', 'en_preparacion', 'listo'])
+        .select('id_pedido, id_mesa, id_usuario, fecha_emision_pedido, estado_pedido, estado_cocina, estado_bar')
+        .in('estado_pedido', ['confirmado', 'en_preparacion', 'listo', 'entregado'])
         .order('fecha_emision_pedido', { ascending: true });
 
       if (error) {
@@ -125,9 +127,11 @@ export class PedidosListos {
 
         return {
           idPedido: p.id_pedido,
+          idUsuario: p.id_usuario,
           numeroMesa: numeroPorMesa.get(p.id_mesa) ?? 'sin número',
           fecha: p.fecha_emision_pedido,
-          completo: p.estado_pedido === 'listo',
+          completo: p.estado_pedido === 'listo' || p.estado_pedido === 'entregado',
+          entregado: p.estado_pedido === 'entregado',
           partes: this.armarPartes(items, p.estado_cocina, p.estado_bar),
         };
       });

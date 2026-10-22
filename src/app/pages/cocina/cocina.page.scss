@@ -65,8 +65,8 @@
   height: 30px;
   padding: 0 8px;
   border-radius: 999px;
-  background: #ffffff;
-  color: #2f3d24;
+  background: #5a4a3b; // Cambiado a marrón oscuro
+  color: #ffffff;
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -80,10 +80,8 @@
   flex: 1;
   min-height: 0;
   display: flex;
-  // separación suficiente para que no se asomen las tarjetas de al lado
   gap: calc(100vw - var(--ancho-tarjeta));
   margin: 0 -16px;
-  // padding para que la tarjeta quede centrada
   padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 12px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -145,7 +143,7 @@
   opacity: 0.4;
 }
 
-// tarjeta del pedido
+// tarjeta del pedido (Cambiado a marrón similar a la tarjeta de postres)
 .pedido {
   height: 100%;
   min-height: 0;
@@ -154,9 +152,9 @@
   gap: 12px;
   padding: 16px;
   border-radius: 24px;
-  background: var(--ion-color-light, #f4ebdd);
-  color: #2f3d24;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  background: #6b5c4e; // Color marrón de la tarjeta de postres
+  color: #ffffff;      // Texto blanco para contraste sobre marrón
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
 }
 
@@ -174,11 +172,13 @@
     margin: 0;
     font-size: 26px;
     font-weight: 800;
+    color: #ffc983; // Tono destacado acorde a los botones secundarios
   }
 
   span {
     font-size: 14px;
     font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
   }
 }
 
@@ -188,7 +188,7 @@
   align-items: center;
   gap: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(47, 61, 36, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); // Línea clara sutil
 }
 
 .pedido__momento {
@@ -203,13 +203,14 @@
 
 .pedido__fecha {
   font-size: 15px;
+  opacity: 0.85;
 }
 
 .pedido__estado {
   flex-shrink: 0;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #2f3d24;
+  background: #3a2417; // Marrón más oscuro para badges
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
@@ -245,7 +246,7 @@
   height: 44px;
   padding: 0 8px;
   border-radius: 12px;
-  background: #2f3d24;
+  background: #3a2417; // Fondo oscuro para los números de cantidad
   color: #ffffff;
   font-weight: 700;
   display: flex;
@@ -258,6 +259,7 @@
   min-width: 0;
   font-weight: 600;
   overflow-wrap: anywhere;
+  color: #ffffff;
 }
 
 .pedido__acciones {
@@ -361,6 +363,7 @@
 
   .pedido__boton {
     min-height: 44px;
+    
   }
 
   .contador {
@@ -374,12 +377,11 @@
     font-size: 28px;
   }
 }
-// logo más arriba, pegado al encabezado
+
 .logo-container.logo-fijo {
   margin: 0 auto 8px;
 }
 
-// el encabezado flota sobre la pantalla para que el logo suba a su altura
 app-header {
   position: absolute;
   top: 0;
@@ -393,7 +395,6 @@ app-header ::ng-deep ion-buttons {
   pointer-events: auto;
 }
 
-// barra transparente para que no tape el logo
 app-header ::ng-deep ion-toolbar {
   --background: transparent;
   --border-width: 0;
