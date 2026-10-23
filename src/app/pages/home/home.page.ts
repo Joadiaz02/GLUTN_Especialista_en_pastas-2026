@@ -69,7 +69,6 @@ export class HomePage implements OnInit, OnDestroy {
   private _waitlistService = inject(Waitlist);
 
   //punto19
-  recepcionConfirmada = computed(() => this.estadoPedido() === 'recibido');
 
   constructor() {
     addIcons({
@@ -170,14 +169,13 @@ export class HomePage implements OnInit, OnDestroy {
     const cliente = this.esCliente();
     const enMesa = this.enMesa();
     const pedidoRecibido = this.pedidoRecibido();
-    const recepcionConfirmada = this.recepcionConfirmada();
+   
 
     return {
       // reservas oculto hasta la segunda entrega
       reservas: false,
       carta: cliente ? enMesa : perfil !== null,
       juegos: cliente && pedidoRecibido,
-      solicitarCuenta: cliente && recepcionConfirmada,
       encuestas:
         cliente ||
         perfil === EPerfilUsuario.Dueno ||
@@ -399,11 +397,14 @@ export class HomePage implements OnInit, OnDestroy {
       await this.pedido.solicitarCuenta(usuario.id, porcentaje);
       await this.vibracion.confirmacion();
       await this.mostrarToast('Cuenta solicitada. El mozo te la lleva enseguida.', 'success');
-    } catch (error) {
-      await this.vibracion.error();
-      await this.mostrarToast(
-        error instanceof Error ? error.message : 'No pudimos pedir la cuenta. Intentá de nuevo.',
-        'danger'
+    } catch (error)  {
+        alert(JSON.stringify(error))
+        console.error('Error al pedir la cuenta:', JSON.stringify(error));
+        await this.vibracion.error();
+        await this.mostrarToast(
+          error instanceof Error ? error.message : 'No pudimos pedir la cuenta. Intentá de nuevo.',
+          'danger'
+          
       );
     }
   }
@@ -521,9 +522,6 @@ export class HomePage implements OnInit, OnDestroy {
   this.router.navigate(['/cuenta']);
 }
 
-  solicitarCuenta(): void {
-    void this.escanear();
-  }
 
   async verEstadoPedido(idPedido: string) {
   const modal = await this.modalController.create({

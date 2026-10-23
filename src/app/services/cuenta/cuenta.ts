@@ -12,7 +12,7 @@ export interface CuentaDelMozo {
   numeroMesa: string;
   estado: EstadoCuenta;
   subtotal: number;
-  propinaPorcentaje: number | null;
+  propina: number | null;
   totalFinal: number | null;
 }
 
@@ -50,81 +50,77 @@ export class CuentasMozo {
   }
 
   async cargar(): Promise<void> {
-    this.cargando.set(true);
+  this.cargando.set(true);
+  try {
+    const { data: pedidos, error } = await this._db.client
+      .from('pedido')
+      .select('id_pedido, id_mesa, id_usuario, subtotal, estado_pedido') // Quitamos propina_porcentaje
+      .in('estado_pedido', ['cuenta_solicitada', 'cuenta_entregada', 'pago_realizado'])
+      .order('fecha_emision_pedido', { ascending: true });
 
-    try {
-      const { data: pedidos, error } = await this._db.client
-        .from('pedido')
-        .select('id_pedido, id_mesa, id_usuario, subtotal, estado_pedido')
-        .in('estado_pedido', ['cuenta_solicitada', 'cuenta_entregada', 'pago_realizado'])
-        .order('fecha_emision_pedido', { ascending: true });
-
-      if (error) {
-        throw new Error('No pudimos cargar las cuentas.');
-      }
-
-      if (!pedidos || pedidos.length === 0) {
-        this.cuentas.set([]);
-        return;
-      }
-
-      // una cuenta por cliente: suma sus pedidos
-      const porCliente = new Map<string, CuentaDelMozo>();
-
-      for (const p of pedidos) {
-        const existente = porCliente.get(p.id_usuario);
-
-        if (existente) {
-          existente.subtotal += p.subtotal;
-          continue;
-        }
-
-        porCliente.set(p.id_usuario, {
-          idPedido: p.id_pedido,
-          idUsuario: p.id_usuario,
-          idMesa: p.id_mesa,
-          numeroMesa: 'sin número',
-          estado: p.estado_pedido,
-          subtotal: p.subtotal,
-          totalFinal: null,
-          propinaPorcentaje: null
-        });
-      }
-
-      const cuentas = Array.from(porCliente.values());
-
-      const idsMesa = Array.from(new Set(cuentas.map((c) => c.idMesa)));
-      const idsPagados = cuentas
-        .filter((c) => c.estado === 'pago_realizado')
-        .map((c) => c.idPedido);
-
-      const [respuestaMesas, respuestaTickets] = await Promise.all([
-        this._db.client.from('mesas').select('id, numero').in('id', idsMesa),
-        idsPagados.length > 0
-          ? this._db.client.from('ticket').select('id_pedido, total_final').in('id_pedido', idsPagados)
-          : Promise.resolve({ data: [], error: null }),
-      ]);
-
-      const numeroPorMesa = new Map<string, string>();
-      for (const m of respuestaMesas.data ?? []) {
-        numeroPorMesa.set(m.id, String(m.numero));
-      }
-
-      const totalPorPedido = new Map<string, number>();
-      for (const t of respuestaTickets.data ?? []) {
-        totalPorPedido.set(t.id_pedido, t.total_final);
-      }
-
-      for (const cuenta of cuentas) {
-        cuenta.numeroMesa = numeroPorMesa.get(cuenta.idMesa) ?? 'sin número';
-        cuenta.totalFinal = totalPorPedido.get(cuenta.idPedido) ?? null;
-      }
-
-      this.cuentas.set(cuentas);
-    } finally {
-      this.cargando.set(false);
+    if (error) throw new Error('No pudimos cargar las cuentas.');
+    if (!pedidos || pedidos.length === 0) {
+      this.cuentas.set([]);
+      return;
     }
+
+    const porCliente = new Map<string, CuentaDelMozo>();
+    for (const p of pedidos) {
+      const existente = porCliente.get(p.id_usuario);
+      if (existente) {
+        existente.subtotal += p.subtotal;
+        continue;
+      }
+      porCliente.set(p.id_usuario, {
+        idPedido: p.id_pedido,
+        idUsuario: p.id_usuario,
+        idMesa: p.id_mesa,
+        numeroMesa: 'sin número',
+        estado: p.estado_pedido,
+        subtotal: p.subtotal,
+        propina: null,
+        totalFinal: null,
+      });
+    }
+
+    const cuentas = Array.from(porCliente.values());
+    const idsMesa = Array.from(new Set(cuentas.map((c) => c.idMesa)));
+    const idsPagados = cuentas
+      .filter((c) => c.estado === 'pago_realizado' || c.estado === 'cuenta_entregada')
+      .map((c) => c.idPedido);
+
+    // Consultamos la tabla ticket para obtener la propina y el total final reales
+    const [respuestaMesas, respuestaTickets] = await Promise.all([
+      this._db.client.from('mesas').select('id, numero').in('id', idsMesa),
+      idsPagados.length > 0
+        ? this._db.client.from('ticket').select('id_pedido, propina, total_final').in('id_pedido', idsPagados)
+        : Promise.resolve({ data: [], error: null }),
+    ]);
+
+    const numeroPorMesa = new Map<string, string>();
+    for (const m of respuestaMesas.data ?? []) {
+      numeroPorMesa.set(m.id, String(m.numero));
+    }
+
+    const ticketPorPedido = new Map<string, { propina: number; totalFinal: number }>();
+    for (const t of respuestaTickets.data ?? []) {
+      ticketPorPedido.set(t.id_pedido, { propina: t.propina, totalFinal: t.total_final });
+    }
+
+    for (const cuenta of cuentas) {
+      cuenta.numeroMesa = numeroPorMesa.get(cuenta.idMesa) ?? 'sin número';
+      const ticketInfo = ticketPorPedido.get(cuenta.idPedido);
+      if (ticketInfo) {
+        cuenta.propina = ticketInfo.propina;
+        cuenta.totalFinal = ticketInfo.totalFinal;
+      }
+    }
+
+    this.cuentas.set(cuentas);
+  } finally {
+    this.cargando.set(false);
   }
+}
 
   // el mozo lleva la cuenta a la mesa
   async entregarCuenta(cuenta: CuentaDelMozo): Promise<void> {
