@@ -83,6 +83,16 @@ export class HomePage implements OnInit, OnDestroy {
       const idPedido = this.pedido.idUltimoPedido();
       untracked(() => void this.escucharPedido(idPedido));
     });
+    // cuando el mozo entrega la cuenta, el cliente va directo a verla
+    effect(() => {
+      if (this.estadoPedido() === 'cuenta_entregada') {
+        untracked(() => {
+          if (!this.router.url.startsWith('/cuenta')) {
+            void this.router.navigate(['/cuenta']);
+          }
+        });
+      }
+    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -150,9 +160,9 @@ export class HomePage implements OnInit, OnDestroy {
 
   // el mozo ya confirmó el pedido, en cualquier etapa posterior
   pedidoRecibido = computed(() =>
-    ['confirmado', 'en_preparacion', 'listo', 'entregado', 'recibido', 'cuenta_solicitada', 'cuenta_entregada']
-      .includes(this.estadoPedido() ?? '')
-  );
+  ['confirmado', 'en_preparacion', 'listo', 'entregado', 'recibido', 'cuenta_solicitada', 'cuenta_entregada', 'pago_realizado']
+    .includes(this.estadoPedido() ?? '')
+);
 
   // botones que ve cada perfil
   botones = computed(() => {
@@ -175,6 +185,7 @@ export class HomePage implements OnInit, OnDestroy {
       escaner: cliente,
       consultas: (cliente && enMesa) || perfil === EPerfilUsuario.Mozo,
       estadoPedido: cliente && this.pedido.idUltimoPedido() !== null,
+      verCuenta: cliente && (this.estadoPedido() === 'cuenta_entregada' || this.estadoPedido() === 'pago_realizado'),
     };
   });
 
@@ -506,8 +517,10 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   // solicitar cuenta
+  goToCuenta() {
+  this.router.navigate(['/cuenta']);
+}
 
-  
   solicitarCuenta(): void {
     void this.escanear();
   }

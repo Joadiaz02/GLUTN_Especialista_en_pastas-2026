@@ -2,6 +2,19 @@ import {  effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 import { Carrito } from '@app/pages/carrito/carrito';
 import { MesaCliente } from '../mesa-cliente/mesa-cliente';
+//punto 21
+  export interface CuentaCliente {
+    estado: 'cuenta_entregada' | 'pago_realizado';
+    idMesa: string;
+    idsPedidos: string[];
+    propinaPorcentaje: number;
+    lineas: {
+      nombre: string;
+      cantidad: number;
+      precioUnitario: number;
+      importe: number;
+    }[];
+  }
 
 @Injectable({
     providedIn: 'root'
@@ -239,6 +252,82 @@ async confirmarRecepcion(idPedido: string): Promise<void> {
 }
 
 //punto 21
+  async obtenerCuenta(idUsuario: string): Promise<CuentaCliente | null> {
+    const { data: pedidos, error } = await this.sup.client
+      .from('pedido')
+      .select('id_pedido, id_mesa, estado_pedido, propina')
+      .eq('id_usuario', idUsuario)
+      .in('estado_pedido', ['cuenta_entregada', 'pago_realizado'])
+      .order('fecha_emision_pedido', { ascending: true });
+
+    if (error) throw new Error('No pudimos cargar tu cuenta.');
+    if (!pedidos || pedidos.length === 0) return null;
+
+    const ids: string[] = [];
+    for (const p of pedidos) {
+      ids.push(p.id_pedido);
+    }
+
+    const { data: items, error: errorItems } = await this.sup.client
+      .from('pedido_item')
+      .select('cantidad, precio_unitario, subtotal, carta(nombre)')
+      .in('id_pedido', ids);
+
+    if (errorItems) throw new Error('No pudimos cargar tu cuenta.');
+
+    const lineas: CuentaCliente['lineas'] = [];
+    for (const item of items ?? []) {
+      const carta = item.carta as unknown as { nombre: string } | null;
+
+      lineas.push({
+        nombre: carta?.nombre ?? 'Producto',
+        cantidad: item.cantidad,
+        precioUnitario: item.precio_unitario,
+        importe: item.subtotal,
+      });
+    }
+
+    return {
+      estado: pedidos[0].estado_pedido as CuentaCliente['estado'],
+      idMesa: pedidos[0].id_mesa,
+      idsPedidos: ids,
+      propinaPorcentaje: pedidos[0].propina ?? 0,
+      lineas,
+    };
+  }
+
+  async pagarCuenta(datos: {
+    idMesa: string;
+    idsPedidos: string[];
+    propinaImporte: number;
+    totalFinal: number;
+  }): Promise<void> {
+    // el ticket va con el pedido más viejo; id_pedido es único, así que no se paga dos veces
+    const { error: errorTicket } = await this.sup.client.from('ticket').insert({
+      id_pedido: datos.idsPedidos[0],
+      propina: datos.propinaImporte,
+      total_final: datos.totalFinal,
+    });
+
+    if (errorTicket) throw new Error('No pudimos registrar el pago.');
+
+    const { data, error } = await this.sup.client
+      .from('pedido')
+      .update({ estado_pedido: 'pago_realizado' })
+      .in('id_pedido', datos.idsPedidos)
+      .eq('estado_pedido', 'cuenta_entregada')
+      .select('id_pedido');
+
+    if (error || !data || data.length === 0) {
+      // si el pedido no cambió, se deshace el ticket para poder reintentar
+      await this.sup.client.from('ticket').delete().eq('id_pedido', datos.idsPedidos[0]);
+      throw new Error('No pudimos registrar el pago.');
+    }
+
+    void this.sup.client.functions.invoke('notify-pago', {
+      body: { idMesa: datos.idMesa, evento: 'realizado' },
+    });
+  }
 
 
   async solicitarCuenta(idUsuario: string, porcentaje: number): Promise<void> {

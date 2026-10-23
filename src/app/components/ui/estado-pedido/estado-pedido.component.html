@@ -22,6 +22,12 @@
     </ion-button>
   }
 
+  @if (estado() === 'cuenta_entregada') {
+    <ion-button shape="round" expand="block" (click)="verCuenta()">
+      Ver mi cuenta
+    </ion-button>
+  }
+
   <ion-button shape="round" expand="block" (click)="volver()">
     Volver
   </ion-button>
