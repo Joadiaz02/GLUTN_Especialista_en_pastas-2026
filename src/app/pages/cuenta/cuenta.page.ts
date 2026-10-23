@@ -40,11 +40,13 @@ export class CuentaPage implements OnDestroy {
   pagando = signal(false);
 
   // el mozo ya confirmó el pago
+  propinaPorcentaje = signal<number>(10);
+
   pagoConfirmado = signal(false);
 
   lineas = computed(() => this.cuenta()?.lineas ?? []);
 
-  propina = computed(() => this.cuenta()?.propinaPorcentaje ?? 0);
+  propina = computed(() => this.propinaPorcentaje() ?? 0);
 
   subtotal = computed(() => {
     let total = 0;

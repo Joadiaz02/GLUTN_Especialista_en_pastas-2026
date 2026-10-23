@@ -67,10 +67,10 @@
               <span>{{ cuenta.subtotal | currency:'ARS':'$':'1.0-0' }}</span>
             </div>
 
-            @if (cuenta.propinaPorcentaje !== null) {
+            @if (cuenta.propina !== null) {
               <div class="pago__fila">
                 <span>Propina</span>
-                <span>{{ cuenta.propinaPorcentaje }}%</span>
+                <span>{{ cuenta.propina }}%</span>
               </div>
             }
 
