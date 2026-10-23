@@ -55,7 +55,7 @@ export class CuentasMozo {
     try {
       const { data: pedidos, error } = await this._db.client
         .from('pedido')
-        .select('id_pedido, id_mesa, id_usuario, subtotal, propina_porcentaje, estado_pedido')
+        .select('id_pedido, id_mesa, id_usuario, subtotal, estado_pedido')
         .in('estado_pedido', ['cuenta_solicitada', 'cuenta_entregada', 'pago_realizado'])
         .order('fecha_emision_pedido', { ascending: true });
 
@@ -86,8 +86,8 @@ export class CuentasMozo {
           numeroMesa: 'sin número',
           estado: p.estado_pedido,
           subtotal: p.subtotal,
-          propinaPorcentaje: p.propina_porcentaje,
           totalFinal: null,
+          propinaPorcentaje: null
         });
       }
 

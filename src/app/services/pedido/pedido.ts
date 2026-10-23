@@ -255,7 +255,7 @@ async confirmarRecepcion(idPedido: string): Promise<void> {
   async obtenerCuenta(idUsuario: string): Promise<CuentaCliente | null> {
     const { data: pedidos, error } = await this.sup.client
       .from('pedido')
-      .select('id_pedido, id_mesa, estado_pedido, propina_porcentaje')
+      .select('id_pedido, id_mesa, estado_pedido, propina')
       .eq('id_usuario', idUsuario)
       .in('estado_pedido', ['cuenta_entregada', 'pago_realizado'])
       .order('fecha_emision_pedido', { ascending: true });
@@ -291,7 +291,7 @@ async confirmarRecepcion(idPedido: string): Promise<void> {
       estado: pedidos[0].estado_pedido as CuentaCliente['estado'],
       idMesa: pedidos[0].id_mesa,
       idsPedidos: ids,
-      propinaPorcentaje: pedidos[0].propina_porcentaje ?? 0,
+      propinaPorcentaje: pedidos[0].propina ?? 0,
       lineas,
     };
   }
