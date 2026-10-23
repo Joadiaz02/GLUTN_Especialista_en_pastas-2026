@@ -12,15 +12,20 @@
 
     <h1 class="titulo-pagina">Tu cuenta</h1>
 
-    @if (cargando()) {
+    @if (pagoConfirmado()) {
+      <section class="cuenta-ticket">
+        <h2 class="cuenta-ticket__titulo">¡Pago confirmado!</h2>
+        <p class="cuenta-gracias">Gracias por tu visita. ¡Esperamos verte pronto!</p>
+
+        <ion-button expand="block" shape="round" (click)="irAlInicio()">
+          Volver al inicio
+        </ion-button>
+      </section>
+    } @else if (cargando() && !cuenta()) {
       <div class="cuenta-vacio">
         <app-spinner-logo />
       </div>
-    } @else if (lineas().length === 0) {
-      <div class="cuenta-vacio">
-        <p>No tenés pedidos para pagar.</p>
-      </div>
-    } @else {
+    } @else if (cuenta(); as c) {
       <section class="cuenta-ticket">
         <h2 class="cuenta-ticket__titulo">Detalle de tu pedido</h2>
 
@@ -53,25 +58,34 @@
             </div>
           }
 
-          @if (propina() !== null) {
-            <div class="cuenta-fila">
-              <span>Propina: {{ nivelPropina() }} ({{ propina() }}%)</span>
-              <span>{{ propinaImporte() | currency:'ARS':'$':'1.0-0' }}</span>
-            </div>
-          }
+          <div class="cuenta-fila">
+            <span>Propina: {{ nivelPropina() }} ({{ propina() }}%)</span>
+            <span>{{ propinaImporte() | currency:'ARS':'$':'1.0-0' }}</span>
+          </div>
         </div>
 
-        @if (propina() !== null) {
-          <div class="cuenta-total">
-            <span class="cuenta-total__etiqueta">Total a pagar</span>
-            <span class="cuenta-total__importe">
-              {{ total() | currency:'ARS':'$':'1.0-0' }}
-            </span>
-          </div>
+        <div class="cuenta-total">
+          <span class="cuenta-total__etiqueta">Total a pagar</span>
+          <span class="cuenta-total__importe">{{ total() | currency:'ARS':'$':'1.0-0' }}</span>
+        </div>
+
+        @if (c.estado === 'cuenta_entregada') {
+          <ion-button
+            expand="block"
+            shape="round"
+            [disabled]="pagando()"
+            (click)="pagar()"
+          >
+            Pagar {{ total() | currency:'ARS':'$':'1.0-0' }}
+          </ion-button>
         } @else {
-          <p class="cuenta-aviso">Escaneá el QR de propina para generar tu cuenta.</p>
+          <p class="cuenta-aviso">Pago enviado. Esperando la confirmación del mozo.</p>
         }
       </section>
+    } @else {
+      <div class="cuenta-vacio">
+        <p>No tenés pedidos para pagar.</p>
+      </div>
     }
   </div>
 </ion-content>

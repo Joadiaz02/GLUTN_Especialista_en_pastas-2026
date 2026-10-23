@@ -364,4 +364,16 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/cuenta/cuenta.page').then((m) => m.CuentaPage),
   },
+  {
+    path: 'pagos',
+    loadComponent: () =>
+      import('./pages/pagos/pagos.page').then((m) => m.PagosPage),
+  },
+  {
+    path: 'admin/payments',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
+    loadComponent: () =>
+      import('./pages/pagos/pagos.page').then((m) => m.PagosPage),
+  },
 ];
