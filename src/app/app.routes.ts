@@ -33,7 +33,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/encuestas/encuestas.page').then((m) => m.EncuestasPage),
   },
-
+  {
+  path: 'encuestas/grafico/:tipo',
+  loadComponent: () =>
+    import('./pages/encuestas/encuestas.page')
+      .then(m => m.EncuestasPage),
+},
   {
     path: 'acceso_rapido',
 

@@ -1,12 +1,17 @@
-
 import {
+  AfterViewChecked,
+  AfterViewInit,
   Component,
+  ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
+  ViewChild,
   computed,
   inject,
   signal,
 } from '@angular/core';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonButton,
@@ -18,7 +23,7 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-
+import { HeaderComponent } from '@app/components/ui/header/header.component';
 import {
   EncuestasService,
   EstadoEncuesta,
@@ -37,22 +42,41 @@ import {
     IonTitle,
     IonToolbar,
     IonSpinner,
+    HeaderComponent,
+    SpinnerLogoComponent
   ],
   templateUrl: './encuestas.page.html',
   styleUrl: './encuestas.page.scss',
 })
-export class EncuestasPage implements OnInit, OnDestroy {
+export class EncuestasPage implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
   private readonly encuestasService = inject(EncuestasService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly toastController = inject(ToastController);
+  private readonly urlPrevia = (
+  this.router.getCurrentNavigation()?.previousNavigation?.finalUrl?.toString() ?? ''
+).split(/[?#]/)[0];
+  @ViewChild(IonContent) private content?: IonContent;
 
   private routeSubscription?: Subscription;
 
   cargando = signal(true);
   enviando = signal(false);
   error = signal('');
+  // antes: rutaVolver = signal('/home');
+  private origenMenu = signal<'/home' | '/waiting-room'>('/home');
 
+  rutaVolver = computed(() =>
+    this.esPantallaGrafico() ? '/encuestas' : this.origenMenu(),
+  );
+  modoEncuesta = computed(
+  () =>
+    !this.cargando() &&
+    !this.esPantallaGrafico() &&
+    !this.estado().respondida &&
+    this.estado().puede_responder &&
+    this.tienePreguntas(),
+);
   titulo = signal('Tu experiencia en GLUTN');
   descripcion = signal(
     'Tu opinión nos ayuda a mejorar la atención, los platos y el servicio.',
@@ -74,16 +98,160 @@ export class EncuestasPage implements OnInit, OnDestroy {
 
   esPantallaGrafico = computed(() => this.tipoGrafico().length > 0);
   tienePreguntas = computed(() => this.preguntas().length > 0);
+  pasoActual = signal(0);
 
-  ngOnInit(): void {
-    this.routeSubscription = this.route.paramMap.subscribe((params) => {
-      this.tipoGrafico.set(params.get('tipo') ?? '');
-      void this.cargar();
-    });
+  @ViewChild('scroller') private scroller?: ElementRef<HTMLElement>;
+@ViewChild('finDesplazamiento') private finDesplazamiento?: ElementRef<HTMLElement>;
+
+private resizeObserver?: ResizeObserver;
+private ajusteFrame = 0;
+
+ngAfterViewInit(): void {
+  const el = this.scroller?.nativeElement;
+  if (el && typeof ResizeObserver !== 'undefined') {
+    this.resizeObserver = new ResizeObserver(() => this.programarAjuste());
+    this.resizeObserver.observe(el);
+  }
+  void document.fonts?.ready.then(() => this.programarAjuste());
+}
+
+ngAfterViewChecked(): void {
+  // Los bloques cambian al responder, al avanzar de paso o al aparecer errores.
+  this.programarAjuste();
+}
+
+ngOnDestroy(): void {
+  this.routeSubscription?.unsubscribe();
+  this.resizeObserver?.disconnect();
+  cancelAnimationFrame(this.ajusteFrame);
+}
+
+@HostListener('window:resize')
+@HostListener('window:orientationchange')
+onResize(): void {
+  this.programarAjuste();
+}
+
+
+  preguntaActual = computed(
+    () => this.preguntas()[this.pasoActual()] ?? null,
+  );
+
+  esUltimoPaso = computed(
+    () => this.pasoActual() === this.preguntas().length - 1,
+  );
+
+
+  private programarAjuste(): void {
+  cancelAnimationFrame(this.ajusteFrame);
+  this.ajusteFrame = requestAnimationFrame(() => this.ajustarFinal());
+}
+
+private resolverOrigen(): '/home' | '/waiting-room' {
+  const esValido = (v: unknown): v is '/home' | '/waiting-room' =>
+    v === '/home' || v === '/waiting-room';
+
+  // 1. Si quien navega manda el origen, se respeta.
+  const deState = history.state?.origenEncuestas;
+  if (esValido(deState)) return deState;
+
+  // 2. Si no, se usa la página de la que venimos.
+  if (this.urlPrevia.startsWith('/waiting-room')) return '/waiting-room';
+  if (this.urlPrevia === '/home') return '/home';
+
+  // 3. Si venimos de un gráfico (o se recargó la página), se usa lo guardado.
+  if (this.urlPrevia === '' || this.urlPrevia.startsWith('/encuestas')) {
+    try {
+      const guardado = sessionStorage.getItem('origenEncuestas');
+      if (esValido(guardado)) return guardado;
+    } catch {}
   }
 
-  ngOnDestroy(): void {
-    this.routeSubscription?.unsubscribe();
+  return '/home';
+}
+
+/**
+ * Hace que el último bloque pueda alinearse arriba de todo.
+ * El espaciador final ocupa lo que sobra del área visible, así el scroll
+ * máximo cae justo al inicio del último bloque: ni arriba ni abajo queda
+ * un bloque cortado.
+ */
+private ajustarFinal(): void {
+  const scroller = this.scroller?.nativeElement;
+  if (!scroller) return;
+
+  scroller.style.setProperty('--alto-visible', `${scroller.clientHeight}px`);
+}
+
+
+private bloquesDeScroll(): HTMLElement[] {
+  const scroller = this.scroller?.nativeElement;
+  const fin = this.finDesplazamiento?.nativeElement;
+  if (!scroller) return [];
+
+  return (Array.from(scroller.children) as HTMLElement[]).filter(
+    (el) => el !== fin,
+  );
+}
+
+
+  avanzar(): void {
+    const pregunta = this.preguntaActual();
+    if (!pregunta) return;
+
+    const valor = this.respuestas()[pregunta.id];
+
+    const vacia =
+      valor === undefined ||
+      valor === null ||
+      (typeof valor === 'string' && !valor.trim()) ||
+      (Array.isArray(valor) && valor.length === 0);
+
+    if (pregunta.obligatoria && vacia) {
+      this.error.set(`Completá la pregunta: ${pregunta.texto}`);
+      return;
+    }
+
+    this.error.set('');
+
+    if (!this.esUltimoPaso()) {
+      this.pasoActual.update((paso) => paso + 1);
+      void this.desplazarArriba();
+    }
+  }
+
+  retroceder(): void {
+    this.error.set('');
+    this.pasoActual.update((paso) => Math.max(0, paso - 1));
+    void this.desplazarArriba();
+  }
+
+  colorOpcion(indice: number): string {
+    const colores = [
+      '#3639fc',
+      '#657a4d',
+      '#7ad467',
+      '#8b79a8',
+      '#6b9bb8',
+      '#b94f2d',
+    ];
+
+    return colores[indice % colores.length];
+  }
+
+  ngOnInit(): void {
+    const origen = this.resolverOrigen();
+    this.origenMenu.set(origen);
+
+    try {
+      sessionStorage.setItem('origenEncuestas', origen);
+    } catch {}
+
+    this.routeSubscription = this.route.paramMap.subscribe((params) => {
+      this.tipoGrafico.set(params.get('tipo') ?? '');
+      void this.desplazarArriba();
+      void this.cargar();
+    });
   }
 
   async cargar(): Promise<void> {
@@ -97,8 +265,8 @@ export class EncuestasPage implements OnInit, OnDestroy {
         this.encuestasService.obtenerEncuestaActiva(),
       ]);
 
-      // La RPC temporal se agrega mediante una migración opcional. Si todavía
-      // no está aplicada, el resto de la encuesta sigue funcionando.
+      // La RPC temporal es opcional. Si todavía no está aplicada,
+      // el resto de la encuesta sigue funcionando.
       try {
         this.resultadosTemporales.set(
           await this.encuestasService.obtenerResultadosTemporales(),
@@ -122,8 +290,9 @@ export class EncuestasPage implements OnInit, OnDestroy {
       this.titulo.set(encuesta.titulo);
       this.descripcion.set(encuesta.descripcion ?? '');
 
-      const preguntas =
-        await this.encuestasService.obtenerPreguntas(encuesta.id);
+      const preguntas = await this.encuestasService.obtenerPreguntas(
+        encuesta.id,
+      );
 
       this.preguntas.set(preguntas);
     } catch (error: unknown) {
@@ -134,6 +303,8 @@ export class EncuestasPage implements OnInit, OnDestroy {
       );
     } finally {
       this.cargando.set(false);
+      await Promise.resolve();
+      await this.desplazarArriba();
     }
   }
 
@@ -260,34 +431,25 @@ export class EncuestasPage implements OnInit, OnDestroy {
     ];
   }
 
-  gradienteTorta(resultado: ResultadoEncuesta): string {
-    const colores = [
-      '#e76f45',
-      '#d9a441',
-      '#657a4d',
-      '#8b79a8',
-      '#d9e0ca',
-      '#6b9bb8',
-    ];
+gradienteTorta(resultado: ResultadoEncuesta): string {
+  const opciones = this.opcionesGrafico(resultado);
+  const total = this.cantidadTotal(resultado);
 
-    const opciones = this.opcionesGrafico(resultado);
-    const total = this.cantidadTotal(resultado);
+  if (!total) return '#d9e0ca';
 
-    if (!total) return '#d9e0ca';
+  let acumulado = 0;
 
-    let acumulado = 0;
+  const segmentos = opciones.map((opcion, indice) => {
+    const inicio = acumulado;
 
-    const segmentos = opciones.map((opcion, indice) => {
-      const inicio = acumulado;
+    acumulado +=
+      (Number(resultado.conteos?.[opcion] ?? 0) / total) * 100;
 
-      acumulado +=
-        (Number(resultado.conteos?.[opcion] ?? 0) / total) * 100;
+    return `${this.colorOpcion(indice)} ${inicio}% ${acumulado}%`;
+  });
 
-      return `${colores[indice % colores.length]} ${inicio}% ${acumulado}%`;
-    });
-
-    return `conic-gradient(${segmentos.join(', ')})`;
-  }
+  return `conic-gradient(${segmentos.join(', ')})`;
+}
 
   puntosLinea(resultado: ResultadoEncuesta): string {
     const serie = this.resultadosTemporales()
@@ -315,21 +477,45 @@ export class EncuestasPage implements OnInit, OnDestroy {
     );
   }
 
-  irAGrafico(tipo: 'torta' | 'barras' | 'lineal'): void {
-    void this.router.navigate(['/encuestas/grafico', tipo]);
+  etiquetaOpcion(opcion: string): string {
+    const etiquetas: Record<string, string> = {
+      '1': 'Muy mala',
+      '2': 'Mala',
+      '3': 'Regular',
+      '4': 'Buena',
+      '5': 'Muy buena',
+    };
+
+    return etiquetas[opcion] ?? opcion;
   }
+
+irAGrafico(tipo: 'torta' | 'barras' | 'columnas'): void {
+  void this.router.navigate(['/encuestas/grafico', tipo], {
+    state: { origenEncuestas: this.origenMenu() },
+  });
+}
 
   volver(): void {
-    void this.router.navigate(['/waiting-room']);
+    void this.router.navigate([this.rutaVolver()]);
   }
 
-  volverAEncuestas(): void {
-    void this.router.navigate(['/encuestas']);
-  }
+volverAEncuestas(): void {
+  void this.router.navigate(['/encuestas'], {
+    state: { origenEncuestas: this.origenMenu() },
+  });
+}
 
   trackPregunta(_: number, pregunta: PreguntaEncuesta): string {
     return pregunta.id;
   }
+
+private async desplazarArriba(): Promise<void> {
+  await Promise.resolve();
+  const scroller = this.scroller?.nativeElement;
+  if (scroller) scroller.scrollTop = 0;
+  this.programarAjuste();
+}
+
 
   private async mostrarMensaje(
     mensaje: string,

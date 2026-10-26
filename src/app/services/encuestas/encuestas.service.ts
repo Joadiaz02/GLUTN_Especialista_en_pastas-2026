@@ -60,23 +60,51 @@ export class EncuestasService {
     return data as EstadoEncuesta;
   }
 
-  async obtenerEncuestaActiva(): Promise<Encuesta | null> {
-    const { data, error } = await this.sup.client.rpc(
-      'obtener_encuesta_activa',
+
+
+async obtenerEncuestaActiva(): Promise<Encuesta | null> {
+  const { data, error } = await this.sup.client
+    .from('encuestas')
+    .select(`
+      id,
+      titulo,
+      descripcion,
+      encuesta_preguntas (
+        id,
+        encuesta_id,
+        texto,
+        tipo,
+        opciones,
+        obligatoria,
+        orden
+      )
+    `)
+    .eq('activa', true)
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(
+      `No se pudo cargar la encuesta: ${error.message}`,
     );
-
-    if (error) {
-      throw new Error(
-        `No se pudo cargar la encuesta: ${error.message}`,
-      );
-    }
-
-    if (!data || !data.id) {
-      return null;
-    }
-
-    return data as Encuesta;
   }
+
+  if (!data) return null;
+
+  const fila = data as any;
+
+  return {
+    id: fila.id,
+    titulo: fila.titulo,
+    descripcion: fila.descripcion ?? null,
+    preguntas: (fila.encuesta_preguntas ?? []).sort(
+      (a: PreguntaEncuesta, b: PreguntaEncuesta) =>
+        a.orden - b.orden,
+    ),
+  };
+}
+
+
 
   async obtenerPreguntas(
     encuestaId?: string,
