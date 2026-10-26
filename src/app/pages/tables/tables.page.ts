@@ -20,6 +20,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TableQrModalComponent } from './components/table-qr-modal/table-qr-modal.component';
 import { HeaderComponent } from '@app/components/ui';
 import { TableActionSheetComponent } from './components/table-action-sheet/table-action-sheet.component';
+import { ClientsNavigationComponent } from '../clients/components/clients-navigation/clients-navigation.component';
 
 @Component({
   selector: 'app-tables',
@@ -38,8 +39,9 @@ import { TableActionSheetComponent } from './components/table-action-sheet/table
     SpinnerLogoComponent,
     IonIcon,
     IonToggle,
-    HeaderComponent
-],
+    HeaderComponent,
+    ClientsNavigationComponent,
+  ],
 })
 export class TablesPage {
   private _router = inject(Router);
@@ -48,6 +50,12 @@ export class TablesPage {
   private _confirm = inject(Confirm);
   private _vibracion = inject(Vibracion);
   private _modalController = inject(ModalController);
+
+  private touchStartX = 0;
+  private touchEndX = 0;
+
+  indiceActual = signal(0);
+  procesandoCliente = signal(false);
 
   readonly tipoLabel: any = {
     vip: 'VIP',
@@ -61,6 +69,16 @@ export class TablesPage {
   });
 
   isLoading = computed(() => this.tables() === null);
+
+  get totalMesas(): number {
+    const tables = this.tables();
+
+    return tables !== null ? tables.length : 0;
+  }
+
+  get posicionVisible(): number {
+    return this.totalMesas === 0 ? 0 : this.indiceActual() + 1;
+  }
 
   volver(): void {
     void this._router.navigate(['/admin']);
@@ -86,6 +104,118 @@ export class TablesPage {
     });
 
     await modal.present();
+  }
+
+  obtenerPosicionCarta(indice: number): number {
+    const total = this.totalMesas;
+
+    if (total === 0) {
+      return 0;
+    }
+
+    let posicion = indice - this.indiceActual();
+
+    if (posicion > total / 2) {
+      posicion -= total;
+    }
+
+    if (posicion < -total / 2) {
+      posicion += total;
+    }
+
+    return posicion;
+  }
+
+  obtenerClaseCarta(
+    indice: number
+  ): 'activa' | 'anterior' | 'siguiente' | 'oculta' {
+    const posicion = this.obtenerPosicionCarta(indice);
+
+    if (posicion === 0) {
+      return 'activa';
+    }
+
+    if (posicion === -1) {
+      return 'anterior';
+    }
+
+    if (posicion === 1) {
+      return 'siguiente';
+    }
+
+    return 'oculta';
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    if (this.procesandoCliente()) return;
+
+    this.touchStartX = event.changedTouches[0]?.screenX ?? 0;
+
+    this.touchEndX = this.touchStartX;
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    if (this.procesandoCliente()) return;
+
+    this.touchEndX = event.changedTouches[0]?.screenX ?? this.touchEndX;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    if (this.procesandoCliente()) return;
+
+    this.touchEndX = event.changedTouches[0]?.screenX ?? this.touchEndX;
+
+    this.procesarSwipe();
+  }
+
+  private procesarSwipe(): void {
+    const distancia = this.touchEndX - this.touchStartX;
+
+    if (Math.abs(distancia) < 50) {
+      return;
+    }
+
+    if (distancia > 0) {
+      this.irAnterior();
+    } else {
+      this.irSiguiente();
+    }
+  }
+
+  irAnterior(): void {
+    if (this.procesandoCliente()) return;
+
+    const total = this.totalMesas;
+
+    if (total <= 1) return;
+
+    const nuevoIndice = this.indiceActual() - 1;
+
+    if (nuevoIndice < 0) {
+      this.indiceActual.set(total - 1);
+      
+      return;
+    }
+
+    this.indiceActual.set(nuevoIndice);
+  }
+
+  irSiguiente(): void {
+    if (this.procesandoCliente()) return;
+
+    const total = this.totalMesas;
+
+    if (total <= 1) return;
+
+    const nuevoIndice = this.indiceActual() + 1;
+
+    if (nuevoIndice >= total) {
+      this.indiceActual.set(0);
+      
+      return;
+    }
+
+    this.indiceActual.set(nuevoIndice);
   }
 
   async onToggle(table: any, event: CustomEvent): Promise<void> {

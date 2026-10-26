@@ -96,8 +96,10 @@ export class WaitlistPage {
     }
 
     try {
-      await this._waitlistService.remove(
-        entry.id
+      console.log(entry)
+
+      await this._waitlistService.removeUserFromWaitlist(
+        entry.usuario_id
       );
 
       this.users.update((users) =>
