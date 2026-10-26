@@ -40,6 +40,7 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Administración de mesas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-mesas)
   - 🔗 [Gestión de pedidos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos)
   - 🔗 [Gestión de pedidos de cocina](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-cocina)
+  - 🔗 [Gestión de pedidos de bar](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-bar)
   - 🔗 [Modales del menú principal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#modales-del-menú-principal)
   - 🔗 [Carta](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#carta)
   - 🔗 [Platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#platos)
@@ -540,15 +541,15 @@ QR correspondiente a la Mesa 5.
 ## Registro de clientes
 
 <p align="center">
-  <img src="images/Registro_cliente_uno.jpg" alt="Registro cliente - Paso 1" width="250">
+  <img src="images/Registro-cliente-uno.jpg" alt="Registro cliente - Paso 1" width="250">
 </p>
 
 <p align="center">
-  <img src="images/Registro_cliente_dos.jpg" alt="Registro cliente - Paso 2" width="250">
+  <img src="images/Registro-cliente-dos.jpg" alt="Registro cliente - Paso 2" width="250">
 </p>
 
 <p align="center">
-  <img src="images/Registro_cliente_tres.jpg" alt="Registro cliente - Paso 3" width="250">
+  <img src="images/Registro-cliente-tres.jpg" alt="Registro cliente - Paso 3" width="250">
 </p>
 
 ---
@@ -667,7 +668,12 @@ QR correspondiente a la Mesa 5.
 <p align="center">
   <img src="images/gestion-pedidos-cocina.jpg" alt="Gestión de pedidos de cocina" width="250">
 </p>
+---
+## Gestión de pedidos de bar
 
+<p align="center">
+  <img src="images/gestion-pedidos-bar.jpg" alt="Gestión de pedidos de bar" width="250">
+</p>
 ---
 ## Menú principal
 
