@@ -319,3 +319,10 @@
   </div>
   }
 </ion-footer>
+
+@if (loading()) {
+<div class="quick-loading">
+  <app-spinner-logo />
+  <span>Cargando...</span>
+</div>
+}

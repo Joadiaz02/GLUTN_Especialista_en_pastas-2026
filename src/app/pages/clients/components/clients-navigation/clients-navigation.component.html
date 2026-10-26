@@ -1,53 +1,41 @@
 <section class="navigation-section">
-
+  @if (showButtons) {
   <button
     type="button"
     class="navigation-button"
-    [disabled]="
-      totalClientes <= 1 ||
-      deshabilitada
-    "
+    [disabled]="totalClientes <= 1 || deshabilitada"
     (click)="irAnterior()"
     [attr.aria-label]="etiquetaAnterior"
   >
     <span class="nav-chevron nav-left"></span>
   </button>
-
+  }
 
   <div class="counter">
-
     <span class="counter-current">
       {{ posicionActual }}
     </span>
 
-    <span class="counter-separator">
-      de
-    </span>
+    <span class="counter-separator"> de </span>
 
     <span class="counter-total">
       {{ totalClientes }}
     </span>
-
   </div>
 
-
+  @if (showButtons) {
   <button
     type="button"
     class="navigation-button"
-    [disabled]="
-      totalClientes <= 1 ||
-      deshabilitada
-    "
+    [disabled]="totalClientes <= 1 || deshabilitada"
     (click)="irSiguiente()"
     [attr.aria-label]="etiquetaSiguiente"
   >
     <span class="nav-chevron nav-right"></span>
   </button>
-
+  }
 </section>
 
 @if (mostrarAyuda) {
-<p class="swipe-hint">
-  Deslizá para cambiar de cliente
-</p>
+<p class="swipe-hint">Deslizá para cambiar de cliente</p>
 }

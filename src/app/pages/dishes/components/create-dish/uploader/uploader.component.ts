@@ -3,6 +3,7 @@ import { IonIcon, ModalController, ToastController } from '@ionic/angular';
 import { UploadOptionsComponent } from '@app/components/ui/uploader/upload-options/upload-options.component';
 import { Camera, MediaResult } from '@capacitor/camera';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { Vibracion } from '@app/services/vibracion/vibracion';
 @Component({
   selector: 'app-uploader',
   templateUrl: './uploader.component.html',
@@ -20,6 +21,7 @@ export class UploaderComponent {
 
   private _toastController = inject(ToastController);
   private _modalController = inject(ModalController);
+  private _vibracion = inject(Vibracion);
 
   async open() {
     const modal = await this._modalController.create({
@@ -48,7 +50,7 @@ export class UploaderComponent {
 
       await this.processPhoto(photo);
     } catch (err) {
-      this.showErrorToast();
+      await this.avisarError(err);
     }
   }
 
@@ -65,7 +67,7 @@ export class UploaderComponent {
         await this.processPhoto(media);
       }
     } catch (err) {
-      this.showErrorToast();
+      await this.avisarError(err);
     } finally {
       this.uploading.set(false);
     }
@@ -97,12 +99,21 @@ export class UploaderComponent {
     }
   }
 
-  private async showErrorToast() {
+  // si el usuario cerró la cámara o la galería no es un error
+  private async avisarError(err: unknown) {
+    const mensaje = err instanceof Error ? err.message : String(err ?? '');
+
+    if (/cancel/i.test(mensaje)) {
+      return;
+    }
+
+    await this._vibracion.error();
+
     const toast = await this._toastController.create({
-      message:
-        'Ocurrió un problema al guardar tu información. Intentá nuevamente.',
+      message: 'No pudimos cargar la foto. Intentá nuevamente.',
       duration: 5000,
       position: 'top',
+      color: 'danger',
     });
 
     await toast.present();

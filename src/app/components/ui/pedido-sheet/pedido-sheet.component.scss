@@ -87,8 +87,10 @@
 
   flex-direction: column;
 
+  // background:
+  //   #f8f6f2;
   background:
-    #f8f6f2;
+    #3a2417;
 
   border-radius:
     26px
@@ -185,6 +187,7 @@
 
   border-radius: 10px;
 
+  // background: #3a2417;
   background: #c8c5be;
 }
 
@@ -211,7 +214,8 @@
 .pedido-header h2 {
   margin: 0;
 
-  color: #302a25;
+  color: #ffc983;
+  // color: #302a25;
 
   font-size: 24px;
 
@@ -229,7 +233,8 @@
 
   border-radius: 50%;
 
-  background: #ece9e3;
+  background: #ffc983;
+  // background: #ece9e3;
 
   display: flex;
 
@@ -310,9 +315,10 @@
     0
     4px;
 
-  color: #302a25;
+  // color: #302a25;
+  color: #ffc983;
 
-  font-size: 15px;
+  font-size: 18px;
 
   line-height: 1.2;
 
@@ -324,7 +330,7 @@
 
   color: #e76f45;
 
-  font-size: 15px;
+  font-size: 18px;
 }
 
 
@@ -357,9 +363,9 @@
 
   border-radius: 50%;
 
-  background: #e7e4de;
+  background: #e76f45;
 
-  color: #423b35;
+  color: #ffc983;
 
   display: flex;
 
@@ -401,11 +407,11 @@
 
   text-align: center;
 
-  font-size: 15px;
+  font-size: 18px;
 
   font-weight: 800;
 
-  color: #3c352f;
+  color: #ffc983;
 }
 
 
@@ -441,7 +447,7 @@
       )
     );
 
-  background: #f8f6f2;
+  background: #3a2417;
 
   border-top:
     1px solid
@@ -469,7 +475,7 @@
 }
 
 .pedido-total span {
-  color: #302a25;
+  color: #FFF;
 
   font-size: 20px;
 
@@ -498,7 +504,7 @@
 
   margin-bottom: 14px;
 
-  color: #526c3e;
+  color: #ffc983;
 }
 
 .pedido-tiempo > img {
@@ -514,9 +520,9 @@
 .pedido-tiempo span {
   display: block;
 
-  color: #777067;
+  color: #ffc983;
 
-  font-size: 12px;
+  font-size: 18px;
 }
 
 .pedido-tiempo strong {
@@ -524,9 +530,9 @@
 
   margin-top: 2px;
 
-  color: #526c3e;
+  color: #ffc983;
 
-  font-size: 17px;
+  font-size: 18px;
 }
 
 

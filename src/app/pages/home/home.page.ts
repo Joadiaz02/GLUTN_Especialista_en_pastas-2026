@@ -118,6 +118,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   // estados
 
+  loading = signal(false)
+
   // sesión iniciada
   isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
 
@@ -348,12 +350,22 @@ export class HomePage implements OnInit, OnDestroy {
 
       const valor = barcodes[0].rawValue ?? '';
 
+      // if ('ingreso-local' === 'ingreso-local') {
       if (valor === 'ingreso-local') {
+        this.loading.set(true);
+
         await this.procesarCodigo({ tipo: 'ingreso-local' });
+
+        this.loading.set(false);
         return;
       }
 
       // el cliente con mesa asignada también puede escanearla desde acá
+      // if (parseTableQr('ingreso-local')) {
+      //   await this.vincularMesa('ingreso-local');
+      //   return;
+      // }
+
       if (parseTableQr(valor)) {
         await this.vincularMesa(valor);
         return;

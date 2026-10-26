@@ -16,136 +16,148 @@
 
 <ion-content [fullscreen]="true" class="create-dish-content">
   <div class="create-dish-wrapper">
-  <div class="upload-container">
-    <app-uploader (fileSelected)="onPhotoSelected(0, $event)" />
-    <app-uploader (fileSelected)="onPhotoSelected(1, $event)" />
-    <app-uploader (fileSelected)="onPhotoSelected(2, $event)" />
-  </div>
-
-  <form [formGroup]="form" class="fields" appVibrarErrores>
-    <div class="field">
-      <label class="field__label">Nombre</label>
-
-      <ion-input
-        fill="outline"
-        class="field__input"
-        placeholder="Nombre"
-        maxlength="60"
-        formControlName="title"
-      />
-
-      @if ( getFormControl('title')?.invalid &&
-      (getFormControl('title')?.touched || getFormControl('title')?.dirty ) ) {
-      @if ( getFormControl('title')?.hasError('required') ||
-      getFormControl('title')?.hasError('soloEspacios') ) {
-      <p class="field__error">El campo es obligatorio.</p>
-      } @else if ( getFormControl('title')?.hasError('largoMinimo') ) {
-      <p class="field__error">El nombre tiene que tener al menos 3 letras.</p>
-      } @else if ( getFormControl('title')?.hasError('largoMaximo') ) {
-      <p class="field__error">El nombre no puede superar los 60 caracteres.</p>
-      } }
+    <div class="upload-container">
+      <app-uploader (fileSelected)="onPhotoSelected(0, $event)" />
+      <app-uploader (fileSelected)="onPhotoSelected(1, $event)" />
+      <app-uploader (fileSelected)="onPhotoSelected(2, $event)" />
     </div>
 
-    <div class="field">
-      <label class="field__label">Descripción</label>
-
-      <ion-input
-        fill="outline"
-        class="field__input"
-        placeholder="Descripción"
-        maxlength="250"
-        formControlName="description"
-      />
-
-      @if ( getFormControl('description')?.invalid &&
-      (getFormControl('description')?.touched ||
-      getFormControl('description')?.dirty ) ) { @if (
-      getFormControl('description')?.hasError('required') ||
-      getFormControl('description')?.hasError('soloEspacios') ) {
-      <p class="field__error">El campo es obligatorio.</p>
-      } @else if ( getFormControl('description')?.hasError('largoMinimo') ) {
-      <p class="field__error">La descripción tiene que tener al menos 10 caracteres.</p>
-      } @else if ( getFormControl('description')?.hasError('largoMaximo') ) {
-      <p class="field__error">La descripción no puede superar los 250 caracteres.</p>
-      } }
-    </div>
-
-    <div class="fields__row">
+    <form [formGroup]="form" class="fields" appVibrarErrores>
       <div class="field">
-        <label class="field__label" type="text"
-          >Elaboración</label>
+        <label class="field__label">Nombre</label>
 
         <ion-input
-          type="text"
-          inputmode="numeric"
-          maxlength="3"
           fill="outline"
           class="field__input"
-          placeholder="0"
-          formControlName="preparation"
-        >
-          <span slot="end" class="field__suffix">min</span>
-        </ion-input>
+          placeholder="Nombre"
+          maxlength="60"
+          formControlName="title"
+        />
 
-        @if ( getFormControl('preparation')?.invalid &&
-        (getFormControl('preparation')?.touched ||
-        getFormControl('preparation')?.dirty ) ) {
-        @if ( getFormControl('preparation')?.hasError('required') ) {
+        @if ( getFormControl('title')?.invalid &&
+        (getFormControl('title')?.touched || getFormControl('title')?.dirty ) )
+        { @if ( getFormControl('title')?.hasError('required') ||
+        getFormControl('title')?.hasError('soloEspacios') ) {
         <p class="field__error">El campo es obligatorio.</p>
-        } @else if ( getFormControl('preparation')?.hasError('pattern') ) {
-        <p class="field__error">Ingresá solo números, sin letras ni símbolos.</p>
-        } @else if ( getFormControl('preparation')?.hasError('min') ) {
-        <p class="field__error">Tiene que ser mayor a 0.</p>
+        } @else if ( getFormControl('title')?.hasError('largoMinimo') ) {
+        <p class="field__error">El nombre tiene que tener al menos 3 letras.</p>
+        } @else if ( getFormControl('title')?.hasError('largoMaximo') ) {
+        <p class="field__error">
+          El nombre no puede superar los 60 caracteres.
+        </p>
         } }
       </div>
 
       <div class="field">
-        <label class="field__label">Precio</label>
+        <label class="field__label">Descripción</label>
 
         <ion-input
-          type="text"
-          inputmode="decimal"
-          maxlength="9"
           fill="outline"
           class="field__input"
-          placeholder="0.00"
-          formControlName="price"
-          appPrecioInput
-        >
-          <span slot="start" class="field__prefix">$</span>
-        </ion-input>
+          placeholder="Descripción"
+          maxlength="250"
+          formControlName="description"
+        />
 
-        @if ( getFormControl('price')?.invalid &&
-        (getFormControl('price')?.touched || getFormControl('price')?.dirty ) )
-        {
-        @if ( getFormControl('price')?.hasError('required') ) {
+        @if ( getFormControl('description')?.invalid &&
+        (getFormControl('description')?.touched ||
+        getFormControl('description')?.dirty ) ) { @if (
+        getFormControl('description')?.hasError('required') ||
+        getFormControl('description')?.hasError('soloEspacios') ) {
         <p class="field__error">El campo es obligatorio.</p>
-        } @else if ( getFormControl('price')?.hasError('pattern') ) {
-        <p class="field__error">Ingresá un precio válido (por ejemplo, 8500 o 8500.50).</p>
-        } @else if ( getFormControl('price')?.hasError('min') ) {
-        <p class="field__error">Tiene que ser mayor a 0.</p>
+        } @else if ( getFormControl('description')?.hasError('largoMinimo') ) {
+        <p class="field__error">
+          La descripción tiene que tener al menos 10 caracteres.
+        </p>
+        } @else if ( getFormControl('description')?.hasError('largoMaximo') ) {
+        <p class="field__error">
+          La descripción no puede superar los 250 caracteres.
+        </p>
         } }
       </div>
-    </div>
 
-    <div class="field field--checkbox">
-      <ion-checkbox formControlName="sugerencia">
-        Sugerencia del chef
-      </ion-checkbox>
-      <p class="field__hint">
-        Los platos marcados como sugerencia aparecen en el slide de
-        "Productos destacados" del inicio.
-      </p>
-    </div>
-  </form>
+      <div class="fields__row">
+        <div class="field">
+          <label class="field__label" type="text">Elaboración</label>
+
+          <ion-input
+            type="text"
+            inputmode="numeric"
+            maxlength="3"
+            fill="outline"
+            class="field__input"
+            placeholder="0"
+            formControlName="preparation"
+          >
+            <!-- <span slot="end" class="field__suffix">min</span> -->
+          </ion-input>
+
+          @if ( getFormControl('preparation')?.invalid &&
+          (getFormControl('preparation')?.touched ||
+          getFormControl('preparation')?.dirty ) ) { @if (
+          getFormControl('preparation')?.hasError('required') ) {
+          <p class="field__error">El campo es obligatorio.</p>
+          } @else if ( getFormControl('preparation')?.hasError('pattern') ) {
+          <p class="field__error">
+            Ingresá solo números, sin letras ni símbolos.
+          </p>
+          } @else if ( getFormControl('preparation')?.hasError('min') ) {
+          <p class="field__error">Tiene que ser mayor a 0.</p>
+          } }
+        </div>
+
+        <div class="field">
+          <label class="field__label">Precio</label>
+
+          <ion-input
+            type="text"
+            inputmode="decimal"
+            maxlength="9"
+            fill="outline"
+            class="field__input"
+            placeholder="0.00"
+            formControlName="price"
+            appPrecioInput
+          >
+            <span slot="start" class="field__prefix">$</span>
+          </ion-input>
+
+          @if ( getFormControl('price')?.invalid &&
+          (getFormControl('price')?.touched || getFormControl('price')?.dirty )
+          ) { @if ( getFormControl('price')?.hasError('required') ) {
+          <p class="field__error">El campo es obligatorio.</p>
+          } @else if ( getFormControl('price')?.hasError('pattern') ) {
+          <p class="field__error">
+            Ingresá un precio válido (por ejemplo, 8500 o 8500.50).
+          </p>
+          } @else if ( getFormControl('price')?.hasError('min') ) {
+          <p class="field__error">Tiene que ser mayor a 0.</p>
+          } }
+        </div>
+      </div>
+
+      <div class="field field--checkbox">
+        <div class="expandirrrr">
+          <span>Sugerencia del chef</span>
+          <ion-toggle formControlName="sugerencia" />
+        </div>
+        <!-- <ion-checkbox formControlName="sugerencia">
+          Sugerencia del chef
+        </ion-checkbox> -->
+        <p class="field__hint">
+          Los platos marcados como sugerencia aparecen en el slide de "Productos
+          destacados" del inicio.
+        </p>
+      </div>
+    </form>
   </div>
 </ion-content>
 
 @if (isLoading()) {
-  <div class="page-loading">
-    <app-spinner-logo />
-    <span>Guardando plato...</span>
-  </div>
+<div class="page-loading">
+  <app-spinner-logo />
+  <span>Guardando plato...</span>
+</div>
 }
 
 <ion-footer class="ion-no-border">
@@ -153,7 +165,7 @@
     <ion-button
       expand="block"
       shape="round"
-      [disabled]="(form.statusChanges | async) !== 'VALID' || isLoading()"
+      [disabled]="isLoading()"
       (click)="confirmarYGuardar()"
     >
       Guardar

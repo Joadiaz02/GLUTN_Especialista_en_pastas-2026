@@ -65,14 +65,14 @@ export const ADMIN_MODULES: AdminModule[] = [
     path: 'waitlist',
   },
 
-  {
-    id: 'asignacion-mesas',
-    title: 'Asignación de mesas',
-    description: 'Asignar mesas a los clientes',
-    icon: 'table',
-    roles: [EPerfilUsuario.Metre],
-    path: 'table-assignment',
-  },
+  // {
+  //   id: 'asignacion-mesas',
+  //   title: 'Asignación de mesas',
+  //   description: 'Asignar mesas a los clientes',
+  //   icon: 'table',
+  //   roles: [EPerfilUsuario.Metre],
+  //   path: 'table-assignment',
+  // },
 
   {
     id: 'consultas',

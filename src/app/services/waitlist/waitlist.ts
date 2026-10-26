@@ -323,8 +323,10 @@ export class Waitlist {
       throw error;
     }
 
+    console.log("NOTICATIONNNNNNNNNNNNNNNNNNNNNNNN MESAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
     try {
-      await this._db.client.functions.invoke(
+      const { data } = await this._db.client.functions.invoke(
         'notify-table-assigned',
         {
           body: {
@@ -333,6 +335,8 @@ export class Waitlist {
           },
         }
       );
+
+      console.log(data)
     } catch (error) {
       console.warn(
         'La mesa fue asignada, pero no se pudo enviar el push:',
