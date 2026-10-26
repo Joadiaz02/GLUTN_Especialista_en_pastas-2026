@@ -361,13 +361,14 @@ export class HomePage implements OnInit, OnDestroy {
       }
 
       // el cliente con mesa asignada también puede escanearla desde acá
-      if (parseTableQr('ingreso-local')) {
-        await this.vincularMesa('ingreso-local');
-        return;
-      }
+      // if (parseTableQr('ingreso-local')) {
+      //   await this.vincularMesa('ingreso-local');
+      //   return;
+      // }
 
       // if (parseTableQr(valor)) {
       //   await this.vincularMesa(valor);
+
       //   return;
       // }
 
@@ -417,21 +418,21 @@ export class HomePage implements OnInit, OnDestroy {
           const currentUser = this.authService.usuarioActual();
 
           // si ya está anotado no lo agrega de nuevo
-          const entrada = await this._waitlistService.getMyEntry(currentUser.id);
+          // const entrada = await this._waitlistService.getMyEntry(currentUser.id);
 
-          if (!entrada) {
+          // if (!entrada) {
+          // }
+            
             const nueva = await this._waitlistService.add({
               usuario_id: currentUser.id,
               estado: 'esperando',
             });
-
             // avisa al metre que hay un cliente nuevo
             try {
               await this._waitlistService.notifyNewWaitlist(nueva.id);
             } catch (error) {
               console.warn('No se pudo notificar al metre:', error);
             }
-          }
 
           this.router.navigate(['/waiting-room']);
         } catch {
