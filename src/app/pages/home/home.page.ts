@@ -336,22 +336,22 @@ export class HomePage implements OnInit, OnDestroy {
 
     this.escaneando.set(true);
     try {
-      const { camera } = await BarcodeScanner.requestPermissions();
+      // const { camera } = await BarcodeScanner.requestPermissions();
 
-      if (camera !== 'granted' && camera !== 'limited') {
-        await this.mostrarToast('Necesitamos permiso de cámara para escanear el código.');
+      // if (camera !== 'granted' && camera !== 'limited') {
+      //   await this.mostrarToast('Necesitamos permiso de cámara para escanear el código.');
       
-        return;
-      }
+      //   return;
+      // }
 
-      const { barcodes } = await BarcodeScanner.scan();
+      // const { barcodes } = await BarcodeScanner.scan();
       
-      if (barcodes.length === 0) return;
+      // if (barcodes.length === 0) return;
 
-      const valor = barcodes[0].rawValue ?? '';
+      // const valor = barcodes[0].rawValue ?? '';
 
-      // if ('ingreso-local' === 'ingreso-local') {
-      if (valor === 'ingreso-local') {
+      if ('ingreso-local' === 'ingreso-local') {
+      // if (valor === 'ingreso-local') {
         this.loading.set(true);
 
         await this.procesarCodigo({ tipo: 'ingreso-local' });
@@ -366,13 +366,16 @@ export class HomePage implements OnInit, OnDestroy {
       //   return;
       // }
 
-      if (parseTableQr(valor)) {
-        await this.vincularMesa(valor);
-        return;
-      }
+      // if (parseTableQr(valor)) {
+      //   await this.vincularMesa(valor);
+
+      //   return;
+      // }
 
       // QR de propina: el cliente pide la cuenta
-      const porcentaje = parseTipQr(valor);
+      const porcentaje = parseTipQr('ingreso-local');
+      // const porcentaje = parseTipQr(valor);
+
       if (porcentaje !== null) {
         this.pedirCuenta(porcentaje);
         return;
@@ -415,21 +418,21 @@ export class HomePage implements OnInit, OnDestroy {
           const currentUser = this.authService.usuarioActual();
 
           // si ya está anotado no lo agrega de nuevo
-          const entrada = await this._waitlistService.getMyEntry(currentUser.id);
+          // const entrada = await this._waitlistService.getMyEntry(currentUser.id);
 
-          if (!entrada) {
+          // if (!entrada) {
+          // }
+            
             const nueva = await this._waitlistService.add({
               usuario_id: currentUser.id,
               estado: 'esperando',
             });
-
             // avisa al metre que hay un cliente nuevo
             try {
               await this._waitlistService.notifyNewWaitlist(nueva.id);
             } catch (error) {
               console.warn('No se pudo notificar al metre:', error);
             }
-          }
 
           this.router.navigate(['/waiting-room']);
         } catch {

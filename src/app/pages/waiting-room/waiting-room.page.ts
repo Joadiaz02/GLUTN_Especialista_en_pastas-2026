@@ -1,15 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  ToastController,
-} from '@ionic/angular';
-import { Router } from '@angular/router';
+import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar, ToastController, IonRouterLink } from '@ionic/angular';
+import { Router, RouterLink } from '@angular/router';
 import { Auth, PushNotificationService, SupabaseService, Vibracion, Waitlist } from '@app/services';
 import { TurnRingComponent } from '@app/components';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
@@ -19,6 +12,7 @@ import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
   templateUrl: './waiting-room.page.html',
   styleUrls: ['./waiting-room.page.scss'],
   imports: [
+    RouterLink,
     IonContent,
     IonHeader,
     IonTitle,
@@ -27,7 +21,8 @@ import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
     FormsModule,
     IonButton,
     TurnRingComponent,
-  ],
+    IonRouterLink
+],
 })
 export class WaitingRoomPage {
   private _router = inject(Router);
@@ -51,6 +46,10 @@ export class WaitingRoomPage {
   loading = signal(true);
 
   isTableAssigned = signal(false);
+
+  isTableCancelled = signal(false);
+
+  tableStatus = signal("")
 
   table = signal<any | null>(null);
   private _unsubscribe: (() => void) | null = null;
@@ -111,7 +110,7 @@ export class WaitingRoomPage {
     try {
       // const result = await this._waitlistService.linkTable(
       //   this._userId,
-      //   "mesa:b63469cd-404d-460c-a193-4eb153b9dec1"
+      //   "mesa:c80da3b5-fa09-4029-8dfd-b8966141d3ce"
       // );
 
       const result = await this._waitlistService.linkTable(
@@ -176,31 +175,53 @@ export class WaitingRoomPage {
 
     try {
       const miEntrada = await this._waitlistService.getMyEntry(this._userId);
+      
+      console.log("lista_espera")
+      console.log(this._userId)
+      console.log(miEntrada)
+      console.log(miEntrada?.estado)
+
+      // if (miEntrada?.estado === 'esperando') {
+      //   this.tableStatus.set("esperando");
+        
+      //   return;
+      // }
 
       if (miEntrada?.estado === 'asignado' && miEntrada.mesa_id) {
         const mesa = await this._waitlistService.getTableById(
           miEntrada.mesa_id
         );
 
-        this.isTableAssigned.set(true);
-
+        this.tableStatus.set("asignado");
+        
         this.table.set(mesa);
 
         return;
       }
 
-      this.isTableAssigned.set(false);
+      
+      if (miEntrada?.estado === 'cancelado') {
+        this.tableStatus.set("cancelado");
+        
+        return;
+      }
 
-      this.table.set(null);
+      if (miEntrada?.estado === 'esperando') {
+        const [position, listaCompleta] = await Promise.all([
+          this._waitlistService.getPosition(this._userId),
+          this._waitlistService.getList(),
+        ]);
+  
+        this.position.set(position);
+  
+        this.total.set(Math.max(listaCompleta.length, 1));
+      }
+      
+      // this.tableStatus.set("");
+      // this.isTableAssigned.set(false);
 
-      const [position, listaCompleta] = await Promise.all([
-        this._waitlistService.getPosition(this._userId),
-        this._waitlistService.getList(),
-      ]);
+      // this.table.set(null);
 
-      this.position.set(position);
-
-      this.total.set(Math.max(listaCompleta.length, 1));
     } catch (error) {
       console.error('Error actualizando sala de espera:', error);
 

@@ -1,4 +1,3 @@
-
 <ion-content class="waiting-room" [fullscreen]="true">
   <div class="waiting-room__body">
     <img
@@ -8,51 +7,67 @@
     />
 
     @if (loading()) {
-      <p class="waiting-room__loading">Cargando tu turno...</p>
-    } @else if (!isTableAssigned()) {
-      <div class="info">
-        <h1 class="waiting-room__title">¡Ya estás en la fila!</h1>
-        <p class="waiting-room__subtitle">
-          El metre ya te tiene anotado. Relajate que tu mesa te está esperando.
-        </p>
-      </div>
+    <p class="waiting-room__loading">Cargando tu turno...</p>
+    } @else if (tableStatus() == 'asignado') {
+    <div class="info">
+      <h1 class="waiting-room__title">
+        Tu mesa es la N° {{ table()?.numero }}
+      </h1>
 
-      <app-turn-ring
-        [position]="position() ?? 0"
-        [total]="total()"
-      />
-
-      <p class="waiting-room__footer">
-        Te avisaremos cuando tu mesa esté lista. Mantené las notificaciones activadas.
+      <p class="waiting-room__subtitle">
+        Escaneá el código QR de tu mesa para poder continuar.
       </p>
 
       <ion-button
         expand="block"
         shape="round"
         class="button-expand"
-        (click)="irAEncuestas()"
+        (click)="scanQR()"
       >
-        Ir a encuestas
+        Escanear QR
       </ion-button>
+    </div>
+
+    } @else if (tableStatus() == "cancelado") {
+    <h1 class="waiting-room__title">
+      El metre cancelo el turno. Lo siento mucho
+    </h1>
+
+    <p class="waiting-room__subtitle">
+      Podes seguir ingresando a la lista de espera hasta que te acepte.
+    </p>
+
+    <ion-button
+      expand="block"
+      shape="round"
+      class="button-expand"
+      routerLink="/home"
+    >
+      Volver al inicio
+    </ion-button>
     } @else {
-      <div class="info">
-        <h1 class="waiting-room__title">
-          Tu mesa es la N° {{ table()?.numero }}
-        </h1>
+    <div class="info">
+      <h1 class="waiting-room__title">¡Ya estás en la fila!</h1>
+      <p class="waiting-room__subtitle">
+        El metre ya te tiene anotado. Relajate que tu mesa te está esperando.
+      </p>
+    </div>
 
-        <p class="waiting-room__subtitle">
-          Escaneá el código QR de tu mesa para poder continuar.
-        </p>
+    <app-turn-ring [position]="position() ?? 0" [total]="total()" />
 
-        <ion-button
-          expand="block"
-          shape="round"
-          class="button-expand"
-          (click)="scanQR()"
-        >
-          Escanear QR
-        </ion-button>
-      </div>
+    <p class="waiting-room__footer">
+      Te avisaremos cuando tu mesa esté lista. Mantené las notificaciones
+      activadas.
+    </p>
+
+    <ion-button
+      expand="block"
+      shape="round"
+      class="button-expand"
+      (click)="irAEncuestas()"
+    >
+      Ir a encuestas
+    </ion-button>
     }
   </div>
 </ion-content>

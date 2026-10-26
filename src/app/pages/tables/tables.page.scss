@@ -1,9 +1,18 @@
 .container-full-center {
   width: 100%;
-  height: calc(100% - env(safe-area-inset-bottom));
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+.algooo {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }
 
 ion-content {
@@ -12,42 +21,29 @@ ion-content {
 }
 
 .table__list {
-  display: flex;
-  gap: 24px;
-  // height: calc(100% - 72px - 48px);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  // scroll-padding-inline: 0;
-    padding-inline: 16px;
-  scroll-padding-inline: 16px;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  // padding: 0 16px;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  display: grid;
+  width: calc(100% - 32px);
+  margin-inline: auto;
 }
 
 .table-card {
-  flex: 0 0 calc(100% - 0px);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  grid-area: 1 / 1;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #A8B68A;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 
   &:only-child {
     flex-basis: 100%;
   }
-
-  overflow: hidden;
-  border-radius: 8px;
-  background: #A8B68A;
 
   .table-card__media {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    // height: calc(100% - 84px);
     aspect-ratio: 3 / 4;
     background: rgba(0, 0, 0, 0.20);
 
@@ -154,4 +150,32 @@ ion-content {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.table-card.activa {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 5;
+}
+
+.table-card.anterior {
+  transform: translateX(-100%);
+  opacity: 0.0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.table-card.siguiente {
+  transform: translateX(100%);
+  opacity: 0.0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.table-card.oculta {
+  transform: translateX(0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
 }
