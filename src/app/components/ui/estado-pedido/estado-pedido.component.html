@@ -10,6 +10,24 @@
     </ion-button>
   }
 
+  @if (estado() === 'entregado') {
+    <ion-button shape="round" expand="block" [disabled]="confirmando()" (click)="confirmarRecepcion()">
+      Confirmar recepción
+    </ion-button>
+  }
+
+  @if (estado() === 'recibido') {
+    <ion-button shape="round" expand="block" (click)="solicitarCuenta()">
+      Solicitar cuenta
+    </ion-button>
+  }
+
+  @if (estado() === 'cuenta_entregada') {
+    <ion-button shape="round" expand="block" (click)="verCuenta()">
+      Ver mi cuenta
+    </ion-button>
+  }
+
   <ion-button shape="round" expand="block" (click)="volver()">
     Volver
   </ion-button>

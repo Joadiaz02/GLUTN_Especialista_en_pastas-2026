@@ -18,6 +18,9 @@ export class MesaCliente {
   // id de la mesa en la base
   id = signal<string | null>(null);
 
+  // desde cuándo está anotado en esta estadía
+  desde = signal<string | null>(null);
+
   // compara por id para no repetir la consulta
   private _idCliente = computed<string | null>(() => {
     const usuario = this._auth.usuarioActual();
@@ -38,6 +41,7 @@ export class MesaCliente {
     if (!idCliente) {
       this.numero.set(null);
       this.id.set(null);
+      this.desde.set(null);
       return;
     }
 
@@ -47,6 +51,7 @@ export class MesaCliente {
     if (this._idCliente() === idCliente) {
       this.numero.set(mesa?.numero ?? null);
       this.id.set(mesa?.id ?? null);
+      this.desde.set(mesa?.desde ?? null);
     }
   }
 
@@ -58,6 +63,7 @@ export class MesaCliente {
 
     this.numero.set(null);
     this.id.set(null);
+    this.desde.set(null);
 
     if (!idCliente) {
       return;
@@ -80,10 +86,10 @@ export class MesaCliente {
     await this.actualizar();
   }
 
-  private async buscarMesa(idCliente: string): Promise<{ id: string; numero: string } | null> {
+  private async buscarMesa(idCliente: string): Promise<{ id: string; numero: string; desde: string } | null> {
     const { data: entrada } = await this._db.client
       .from('lista_espera')
-      .select('mesa_id')
+      .select('mesa_id, created_at')
       .eq('usuario_id', idCliente)
       .eq('estado', 'en_mesa')
       .order('created_at', { ascending: false })
@@ -100,6 +106,8 @@ export class MesaCliente {
       .eq('id', entrada.mesa_id)
       .maybeSingle();
 
-    return mesa ? { id: String(entrada.mesa_id), numero: String(mesa.numero) } : null;
+    return mesa
+      ? { id: String(entrada.mesa_id), numero: String(mesa.numero), desde: String(entrada.created_at) }
+      : null;
   }
 }

@@ -53,7 +53,7 @@
   opacity: 1;
 }
 
-/* Estructura general de la tarjeta de pedido */
+/* Estructura general de la tarjeta de pedido (Marrón) */
 .pedido {
   flex: 1;
   min-height: 0;
@@ -63,9 +63,9 @@
   gap: 10px;
   padding: 16px;
   border-radius: 24px;
-  background: var(--ion-color-light, #f4ebdd);
-  color: #2f3d24;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  background: #6b5c4e; // Marrón de la tarjeta de postres
+  color: #ffffff;      // Texto blanco para contraste
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
 }
 
@@ -79,11 +79,13 @@
     margin: 0;
     font-size: 20px;
     font-weight: 800;
+    color: #ffc983; // Tono secundario cálido destacado
   }
 
   span {
     font-size: 12px;
     font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
   }
 }
 
@@ -93,7 +95,7 @@
   align-items: center;
   gap: 8px;
   padding-bottom: 6px;
-  border-bottom: 1px solid rgba(47, 61, 36, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .pedido__momento {
@@ -108,13 +110,14 @@
 
 .pedido__fecha {
   font-size: 12px;
+  opacity: 0.85;
 }
 
 .pedido__estado {
   flex-shrink: 0;
   padding: 4px 10px;
   border-radius: 999px;
-  background: #2f3d24;
+  background: #3a2417; // Marrón oscuro para el estado
   color: #ffffff;
   font-size: 12px;
   font-weight: 700;
@@ -134,7 +137,8 @@
 .usuario-txt {
   font-size: 13px;
   font-weight: 700;
-  opacity: 0.8;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2px;
 }
 
 .lista-productos {
@@ -144,7 +148,7 @@
 }
 
 .producto-card {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(58, 36, 23, 0.45); // Marrón oscuro translúcido para ordenar cada producto
   padding: 8px 12px;
   border-radius: 12px;
   display: flex;
@@ -162,25 +166,24 @@
 .item-nombre {
   font-size: 13px;
   font-weight: 700;
-  color: #2f3d24;
+  color: #ffffff;
 }
 
 .item-descripcion {
   font-size: 11px;
-  opacity: 0.7;
-  color: #2f3d24;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .item-precio {
   font-size: 13px;
   font-weight: 800;
-  color: #2f3d24;
+  color: #ffc983; // Tono destacado para precios
   white-space: nowrap;
 }
 
 /* Total a pagar más grande al fondo de los ítems */
 .total-card {
-  background: rgba(47, 61, 36, 0.12);
+  background: rgba(58, 36, 23, 0.65); // Marrón oscuro destacado para el total
   margin-top: 8px;
   padding: 10px 14px;
   border-radius: 12px;
@@ -192,10 +195,11 @@
     align-items: center;
     font-weight: 800;
     font-size: 15px;
-    color: #2f3d24;
+    color: #ffffff;
 
     .item-precio {
       font-size: 16px;
+      color: #ffc983;
     }
   }
 }
@@ -203,7 +207,7 @@
 .sin-items {
   font-size: 12px;
   font-style: italic;
-  opacity: 0.6;
+  color: rgba(255, 255, 255, 0.6);
   text-align: center;
   margin: auto 0;
 }
