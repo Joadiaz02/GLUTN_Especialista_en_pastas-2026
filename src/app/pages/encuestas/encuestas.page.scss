@@ -1,42 +1,994 @@
+/* ==========================================================================
+   Encuestas
+   Estructura: variables → layout → header → tarjetas → encuesta → gráficos
+               → overlay de carga → responsive → animaciones
+   ========================================================================== */
 
-.surveys-page {
-  --padding-start: 24px;
-  --padding-end: 24px;
-  --padding-top: max(24px, env(safe-area-inset-top));
-  --padding-bottom: max(24px, env(safe-area-inset-bottom));
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+
+  --survey-orange: #e76f45;
+  --survey-orange-dark: #b94f2d;
+  --survey-orange-light: #f5a16e;
+  --survey-green: #657a4d;
+  --survey-text: #303526;
+  --survey-muted: #514b3e;
+  --survey-light: #fffaf3;
+  --survey-light-soft: #fff4e9;
+  --survey-max-width: 760px;
 }
 
-.surveys-page__body {
-  min-height: 100%;
-  max-width: 440px;
+/* ===== Layout ===== */
+
+ion-content.surveys-page {
+  display: block;
+  flex: 1 1 0;
+  width: 100%;
+  height: 0;
+  min-height: 0;
+
+  --background: var(--survey-green);
+  --overflow: hidden;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --padding-top: 8px;
+  --padding-bottom: 0px;
+}
+
+// El margen inferior vive acá (no en el ion-content) para que el scroller
+// mida su alto real y las tarjetas no queden pegadas al borde de la pantalla.
+.surveys-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+/* Único bloque que scrollea. Cada hijo directo se alinea al borde superior. */
+.surveys-scroller {
+  --survey-gap: 12px;
+
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--survey-gap);
+  width: 100%;
+  max-width: var(--survey-max-width);
+  min-height: 0;
   margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y proximity;   // proximity: no atrapa si el contenido es más alto que la pantalla
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > * {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+
+  &:not(.is-survey) > * {
+    flex-shrink: 0;
+  }
+
+  // Mientras el cliente responde no hay scroll
+  &.is-survey {
+    overflow: hidden;
+    scroll-snap-type: none;
+  }
+}
+
+// Espaciador heredado: si todavía existe el <div> en el HTML, no ocupa lugar
+.surveys-scroller__fin {
+  display: none;
+}
+
+/* ===== Tipografía base ===== */
+
+h1 {
+  margin: 0;
+  color: var(--survey-light);
+  font-size: clamp(25px, 5.5vw, 34px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: 0 2px 10px rgb(80 37 20 / 15%);
+}
+
+h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+p {
+  overflow-wrap: anywhere;
+}
+
+.section-eyebrow {
+  display: block;
+  color: var(--survey-light-soft);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+}
+
+/* ===== Header fijo ===== */
+
+.surveys-header {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  max-width: var(--survey-max-width);
+  margin: 0 auto;
+  padding: 0 0 10px;
+  box-sizing: border-box;
+  text-align: center;
+  background: var(--survey-green);
+}
+
+.surveys-page__logo {
+  display: block;
+  flex: 0 0 auto;
+  width: 88px;
+  height: 58px;
+  margin-top: 8px;
+  object-fit: contain;
+}
+
+.surveys-intro {
+  margin: 0;
+  color: var(--survey-light-soft);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* ===== Tarjetas (estilo compartido) ===== */
+
+.results-shortcut,
+.survey-form,
+.result-card,
+.surveys-notice {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid rgb(255 255 255 / 38%);
+  border-radius: 20px;
+  color: var(--survey-light);
+  background: var(--survey-orange);
+  box-shadow: 0 7px 18px rgb(83 42 21 / 13%);
+  animation: card-enter 320ms ease-out both;
+}
+
+// El texto escala con el alto de pantalla: así las dos tarjetas entran sin scroll
+.results-shortcut p,
+.surveys-notice p {
+  margin: 6px 0 0;
+  font-size: clamp(14px, 2.3vh, 18px);
+  line-height: 1.4;
+}
+
+/* Botones (atajos a gráficos y pasos de la encuesta) */
+.chart-links ion-button,
+.step-actions ion-button {
+  --background: var(--survey-green);
+  --background-activated: #52643e;
+  --color: var(--survey-light);
+  --border-radius: 13px;
+  font-weight: 800;
+}
+
+.step-actions ion-button[fill='outline'] {
+  --background: transparent;
+  --background-activated: rgb(101 122 77 / 15%);
+  --color: var(--survey-light);
+  --border-color: var(--survey-light);
+  --border-width: 1.5px;
+}
+
+.step-actions ion-button:disabled {
+  opacity: 0.65;
+}
+
+/* ===== Atajo a resultados ===== */
+
+.results-shortcut {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chart-links {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+  margin: 0;
+}
+
+/* ===== Avisos ===== */
+
+.surveys-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 16px;
+  text-align: center;
+
+  h2 {
+    font-size: 20px;
+  }
+
+  p {
+    max-width: 38ch;
+  }
+
+  .notice-footnote {
+    margin-top: 2px;
+    font-size: 14px;
+  }
+}
+
+.notice-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--survey-orange);
+  color: var(--survey-light);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.surveys-error {
+  flex: 0 0 auto;
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  border: 1px solid #d78d75;
+  border-radius: 11px;
+  color: #702817;
+  background: #f9d9cc;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+/* ===== Formulario de encuesta (siempre en modo .is-survey: sin scroll) ===== */
+
+.survey-form {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.survey-form__heading {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 4px;
+
+  h2 {
+    font-size: 19px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.35;
+  }
+}
+
+.step-progress {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step-progress__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.step-progress__track {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e1d0bc;
+}
+
+.step-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    var(--survey-orange-dark),
+    var(--survey-orange-light)
+  );
+  transition: width 220ms ease;
+}
+
+// La tarjeta de la pregunta absorbe el espacio sobrante
+.question-card {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 14px;
+  box-sizing: border-box;
+  border: 1px solid rgb(255 250 243 / 55%);
+  border-radius: 15px;
+  background: var(--survey-orange-light);
+  overflow-y: auto;            // solo aparece en pantallas muy chicas, para que nada quede cortado
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .question-title {
+    flex: 0 0 auto;
+    margin: 0;
+    color: var(--survey-text);
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+}
+
+.required-mark {
+  margin-left: 2px;
+  color: var(--survey-orange-dark);
+}
+
+.question-hint {
+  display: block;
+  margin: 0;
+  color: var(--survey-text);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+// Opciones (escala y selección)
+.rating-options label,
+.choice-list label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ddc6b1;
+  border-radius: 11px;
+  color: var(--survey-text);
+  background: #fff0e3;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+
+  &.is-selected {
+    border-color: var(--survey-green);
+    background: #dce5d1;
+    box-shadow: 0 0 0 1px rgb(185 79 45 / 12%);
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--survey-light);
+    outline-offset: 2px;
+  }
+}
+
+// Escala 1-5: cinco casillas grandes, centradas entre el título y la ayuda.
+// El input queda invisible sobre toda la casilla (sigue siendo accesible y tocable).
+.rating-options {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+  margin-block: auto;
+
+  label {
+    position: relative;
+    justify-content: center;
+    min-height: clamp(64px, 12vh, 104px);
+    padding: 8px 4px;
+    font-size: 26px;
+    font-weight: 800;
+
+    &.is-selected {
+      color: var(--survey-light);
+      background: var(--survey-green);
+    }
+  }
+
+  input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
+// Opciones: una por fila, repartidas en el alto
+.choice-list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  gap: 8px;
+  min-width: 0;
+
+  label {
+    flex: 1 1 0;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 12px;
+    min-height: 44px;
+    max-height: 72px;
+    padding: 9px 14px;
+    font-size: 17px;
+  }
+
+  // Control propio: reemplaza el punto negro nativo del WebView
+  input {
+    display: grid;
+    flex: 0 0 auto;
+    place-content: center;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    border: 2px solid var(--survey-green);
+    border-radius: 50%;
+    background: #fff;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--survey-green);
+      transform: scale(0);
+      transition: transform 120ms ease;
+    }
+
+    &:checked::before {
+      transform: scale(1);
+    }
+
+    &[type='checkbox'] {
+      border-radius: 6px;
+
+      &::before {
+        border-radius: 2px;
+      }
+    }
+  }
+}
+
+textarea {
+  display: block;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 90px;
+  padding: 11px;
+  box-sizing: border-box;
+  border: 1px solid #cba990;
+  border-radius: 11px;
+  color: var(--survey-text);
+  background: #fff0e3;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  resize: none;
+
+  &::placeholder {
+    color: #786759;
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--survey-orange-dark);
+    outline-offset: 2px;
+  }
+}
+
+// Botones: ocupan el ancho y no se pisan
+.step-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+
+  ion-button {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 46px;
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
+/* ===== Resultados: tarjeta de gráfico (una por pantalla) ===== */
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 18px;
+  min-height: var(--alto-visible, 0px);   // lo publica ajustarFinal() en el .ts
+  padding: 20px 18px;
+
+  h2 {
+    font-size: 23px;
+    line-height: 1.2;
+  }
+}
+
+.result-card__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.result-total {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.chart-empty {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  border-radius: 12px;
+  color: var(--survey-text);
+  background: var(--survey-orange-light);
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.4;
+  }
+}
+
+/* Torta: el tamaño escala con el alto disponible */
+.pie-chart {
+  align-self: center;
+  width: min(calc(var(--alto-visible, 500px) * 0.36), 82%);
+  aspect-ratio: 1;
+  margin-block: auto;
+  border: 4px solid var(--survey-light-soft);
+  border-radius: 50%;
+  box-shadow: 0 5px 14px rgb(83 42 21 / 14%);
+  animation: pie-appear 650ms ease-out both;
+}
+
+.pie-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: auto;
+}
+
+.pie-row {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+
+  strong {
+    font-size: 17px;
+    text-align: right;
+    white-space: nowrap;
+  }
+}
+
+.pie-row__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pie-dot {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+/* Barras: se reparten en todo el alto */
+.bar-chart {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+.bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bar-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 17px;
+
+  span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  strong {
+    flex: 0 0 auto;
+    text-align: right;
+  }
+
+  small {
+    color: var(--survey-muted);
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.bar-track {
+  height: 20px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(255 244 233 / 48%);
+}
+
+.bar-fill {
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  transform-origin: left center;
+  animation: bar-grow 750ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+/* Columnas: crecen con el alto y las etiquetas reservan 3 líneas
+   para que todas las columnas terminen a la misma altura */
+.column-chart {
+  display: flex;
+  flex: 1 1 0;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 8px 2px 0;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgb(255 244 233 / 65%);
+}
+
+.column-chart__item {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.column-chart__value {
+  min-height: 1.4em;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.column-chart__track {
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-end;
+  justify-content: center;
+  width: min(100%, 52px);
+  min-height: 120px;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+  background: rgb(255 244 233 / 48%);
+}
+
+.column-chart__fill {
+  width: 100%;
+  min-height: 0;
+  border-radius: 7px 7px 0 0;
+  transform-origin: bottom;
+  animation: column-grow 650ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.column-chart__label {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-height: 3.6em;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.column-chart__percentage {
+  min-height: 1.4em;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ===== Overlay de carga (mismo patrón que Cocina) ===== */
+// Si ya tenés estilos globales para .cocina-loading, usá esos y borrá este bloque.
+
+.encuestas-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  text-align: center;
-}
-
-.surveys-page__body img {
-  width: clamp(120px, 34vw, 170px);
-  max-height: 100px;
-  object-fit: contain;
-}
-
-.surveys-page__body h1 {
-  margin: 0;
-  color: #fff;
-  font-size: clamp(26px, 6vw, 32px);
-}
-
-.surveys-page__body p {
-  margin: 0 0 8px;
-  color: #D5E0C9;
+  color: var(--survey-light);
+  background: var(--survey-green);
   font-size: 16px;
-  line-height: 1.5;
 }
 
-.surveys-page__body ion-button {
-  width: 100%;
+/* ===== Responsive ===== */
+
+@media (max-width: 380px) {
+  ion-content.surveys-page {
+    --padding-start: 10px;
+    --padding-end: 10px;
+    --padding-top: 5px;
+  }
+
+  .surveys-scroller {
+    --survey-gap: 9px;
+  }
+
+  .surveys-page__logo {
+    width: 72px;
+    height: 44px;
+  }
+
+  .surveys-intro {
+    font-size: 12px;
+  }
+
+  .results-shortcut,
+  .survey-form,
+  .result-card,
+  .surveys-notice {
+    border-radius: 16px;
+  }
+
+  .results-shortcut,
+  .surveys-notice {
+    padding: 12px;
+  }
+
+  .chart-links ion-button {
+    min-height: 37px;
+  }
+
+  .column-chart {
+    padding-inline: 0;
+  }
+}
+
+// La nota repite lo que ya dice la tarjeta de resultados: se oculta si falta lugar
+@media (max-height: 820px) {
+  .surveys-notice .notice-footnote {
+    display: none;
+  }
+}
+
+// Encuesta en pantallas bajas: se compacta el header para ganar lugar
+@media (max-height: 700px) {
+  .surveys-layout.is-survey {
+    .surveys-intro,
+    .survey-form__heading p {
+      display: none;
+    }
+
+    .surveys-page__logo {
+      height: 44px;
+    }
+
+    .rating-options label {
+      min-height: 54px;
+    }
+  }
+}
+
+@media (max-height: 650px) {
+  .surveys-scroller {
+    --survey-gap: 7px;
+  }
+
+  .surveys-header {
+    padding-bottom: 6px;
+  }
+
+  .surveys-page__logo {
+    width: 64px;
+    height: 38px;
+    margin-top: 4px;
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+
+  .result-card h2 {
+    font-size: 20px;
+  }
+
+  .pie-row,
+  .pie-row strong,
+  .bar-label {
+    font-size: 15px;
+  }
+
+  .surveys-notice {
+    gap: 6px;
+    padding: 12px;
+
+    h2 {
+      font-size: 17px;
+    }
+  }
+
+  .notice-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 600px) {
+  ion-content.surveys-page {
+    --padding-start: 24px;
+    --padding-end: 24px;
+    --padding-top: 14px;
+  }
+
+  .surveys-scroller {
+    --survey-gap: 16px;
+  }
+
+  .surveys-page__logo {
+    width: 105px;
+    height: 70px;
+  }
+
+  .results-shortcut,
+  .surveys-notice {
+    padding: 22px;
+  }
+
+  .chart-links {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    ion-button {
+      min-height: 44px;
+    }
+  }
+}
+
+/* ===== Animaciones ===== */
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes column-grow {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes pie-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.82) rotate(-12deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

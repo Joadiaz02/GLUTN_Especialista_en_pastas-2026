@@ -71,13 +71,32 @@ export class Pedido {
         if (item.length === 0) {
             throw new Error('El carrito está vacío');
         }
-        const { data: pedido, error: error } = await this.sup.client.from('pedido').insert({
-            id_mesa: id_mesa,
-            id_usuario: id_usuario,
-            detalles,
-            subtotal: this.carrito.importeTotal(),
-            estado_pedido: 'Pendiente'
-        }).select().single();
+        const { data: pedido, error } = await this.sup.client
+    .from('pedido')
+    .insert({
+        id_mesa,
+        id_usuario,
+        detalles,
+        subtotal: this.carrito.importeTotal(),
+        estado_pedido: 'Pendiente'
+    })
+    .select('id_pedido, id_estadia')
+    .single();
+
+if (error) {
+    throw error;
+}
+
+if (!pedido.id_estadia) {
+    await this.sup.client
+        .from('pedido')
+        .delete()
+        .eq('id_pedido', pedido.id_pedido);
+
+    throw new Error(
+        'No se pudo asociar el pedido a tu estadía. Intentá nuevamente.'
+    );
+}
 
         if (error) {
             throw error;
