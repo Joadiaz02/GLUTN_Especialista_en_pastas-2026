@@ -1,5 +1,6 @@
 import {
   Component,
+  inject,
 } from '@angular/core';
 
 import {
@@ -10,6 +11,10 @@ import {
 import {
   PedidoSheetComponent,
 } from '@app/components/ui/pedido-sheet/pedido-sheet.component';
+
+import {
+  IngresoSocial,
+} from '@app/services/auth/ingreso-social';
 
 
 @Component({
@@ -23,4 +28,9 @@ import {
     PedidoSheetComponent,
   ],
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor() {
+    // la vuelta del login con Google o Discord puede llegar en cualquier pantalla
+    inject(IngresoSocial).escucharRetorno();
+  }
+}

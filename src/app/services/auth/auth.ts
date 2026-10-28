@@ -7,8 +7,24 @@ import { Storage } from '../storage';
 import { Vibracion } from '../vibracion/vibracion';
 import { User } from '../user';
 import { Carrito } from '@app/pages/carrito/carrito';
+import { Capacitor } from '@capacitor/core';
+import { Browser } from '@capacitor/browser';
 
 const CLAVE_PANTALLA_INGRESO = 'pantallaIngreso';
+
+export type RedSocial = 'google' | 'discord';
+
+// adónde vuelve Supabase en el celular después de la red social
+export const ESQUEMA_RETORNO_SOCIAL = 'com.glutn.especialista://login-callback';
+
+// datos que trae la red para precargar "Completá tu registro"
+export interface DatosRedSocial {
+  nombre: string;
+  apellido: string;
+  avatar: string | null;
+  email: string;
+  red: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -181,12 +197,17 @@ export class Auth {
       throw new Error('Login fallido: no se retorno un usuario');
     }
 
-    const perfil = data.user.user_metadata?.['perfil'];
+    return this.validarIngreso(data.user);
+  }
+
+  // valida el estado de aprobación del cliente registrado (correo o red social)
+  async validarIngreso(usuario: any): Promise<any> {
+    const perfil = usuario.user_metadata?.['perfil'];
 
     if (perfil !== EPerfilUsuario.ClienteRegistrado) {
-      this.usuarioActual.set(data.user);
+      this.usuarioActual.set(usuario);
 
-      return data.user;
+      return usuario;
     }
 
     const { data: estado, error: errorEstado } =
@@ -217,9 +238,9 @@ export class Auth {
     }
 
     if (estado === 'aprobado') {
-      this.usuarioActual.set(data.user);
+      this.usuarioActual.set(usuario);
 
-      return data.user;
+      return usuario;
     }
 
     await this.supabaseService.client.auth.signOut();
@@ -227,6 +248,251 @@ export class Auth {
     this.usuarioActual.set(null);
 
     throw new Error('No se pudo verificar el estado de la cuenta.');
+  }
+
+  // ingreso con redes sociales
+
+  private urlRetornoSocial(): string {
+    return Capacitor.isNativePlatform()
+      ? ESQUEMA_RETORNO_SOCIAL
+      : `${window.location.origin}/login`;
+  }
+
+  async iniciarConRed(red: RedSocial): Promise<void> {
+    const esNativo = Capacitor.isNativePlatform();
+
+    const { data, error } =
+      await this.supabaseService.client.auth.signInWithOAuth({
+        provider: red,
+        options: {
+          redirectTo: this.urlRetornoSocial(),
+          // en el celular abrimos nosotros el navegador; en web redirige Supabase
+          skipBrowserRedirect: esNativo,
+          // Google siempre deja elegir la cuenta (Discord ya tiene "¿No sos vos?")
+          queryParams:
+            red === 'google' ? { prompt: 'select_account' } : undefined,
+        },
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    if (esNativo && data.url) {
+      await Browser.open({ url: data.url, toolbarColor: '#657A4D' });
+    }
+  }
+
+  async vincularRed(red: RedSocial): Promise<void> {
+    const esNativo = Capacitor.isNativePlatform();
+
+    const { data, error } =
+      await this.supabaseService.client.auth.linkIdentity({
+        provider: red,
+        options: {
+          redirectTo: this.urlRetornoSocial(),
+          skipBrowserRedirect: esNativo,
+          queryParams:
+            red === 'google' ? { prompt: 'select_account' } : undefined,
+        },
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    if (esNativo && data.url) {
+      await Browser.open({ url: data.url, toolbarColor: '#657A4D' });
+    }
+  }
+
+  async redesVinculadas(): Promise<RedSocial[]> {
+    const { data, error } =
+      await this.supabaseService.client.auth.getUserIdentities();
+
+    if (error) {
+      throw error;
+    }
+
+    return (data?.identities ?? [])
+      .map((identidad) => identidad.provider)
+      .filter(
+        (proveedor): proveedor is RedSocial =>
+          proveedor === 'google' || proveedor === 'discord'
+      );
+  }
+
+  // canjea la vuelta de la red por una sesión y valida el perfil
+  async completarIngresoSocial(url: string): Promise<any> {
+    const parametros = new URL(url).searchParams;
+
+    if (parametros.get('error')) {
+      throw new Error('INGRESO_SOCIAL_CANCELADO');
+    }
+
+    let usuario: any = null;
+
+    if (Capacitor.isNativePlatform()) {
+      const codigo = parametros.get('code');
+
+      if (!codigo) {
+        throw new Error('INGRESO_SOCIAL_SIN_CODIGO');
+      }
+
+      const { data, error } =
+        await this.supabaseService.client.auth.exchangeCodeForSession(codigo);
+
+      if (error) {
+        throw error;
+      }
+
+      usuario = data.user;
+    } else {
+      // en web supabase-js ya canjeó el ?code= al cargar la página
+      const { data } = await this.supabaseService.client.auth.getSession();
+
+      usuario = data.session?.user ?? null;
+    }
+
+    if (!usuario) {
+      throw new Error('INGRESO_SOCIAL_SIN_CODIGO');
+    }
+
+    this.usuarioActual.set(usuario);
+
+    // cuenta de red sin vincular: todavía no tiene perfil de GLUTN
+    if (!this.obtenerPerfil(usuario)) {
+      throw new Error('PERFIL_INCOMPLETO');
+    }
+
+    return this.validarIngreso(usuario);
+  }
+
+  datosRedSocial(usuario: any = this.usuarioActual()): DatosRedSocial {
+    const metadata = usuario?.user_metadata ?? {};
+
+    const nombreCompleto: string = (
+      metadata['full_name'] ??
+      metadata['name'] ??
+      metadata['custom_claims']?.['global_name'] ??
+      ''
+    ).trim();
+
+    // Google trae nombre y apellido por separado; Discord, un solo nombre
+    const nombre: string =
+      metadata['given_name'] ?? nombreCompleto.split(' ')[0] ?? '';
+
+    const apellido: string =
+      metadata['family_name'] ??
+      nombreCompleto.split(' ').slice(1).join(' ') ??
+      '';
+
+    return {
+      nombre,
+      apellido,
+      avatar: metadata['avatar_url'] ?? metadata['picture'] ?? null,
+      email: usuario?.email ?? '',
+      red: usuario?.app_metadata?.['provider'] ?? '',
+    };
+  }
+
+  // la cuenta de la red queda también con correo y contraseña
+  async establecerContrasena(password: string): Promise<void> {
+    const { error } = await this.supabaseService.client.auth.updateUser({
+      password,
+    });
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async completarRegistroSocial(datos: {
+    nombre: string;
+    apellido: string;
+    documento: string;
+    avatar: string | null;
+  }): Promise<void> {
+    const { error } = await this.supabaseService.client.rpc(
+      'completar_registro_social',
+      {
+        p_nombre: datos.nombre,
+        p_apellido: datos.apellido,
+        p_documento: datos.documento,
+        p_avatar: datos.avatar,
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    // trae la metadata nueva (perfil = cliente_registrado) a la sesión
+    const { data: sesion, error: errorSesion } =
+      await this.supabaseService.client.auth.refreshSession();
+
+    if (errorSesion || !sesion.user) {
+      throw errorSesion ?? new Error('No se pudo actualizar la sesión.');
+    }
+
+    const clienteId = sesion.user.id;
+
+    // mismo aviso que el registro con correo
+    const { error: errorCorreo } =
+      await this.supabaseService.client.functions.invoke(
+        'send-client-status-email',
+        { body: { clienteId, estado: 'pendiente' } }
+      );
+
+    if (errorCorreo) {
+      console.error(
+        'Registro social completo, pero no se pudo enviar el correo de pendiente:',
+        errorCorreo
+      );
+    }
+
+    const { error: errorPush } =
+      await this.supabaseService.client.functions.invoke(
+        'notify-pending-client',
+        { body: { clienteId } }
+      );
+
+    if (errorPush) {
+      console.error(
+        'Registro social completo, pero no se pudo notificar a los gestores:',
+        errorPush
+      );
+    }
+
+    // queda pendiente: no puede seguir logueado
+    await this.supabaseService.client.auth.signOut();
+
+    this.usuarioActual.set(null);
+  }
+
+  // cambia la foto de perfil (cuenta + tabla usuarios, que usan el chat y los listados)
+  async actualizarAvatar(file: File): Promise<string> {
+    const avatar = await this.storageService.uploadImage(file);
+
+    const { error } = await this.supabaseService.client.rpc(
+      'actualizar_avatar',
+      { p_avatar: avatar }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    const { data, error: errorSesion } =
+      await this.supabaseService.client.auth.refreshSession();
+
+    if (errorSesion) {
+      throw errorSesion;
+    }
+
+    this.usuarioActual.set(data.user ?? null);
+
+    return avatar;
   }
 
 async logout(): Promise<void> {
