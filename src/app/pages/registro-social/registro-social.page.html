@@ -1,0 +1,71 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        titulo="¿Salir del registro?"
+        mensaje="Si salís ahora, tu cuenta no se va a crear."
+        textoConfirmar="Salir"
+        (confirmadoVolver)="cancelar()"
+      />
+    </ion-buttons>
+
+    <ion-title>Completá tu registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (datos(); as datos) {
+  <div class="social">
+    <p class="social__intro">
+      Tomamos tus datos de {{ nombreRed() }}. Faltan algunos para terminar.
+    </p>
+
+    @if (!cambiarFoto()) {
+    <div class="social__foto">
+      <div class="social__circulo">
+        <img [src]="datos.avatar" alt="Foto de perfil" class="social__imagen" />
+        <span class="social__badge" [class.social__badge--discord]="datos.red === 'discord'">
+          <img
+            [src]="'assets/icons/' + datos.red + '.svg'"
+            alt=""
+            class="social__badge-logo"
+          />
+        </span>
+      </div>
+      <p class="social__chico">
+        Foto de {{ nombreRed() }} ·
+        <button type="button" class="social__link" (click)="cambiarFoto.set(true)">
+          Usar otra foto
+        </button>
+      </p>
+    </div>
+    } @else {
+    <app-profile-step [control]="perfil" />
+    }
+
+    <app-personal-step [control]="personal" />
+
+    <app-credentials-step [control]="credenciales" />
+  </div>
+  }
+</ion-content>
+
+@if (guardando()) {
+<div class="page-loading">
+  <app-spinner-logo />
+  <span>Creando cuenta...</span>
+</div>
+}
+
+<ion-footer class="ion-no-border">
+  <div class="footer-actions">
+    <ion-button
+      expand="block"
+      shape="round"
+      (click)="finalizar()"
+      [disabled]="guardando()"
+    >
+      Finalizar registro
+    </ion-button>
+  </div>
+</ion-footer>

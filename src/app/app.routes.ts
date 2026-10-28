@@ -27,6 +27,17 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/register/register.page').then((m) => m.RegisterPage),
   },
+
+  {
+    // cliente nuevo que entró con Google o Discord (tiene sesión, no perfil)
+    path: 'registro/social',
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/registro-social/registro-social.page').then(
+        (m) => m.RegistroSocialPage
+      ),
+  },
   {
     path: 'encuestas',
     canActivate: [authGuard],
