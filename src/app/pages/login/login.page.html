@@ -43,7 +43,7 @@
   </p>
 </div>
 
-      @if (cargando()) {
+      @if (cargando() || ingresoSocial.procesando()) {
         <div class="page-loading">
           <app-spinner-logo />
           <span>Iniciando sesión...</span>
@@ -54,15 +54,37 @@
         expand="block"
         class="boton_i"
         (click)="iniciarSesion()"
-        [disabled]="cargando()"
+        [disabled]="cargando() || ingresoSocial.procesando()"
       >
         Iniciar sesión
       </ion-button>
 
     <div class="separador">
       <span class="linea_isq"></span>
-      <span class="punto"></span>
+      <span class="separador__texto">o ingresá con</span>
       <span class="linea_isq"></span>
+    </div>
+
+    <!-- ingreso con redes sociales -->
+    <div class="redes">
+      <button
+        type="button"
+        class="red red--google"
+        aria-label="Ingresar con Google"
+        [disabled]="cargando() || ingresoSocial.procesando()"
+        (click)="ingresarConRed('google')"
+      >
+        <img src="assets/icons/google.svg" alt="" class="red__logo">
+      </button>
+      <button
+        type="button"
+        class="red red--discord"
+        aria-label="Ingresar con Discord"
+        [disabled]="cargando() || ingresoSocial.procesando()"
+        (click)="ingresarConRed('discord')"
+      >
+        <img src="assets/icons/discord.svg" alt="" class="red__logo">
+      </button>
     </div>
 
     <ion-button
