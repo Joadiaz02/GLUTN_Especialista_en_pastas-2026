@@ -30,6 +30,17 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { parseTableQr, parseTipQr } from '@app/utils';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
+import { MiCuentaComponent } from '@app/components/ui/mi-cuenta/mi-cuenta.component';
+import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+
+const NOMBRE_PERFIL: Record<string, string> = {
+  [EPerfilUsuario.Dueno]: 'Dueño',
+  [EPerfilUsuario.Supervisor]: 'Supervisor',
+  [EPerfilUsuario.Metre]: 'Metre',
+  [EPerfilUsuario.Mozo]: 'Mozo',
+  [EPerfilUsuario.Cocinero]: 'Cocinero',
+  [EPerfilUsuario.Cantinero]: 'Cantinero',
+};
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
 
@@ -50,7 +61,9 @@ const DEMORA_FOTO_DESTACADO_MS = 3000;
     IonHeader,
     IonToolbar,
     IonButtons,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    MiCuentaComponent,
+    ConfirmVolverComponent,
 ],
 })
 export class HomePage implements OnInit, OnDestroy {
@@ -130,7 +143,11 @@ export class HomePage implements OnInit, OnDestroy {
 
   mensajeVolver = computed(() => {
     if (this.esPersonal()) {
-      return 'Vas a volver a la selección de acceso.';
+      const perfil = NOMBRE_PERFIL[this.perfil() ?? ''];
+
+      return perfil
+        ? `Vas a volver al panel de ${perfil}.`
+        : 'Vas a volver a tu panel.';
     }
 
     if (this.isLoggedIn()) {
@@ -254,8 +271,9 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async volver(): Promise<void> {
+    // el panel de cada perfil es /admin (muestra solo sus tarjetas)
     if (this.esPersonal()) {
-      void this.router.navigate(['/seleccion-acceso']);
+      void this.router.navigate(['/admin']);
       return;
     }
 
