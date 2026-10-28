@@ -183,6 +183,25 @@ ion-modal.home-modal {
   border: none;
 }
 
+// correo: sobre en el círculo y la dirección abajo
+.mi-cuenta__correo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.mi-cuenta__logo--correo {
+  background: var(--ion-color-primary);
+  border: none;
+  color: #ffffff;
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
 .chip {
   flex-shrink: 0;
   white-space: nowrap;
