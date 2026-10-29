@@ -150,11 +150,13 @@ ion-modal.home-modal {
   }
 }
 
-// logo de la red en lugar del nombre, como los botones del login
+// logo de la red arriba y el texto abajo, igual que el correo
 .mi-cuenta__red {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
 
   small {
     margin-top: 0;
@@ -190,6 +192,10 @@ ion-modal.home-modal {
   align-items: flex-start;
   gap: 6px;
   min-width: 0;
+
+  small {
+    margin-top: 0;
+  }
 }
 
 .mi-cuenta__logo--correo {
