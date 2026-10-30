@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
+import { Component, computed, ElementRef, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { IonButton, IonContent, ToastController } from '@ionic/angular';
 
@@ -30,6 +30,9 @@ export class PagosPage implements OnDestroy {
 
   vista = signal<VistaPagos>('cuentas');
 
+  private _viewport = viewChild<ElementRef<HTMLElement>>('viewport');
+  indiceActual = signal(0);
+
   // cuenta que se está procesando
   procesando = signal<string | null>(null);
 
@@ -58,16 +61,16 @@ export class PagosPage implements OnDestroy {
   entregar(cuenta: CuentaDelMozo): Promise<void> {
     return this.procesar(cuenta, async () => {
       await this.cuentasMozo.entregarCuenta(cuenta);
-      await this._vibracion.confirmacion();
-      await this.avisar('Cuenta entregada. El cliente ya la ve en su pantalla.', 'success');
+      
+      
     });
   }
 
   confirmar(cuenta: CuentaDelMozo): Promise<void> {
     return this.procesar(cuenta, async () => {
       await this.cuentasMozo.confirmarPago(cuenta);
-      await this._vibracion.confirmacion();
-      await this.avisar('Pago confirmado. La mesa quedó libre.', 'success');
+      
+      
     });
   }
 
@@ -109,5 +112,52 @@ export class PagosPage implements OnDestroy {
     });
 
     await toast.present();
+  }
+
+  cambiarVista_card(vista: VistaPagos): void {
+    if (vista === this.vista()) return;
+    this.vista.set(vista);
+    this.indiceActual.set(0);
+
+    const viewport = this._viewport()?.nativeElement;
+    if (viewport) {
+      viewport.scrollLeft = 0;
+    }
+  }
+
+  irA(indice: number): void {
+    const viewport = this._viewport()?.nativeElement;
+    const slide = viewport?.querySelectorAll<HTMLElement>('.slide')[indice];
+
+    if (!viewport || !slide) return;
+
+    this.indiceActual.set(indice);
+    viewport.scrollTo({
+      left: slide.offsetLeft - (viewport.clientWidth - slide.offsetWidth) / 2,
+      behavior: 'smooth',
+    });
+  }
+
+  alDesplazar(): void {
+    const viewport = this._viewport()?.nativeElement;
+    if (!viewport) return;
+
+    const centro = viewport.scrollLeft + viewport.clientWidth / 2;
+    const slides = Array.from(viewport.querySelectorAll<HTMLElement>('.slide'));
+
+    let masCercano = 0;
+    let distanciaMinima = Number.POSITIVE_INFINITY;
+
+    slides.forEach((slide, indice) => {
+      const distancia = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - centro);
+      if (distancia < distanciaMinima) {
+        distanciaMinima = distancia;
+        masCercano = indice;
+      }
+    });
+
+    if (masCercano !== this.indiceActual()) {
+      this.indiceActual.set(masCercano);
+    }
   }
 }
