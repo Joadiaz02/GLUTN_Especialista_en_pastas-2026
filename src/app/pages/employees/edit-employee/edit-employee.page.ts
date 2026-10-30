@@ -67,8 +67,13 @@ export class EditEmployeePage {
         this.isLoading.set(true)
     const id = this._route.snapshot.paramMap.get('id') ?? '';
     
-    const employee = await this._employeeRepository.getById(id)!;
-    
+    const employee = await this._employeeRepository.getById(id);
+
+    if (!employee) {
+      await this.avisarNoEncontrado();
+      return;
+    }
+
     this.employee.set(employee);
     this.image.set(employee.avatar);
 
@@ -84,6 +89,22 @@ export class EditEmployeePage {
     this.typeSelected.set(employee.perfil);
 
     this.isLoading.set(false)
+  }
+
+  // si lo borraron o el enlace es viejo, avisa y vuelve al listado
+  private async avisarNoEncontrado(): Promise<void> {
+    await this._vibracion.error();
+
+    const toast = await this._toastController.create({
+      message: 'No encontramos ese empleado. Puede que lo hayan borrado.',
+      duration: 5000,
+      position: 'top',
+      color: 'danger',
+    });
+
+    await toast.present();
+
+    await this._router.navigateByUrl('/admin/employees');
   }
 
   form = new FormGroup({

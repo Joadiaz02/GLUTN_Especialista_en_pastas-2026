@@ -101,7 +101,12 @@ export class EditDrinkPage implements OnInit {
     this.isLoadingDrink.set(true);
 
     try {
-      const drink = await this._drinkService.getById(id)!;
+      const drink = await this._drinkService.getById(id);
+
+      if (!drink) {
+        await this.avisarNoEncontrado();
+        return;
+      }
 
       this.drink.set(drink);
 
@@ -138,6 +143,22 @@ export class EditDrinkPage implements OnInit {
 
   async volver() {
     await this._router.navigate(['/admin/drinks']);
+  }
+
+  // si lo borraron o el enlace es viejo, avisa y vuelve al listado
+  private async avisarNoEncontrado(): Promise<void> {
+    await this._vibracion.error();
+
+    const toast = await this._toastController.create({
+      message: 'No encontramos esa bebida. Puede que lo hayan borrado.',
+      duration: 5000,
+      position: 'top',
+      color: 'danger',
+    });
+
+    await toast.present();
+
+    await this._router.navigateByUrl('/admin/drinks');
   }
 
   private async resolverFoto(

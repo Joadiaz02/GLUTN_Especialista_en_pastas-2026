@@ -78,8 +78,13 @@ export class EditTablePage implements OnInit {
     this.isLoading.set(true)
     const id = this._route.snapshot.paramMap.get('id') ?? '';
     
-    const table = await this._tableService.getTableById(id)!;
-    
+    const table = await this._tableService.getTableById(id);
+
+    if (!table) {
+      await this.avisarNoEncontrado();
+      return;
+    }
+
     this.table.set(table);
     this.image.set(table.foto);
 
@@ -91,6 +96,22 @@ export class EditTablePage implements OnInit {
     });
 
     this.isLoading.set(false)
+  }
+
+  // si lo borraron o el enlace es viejo, avisa y vuelve al listado
+  private async avisarNoEncontrado(): Promise<void> {
+    await this._vibracion.error();
+
+    const toast = await this._toastController.create({
+      message: 'No encontramos esa mesa. Puede que lo hayan borrado.',
+      duration: 5000,
+      position: 'top',
+      color: 'danger',
+    });
+
+    await toast.present();
+
+    await this._router.navigateByUrl('/admin/tables');
   }
 
   getFormControl(controlName: string) {
