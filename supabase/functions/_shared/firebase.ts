@@ -206,6 +206,15 @@ export async function enviarNotificacionFirebase(
               title: titulo,
               body: cuerpo,
             },
+            // canal 'avisos' que crea la app, con aviso.wav y vibración
+            android: {
+              priority: 'high',
+              notification: {
+                channel_id: 'avisos',
+                sound: 'aviso',
+                default_vibrate_timings: true,
+              },
+            },
             ...(datos
               ? { data: datos }
               : {}),

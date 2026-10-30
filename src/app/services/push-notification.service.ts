@@ -20,6 +20,9 @@ const RUTA_POR_TIPO: Record<string, string> = {
   cliente_pendiente: '/admin/clients',
 };
 
+// el mismo id usa _shared/firebase.ts al mandar la push
+const CANAL_AVISOS = 'avisos';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -65,6 +68,17 @@ export class PushNotificationService {
       }
     }
 
+    // canal con sonido y vibración para las push con la app cerrada
+    await PushNotifications.createChannel({
+      id: CANAL_AVISOS,
+      name: 'Avisos de GLUTN',
+      description: 'Pedidos, consultas, mesas y pagos',
+      importance: 5,
+      visibility: 1,
+      sound: 'aviso.wav',
+      vibration: true,
+    });
+
     // Solicitar el registro en cada inicio de sesión.
     await PushNotifications.register();
 
@@ -94,6 +108,7 @@ export class PushNotificationService {
     await PushNotifications.addListener(
       'pushNotificationReceived',
       async (notification: PushNotificationSchema) => {
+        void this.vibracion.aviso();
         await this.mostrarAviso(notification);
       }
     );
