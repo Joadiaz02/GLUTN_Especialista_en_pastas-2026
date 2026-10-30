@@ -13,16 +13,24 @@
 }
 
 .social__foto {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 4px;
+
+  .step__title,
+  .step__subtitle {
+    align-self: flex-start;
+  }
 }
 
+// la foto de la red ocupa el paso entero, como en el registro normal
 .social__circulo {
   position: relative;
-  width: 112px;
-  height: 112px;
+  width: min(300px, 75vw);
+  height: min(300px, 75vw);
+  margin-top: 16px;
 }
 
 .social__imagen {
@@ -35,10 +43,10 @@
 
 .social__badge {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 34px;
-  height: 34px;
+  right: 8%;
+  bottom: 8%;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 3px solid var(--ion-background-color);
   background: #ffffff;
@@ -52,8 +60,8 @@
 }
 
 .social__badge-logo {
-  width: 18px;
-  height: 18px;
+  width: 26px;
+  height: 26px;
 }
 
 .social__chico {
@@ -73,9 +81,10 @@
   cursor: pointer;
 }
 
-// los pasos de datos y de acceso ocupan todo el ancho
+// los pasos ocupan todo el ancho
 app-personal-step,
-app-credentials-step {
+app-credentials-step,
+app-profile-step {
   width: 100%;
 }
 

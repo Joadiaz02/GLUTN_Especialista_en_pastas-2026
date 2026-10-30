@@ -24,6 +24,7 @@ import { passwordMatchValidator } from '@app/validators';
 import { PersonalStepPage } from '../register/steps/personal-step/personal-step.page';
 import { CredentialsStepPage } from '../register/steps/credentials-step/credentials-step.page';
 import { ProfileStepPage } from '../register/steps/profile-step/profile-step.page';
+import { ProgressBarComponent } from '@app/components';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
@@ -54,6 +55,7 @@ const NOMBRE_RED: Record<string, string> = {
     PersonalStepPage,
     CredentialsStepPage,
     ProfileStepPage,
+    ProgressBarComponent,
     ConfirmVolverComponent,
     SpinnerLogoComponent,
   ],
@@ -105,6 +107,9 @@ export class RegistroSocialPage implements OnInit {
     file: new FormControl<File | null>(null),
   });
 
+  // mismos 3 pasos que el registro normal
+  pasoActual = signal<number>(1);
+
   datos = signal<DatosRedSocial | null>(null);
   cambiarFoto = signal<boolean>(false);
   guardando = signal<boolean>(false);
@@ -134,6 +139,36 @@ export class RegistroSocialPage implements OnInit {
 
   nombreRed(): string {
     return NOMBRE_RED[this.datos()?.red ?? ''] ?? 'la red social';
+  }
+
+  tituloPaso(): string {
+    switch (this.pasoActual()) {
+      case 1:
+        return 'Datos personales';
+
+      case 2:
+        return 'Acceso';
+
+      default:
+        return 'Perfil';
+    }
+  }
+
+  siguientePaso(): void {
+    const formulario = this.pasoActual() === 1 ? this.personal : this.credenciales;
+
+    if (formulario.invalid) {
+      formulario.markAllAsTouched();
+      void this.vibracion.errorValidacion();
+
+      return;
+    }
+
+    this.pasoActual.update((paso) => paso + 1);
+  }
+
+  pasoAnterior(): void {
+    this.pasoActual.update((paso) => Math.max(1, paso - 1));
   }
 
   async finalizar(): Promise<void> {
