@@ -1,4 +1,3 @@
-
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -31,15 +30,20 @@
 
     <!-- Solo esta zona scrollea. Su alto lo calcula la página (filas completas)
          y el scroll frena al ras de cada fila: ninguna tarjeta queda cortada. -->
-    <div class="admin-scroller">
+    <div
+      class="admin-scroller"
+      [class.admin-scroller--fill]="getLengthModulosVisibles()"
+      /* [class.admin-scroller--fill]="modulosVisibles.length == 2" */
+    >
       <div class="modules-container">
         @for (modulo of modulosVisibles; track modulo.id) {
-          <app-admin-module-card
-            [module]="modulo"
-            (selected)="seleccionarModulo($event)"
-            [routerLink]="modulo.path"
-            [icon]="modulo.icon"
-          ></app-admin-module-card>
+        <app-admin-module-card
+          [module]="modulo"
+          [agrandar]="getLengthModulosVisibles()"
+          (selected)="seleccionarModulo($event)"
+          [routerLink]="modulo.path"
+          [icon]="modulo.icon"
+        ></app-admin-module-card>
         }
       </div>
     </div>

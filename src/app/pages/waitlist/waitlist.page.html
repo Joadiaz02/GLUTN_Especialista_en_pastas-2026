@@ -1,48 +1,26 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-
     <ion-buttons slot="start">
-      <app-confirm-volver
-        (confirmadoVolver)="volver()"
-      ></app-confirm-volver>
+      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
 
-    <ion-title>
-      Lista de espera
-    </ion-title>
-
+    <ion-title> Lista de espera </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content
-  [fullscreen]="true"
-  class="waitlist-content"
->
-
+<ion-content [fullscreen]="true" class="waitlist-content">
   <div class="waitlist">
-
     <!-- =========================
          ENCABEZADO
     ========================== -->
 
     <div class="waitlist__header">
-
-      <h1 class="waitlist__title">
-        Clientes esperando
-      </h1>
+      <h1 class="waitlist__title">Clientes esperando</h1>
 
       <p class="waitlist__subtitle">
-
-        {{ users().length }}
-
-        {{
-          users().length === 1
-            ? 'persona esperando una mesa.'
-            : 'personas esperando una mesa.'
-        }}
-
+        {{ users().length }} {{ users().length === 1 ? 'persona esperando una
+        mesa.' : 'personas esperando una mesa.' }}
       </p>
-
     </div>
 
     <!-- =========================
@@ -53,33 +31,20 @@
       class="waitlist-filters"
       aria-label="Filtrar por cantidad de comensales"
     >
+      @for ( filtro of filtros; track filtro ) {
 
-      @for (
-        filtro of filtros;
-        track filtro
-      ) {
-
-        <button
-          type="button"
-          class="waitlist-filter"
-          [class.waitlist-filter--active]="
+      <button
+        type="button"
+        class="waitlist-filter"
+        [class.waitlist-filter--active]="
             filtroSeleccionado() === filtro
           "
-          (click)="seleccionarFiltro(filtro)"
-        >
-
-          {{
-            filtro === 'todos'
-              ? 'Todos'
-              : filtro === 5
-                ? '5+'
-                : filtro
-          }}
-
-        </button>
+        (click)="seleccionarFiltro(filtro)"
+      >
+        {{ filtro === 'todos' ? 'Todos' : filtro === 5 ? '5+' : filtro }}
+      </button>
 
       }
-
     </div>
 
     <!-- =========================
@@ -88,11 +53,9 @@
 
     @if (cargando()) {
 
-      <div class="waitlist__empty">
-
-        <app-spinner-logo />
-
-      </div>
+    <div class="waitlist__empty">
+      <app-spinner-logo />
+    </div>
 
     }
 
@@ -100,18 +63,11 @@
          SIN RESULTADOS
     ========================== -->
 
-    @else if (
-      usuariosFiltrados().length === 0
-    ) {
+    @else if ( usuariosFiltrados().length === 0 ) {
 
-      <div class="waitlist__empty">
-
-        <p>
-          No hay clientes que coincidan
-          con este filtro.
-        </p>
-
-      </div>
+    <div class="waitlist__empty">
+      <p>No hay clientes que coincidan con este filtro.</p>
+    </div>
 
     }
 
@@ -121,152 +77,82 @@
 
     @else {
 
-      <div class="waitlist__list">
+    <div class="waitlist__list">
+      @for ( entry of usuariosFiltrados(); track entry.id ) {
 
-        @for (
-          entry of usuariosFiltrados();
-          track entry.id
-        ) {
+      <article class="waitlist-card">
+        <button
+          class="waitlist-card__main"
+          type="button"
+          [routerLink]="entry.id"
+        >
+          <!-- Avatar -->
 
-          <article
-            class="waitlist-card"
-          >
+          @if (entry.usuarios?.avatar) {
 
-            <button
-              class="waitlist-card__main"
-              type="button"
-              [routerLink]="entry.id"
-            >
+          <img
+            [src]="entry.usuarios.avatar"
+            [alt]="entry.usuarios.nombre"
+            class="waitlist-card__avatar"
+          />
 
-              <!-- Avatar -->
+          } @else {
 
-              @if (entry.usuarios?.avatar) {
+          <div class="waitlist-card__avatar waitlist-card__avatar--empty">
+            {{ entry.usuarios?.nombre ?.charAt(0) ?.toUpperCase() || '?' }}
+          </div>
 
-                <img
-                  [src]="entry.usuarios.avatar"
-                  [alt]="entry.usuarios.nombre"
-                  class="waitlist-card__avatar"
-                />
+          }
+
+          <!-- Información -->
+
+          <div class="waitlist-card__info">
+            <p class="waitlist-card__name">
+              {{ entry.usuarios?.nombre || '' }} {{ entry.usuarios?.apellido ||
+              '' }}
+            </p>
+
+            <p class="waitlist-card__details">
+              {{ entry.comensales ?? 1 }} {{ (entry.comensales ?? 1) === 1 ?
+              'comensal' : 'comensales' }} · {{ entry.created_at | date: 'HH:mm'
+              }}
+            </p>
+
+            @if ( (entry.consideraciones ?? []).length > 0 ) {
+
+            <div class="waitlist-card__tags">
+              @for ( consideracion of entry.consideraciones; track consideracion
+              ) {
+
+              <span>
+                {{ consideracion === 'movilidad_reducida' ? 'Movilidad reducida'
+                : consideracion === 'vip' ? 'VIP' : consideracion ===
+                'vip_movilidad_reducida' ? "VIP con Movilidad Reducida" :
+                "Estandar" }}
+              </span>
 
               }
+            </div>
 
-              @else {
+            }
+          </div>
+        </button>
 
-                <div
-                  class="
-                    waitlist-card__avatar
-                    waitlist-card__avatar--empty
-                  "
-                >
+        <!-- Eliminar -->
 
-                  {{
-                    entry.usuarios?.nombre
-                      ?.charAt(0)
-                      ?.toUpperCase() || '?'
-                  }}
+        <button
+          type="button"
+          class="waitlist-card__delete"
+          aria-label="Eliminar cliente de la lista"
+          (click)="eliminar(entry)"
+        >
+          ×
+        </button>
+      </article>
 
-                </div>
-
-              }
-
-              <!-- Información -->
-
-              <div
-                class="waitlist-card__info"
-              >
-
-                <p
-                  class="waitlist-card__name"
-                >
-
-                  {{
-                    entry.usuarios?.nombre || ''
-                  }}
-
-                  {{
-                    entry.usuarios?.apellido || ''
-                  }}
-
-                </p>
-
-                <p
-                  class="waitlist-card__details"
-                >
-
-                  {{ entry.comensales ?? 1 }}
-
-                  {{
-                    (entry.comensales ?? 1) === 1
-                      ? 'comensal'
-                      : 'comensales'
-                  }}
-
-                  ·
-
-                  {{
-                    entry.created_at
-                      | date: 'HH:mm'
-                  }}
-
-                </p>
-
-                @if (
-                  (entry.consideraciones ?? []).length > 0
-                ) {
-
-                  <div
-                    class="waitlist-card__tags"
-                  >
-
-                    @for (
-                      consideracion
-                      of entry.consideraciones;
-                      track consideracion
-                    ) {
-
-                      <span>
-
-                        {{
-                          consideracion ===
-                          'movilidad_reducida'
-                            ? 'Movilidad reducida'
-                            : consideracion ===
-                              'silla_bebe'
-                              ? 'Silla para bebé'
-                              : 'Otra consideración'
-                        }}
-
-                      </span>
-
-                    }
-
-                  </div>
-
-                }
-
-              </div>
-
-            </button>
-
-            <!-- Eliminar -->
-
-            <button
-              type="button"
-              class="waitlist-card__delete"
-              aria-label="Eliminar cliente de la lista"
-              (click)="eliminar(entry)"
-            >
-              ×
-            </button>
-
-          </article>
-
-        }
-
-      </div>
+      }
+    </div>
 
     }
-
   </div>
-
 </ion-content>

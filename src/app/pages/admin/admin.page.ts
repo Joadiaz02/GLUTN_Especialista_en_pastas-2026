@@ -127,6 +127,10 @@ private async cargarModulos(): Promise<void> {
   this.programarAjuste();
 }
 
+getLengthModulosVisibles() {
+  return this.modulosVisibles.length == 2 || this.modulosVisibles.length == 3 ? true : false
+}
+
   private programarAjuste(): void {
     cancelAnimationFrame(this.layoutFrame);
     this.layoutFrame = requestAnimationFrame(() => this.ajustarScroll());

@@ -25,7 +25,7 @@
     <div class="guest-extra__section">
       <h2>¿Cuántos son?</h2>
 
-      <p>Indicá la cantidad de personas que van a ocupar la mesa.</p>
+      <!-- <p>Indicá la cantidad de personas que van a ocupar la mesa.</p> -->
 
       <div class="guest-stepper">
         <button
@@ -51,11 +51,50 @@
     </div>
 
     <div class="guest-extra__section">
-      <h2>¿Necesitan alguna consideración?</h2>
+      <h2>Eliga el tipo de mesa</h2>
 
-      <p>Podés seleccionar más de una.</p>
+      <!-- <p>Podés seleccionar más de una.</p> -->
 
       <div class="guest-options">
+        <button
+          type="button"
+          class="guest-option"
+          [class.guest-option--active]="
+                tieneConsideracion('estandar')
+              "
+          (click)="
+                toggleConsideracion('estandar')
+              "
+        >
+          Estandar
+        </button>
+
+        <button
+          type="button"
+          class="guest-option"
+          [class.guest-option--active]="
+                tieneConsideracion('vip')
+              "
+          (click)="
+                toggleConsideracion('vip')
+              "
+        >
+          VIP
+        </button>
+
+        <button
+          type="button"
+          class="guest-option"
+          [class.guest-option--active]="
+                tieneConsideracion('vip_movilidad_reducida')
+              "
+          (click)="
+                toggleConsideracion('vip_movilidad_reducida')
+              "
+        >
+          VIP con Movilidad Reducida
+        </button>
+
         <button
           type="button"
           class="guest-option"
@@ -66,33 +105,7 @@
                 toggleConsideracion('movilidad_reducida')
               "
         >
-          Movilidad reducida
-        </button>
-
-        <button
-          type="button"
-          class="guest-option"
-          [class.guest-option--active]="
-                tieneConsideracion('silla_bebe')
-              "
-          (click)="
-                toggleConsideracion('silla_bebe')
-              "
-        >
-          Silla para bebé
-        </button>
-
-        <button
-          type="button"
-          class="guest-option"
-          [class.guest-option--active]="
-                tieneConsideracion('otra')
-              "
-          (click)="
-                toggleConsideracion('otra')
-              "
-        >
-          Otra consideración
+          Movilidad Reducida
         </button>
       </div>
     </div>
@@ -126,7 +139,7 @@
       (click)="scanQR()"
       [disabled]="scanning()"
     >
-      {{ scanning() ? 'Procesando...' : 'Escanear QR' }}
+      Escanear QR
     </ion-button>
 
     <ion-button
@@ -142,3 +155,10 @@
     }
   </div>
 </ion-footer>
+
+@if (scanning()) {
+<div class="quick-loading">
+  <app-spinner-logo />
+  <span>Cargando...</span>
+</div>
+}

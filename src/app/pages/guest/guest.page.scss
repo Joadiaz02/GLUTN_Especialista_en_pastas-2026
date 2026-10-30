@@ -1,5 +1,5 @@
 ion-content {
-  --padding-bottom: 24px;
+  --padding-bottom: 0;
 }
 
 .guest-extra {
@@ -8,6 +8,7 @@ ion-content {
   flex-direction: column;
   gap: 16px;
   padding: 0 4px 24px;
+  padding-bottom: 0;
 }
 
 .guest-extra__section {
@@ -68,22 +69,24 @@ ion-content {
 }
 
 .guest-options {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
-  margin-top: 4px;
+  // display: flex;
+  // flex-wrap: wrap;
+  // margin-top: 4px;
 }
 
 .guest-option {
-  min-height: 42px;
+  min-height: 48px;
   padding: 0 14px;
   border: 0;
   border-radius: 999px;
   background: var(--color-surface-muted);
   color: #fff;
   font: inherit;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 16px;
+  // font-weight: 700;
   transition:
     background 0.2s ease,
     transform 0.15s ease;

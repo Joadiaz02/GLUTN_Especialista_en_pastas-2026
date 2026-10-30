@@ -136,3 +136,24 @@
 :host-context(.modules-container--compact) {
   @include compacto;
 }
+
+.module-icon-wrapper--large {
+  width: 64px;
+  height: 64px;
+}
+
+.module-icon--large {
+  font-size: 32px !important;
+}
+
+.title--large {
+  font-size: 24px !important;
+}
+
+.description--large {
+  font-size: 18px !important;
+}
+
+.card-content--large {
+  padding: 24px !important;
+}
