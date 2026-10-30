@@ -72,7 +72,6 @@ export class TableActionSheetComponent {
   
       try {
         await this._tableRepository.update(item.id, { baja_logica: true });
-        await this._vibracion.confirmacion();
         await this._modalController.dismiss();
         await this.mostrarAviso('Mesa dada de baja correctamente.');
       } catch (error) {
@@ -93,7 +92,6 @@ export class TableActionSheetComponent {
   
       try {
         await this._tableRepository.update(item.id, { baja_logica: false });
-        await this._vibracion.confirmacion();
         await this._modalController.dismiss();
         await this.mostrarAviso('Mesa reactivada correctamente.');
       } catch (error) {

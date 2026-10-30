@@ -28,7 +28,7 @@ describe('RuletaPage - salir en medio de una partida', () => {
             obtenerPerfil: () => EPerfilUsuario.ClienteRegistrado,
           },
         },
-        { provide: Vibracion, useValue: { error: vi.fn(), confirmacion: vi.fn() } },
+        { provide: Vibracion, useValue: { error: vi.fn() } },
         { provide: Router, useValue: { navigate: vi.fn() } },
       ],
     }).overrideComponent(RuletaPage, {

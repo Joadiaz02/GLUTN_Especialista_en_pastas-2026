@@ -414,7 +414,6 @@ export class HomePage implements OnInit, OnDestroy {
 
     try {
       await this.pedido.solicitarCuenta(usuario.id, porcentaje);
-      await this.vibracion.confirmacion();
       
     } catch (error)  {
         console.error('Error al pedir la cuenta:', JSON.stringify(error));

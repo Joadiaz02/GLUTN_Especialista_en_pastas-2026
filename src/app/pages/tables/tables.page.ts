@@ -14,7 +14,7 @@ import {
 } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-import { Confirm, Table, Vibracion } from '@app/services';
+import { Confirm, Table } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TableQrModalComponent } from './components/table-qr-modal/table-qr-modal.component';
@@ -48,7 +48,6 @@ export class TablesPage {
   private _tableService = inject(Table);
   private _toastController = inject(ToastController);
   private _confirm = inject(Confirm);
-  private _vibracion = inject(Vibracion);
   private _modalController = inject(ModalController);
 
   private touchStartX = 0;
@@ -249,7 +248,6 @@ export class TablesPage {
 
       await this._tableService.update(table.id, { baja_logica: !activa });
 
-      await this._vibracion.confirmacion();
 
       const toast = await this._toastController.create({
         message: activa

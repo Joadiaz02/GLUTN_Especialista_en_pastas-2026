@@ -108,7 +108,6 @@ export class CuentaPage implements OnDestroy {
         totalFinal: this.total(),
       });
 
-      await this._vibracion.confirmacion();
       await this.avisar('Pago enviado. Esperando la confirmación del mozo.', 'success');
       await this.cargar();
     } catch (error) {

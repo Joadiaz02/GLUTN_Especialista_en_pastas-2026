@@ -4,7 +4,7 @@ import {
   IonButton,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { CONFIG_JUEGOS, Juegos, Vibracion } from '@app/services';
+import { CONFIG_JUEGOS, Juegos } from '@app/services';
 import { Auth } from '../../../services/auth/auth';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 
@@ -52,7 +52,6 @@ const VUELTAS_EXTRA_AL_FRENAR = 5;
 })
 export class RuletaPage implements OnDestroy {
   private _juegosService = inject(Juegos);
-  private _vibracion = inject(Vibracion);
   private _authService = inject(Auth);
   private _router = inject(Router);
 
@@ -220,10 +219,8 @@ export class RuletaPage implements OnDestroy {
     // reintenta no consume el intento
     if (tipo === 'gana') {
       this._juegosService.registrarIntento(true, PORCENTAJE_RULETA);
-      await this._vibracion.confirmacion();
     } else if (tipo === 'pierde') {
       this._juegosService.registrarIntento(false, PORCENTAJE_RULETA);
-      await this._vibracion.error();
     } else {
       this._juegosService.anularIntento();
     }

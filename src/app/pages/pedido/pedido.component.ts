@@ -184,7 +184,6 @@ export class PedidoComponent implements OnDestroy {
         await this.pedido.crear_pedido(idMesa, usuario.id, '');
       }
 
-      await this.vibracion.confirmacion();
       await this.mostrarToast('¡Pedido enviado! El mozo lo va a confirmar en breve.', 'success');
 
       void this.root.navigate(['/home'], { replaceUrl: true });

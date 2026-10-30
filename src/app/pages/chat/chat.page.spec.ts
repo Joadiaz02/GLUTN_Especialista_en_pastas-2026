@@ -39,7 +39,7 @@ describe('ChatPage', () => {
     enviar: vi.fn(),
     detener: vi.fn(),
   };
-  const vibracion = { error: vi.fn(), confirmacion: vi.fn() };
+  const vibracion = { error: vi.fn() };
   const toast = { present: vi.fn() };
   const toastController = { create: vi.fn() };
   const router = { navigate: vi.fn() };

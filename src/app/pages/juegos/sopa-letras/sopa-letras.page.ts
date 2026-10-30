@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   IonContent,
   IonButton,
@@ -10,7 +10,6 @@ import {
   SOPA_LETRAS_DURACION_SEGUNDOS,
   SOPA_LETRAS_PALABRAS_POR_PARTIDA,
   SopaLetras,
-  Vibracion,
 } from '@app/services';
 import { Auth } from '../../../services/auth/auth';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
@@ -35,7 +34,6 @@ export class SopaLetrasPage implements OnInit, OnDestroy {
   sopaLetras = inject(SopaLetras);
 
   private _juegosService = inject(Juegos);
-  private _vibracion = inject(Vibracion);
   private _authService = inject(Auth);
   private _router = inject(Router);
 
@@ -44,27 +42,7 @@ export class SopaLetrasPage implements OnInit, OnDestroy {
   readonly duracionSegundos = SOPA_LETRAS_DURACION_SEGUNDOS;
 
   celdaInicio: CeldaSeleccionada | null = null;
-  private _yaVibroFinal = false;
-
-  constructor() {
-    // detecta el fin de la partida por palabra o por tiempo
-    effect(() => {
-      const terminado = this.sopaLetras.juegoTerminado();
-
-      if (!terminado || this._yaVibroFinal) return;
-
-      this._yaVibroFinal = true;
-
-      if (this.sopaLetras.perdioPorTiempo()) {
-        void this._vibracion.error();
-      } else {
-        void this._vibracion.confirmacion();
-      }
-    });
-  }
-
   ngOnInit(): void {
-    this._yaVibroFinal = false;
     this.celdaInicio = null;
     this.sopaLetras.prepararPartida();
   }
@@ -145,13 +123,11 @@ export class SopaLetrasPage implements OnInit, OnDestroy {
   }
 
   comenzar(): void {
-    this._yaVibroFinal = false;
     this.celdaInicio = null;
     this.sopaLetras.iniciarPartida();
   }
 
   jugarDeNuevo(): void {
-    this._yaVibroFinal = false;
     this.celdaInicio = null;
     this.sopaLetras.prepararPartida();
   }

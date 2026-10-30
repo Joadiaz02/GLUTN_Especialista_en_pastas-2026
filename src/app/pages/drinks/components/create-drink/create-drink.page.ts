@@ -260,7 +260,6 @@ export class CreateDrinkPage {
       });
 
 
-      await this._vibracion.confirmacion();
 
 
       const toast = await this._toastController.create({

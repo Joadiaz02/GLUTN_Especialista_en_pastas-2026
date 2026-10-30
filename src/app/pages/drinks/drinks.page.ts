@@ -146,7 +146,6 @@ export class DrinksPage implements OnInit {
 
     try {
       await this._drinkService.update(item.id_carta, { sugerencia: activar });
-      await this._vibracion.confirmacion();
       await this.mostrarAviso(
         activar ? 'Bebida destacada correctamente.' : 'Bebida retirada de destacadas.'
       );
@@ -168,7 +167,6 @@ export class DrinksPage implements OnInit {
 
     try {
       await this._drinkService.update(item.id_carta, { baja_logica: true });
-      await this._vibracion.confirmacion();
       await this.mostrarAviso('Bebida dada de baja correctamente.');
     } catch (error) {
       await this.mostrarError();
@@ -188,7 +186,6 @@ export class DrinksPage implements OnInit {
 
     try {
       await this._drinkService.update(item.id_carta, { baja_logica: false });
-      await this._vibracion.confirmacion();
       await this.mostrarAviso('Bebida reactivada correctamente.');
     } catch (error) {
       await this.mostrarError();

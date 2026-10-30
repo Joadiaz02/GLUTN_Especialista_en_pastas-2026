@@ -65,7 +65,6 @@ export class DrinkCardComponent {
 
     try {
       // await this._platoService.darDeBaja(item.id_carta);
-      // await this._vibracion.confirmacion();
       // await this.mostrarAviso('Plato dado de baja correctamente.');
       // await this.cargarPlatos();
     } catch (error) {
