@@ -415,9 +415,8 @@ export class HomePage implements OnInit, OnDestroy {
     try {
       await this.pedido.solicitarCuenta(usuario.id, porcentaje);
       await this.vibracion.confirmacion();
-      await this.mostrarToast('Cuenta solicitada. El mozo te la lleva enseguida.', 'success');
+      
     } catch (error)  {
-        alert(JSON.stringify(error))
         console.error('Error al pedir la cuenta:', JSON.stringify(error));
         await this.vibracion.error();
         await this.mostrarToast(

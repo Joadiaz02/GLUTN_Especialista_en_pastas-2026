@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -9,11 +9,9 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-import { Router } from '@angular/router';
-import { Confirm, Waitlist } from '@app/services';
+import { Router, RouterLink } from '@angular/router';
+import { Confirm, Waitlist, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
-import { ClientsNavigationComponent } from '../clients/components/clients-navigation/clients-navigation.component';
-import { WaitlistCardComponent } from './components/waitlist-card/waitlist-card.component';
 
 @Component({
   selector: 'app-waitlist',
@@ -21,6 +19,7 @@ import { WaitlistCardComponent } from './components/waitlist-card/waitlist-card.
   styleUrls: ['./waitlist.page.scss'],
   imports: [
     CommonModule,
+    RouterLink,
     IonHeader,
     IonTitle,
     IonToolbar,
@@ -28,15 +27,14 @@ import { WaitlistCardComponent } from './components/waitlist-card/waitlist-card.
     ConfirmVolverComponent,
     IonContent,
     SpinnerLogoComponent,
-    ClientsNavigationComponent,
-    WaitlistCardComponent,
   ],
 })
-export class WaitlistPage {
+export class WaitlistPage implements OnInit {
   private _router = inject(Router);
   private _waitlistService = inject(Waitlist);
   private _confirm = inject(Confirm);
   private _toastController = inject(ToastController);
+  private _vibracion = inject(Vibracion);
 
   private _unsubscribe: (() => void) | null = null;
 
@@ -57,7 +55,7 @@ export class WaitlistPage {
     5,
   ];
 
-  usuariosFiltrados = computed((): any[] => {
+  usuariosFiltrados(): any[] {
     const filtro = this.filtroSeleccionado();
 
     if (filtro === 'todos') {
@@ -66,71 +64,36 @@ export class WaitlistPage {
 
     if (filtro === 5) {
       return this.users().filter(
-        (entry) =>
-          Number(entry.comensales ?? 1) >= 5
+        (entry) => Number(entry.comensales ?? 1) >= 5
       );
     }
 
     return this.users().filter(
-      (entry) =>
-        Number(entry.comensales ?? 1) === filtro
+      (entry) => Number(entry.comensales ?? 1) === filtro
     );
-  });
+  }
 
-  // posición que se muestra en el contador
-  posicionVisible = computed(() =>
-    this.usuariosFiltrados().length === 0
-      ? 0
-      : Math.min(this.indiceActual(), this.usuariosFiltrados().length - 1) + 1
-  );
+  get posicionVisible(): number {
+    return this.usuariosFiltrados().length === 0 ? 0 : this.indiceActual() + 1;
+  }
 
-  seleccionarFiltro(
-    filtro: number | 'todos'
-  ): void {
+  seleccionarFiltro(filtro: number | 'todos'): void {
     this.filtroSeleccionado.set(filtro);
     this.indiceActual.set(0);
   }
 
-  // clase de cada tarjeta según su lugar en el carrusel
-  obtenerClaseCarta(
-    indice: number
-  ): 'activa' | 'anterior' | 'siguiente' | 'oculta' {
-    const total = this.usuariosFiltrados().length;
-    const actual = Math.min(this.indiceActual(), total - 1);
-
-    if (indice === actual) {
-      return 'activa';
-    }
-
-    if (indice === (actual - 1 + total) % total) {
-      return 'anterior';
-    }
-
-    if (indice === (actual + 1) % total) {
-      return 'siguiente';
-    }
-
-    return 'oculta';
-  }
-
   irAnterior(): void {
     const total = this.usuariosFiltrados().length;
-
-    if (total <= 1) {
-      return;
-    }
-
-    this.indiceActual.set((this.indiceActual() - 1 + total) % total);
+    if (total <= 1) return;
+    const nuevoIndice = this.indiceActual() - 1;
+    this.indiceActual.set(nuevoIndice < 0 ? total - 1 : nuevoIndice);
   }
 
   irSiguiente(): void {
     const total = this.usuariosFiltrados().length;
-
-    if (total <= 1) {
-      return;
-    }
-
-    this.indiceActual.set((this.indiceActual() + 1) % total);
+    if (total <= 1) return;
+    const nuevoIndice = this.indiceActual() + 1;
+    this.indiceActual.set(nuevoIndice >= total ? 0 : nuevoIndice);
   }
 
   onTouchStart(event: TouchEvent): void {
@@ -142,86 +105,85 @@ export class WaitlistPage {
     this.touchEndX = event.changedTouches[0]?.screenX ?? this.touchEndX;
   }
 
-  // deslizar a un lado o al otro cambia de cliente
   onTouchEnd(event: TouchEvent): void {
     this.touchEndX = event.changedTouches[0]?.screenX ?? this.touchEndX;
-
     const distancia = this.touchEndX - this.touchStartX;
 
-    if (Math.abs(distancia) < 50) {
-      return;
-    }
-
-    if (distancia > 0) {
-      this.irAnterior();
-    } else {
-      this.irSiguiente();
+    if (Math.abs(distancia) >= 50) {
+      if (distancia > 0) {
+        this.irAnterior();
+      } else {
+        this.irSiguiente();
+      }
     }
   }
 
-  asignarMesa(entry: any): void {
-    void this._router.navigate(['/admin/waitlist', entry.id]);
+  // Lógica para Aceptar / Asignar mesa
+  async aceptar(entry: any): Promise<void> {
+    try {
+      
+      
+      // Navega a la pantalla de asignación de mesa pasando el id del elemento de la lista de espera
+      await this._router.navigate(['/admin/waitlist', entry.id]);
+    } catch (error) {
+      console.error('Error al redirigir a asignación de mesa:', error);
+      await this._vibracion.error();
+      const toast = await this._toastController.create({
+        message: 'No pudimos procesar la acción. Intentá nuevamente.',
+        duration: 3000,
+        position: 'top',
+        color: 'danger',
+      });
+      await toast.present();
+    }
   }
 
   async eliminar(entry: any): Promise<void> {
-    const nombre =
-      `${entry.usuarios?.nombre ?? ''} ${entry.usuarios?.apellido ?? ''}`
-        .trim();
+    const nombre = `${entry.usuarios?.nombre ?? ''} ${entry.usuarios?.apellido ?? ''}`.trim();
 
-    const confirmado =
-      await this._confirm.preguntar({
-        titulo: '¿Eliminar de la lista?',
-        mensaje:
-          `${nombre || 'Este cliente'} dejará de esperar una mesa.`,
-        textoConfirmar: 'Eliminar',
-        colorConfirmar: 'danger',
-        icono: 'trash-outline',
-      });
+    const confirmado = await this._confirm.preguntar({
+      titulo: '¿Eliminar de la lista?',
+      mensaje: `${nombre || 'Este cliente'} dejará de esperar una mesa.`,
+      textoConfirmar: 'Eliminar',
+      colorConfirmar: 'danger',
+      icono: 'trash-outline',
+    });
 
     if (!confirmado) {
       return;
     }
 
     try {
-      console.log(`CAMBIAR EL ESTADO A CANCELADO AL USUARIO QUE TIENE EL ID ${entry.usuario_id} | ID LISTA ESPERA: ${entry.id}`)
-      console.log(entry)
-
       await this._waitlistService.removeUserFromWaitlist(
         entry.usuario_id,
         entry.id
       );
 
       this.users.update((users) =>
-        users.filter(
-          (user) => user.id !== entry.id
-        )
+        users.filter((user) => user.id !== entry.id)
       );
-      this._ajustarIndice();
 
-      const toast =
-        await this._toastController.create({
-          message:
-            'Cliente eliminado de la lista.',
-          duration: 2500,
-          position: 'top',
-          color: 'success',
-        });
+      const totalFiltrados = this.usuariosFiltrados().length;
+      if (this.indiceActual() >= totalFiltrados && totalFiltrados > 0) {
+        this.indiceActual.set(totalFiltrados - 1);
+      }
+
+      const toast = await this._toastController.create({
+        message: 'Cliente eliminado de la lista.',
+        duration: 2500,
+        position: 'top',
+        color: 'success',
+      });
 
       await toast.present();
     } catch (error) {
-      console.error(
-        'Error eliminando cliente:',
-        error
-      );
-
-      const toast =
-        await this._toastController.create({
-          message:
-            'No pudimos eliminar al cliente. Intentá nuevamente.',
-          duration: 3000,
-          position: 'top',
-          color: 'danger',
-        });
+      console.error('Error eliminando cliente:', error);
+      const toast = await this._toastController.create({
+        message: 'No pudimos eliminar al cliente. Intentá nuevamente.',
+        duration: 3000,
+        position: 'top',
+        color: 'danger',
+      });
 
       await toast.present();
     }
@@ -230,35 +192,23 @@ export class WaitlistPage {
   async ngOnInit(): Promise<void> {
     await this._loadList();
 
-    this._unsubscribe =
-      this._waitlistService.getListChange(
-        () => {
-          void this._loadList();
-        }
-      );
+    this._unsubscribe = this._waitlistService.getListChange(() => {
+      void this._loadList();
+    });
   }
 
   private async _loadList(): Promise<void> {
     try {
-      const users =
-        await this._waitlistService.getList();
-
+      const users = await this._waitlistService.getList();
       this.users.set(users);
-      this._ajustarIndice();
     } catch (error) {
-      console.error(
-        'Error cargando lista de espera:',
-        error
-      );
-
-      const toast =
-        await this._toastController.create({
-          message:
-            'No pudimos cargar la lista de espera.',
-          duration: 3000,
-          position: 'top',
-          color: 'danger',
-        });
+      console.error('Error cargando lista de espera:', error);
+      const toast = await this._toastController.create({
+        message: 'No pudimos cargar la lista de espera.',
+        duration: 3000,
+        position: 'top',
+        color: 'danger',
+      });
 
       await toast.present();
     } finally {
@@ -266,19 +216,8 @@ export class WaitlistPage {
     }
   }
 
-  // si la lista se achica, la tarjeta actual no queda fuera de rango
-  private _ajustarIndice(): void {
-    const total = this.usuariosFiltrados().length;
-
-    if (this.indiceActual() >= total) {
-      this.indiceActual.set(Math.max(total - 1, 0));
-    }
-  }
-
   volver(): void {
-    void this._router.navigate([
-      '/admin',
-    ]);
+    void this._router.navigate(['/admin']);
   }
 
   ngOnDestroy(): void {
