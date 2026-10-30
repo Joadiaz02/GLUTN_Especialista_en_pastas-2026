@@ -1,0 +1,98 @@
+// .step__title {
+//   font-size: 24px !important;
+// }
+
+// .step__subtitle {
+//   margin-bottom: 16px !important;
+// }
+
+// .photo-upload {
+//   margin: 0 auto;
+//   width: calc(100vh - 90px - 16px - 143px - 131px - 28px - 44px - 8px - 108px - 108px  - 48px - 8px) !important;
+//   height: calc(100vh - 90px - 16px - 143px - 131px - 28px - 44px - 8px - 108px  - 108px - 48px - 8px) !important;
+// }
+
+/* --- PUNTOS CAMBIADOS ---
+   1. Usamos 'display: flex' vertical en el contenedor para distribuir espacio.
+   2. '.photo-upload' ahora usa aspect-ratio e 'height' dinámico dependiente de vh.
+   3. Establecemos un 'max-height' y 'min-height' razonable para que nunca sea excesivamente grande ni minúsculo.
+*/
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.step__title {
+  font-size: 24px !important;
+}
+
+.step__subtitle {
+  margin-bottom: 16px !important;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.photo-upload {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 8px auto !important;
+
+  /*
+     Explicación:
+     - Usamos aspect-ratio para mantener la forma circular siempre perfecta.
+     - clamp(80px, 18vh, 160px): El avatar tendrá como mínimo 80px, idealmente un 18% 
+       del alto de la pantalla del celular (18vh), y como máximo 160px.
+  */
+  width: clamp(80px, 18vh, 160px) !important;
+  height: clamp(80px, 18vh, 160px) !important;
+  aspect-ratio: 1 / 1 !important;
+
+  &__circle {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+
+    ion-button {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      --padding-start: 0;
+      --padding-end: 0;
+      margin: 0;
+    }
+  }
+
+  &__image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+  }
+}
+
+.field {
+  &__label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  &__input {
+    /* El input mantiene su alto estándar fijo */
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+
+  &__error {
+    color: var(--ion-color-danger, #eb445a);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}

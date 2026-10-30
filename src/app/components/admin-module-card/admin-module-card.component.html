@@ -1,21 +1,25 @@
 <ion-card class="module-card" button (click)="seleccionar()">
-  <ion-card-content>
+  <ion-card-content [class.card-content--large]="agrandar">
     <div class="top">
-      <div class="module-icon">
+      <div class="module-icon" [class.module-icon-wrapper--large]="agrandar">
         <!-- <ion-icon [name]="module.icon" ></ion-icon> -->
-        <ion-icon [src]="'assets/icons/' + icon + '.svg'"></ion-icon>
+        <ion-icon
+          [src]="'assets/icons/' + icon + '.svg'"
+          [class.module-icon--large]="agrandar"
+        ></ion-icon>
       </div>
 
       <ion-icon
+        [class.module-icon--large]="agrandar"
         class="arrow-icon"
         src="assets/icons/arrow-right-2.svg"
       ></ion-icon>
     </div>
 
     <div class="module-info">
-      <h2>{{ module.title }}</h2>
+      <h2 [class.title--large]="agrandar">{{ module.title }}</h2>
 
-      <p>{{ module.description }}</p>
+      <p [class.description--large]="agrandar">{{ module.description }}</p>
     </div>
   </ion-card-content>
 </ion-card>

@@ -1,5 +1,33 @@
+// .illustration {
+//   display: block;
+//   margin: 0 auto;
+//   height: calc(100vh - 186px - 108px - 85px - 40px - 8px);
+// }
+
+/* El contenedor ocupa todo el alto de la pantalla disponible */
+.step-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between; /* Distribuye el espacio equitativamente */
+  box-sizing: border-box;
+}
+
+/* Contenedor flexible para la imagen */
+.illustration-container {
+  flex: 1; /* Hace que ocupe el espacio sobrante de la pantalla */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0; /* Vital para que el flexbox permita achicar la imagen si es necesario */
+  padding: 10px 0;
+}
+
+/* La imagen se adapta dinámicamente al contenedor sin deformarse */
 .illustration {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
   display: block;
   margin: 0 auto;
-  width: 70%;
 }

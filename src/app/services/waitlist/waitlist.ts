@@ -391,16 +391,17 @@ async remove(
   }
 }
 
-async removeUserFromWaitlist(userId: string) {
-  const lastTable = await this.getLastUserTable(userId)
+async removeUserFromWaitlist(userId: string, waitlistId: string) {
 
 const { data, error } = await this._db.client
   .from(this._tableName)
   .update({ estado: "cancelado" })
-  .eq('id', lastTable.id)
+  .eq('id', waitlistId)
   .eq('usuario_id', userId)
   .select()
   .maybeSingle();
+
+  console.log(data)
 
 if (error) throw new Error(`Failed to update table: ${error.message}`);
 if (!data) throw new Error('No se encontró la fila o no tenés permiso para modificarla');

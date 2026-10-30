@@ -183,10 +183,12 @@ export class WaitlistPage {
     }
 
     try {
+      console.log(`CAMBIAR EL ESTADO A CANCELADO AL USUARIO QUE TIENE EL ID ${entry.usuario_id} | ID LISTA ESPERA: ${entry.id}`)
       console.log(entry)
 
       await this._waitlistService.removeUserFromWaitlist(
-        entry.usuario_id
+        entry.usuario_id,
+        entry.id
       );
 
       this.users.update((users) =>
