@@ -353,13 +353,6 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'assigned-table',
-    loadComponent: () =>
-      import('./pages/assigned-table/assigned-table.page').then(
-        (m) => m.AssignedTablePage
-      ),
-  },
-  {
     path: 'admin/employees',
     loadComponent: () =>
       import('./pages/employees/employees.page').then((m) => m.EmployeesPage),

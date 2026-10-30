@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -29,7 +29,7 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     SpinnerLogoComponent,
   ],
 })
-export class WaitlistPage implements OnInit {
+export class WaitlistPage implements OnInit, OnDestroy {
   private _router = inject(Router);
   private _waitlistService = inject(Waitlist);
   private _confirm = inject(Confirm);

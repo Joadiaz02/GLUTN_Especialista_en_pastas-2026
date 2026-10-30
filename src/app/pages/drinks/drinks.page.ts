@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -52,7 +52,7 @@ import { HeaderComponent } from '@app/components/ui';
     HeaderComponent
 ],
 })
-export class DrinksPage implements OnInit {
+export class DrinksPage {
   textoBusqueda = signal('');
 
   private _drinkService = inject(Drink);
@@ -85,10 +85,6 @@ export class DrinksPage implements OnInit {
       'star-outline': starOutline,
       trashOutline,
     });
-  }
-
-  ngOnInit(): void {
-    // No hace falta cargar nada acá: toSignal ya se suscribe solo
   }
 
   

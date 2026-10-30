@@ -37,7 +37,7 @@ const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/;
     DniFormat, CuilFormat
 ],
 })
-export class EditEmployeePage {
+export class EditEmployeePage implements OnInit {
     private _toastController = inject(ToastController);
   private _vibracion = inject(Vibracion);
   private _router = inject(Router);

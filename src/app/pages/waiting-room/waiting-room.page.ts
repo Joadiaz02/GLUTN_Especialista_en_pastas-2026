@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar, ToastController, IonRouterLink } from '@ionic/angular';
@@ -24,7 +24,7 @@ import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
     IonRouterLink
 ],
 })
-export class WaitingRoomPage {
+export class WaitingRoomPage implements OnInit, OnDestroy {
   private _router = inject(Router);
 
   private _authService = inject(Auth);

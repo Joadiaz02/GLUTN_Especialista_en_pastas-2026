@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonFooter, IonButton, IonInput, IonSpinner, ToastController, NavController } from '@ionic/angular';
@@ -35,7 +35,7 @@ type TipoMesa = 'vip' | 'estandar' | 'movilidad_reducida';
     SpinnerLogoComponent
 ],
 })
-export class CreateTablePage {
+export class CreateTablePage implements OnInit {
   private _router = inject(Router);
   private _tableService = inject(Table);
   private _storageService = inject(Storage);
