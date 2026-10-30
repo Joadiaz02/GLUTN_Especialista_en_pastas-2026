@@ -9,7 +9,7 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Confirm, Waitlist } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ClientsNavigationComponent } from '../clients/components/clients-navigation/clients-navigation.component';
@@ -30,6 +30,7 @@ import { WaitlistCardComponent } from './components/waitlist-card/waitlist-card.
     SpinnerLogoComponent,
     ClientsNavigationComponent,
     WaitlistCardComponent,
+    RouterLink
   ],
 })
 export class WaitlistPage {
