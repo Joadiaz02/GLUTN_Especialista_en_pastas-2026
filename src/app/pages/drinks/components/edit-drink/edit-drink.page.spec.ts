@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular';
-
 import { EditDrinkPage } from './edit-drink.page';
 
 describe('EditDrinkPage', () => {
@@ -10,22 +9,8 @@ describe('EditDrinkPage', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideIonicAngular(),
-        {
-          provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: { get: () => null } } },
-        },
-        {
-          provide: Router,
-          useValue: {
-            navigate: () => Promise.resolve(true),
-            navigateByUrl: () => Promise.resolve(true),
-          },
-        },
-      ],
+      providers: [provideIonicAngular(), provideRouter([])],
     });
-
     fixture = TestBed.createComponent(EditDrinkPage);
     component = fixture.componentInstance;
     fixture.detectChanges();

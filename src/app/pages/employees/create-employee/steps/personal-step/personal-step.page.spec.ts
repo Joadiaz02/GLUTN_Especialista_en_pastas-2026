@@ -14,6 +14,7 @@ describe('PersonalStepPage', () => {
       new FormGroup({
         name: new FormControl(''),
         lastName: new FormControl(''),
+        cuil: new FormControl(''),
         dni: new FormControl(''),
       })
     );
