@@ -122,6 +122,10 @@ export class RuletaPage implements OnDestroy {
     return this._juegosService.esClienteRegistrado();
   }
 
+  ganoDescuento(): boolean {
+    return this._juegosService.ganoDescuento();
+  }
+
   mensajeEstado(): string {
     if (!this.esClienteRegistrado()) {
       return 'Registrate para participar de estos descuentos';
