@@ -16,6 +16,9 @@ import {
   CurrencyPipe,
 } from '@angular/common';
 
+import { IonIcon } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { timeOutline } from 'ionicons/icons';
 import { CartaItem } from '@app/models/carta.model';
 import { Carrito } from '@app/pages/carrito/carrito';
 import { ClientsNavigationComponent } from 
@@ -28,6 +31,7 @@ import { ClientsNavigationComponent } from
     CommonModule,
     CurrencyPipe,
     ClientsNavigationComponent,
+    IonIcon,
   ],
   templateUrl:
     './producto-carrusel.component.html',
@@ -36,6 +40,10 @@ import { ClientsNavigationComponent } from
 })
 export class ProductoCarruselComponent
   implements AfterViewInit, OnChanges, OnDestroy {
+
+  constructor() {
+    addIcons({ timeOutline });
+  }
 
   @Input()
   productos: CartaItem[] = [];

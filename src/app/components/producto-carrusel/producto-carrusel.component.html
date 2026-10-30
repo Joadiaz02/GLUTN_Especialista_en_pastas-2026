@@ -52,8 +52,12 @@
 
             <div class="producto-datos">
               <div class="producto-dato">
-                <span class="dato-icono">◷</span>
-                <span>{{ producto.tiempo_elaboracion }} min</span>
+                <ion-icon
+                  class="dato-icono"
+                  name="time-outline"
+                  aria-label="Tiempo de elaboración en minutos"
+                ></ion-icon>
+                <span>{{ producto.tiempo_elaboracion }}</span>
               </div>
 
               @if (producto.medida_ml) {
