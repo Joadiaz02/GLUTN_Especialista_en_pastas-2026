@@ -38,7 +38,8 @@
 .home-button {
   flex: 1 1 0;
   min-height: 38px;
-  max-height: 110px;
+  // con pocos botones crecen hasta llenar el hueco
+  max-height: 160px;
   width: 90%;
   margin: 0 auto;
   container-type: size;
