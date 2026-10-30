@@ -4,10 +4,10 @@ import {
   FormArray,
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { PrecioInput } from '@app/directives';
 import {
   IonContent,
   IonHeader,
@@ -18,20 +18,26 @@ import {
   IonFooter,
   ToastController,
   IonInput,
-  IonCheckbox,
+  IonTextarea,
+  IonToggle,
+  IonIcon,
 } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UploaderComponent } from '../../../dishes/components/create-dish/uploader/uploader.component';
-import { Storage, Postre, Confirm, Vibracion } from '@app/services';
+import { addIcons } from 'ionicons';
+import { timeOutline } from 'ionicons/icons';
+import { UploaderComponent } from '../uploader/uploader.component';
+import { Storage, CartaCocina, Confirm, Vibracion, TipoCocina } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { VibrarErrores } from '@app/directives/vibrar-errores';
 import { textoValido } from '@app/validators/texto';
+import { CARTA_COCINA } from '../carta-cocina.config';
 
+// alta y edición de platos y postres; con :id en la ruta edita
 @Component({
-  selector: 'app-edit-postre',
-  templateUrl: './edit-postre.page.html',
-  styleUrls: ['./edit-postre.page.scss'],
+  selector: 'app-form-carta-cocina',
+  templateUrl: './form-carta-cocina.page.html',
+  styleUrls: ['./form-carta-cocina.page.scss'],
   imports: [
     VibrarErrores,
     IonContent,
@@ -39,35 +45,42 @@ import { textoValido } from '@app/validators/texto';
     IonTitle,
     IonToolbar,
     CommonModule,
-    FormsModule,
     IonButtons,
     IonButton,
     IonFooter,
     IonInput,
+    IonTextarea,
+    IonToggle,
+    IonIcon,
     ReactiveFormsModule,
     UploaderComponent,
     SpinnerLogoComponent,
-    IonCheckbox,
+    PrecioInput,
     ConfirmVolverComponent,
   ],
 })
-export class EditPostrePage implements OnInit {
-  isLoading = signal<boolean>(false);
-  isLoadingPostre = signal<boolean>(true);
-
-  fotoActual1 = signal<string | null>(null);
-  fotoActual2 = signal<string | null>(null);
-  fotoActual3 = signal<string | null>(null);
-
-  private _id = '';
+export class FormCartaCocinaPage implements OnInit {
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
-  private _postreService = inject(Postre);
+  private _cartaCocina = inject(CartaCocina);
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
   private _confirm = inject(Confirm);
   private _vibracion = inject(Vibracion);
 
+  readonly tipo: TipoCocina = this._route.snapshot.data['tipo'] ?? 'plato';
+  readonly config = CARTA_COCINA[this.tipo];
+
+  private readonly _id = this._route.snapshot.paramMap.get('id');
+  readonly esEdicion = this._id !== null;
+
+  isLoading = signal<boolean>(false);
+  cargandoProducto = signal<boolean>(this.esEdicion);
+
+  // fotos guardadas, solo al editar
+  fotosActuales = signal<(string | null)[]>([null, null, null]);
+
+  // al editar las fotos son opcionales: si no se cambian quedan las de antes
   form = new FormGroup({
     title: new FormControl('', [Validators.required, textoValido(3, 60)]),
     description: new FormControl('', [Validators.required, textoValido(10, 250)]),
@@ -82,23 +95,27 @@ export class EditPostrePage implements OnInit {
       Validators.min(1),
     ]),
     sugerencia: new FormControl(false),
-    images: new FormArray([
-      new FormControl<File | null>(null),
-      new FormControl<File | null>(null),
-      new FormControl<File | null>(null),
-    ]),
+    images: new FormArray(
+      [0, 1, 2].map(
+        () => new FormControl<File | null>(null, this.esEdicion ? [] : [Validators.required])
+      )
+    ),
   });
 
+  constructor() {
+    addIcons({ timeOutline });
+  }
+
   async ngOnInit(): Promise<void> {
-    this._id = this._route.snapshot.paramMap.get('id') ?? '';
+    if (!this._id) return;
 
-    const postre = this._id ? await this._postreService.getById(this._id) : null;
+    const producto = await this._cartaCocina.getById(this.tipo, this._id);
 
-    if (!postre) {
+    if (!producto) {
       await this._vibracion.error();
 
       const toast = await this._toastController.create({
-        message: 'No encontramos ese postre. Puede que lo hayan borrado.',
+        message: `No encontramos ese ${this.config.singular}. Puede que lo hayan borrado.`,
         duration: 5000,
         position: 'top',
         color: 'danger',
@@ -106,24 +123,22 @@ export class EditPostrePage implements OnInit {
 
       await toast.present();
 
-      this._router.navigateByUrl('/admin/postres');
+      this._router.navigateByUrl(this.config.ruta);
       return;
     }
 
     this.form.setValue({
-      title: postre.nombre,
-      description: postre.descripcion,
-      preparation: String(postre.tiempo_elaboracion),
-      price: String(postre.precio),
-      sugerencia: postre.sugerencia,
+      title: producto.nombre,
+      description: producto.descripcion,
+      preparation: String(producto.tiempo_elaboracion),
+      price: Number(producto.precio).toFixed(2),
+      sugerencia: producto.sugerencia,
       images: [null, null, null],
     });
 
-    this.fotoActual1.set(postre.foto_1);
-    this.fotoActual2.set(postre.foto_2);
-    this.fotoActual3.set(postre.foto_3);
+    this.fotosActuales.set([producto.foto_1, producto.foto_2, producto.foto_3]);
 
-    this.isLoadingPostre.set(false);
+    this.cargandoProducto.set(false);
   }
 
   getFormControl(controlName: string) {
@@ -139,7 +154,7 @@ export class EditPostrePage implements OnInit {
   }
 
   volver(): void {
-    this._router.navigate(['/admin/postres']);
+    this._router.navigate([this.config.ruta]);
   }
 
   // arma el aviso con lo que falta completar
@@ -172,13 +187,23 @@ export class EditPostrePage implements OnInit {
       return;
     }
 
-    const confirmado = await this._confirm.preguntar({
-      titulo: '¿Guardar los cambios?',
-      mensaje: 'Los cambios van a quedar visibles para los clientes de inmediato.',
-      textoConfirmar: 'Guardar',
-      colorConfirmar: 'primary',
-      icono: 'restaurant-outline',
-    });
+    const confirmado = await this._confirm.preguntar(
+      this.esEdicion
+        ? {
+            titulo: '¿Guardar los cambios?',
+            mensaje: 'Los cambios van a quedar visibles para los clientes de inmediato.',
+            textoConfirmar: 'Guardar',
+            colorConfirmar: 'primary',
+            icono: 'restaurant-outline',
+          }
+        : {
+            titulo: `¿Guardar este ${this.config.singular}?`,
+            mensaje: 'Se va a agregar a la carta y va a quedar visible para los clientes.',
+            textoConfirmar: 'Guardar',
+            colorConfirmar: 'primary',
+            icono: 'restaurant-outline',
+          }
+    );
 
     if (!confirmado) return;
 
@@ -191,38 +216,37 @@ export class EditPostrePage implements OnInit {
 
       this.isLoading.set(true);
 
-      const nuevoFoto1 = data.images[0];
-      const nuevoFoto2 = data.images[1];
-      const nuevoFoto3 = data.images[2];
+      // sube solo las fotos nuevas
+      const fotos: string[] = [];
+      for (const [i, archivo] of data.images.entries()) {
+        fotos.push(
+          archivo
+            ? await this._storageService.uploadImage(archivo)
+            : (this.fotosActuales()[i] as string)
+        );
+      }
 
-      const foto1 = nuevoFoto1
-        ? await this._storageService.uploadImage(nuevoFoto1)
-        : (this.fotoActual1() as string);
-
-      const foto2 = nuevoFoto2
-        ? await this._storageService.uploadImage(nuevoFoto2)
-        : (this.fotoActual2() as string);
-
-      const foto3 = nuevoFoto3
-        ? await this._storageService.uploadImage(nuevoFoto3)
-        : (this.fotoActual3() as string);
-
-      await this._postreService.update(this._id, {
+      const producto = {
         nombre: (data.title as string).trim(),
         descripcion: (data.description as string).trim(),
         tiempo_elaboracion: Number(data.preparation),
         precio: Number(data.price),
-        foto_1: foto1,
-        foto_2: foto2,
-        foto_3: foto3,
+        foto_1: fotos[0],
+        foto_2: fotos[1],
+        foto_3: fotos[2],
         sugerencia: data.sugerencia ?? false,
-      });
+      };
 
-      // sin sonido al guardar por ahora
-      // await this._vibracion.confirmacion();
+      if (this._id) {
+        await this._cartaCocina.update(this.tipo, this._id, producto);
+      } else {
+        await this._cartaCocina.add(this.tipo, producto);
+      }
+
+      const nombre = this.config.singular.charAt(0).toUpperCase() + this.config.singular.slice(1);
 
       const toastOk = await this._toastController.create({
-        message: 'Postre actualizado correctamente.',
+        message: `${nombre} ${this.esEdicion ? 'actualizado' : 'creado'} correctamente.`,
         duration: 3000,
         position: 'top',
         color: 'success',
@@ -230,7 +254,7 @@ export class EditPostrePage implements OnInit {
 
       await toastOk.present();
 
-      this._router.navigateByUrl('/admin/postres');
+      this._router.navigateByUrl(this.config.ruta);
     } catch (error) {
       await this._vibracion.error();
 

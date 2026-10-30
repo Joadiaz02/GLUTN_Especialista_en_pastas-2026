@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <app-confirm-volver
-        titulo="¿Salir de Platos?"
+        [titulo]="'¿Salir de ' + (config.plural | titlecase) + '?'"
         mensaje="Vas a volver al panel de administración."
         textoConfirmar="Salir"
         colorConfirmar="primary"
@@ -10,7 +10,7 @@
       ></app-confirm-volver>
     </ion-buttons>
 
-    <ion-title>Platos</ion-title>
+    <ion-title>{{ config.plural | titlecase }}</ion-title>
 
     <ion-buttons slot="end">
       <ion-button routerLink="create">
@@ -20,28 +20,28 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="dishes-content">
-  <div class="dishes-wrapper">
+<ion-content [fullscreen]="true" class="carta-cocina-content">
+  <div class="carta-cocina-wrapper">
     <!-- <ion-searchbar
-      placeholder="Buscar plato"
+      [placeholder]="'Buscar ' + config.singular"
       [debounce]="200"
       (ionInput)="onBuscar($event.detail.value ?? '')"
     ></ion-searchbar> -->
 
     <!-- spinner solo en la carga inicial -->
-        @if (isLoading() && dishes().length === 0) {
+    @if (isLoading() && productos().length === 0) {
     <!-- el cartel "Cargando..." está al final de la página -->
-    } @else if (dishesFiltrados().length === 0) {
-    <div class="dishes-vacio">
+    } @else if (productosFiltrados().length === 0) {
+    <div class="carta-cocina-vacio">
       <p>
-        {{ dishes().length === 0 ? 'Todavía no cargaste ningún plato.' : 'No
+        {{ productos().length === 0 ? 'Todavía no cargaste ningún ' + config.singular + '.' : 'No
         encontramos nada que coincida con tu búsqueda.' }}
       </p>
     </div>
     } @else {
     <app-producto-carrusel
-      [productos]="dishesFiltrados()"
-      etiqueta="platos"
+      [productos]="productosFiltrados()"
+      [etiqueta]="config.plural"
       [mostrarNavegacion]="true"
       [decimales]="true"
       [acciones]="accionesProducto"
@@ -97,7 +97,7 @@
     </div>
   </ng-template>
 </ion-content>
-@if (isLoading() && dishes().length === 0) {
+@if (isLoading() && productos().length === 0) {
 <div class="quick-loading">
   <app-spinner-logo />
   <span>Cargando...</span>

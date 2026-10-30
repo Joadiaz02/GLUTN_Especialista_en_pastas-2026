@@ -2,24 +2,36 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <app-confirm-volver
-        titulo="¿Descartar el plato?"
-        mensaje="Vas a perder los datos que cargaste hasta ahora."
+        [titulo]="esEdicion ? '¿Descartar los cambios?' : '¿Descartar el ' + config.singular + '?'"
+        [mensaje]="
+          esEdicion
+            ? 'Vas a perder los cambios que hiciste en este ' + config.singular + '.'
+            : 'Vas a perder los datos que cargaste hasta ahora.'
+        "
         textoConfirmar="Descartar"
         colorConfirmar="danger"
         (confirmadoVolver)="volver()"
       ></app-confirm-volver>
     </ion-buttons>
 
-    <ion-title>Crear Plato</ion-title>
+    <ion-title>{{ esEdicion ? 'Editar' : 'Crear' }} {{ config.singular }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="create-dish-content">
-  <div class="create-dish-wrapper">
+<ion-content [fullscreen]="true" class="form-carta-content">
+  @if (cargandoProducto()) {
+  <div class="carga-producto">
+    <app-spinner-logo />
+  </div>
+  } @else {
+  <div class="form-carta-wrapper">
     <div class="upload-container">
-      <app-uploader (fileSelected)="onPhotoSelected(0, $event)" />
-      <app-uploader (fileSelected)="onPhotoSelected(1, $event)" />
-      <app-uploader (fileSelected)="onPhotoSelected(2, $event)" />
+      @for (foto of fotosActuales(); track $index) {
+      <app-uploader
+        [initialPreview]="foto"
+        (fileSelected)="onPhotoSelected($index, $event)"
+      />
+      }
     </div>
 
     <form [formGroup]="form" class="fields" appVibrarErrores>
@@ -51,11 +63,12 @@
       <div class="field">
         <label class="field__label">Descripción</label>
 
-        <ion-input
+        <ion-textarea
           fill="outline"
-          class="field__input"
+          class="field__input field__textarea"
           placeholder="Descripción"
           maxlength="250"
+          [rows]="3"
           formControlName="description"
         />
 
@@ -78,7 +91,7 @@
 
       <div class="fields__row">
         <div class="field">
-          <label class="field__label" type="text">Elaboración</label>
+          <label class="field__label">Elaboración</label>
 
           <ion-input
             type="text"
@@ -86,10 +99,11 @@
             maxlength="3"
             fill="outline"
             class="field__input"
-            placeholder="0"
+            placeholder="Minutos"
+            aria-label="Tiempo de elaboración en minutos"
             formControlName="preparation"
           >
-            <!-- <span slot="end" class="field__suffix">min</span> -->
+            <ion-icon slot="start" name="time-outline" class="field__prefix" aria-hidden="true"></ion-icon>
           </ion-input>
 
           @if ( getFormControl('preparation')?.invalid &&
@@ -136,27 +150,25 @@
         </div>
       </div>
 
-      <div class="field field--checkbox">
-        <div class="expandirrrr">
+      <div class="field field--sugerencia">
+        <div class="sugerencia">
           <span>Sugerencia del chef</span>
-          <ion-toggle formControlName="sugerencia" />
+          <ion-toggle formControlName="sugerencia" aria-label="Sugerencia del chef" />
         </div>
-        <!-- <ion-checkbox formControlName="sugerencia">
-          Sugerencia del chef
-        </ion-checkbox> -->
         <p class="field__hint">
-          Los platos marcados como sugerencia aparecen en el slide de "Productos
-          destacados" del inicio.
+          Los {{ config.plural }} marcados como sugerencia aparecen en el slide de
+          "Productos destacados" del inicio.
         </p>
       </div>
     </form>
   </div>
+  }
 </ion-content>
 
 @if (isLoading()) {
 <div class="page-loading">
   <app-spinner-logo />
-  <span>Guardando plato...</span>
+  <span>{{ esEdicion ? 'Guardando cambios...' : 'Guardando ' + config.singular + '...' }}</span>
 </div>
 }
 
@@ -165,10 +177,10 @@
     <ion-button
       expand="block"
       shape="round"
-      [disabled]="isLoading()"
+      [disabled]="isLoading() || cargandoProducto()"
       (click)="confirmarYGuardar()"
     >
-      Guardar
+      {{ esEdicion ? 'Guardar cambios' : 'Guardar' }}
     </ion-button>
   </div>
 </ion-footer>

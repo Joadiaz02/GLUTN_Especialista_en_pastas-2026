@@ -130,62 +130,66 @@ export const routes: Routes = [
     path: 'admin/dishes',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'plato' },
 
     loadComponent: () =>
-      import('./pages/dishes/dishes.page').then((m) => m.DishesPage),
+      import('./pages/carta-cocina/carta-cocina.page').then(
+        (m) => m.CartaCocinaPage
+      ),
   },
   {
     path: 'admin/dishes/create',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'plato' },
 
     loadComponent: () =>
-      import('./pages/dishes/components/create-dish/create-dish.page').then(
-        (m) => m.CreateDishPage
+      import('./pages/carta-cocina/form-carta-cocina/form-carta-cocina.page').then(
+        (m) => m.FormCartaCocinaPage
       ),
   },
   {
     path: 'admin/dishes/edit/:id',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'plato' },
 
     loadComponent: () =>
-      import('./pages/dishes/components/edit-dish/edit-dish.page').then(
-        (m) => m.EditDishPage
+      import('./pages/carta-cocina/form-carta-cocina/form-carta-cocina.page').then(
+        (m) => m.FormCartaCocinaPage
       ),
   },
   {
     path: 'admin/postres',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'postre' },
 
     loadComponent: () =>
-      import('./pages/postres/postres.page').then((m) => m.PostresPage),
+      import('./pages/carta-cocina/carta-cocina.page').then(
+        (m) => m.CartaCocinaPage
+      ),
   },
   {
     path: 'admin/postres/create',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'postre' },
 
     loadComponent: () =>
-      import(
-        './pages/postres/components/create-postre/create-postre.page'
-      ).then((m) => m.CreatePostrePage),
+      import('./pages/carta-cocina/form-carta-cocina/form-carta-cocina.page').then(
+        (m) => m.FormCartaCocinaPage
+      ),
   },
   {
     path: 'admin/postres/edit/:id',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'postre' },
 
     loadComponent: () =>
-      import('./pages/postres/components/edit-postre/edit-postre.page').then(
-        (m) => m.EditPostrePage
+      import('./pages/carta-cocina/form-carta-cocina/form-carta-cocina.page').then(
+        (m) => m.FormCartaCocinaPage
       ),
   },
   {

@@ -1,0 +1,112 @@
+.form-carta-content {
+  --background: var(--ion-background-color);
+}
+
+// ocupa todo el alto: las fotos crecen con el espacio que sobra
+.form-carta-wrapper {
+  width: 100%;
+  min-height: calc(100% - 24px - env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.upload-container {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  flex: 1 1 160px;
+  min-height: 160px;
+  max-height: 300px;
+
+  app-uploader {
+    flex: 1 1 0;
+    min-width: 0;
+    height: auto;
+  }
+}
+
+.fields {
+  margin-top: 16px;
+}
+
+// mismo aspecto que los ion-input del tema
+ion-textarea.field__textarea {
+  --background: var(--color-surface-muted);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --placeholder-color: var(--text-secondary);
+  --placeholder-opacity: 1;
+  --border-color: var(--color-surface-muted);
+  --border-radius: 12px;
+  --highlight-color-invalid: var(--ion-color-danger);
+  --highlight-color-valid: var(--ion-color-primary);
+  font-size: 16px;
+  font-weight: 500;
+
+  &.has-focus {
+    --background: hsla(16, 77%, 59%, 0.15);
+  }
+}
+
+ion-input.field__input ion-icon.field__prefix {
+  font-size: 20px;
+}
+
+.field--sugerencia {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.sugerencia {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  span {
+    font-size: 16px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+}
+
+.field__hint {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.75;
+}
+
+.carga-producto {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  width: 100vw;
+  height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding:
+    max(24px, env(safe-area-inset-top))
+    24px
+    max(24px, env(safe-area-inset-bottom));
+  background: rgba(31, 45, 24, 0.52);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}

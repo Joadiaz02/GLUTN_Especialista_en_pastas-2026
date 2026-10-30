@@ -1,6 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
   IonContent,
   IonHeader,
@@ -9,15 +8,15 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
-  IonSearchbar,
   ToastController,
 } from '@ionic/angular';
-import { Router, RouterLink } from '@angular/router';
-import { Plato, Confirm, Vibracion } from '@app/services';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CartaCocina, Confirm, Vibracion, TipoCocina } from '@app/services';
 import { CartaItem } from '@app/models/carta.model';
 import { ProductoCarruselComponent } from '@app/components/producto-carrusel/producto-carrusel.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
+import { CARTA_COCINA } from './carta-cocina.config';
 import { addIcons } from 'ionicons';
 import {
   addOutline,
@@ -28,45 +27,48 @@ import {
   trashOutline,
 } from 'ionicons/icons';
 
+// listado de platos o postres según la ruta
 @Component({
-  selector: 'app-dishes',
-  templateUrl: './dishes.page.html',
-  styleUrls: ['./dishes.page.scss'],
+  selector: 'app-carta-cocina',
+  templateUrl: './carta-cocina.page.html',
+  styleUrls: ['./carta-cocina.page.scss'],
   imports: [
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
     CommonModule,
-    FormsModule,
     IonButtons,
     IonButton,
     RouterLink,
     ProductoCarruselComponent,
     IonIcon,
-    IonSearchbar,
     SpinnerLogoComponent,
     ConfirmVolverComponent,
   ],
 })
-export class DishesPage  {
-  dishes = signal<CartaItem[]>([]);
-
-  isLoading = signal<boolean>(false);
-
-  textoBusqueda = signal('');
-
-  private _platoService = inject(Plato);
+export class CartaCocinaPage {
+  private _route = inject(ActivatedRoute);
+  private _cartaCocina = inject(CartaCocina);
   private _confirm = inject(Confirm);
   private _toastController = inject(ToastController);
   private _vibracion = inject(Vibracion);
   private _router = inject(Router);
 
-  dishesFiltrados = computed(() => {
+  readonly tipo: TipoCocina = this._route.snapshot.data['tipo'] ?? 'plato';
+  readonly config = CARTA_COCINA[this.tipo];
+
+  productos = signal<CartaItem[]>([]);
+
+  isLoading = signal<boolean>(false);
+
+  textoBusqueda = signal('');
+
+  productosFiltrados = computed(() => {
     const texto = this.textoBusqueda().trim().toLowerCase();
 
-    return this.dishes().filter(
-      (d) => !texto || d.nombre.toLowerCase().includes(texto)
+    return this.productos().filter(
+      (p) => !texto || p.nombre.toLowerCase().includes(texto)
     );
   });
 
@@ -82,17 +84,17 @@ export class DishesPage  {
   }
 
   async ionViewWillEnter(): Promise<void> {
-    await this.cargarPlatos();
+    await this.cargar();
   }
 
-  private async cargarPlatos(): Promise<void> {
+  private async cargar(): Promise<void> {
     this.isLoading.set(true);
 
-    const dishes = await this._platoService.getList();
+    const productos = await this._cartaCocina.getList(this.tipo);
 
     this.isLoading.set(false);
 
-    this.dishes.set(dishes);
+    this.productos.set(productos);
   }
 
   onBuscar(texto: string): void {
@@ -128,7 +130,7 @@ export class DishesPage  {
   }
 
   editar(item: CartaItem): void {
-    this._router.navigate(['/admin/dishes/edit', item.id_carta]);
+    this._router.navigate([this.config.ruta, 'edit', item.id_carta]);
   }
 
   async destacar(item: CartaItem): Promise<void> {
@@ -147,17 +149,15 @@ export class DishesPage  {
     if (!confirmado) return;
 
     try {
-      await this._platoService.setSugerencia(item.id_carta, activar);
-
-      await this._vibracion.confirmacion();
+      await this._cartaCocina.setSugerencia(this.tipo, item.id_carta, activar);
 
       await this.mostrarAviso(
         activar
-          ? 'Plato destacado correctamente.'
-          : 'Plato retirado de destacados.'
+          ? `${this.nombre()} destacado correctamente.`
+          : `${this.nombre()} retirado de destacados.`
       );
 
-      await this.cargarPlatos();
+      await this.cargar();
     } catch (error) {
       await this.mostrarError();
     }
@@ -165,7 +165,7 @@ export class DishesPage  {
 
   async darDeBaja(item: CartaItem): Promise<void> {
     const confirmado = await this._confirm.preguntar({
-      titulo: '¿Dar de baja el plato?',
+      titulo: `¿Dar de baja el ${this.config.singular}?`,
       mensaje: `"${item.nombre}" va a dejar de verse en la carta. Vas a poder reactivarlo cuando quieras.`,
       textoConfirmar: 'Dar de baja',
       colorConfirmar: 'danger',
@@ -175,13 +175,11 @@ export class DishesPage  {
     if (!confirmado) return;
 
     try {
-      await this._platoService.darDeBaja(item.id_carta);
+      await this._cartaCocina.darDeBaja(this.tipo, item.id_carta);
 
-      await this._vibracion.confirmacion();
+      await this.mostrarAviso(`${this.nombre()} dado de baja correctamente.`);
 
-      await this.mostrarAviso('Plato dado de baja correctamente.');
-
-      await this.cargarPlatos();
+      await this.cargar();
     } catch (error) {
       await this.mostrarError();
     }
@@ -189,7 +187,7 @@ export class DishesPage  {
 
   async reactivar(item: CartaItem): Promise<void> {
     const confirmado = await this._confirm.preguntar({
-      titulo: '¿Reactivar el plato?',
+      titulo: `¿Reactivar el ${this.config.singular}?`,
       mensaje: `"${item.nombre}" va a volver a verse en la carta.`,
       textoConfirmar: 'Reactivar',
       colorConfirmar: 'primary',
@@ -199,15 +197,19 @@ export class DishesPage  {
     if (!confirmado) return;
 
     try {
-      await this._platoService.reactivar(item.id_carta);
+      await this._cartaCocina.reactivar(this.tipo, item.id_carta);
 
-      await this._vibracion.confirmacion();
+      await this.mostrarAviso(`${this.nombre()} reactivado correctamente.`);
 
-      await this.mostrarAviso('Plato reactivado correctamente.');
-
-      await this.cargarPlatos();
+      await this.cargar();
     } catch (error) {
       await this.mostrarError();
     }
+  }
+
+  // "Plato" o "Postre" al principio de un aviso
+  private nombre(): string {
+    const { singular } = this.config;
+    return singular.charAt(0).toUpperCase() + singular.slice(1);
   }
 }

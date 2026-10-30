@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { Plato } from './plato';
+import { CartaCocina } from './carta-cocina';
 
-describe('Plato', () => {
-  let service: Plato;
+describe('CartaCocina', () => {
+  let service: CartaCocina;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Plato);
+    service = TestBed.inject(CartaCocina);
   });
 
   it('should be created', () => {
