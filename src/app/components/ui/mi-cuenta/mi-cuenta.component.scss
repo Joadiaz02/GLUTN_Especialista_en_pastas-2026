@@ -1,0 +1,243 @@
+// botón del header
+
+.mi-cuenta__boton {
+  padding: 0;
+  margin: 0 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.mi-cuenta__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  border: 2px solid var(--text-secondary);
+}
+
+.mi-cuenta__avatar--iniciales {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--text-secondary);
+  color: var(--ion-background-color);
+  font-weight: 800;
+}
+
+// ventana: mismos valores que "Quiénes somos" del home
+
+ion-modal.home-modal {
+  --width: 90%;
+  --max-width: 420px;
+  --height: auto;
+  --max-height: 85%;
+  --border-radius: 24px;
+  --background: var(--ion-background-color);
+  --backdrop-opacity: 0.6;
+}
+
+.home-modal__contenido {
+  padding: 28px 24px 24px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+.home-modal__cerrar {
+  margin-top: 20px;
+  --background: var(--ion-color-primary);
+  --border-radius: 18px;
+  height: 52px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.mi-cuenta__titulo {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+.mi-cuenta__yo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.mi-cuenta__foto-marco {
+  position: relative;
+  width: 84px;
+  height: 84px;
+}
+
+.mi-cuenta__foto {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+  font-size: 28px;
+}
+
+// botón de cámara, como el "+" del paso de foto del registro
+.mi-cuenta__camara {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  border: 3px solid var(--ion-background-color);
+  background: var(--ion-color-primary);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 16px;
+  }
+
+  ion-spinner {
+    width: 16px;
+    height: 16px;
+    color: #ffffff;
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.mi-cuenta__nombre {
+  font-size: 18px;
+}
+
+.mi-cuenta__perfil {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.mi-cuenta__fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 17px;
+  font-weight: 600;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+  small {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    // corta solo palabras que no entran (el correo), no el texto común
+    overflow-wrap: anywhere;
+  }
+}
+
+// logo de la red arriba y el texto abajo, igual que el correo
+.mi-cuenta__red {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+
+  small {
+    margin-top: 0;
+  }
+}
+
+.mi-cuenta__logo {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.mi-cuenta__logo--discord {
+  background: #5865f2;
+  border: none;
+}
+
+// correo: sobre en el círculo y la dirección abajo
+.mi-cuenta__correo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+
+  small {
+    margin-top: 0;
+  }
+}
+
+.mi-cuenta__logo--correo {
+  background: var(--ion-color-primary);
+  border: none;
+  color: #ffffff;
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
+.chip {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.chip--ok {
+  background: #d9f2c9;
+  color: #2e5a12;
+  cursor: default;
+}
+
+.chip--google {
+  background: #ffffff;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+}
+
+.chip--discord {
+  background: #5865f2;
+  color: #ffffff;
+}

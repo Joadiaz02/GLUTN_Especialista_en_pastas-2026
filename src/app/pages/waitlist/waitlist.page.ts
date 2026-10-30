@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -9,9 +9,11 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Confirm, Waitlist } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { ClientsNavigationComponent } from '../clients/components/clients-navigation/clients-navigation.component';
+import { WaitlistCardComponent } from './components/waitlist-card/waitlist-card.component';
 
 @Component({
   selector: 'app-waitlist',
@@ -19,7 +21,6 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
   styleUrls: ['./waitlist.page.scss'],
   imports: [
     CommonModule,
-    RouterLink,
     IonHeader,
     IonTitle,
     IonToolbar,
@@ -27,6 +28,8 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     ConfirmVolverComponent,
     IonContent,
     SpinnerLogoComponent,
+    ClientsNavigationComponent,
+    WaitlistCardComponent,
   ],
 })
 export class WaitlistPage {
@@ -40,6 +43,10 @@ export class WaitlistPage {
   users = signal<any[]>([]);
   filtroSeleccionado = signal<number | 'todos'>('todos');
   cargando = signal(true);
+  indiceActual = signal(0);
+
+  private touchStartX = 0;
+  private touchEndX = 0;
 
   readonly filtros: Array<number | 'todos'> = [
     'todos',
@@ -50,7 +57,7 @@ export class WaitlistPage {
     5,
   ];
 
-  usuariosFiltrados(): any[] {
+  usuariosFiltrados = computed((): any[] => {
     const filtro = this.filtroSeleccionado();
 
     if (filtro === 'todos') {
@@ -68,12 +75,92 @@ export class WaitlistPage {
       (entry) =>
         Number(entry.comensales ?? 1) === filtro
     );
-  }
+  });
+
+  // posición que se muestra en el contador
+  posicionVisible = computed(() =>
+    this.usuariosFiltrados().length === 0
+      ? 0
+      : Math.min(this.indiceActual(), this.usuariosFiltrados().length - 1) + 1
+  );
 
   seleccionarFiltro(
     filtro: number | 'todos'
   ): void {
     this.filtroSeleccionado.set(filtro);
+    this.indiceActual.set(0);
+  }
+
+  // clase de cada tarjeta según su lugar en el carrusel
+  obtenerClaseCarta(
+    indice: number
+  ): 'activa' | 'anterior' | 'siguiente' | 'oculta' {
+    const total = this.usuariosFiltrados().length;
+    const actual = Math.min(this.indiceActual(), total - 1);
+
+    if (indice === actual) {
+      return 'activa';
+    }
+
+    if (indice === (actual - 1 + total) % total) {
+      return 'anterior';
+    }
+
+    if (indice === (actual + 1) % total) {
+      return 'siguiente';
+    }
+
+    return 'oculta';
+  }
+
+  irAnterior(): void {
+    const total = this.usuariosFiltrados().length;
+
+    if (total <= 1) {
+      return;
+    }
+
+    this.indiceActual.set((this.indiceActual() - 1 + total) % total);
+  }
+
+  irSiguiente(): void {
+    const total = this.usuariosFiltrados().length;
+
+    if (total <= 1) {
+      return;
+    }
+
+    this.indiceActual.set((this.indiceActual() + 1) % total);
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.changedTouches[0]?.screenX ?? 0;
+    this.touchEndX = this.touchStartX;
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    this.touchEndX = event.changedTouches[0]?.screenX ?? this.touchEndX;
+  }
+
+  // deslizar a un lado o al otro cambia de cliente
+  onTouchEnd(event: TouchEvent): void {
+    this.touchEndX = event.changedTouches[0]?.screenX ?? this.touchEndX;
+
+    const distancia = this.touchEndX - this.touchStartX;
+
+    if (Math.abs(distancia) < 50) {
+      return;
+    }
+
+    if (distancia > 0) {
+      this.irAnterior();
+    } else {
+      this.irSiguiente();
+    }
+  }
+
+  asignarMesa(entry: any): void {
+    void this._router.navigate(['/admin/waitlist', entry.id]);
   }
 
   async eliminar(entry: any): Promise<void> {
@@ -109,6 +196,7 @@ export class WaitlistPage {
           (user) => user.id !== entry.id
         )
       );
+      this._ajustarIndice();
 
       const toast =
         await this._toastController.create({
@@ -156,6 +244,7 @@ export class WaitlistPage {
         await this._waitlistService.getList();
 
       this.users.set(users);
+      this._ajustarIndice();
     } catch (error) {
       console.error(
         'Error cargando lista de espera:',
@@ -174,6 +263,15 @@ export class WaitlistPage {
       await toast.present();
     } finally {
       this.cargando.set(false);
+    }
+  }
+
+  // si la lista se achica, la tarjeta actual no queda fuera de rango
+  private _ajustarIndice(): void {
+    const total = this.usuariosFiltrados().length;
+
+    if (this.indiceActual() >= total) {
+      this.indiceActual.set(Math.max(total - 1, 0));
     }
   }
 

@@ -18,7 +18,7 @@
   display: flex;
   flex-direction: column;
 
-  padding: 0 12px 0 16px;
+  padding: 0;
 
   box-sizing: border-box;
 }
@@ -103,65 +103,6 @@
 }
 
 /* =========================
-   LISTA CON SCROLL
-========================= */
-
-.waitlist__list {
-  flex: 1;
-
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 12px;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  /* Más espacio para la scrollbar */
-  padding: 4px 10px 24px 0;
-
-  box-sizing: border-box;
-
-  -webkit-overflow-scrolling: touch;
-
-  scrollbar-width: auto;
-  scrollbar-color:
-    #d9a441
-    rgba(255, 255, 255, 0.10);
-}
-
-/* =========================
-   SCROLLBAR ANDROID / CHROME
-========================= */
-
-.waitlist__list::-webkit-scrollbar {
-  width: 12px;
-}
-
-.waitlist__list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.10);
-  border-radius: 999px;
-  margin: 4px 0;
-}
-
-.waitlist__list::-webkit-scrollbar-thumb {
-  background: #d9a441;
-  border-radius: 999px;
-  min-height: 55px;
-  border: 2px solid rgba(101, 122, 77, 0.35);
-}
-
-.waitlist__list::-webkit-scrollbar-thumb:hover {
-  background: #e76f45;
-}
-
-.waitlist__list::-webkit-scrollbar-thumb:active {
-  background: #e76f45;
-}
-
-/* =========================
    ESTADO VACÍO
 ========================= */
 
@@ -181,144 +122,40 @@
 }
 
 /* =========================
-   TARJETAS
+   CARRUSEL
 ========================= */
 
-.waitlist-card {
-  display: flex;
-  align-items: stretch;
+/* ocupa el alto que queda y muestra una tarjeta por vez */
+.cards-section {
+  position: relative;
 
   width: 100%;
-  min-width: 0;
+  max-width: 620px;
+
+  margin: 0 auto;
+
+  flex: 1 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  touch-action: pan-y;
+}
+
+.cards-track {
+  width: 100%;
+}
+
+app-clients-navigation {
+  display: block;
+
+  width: 100%;
 
   flex-shrink: 0;
 
-  overflow: hidden;
-
-  border-radius: 18px;
-
-  background: #a8b68a;
-}
-
-.waitlist-card__main {
-  flex: 1;
-
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
-
-  padding: 14px;
-
-  border: 0;
-
-  background: transparent;
-
-  color: #fff;
-
-  text-align: left;
-
-  font: inherit;
-}
-
-.waitlist-card__avatar {
-  flex: 0 0 52px;
-
-  width: 52px;
-  height: 52px;
-
-  border-radius: 14px;
-
-  object-fit: cover;
-
-  background: #657a4d;
-}
-
-.waitlist-card__avatar--empty {
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  color: #fff;
-
-  font-size: 19px;
-  font-weight: 800;
-}
-
-.waitlist-card__info {
-  min-width: 0;
-
-  flex: 1;
-}
-
-.waitlist-card__name,
-.waitlist-card__details {
-  margin: 0;
-}
-
-.waitlist-card__name {
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  white-space: nowrap;
-
-  font-size: 16px;
-
-  font-weight: 800;
-}
-
-.waitlist-card__details {
-  margin-top: 4px;
-
-  color: rgba(255, 255, 255, 0.88);
-
-  font-size: 13px;
-}
-
-.waitlist-card__tags {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 5px;
-
-  margin-top: 7px;
-}
-
-.waitlist-card__tags span {
-  padding: 4px 8px;
-
-  border-radius: 999px;
-
-  background: rgba(231, 111, 69, 0.95);
-
-  color: #fff;
-
-  font-size: 10px;
-
-  font-weight: 700;
-}
-
-.waitlist-card__delete {
-  flex: 0 0 48px;
-
-  border: 0;
-
-  background: rgba(0, 0, 0, 0.12);
-
-  color: #fff;
-
-  font-size: 28px;
-
-  transition: background 0.2s ease;
-}
-
-.waitlist-card__delete:active {
-  background: rgba(0, 0, 0, 0.22);
+  padding: 8px 0 max(12px, env(safe-area-inset-bottom));
 }
 
 /* =========================
@@ -327,45 +164,8 @@
 
 @media (max-width: 380px) {
 
-  .waitlist {
-    padding-left: 12px;
-    padding-right: 8px;
-  }
-
   .waitlist__title {
     font-size: 21px;
-  }
-
-  .waitlist-card__main {
-    padding: 11px;
-    gap: 9px;
-  }
-
-  .waitlist-card__avatar {
-    width: 44px;
-    height: 44px;
-
-    flex-basis: 44px;
-
-    border-radius: 12px;
-  }
-
-  .waitlist-card__name {
-    font-size: 14px;
-  }
-
-  .waitlist-card__details {
-    font-size: 12px;
-  }
-
-  .waitlist-card__delete {
-    flex-basis: 42px;
-
-    font-size: 25px;
-  }
-
-  .waitlist__list::-webkit-scrollbar {
-    width: 7px;
   }
 }
 
@@ -373,7 +173,7 @@
    POCA ALTURA
 ========================= */
 
-@media (max-height: 720px) {
+@media (max-height: 760px) {
 
   .waitlist__header {
     margin-bottom: 10px;
@@ -381,16 +181,5 @@
 
   .waitlist__title {
     font-size: 21px;
-  }
-
-  .waitlist-card__main {
-    padding: 10px;
-  }
-
-  .waitlist-card__avatar {
-    width: 44px;
-    height: 44px;
-
-    flex-basis: 44px;
   }
 }
