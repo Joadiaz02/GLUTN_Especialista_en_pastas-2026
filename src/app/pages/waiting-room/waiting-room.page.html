@@ -8,10 +8,10 @@
 
     @if (loading()) {
     <p class="waiting-room__loading">Cargando tu turno...</p>
-    } @else if (tableStatus() == 'asignado') {
+    } @else if (tableStatus() === 'asignado') {
     <div class="info">
       <h1 class="waiting-room__title">
-        Tu mesa es la N° {{ table()?.numero }}
+        Tu mesa es la número {{ table()?.numero }}
       </h1>
 
       <p class="waiting-room__subtitle">
@@ -28,13 +28,13 @@
       </ion-button>
     </div>
 
-    } @else if (tableStatus() == "cancelado") {
+    } @else if (tableStatus() === "cancelado") {
     <h1 class="waiting-room__title">
-      El metre cancelo el turno. Lo siento mucho
+      El metre canceló tu turno.
     </h1>
 
     <p class="waiting-room__subtitle">
-      Podes seguir ingresando a la lista de espera hasta que te acepte.
+      Podés volver a anotarte escaneando el QR de ingreso.
     </p>
 
     <ion-button
