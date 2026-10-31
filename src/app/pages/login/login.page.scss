@@ -1,28 +1,40 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 ion-content {
+  --background: #657a4d;
   width: 100%;
   height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content:flex-start;
-  gap: 2px;
-  padding: 24px 20px 40px 20px;
+  justify-content: space-between; /* Distribuye el contenido cubriendo toda la altura */
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --padding-start: 16px;
+  --padding-end: 16px;
   box-sizing: border-box;
   overflow-y: auto;
 }
 
 .login {
   width: 100%;
-  max-width: 400px;
+  max-width: 380px;
+  height: 100%; /* Obliga a ocupar todo el alto disponible */
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between; /* Estira y distribuye cada elemento desde el logo hasta el "Registrate" */
+  gap: 2px;
 }
 
 .logo_container {
   width: 100%;
-  max-width: 120px;
-  margin-top: 10px;
+  max-width: clamp(70px, 12vh, 100px); 
+  margin-top: 12px;
 }
 
 .logo {
@@ -33,98 +45,94 @@ ion-content {
 
 .textos {
   width: 100%;
-  
   font-weight: 600;
-  font-size: clamp(20px, 2.2vh, 24px);
+  font-size: clamp(14px, 1.8vh, 18px); // Texto fluido
   text-align: center;
-  line-height: 150%;
-  margin-bottom: 16px;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.textos-titulo {
+  font-size: clamp(18px, 2.4vh, 22px);
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
 }
 
 .texto-error {
-  color: var(--ion-color-danger);
-  font-size: 20px;
+  color: var(--ion-color-danger, #eb444a);
+  font-size: 16px;
   font-weight: 600;
-  margin: 2px 0 0 4px;
-  min-height: 14px;
+  margin: 1px 0 0 2px;
+  min-height: 12px;
   display: block;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
-
-
-.boton_i{
+.campo {
   width: 100%;
-  
-  --margin-top: 1px;
-  --align-items: center;
-  --justify-content: center;
-  --border-radius: 50px;
-  --padding-top: 22px;
-  --padding-bottom: 22px;
-  font-weight: 600;
-  
-}
-.boton_c{
-    margin-top: 6px;
-   width: 100%;
- 
-  --border-radius: 50px;
-  --padding-top:22px;
-  --padding-bottom:22px;
-  font-weight: 600;
+  margin-bottom: 0px;
+
+  .field__label {
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+
+  ion-item {
+    --min-height: 42px; // Altura de input compacta y responsiva
+    font-size: 14px;
+    border-radius: 12px;
+  }
 }
 
+// Botones unificados y fluidos
+.boton_i,
+.boton_c,
 .boton_a {
   width: 100%;
-  
   --border-radius: 50px;
-  margin-top: 15px;
-  --padding-top: 22px;
-  --padding-bottom: 22px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
   font-weight: 600;
+  font-size: 14px;
+  margin: 0;
 }
 
-
 .separador {
-  width: 100vw; 
-  position: relative;
-  
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 0 24px; 
+  gap: 10px;
+  padding: 0 10px;
   box-sizing: border-box;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 2px 0;
 }
 
 .linea_isq {
   height: 1px;
-  background: var(--border);
+  background: rgba(255, 255, 255, 0.3);
   flex: 1;
 }
 
 .separador__texto {
-  color: var(--text-secondary);
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
 }
 
-// botones de redes sociales
-
+// Redes sociales
 .redes {
   width: 100%;
   display: flex;
-  gap: 12px;
-  margin-bottom: 6px;
+  gap: 10px;
+  margin-bottom: 0;
 }
 
 .red {
   flex: 1;
-  height: 64px;
+  height: 48px; // Altura cómoda y adaptada para evitar cortes
   border-radius: 50px;
   display: flex;
   align-items: center;
@@ -144,33 +152,24 @@ ion-content {
 }
 
 .red__logo {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
 }
+
 .label-centrado {
   text-align: center;
-  display: block;   
+  display: block;  
   width: 100%;
-  font-size: 22px;
 }
 
-
-// misma escala que "¿No tenés cuenta?": solo cambia el color
 .registrate_spam {
-  color: var(--ion-color-primary);
-  font-weight: inherit;
-  font-size: inherit;
+  color: var(--ion-color-primary, #ffc409);
+  font-weight: 700;
 }
 
 .red:disabled {
   opacity: 0.6;
   cursor: default;
-}
-
-.campo {
-  width: 100%;
-  max-width: 327px;
-  margin-bottom: 5px;
 }
 
 .page-loading {
@@ -185,86 +184,10 @@ ion-content {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  padding:
-    max(24px, env(safe-area-inset-top))
-    24px
-    max(24px, env(safe-area-inset-bottom));
+  padding: 24px;
   background: rgba(31, 45, 24, 0.52);
   backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
 }
-/* Ajustes para pantallas de poca altura */
-
-@media (max-height: 800px) {
-  ion-content {
-    --padding-top: 0px;
-    --padding-bottom: 0px;
-    --padding-start: 16px;
-    --padding-end: 16px;
-  }
-
-  .login {
-    min-height: 100%;
-    justify-content: space-between;
-  }
-
-  .logo_container {
-    max-width: 108px;
-    margin-top: max(30px, env(safe-area-inset-top));
-    margin-bottom: 0;
-  }
-
-  .textos {
-    margin-top: 2px;
-    margin-bottom: 6px;
-  }
-
-  .campo {
-    margin-bottom: 2px;
-  }
-
-  .texto-error {
-    font-size: 16px;
-    min-height: 12px;
-  }
-
-  .boton_i,
-  .boton_c,
-  .boton_a {
-    --padding-top: 17px;
-    --padding-bottom: 17px;
-    font-size: 16px;
-  }
-
-  .boton_c {
-    margin-top: 3px;
-  }
-
-  .boton_a {
-    margin-top: 6px;
-  }
-
-  .separador {
-    margin-top: 4px;
-    margin-bottom: 4px;
-  }
-
-  .red {
-    height: 54px;
-  }
-
-  .redes {
-    margin-bottom: 3px;
-  }
-
-  .login > p.textos:last-child {
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
-}
-
-
-
