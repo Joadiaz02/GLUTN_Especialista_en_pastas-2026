@@ -1,8 +1,9 @@
 <app-header routeBackName="/admin" />
 
-<ion-content class="pagos-content">
+<ion-content class="pagos-content" [scrollY]="false">
   <div class="pagos-wrapper">
-    <div class="logo-container logo-fijo">
+    <!-- Logo con tamaño controlado -->
+    <div class="logo-container ">
       <img
         src="assets/images/LOGO-GLUTN.png"
         alt="GLUTN - Especialista en Pastas"
@@ -49,63 +50,93 @@
         </p>
       </div>
     } @else {
-      <div class="pagos-lista">
-        @for (cuenta of lista(); track cuenta.idUsuario) {
-          <article class="pago">
-            <header class="pago__cabecera">
-              <h2>Mesa {{ cuenta.numeroMesa }}</h2>
-              <span
-                class="pago__estado"
-                [class.pago__estado--pago]="cuenta.estado === 'pago_realizado'"
-              >
-                {{ etiqueta(cuenta.estado) }}
-              </span>
-            </header>
+      <!-- Carrusel horizontal de tarjetas idéntico a pedidos -->
+      <div #viewport class="carrusel" (scroll)="alDesplazar()">
+        @for (cuenta of lista(); track cuenta.idUsuario; let i = $index) {
+          <article class="slide" [class.slide--activo]="i === indiceActual()">
+            <div class="pago">
+              <header class="pago__cabecera">
+                <h2>Mesa {{ cuenta.numeroMesa }}</h2>
+                <span
+                  class="pago__estado"
+                  [class.pago__estado--pago]="cuenta.estado === 'pago_realizado'"
+                >
+                  {{ etiqueta(cuenta.estado) }}
+                </span>
+              </header>
 
-            <div class="pago__fila">
-              <span>Consumo</span>
-              <span>{{ cuenta.subtotal | currency:'ARS':'$':'1.0-0' }}</span>
+              <div class="pago__detalles">
+                <div class="pago__fila">
+                  <span>Consumo</span>
+                  <span>{{ cuenta.subtotal | currency:'ARS':'$':'1.0-0' }}</span>
+                </div>
+
+                @if (cuenta.propina !== null) {
+                  <div class="pago__fila">
+                    <span>Propina</span>
+                    <span>{{ cuenta.propina | currency:'ARS':'$':'1.0-0' }}</span>
+                  </div>
+                }
+
+                @if (cuenta.totalFinal !== null) {
+                  <div class="pago__fila pago__fila--total">
+                    <span>Total pagado</span>
+                    <span>{{ cuenta.totalFinal | currency:'ARS':'$':'1.0-0' }}</span>
+                  </div>
+                }
+              </div>
+
+              @if (cuenta.estado === 'cuenta_solicitada') {
+                <ion-button
+                  class="pago__boton"
+                  shape="round"
+                  expand="block"
+                  [disabled]="procesando() !== null"
+                  (click)="entregar(cuenta)"
+                >
+                  Entregar cuenta
+                </ion-button>
+              } @else if (cuenta.estado === 'pago_realizado') {
+                <ion-button
+                  class="pago__boton"
+                  shape="round"
+                  expand="block"
+                  [disabled]="procesando() !== null"
+                  (click)="confirmar(cuenta)"
+                >
+                  Confirmar pago
+                </ion-button>
+              } @else {
+                <p class="pago__aviso">Cuenta entregada. Esperando que el cliente pague.</p>
+              }
             </div>
-
-            @if (cuenta.propina !== null) {
-              <div class="pago__fila">
-                <span>Propina</span>
-                <span>{{ cuenta.propina }}%</span>
-              </div>
-            }
-
-            @if (cuenta.totalFinal !== null) {
-              <div class="pago__fila pago__fila--total">
-                <span>Total pagado</span>
-                <span>{{ cuenta.totalFinal | currency:'ARS':'$':'1.0-0' }}</span>
-              </div>
-            }
-
-            @if (cuenta.estado === 'cuenta_solicitada') {
-              <ion-button
-                class="pago__boton"
-                shape="round"
-                expand="block"
-                [disabled]="procesando() !== null"
-                (click)="entregar(cuenta)"
-              >
-                Entregar cuenta
-              </ion-button>
-            } @else if (cuenta.estado === 'pago_realizado') {
-              <ion-button
-                class="pago__boton"
-                shape="round"
-                expand="block"
-                [disabled]="procesando() !== null"
-                (click)="confirmar(cuenta)"
-              >
-                Confirmar pago
-              </ion-button>
-            } @else {
-              <p class="pago__aviso">Cuenta entregada. Esperando que el cliente pague.</p>
-            }
           </article>
         }
+      </div>
+
+      <!-- Barra de navegación con flechas (Igual que en pedidos) -->
+      <div class="contador">
+        <button
+          type="button"
+          class="contador__flecha"
+          aria-label="Cuenta anterior"
+          [disabled]="indiceActual() === 0"
+          (click)="irA(indiceActual() - 1)"
+        >
+          ‹
+        </button>
+
+        <span>Cuenta {{ indiceActual() + 1 }} de {{ lista().length }}</span>
+
+        <button
+          type="button"
+          class="contador__flecha"
+          aria-label="Cuenta siguiente"
+          [disabled]="indiceActual() === lista().length - 1"
+          (click)="irA(indiceActual() + 1)"
+        >
+          ›
+        </button>
       </div>
     }
   </div>

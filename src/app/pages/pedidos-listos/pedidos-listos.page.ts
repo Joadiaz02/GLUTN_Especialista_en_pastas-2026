@@ -189,8 +189,6 @@ export class PedidosListosPage implements OnDestroy {
 
     try {
       await this._pedido.actualizarEstado(pedido.idPedido, pedido.idUsuario, 'entregado');
-      await this._vibracion.confirmacion();
-      await this.avisar('Pedido entregado. Esperando que el cliente confirme.', 'success');
     } catch (error) {
       void this._vibracion.error();
       await this.avisar(

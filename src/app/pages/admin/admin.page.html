@@ -24,8 +24,8 @@
 <ion-content class="admin-content" [scrollY]="false">
   <div class="admin-layout">
     <div class="header-section">
-      <h1>Panel de administración</h1>
-      <p>Seleccioná una sección para continuar.</p>
+      <h1 [class.admin-title--fill]="getLengthModulosVisibles()">Panel de administración</h1>
+      <p [class.admin-description--fill]="getLengthModulosVisibles()">Seleccioná una sección para continuar.</p>
     </div>
 
     <!-- Solo esta zona scrollea. Su alto lo calcula la página (filas completas)

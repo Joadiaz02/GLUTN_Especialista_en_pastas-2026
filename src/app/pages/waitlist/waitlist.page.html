@@ -3,156 +3,166 @@
     <ion-buttons slot="start">
       <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
-
-    <ion-title> Lista de espera </ion-title>
+    <ion-title>Lista de espera</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="waitlist-content">
+<ion-content [fullscreen]="true" class="waitlist-content" [scrollY]="false">
   <div class="waitlist">
-    <!-- =========================
-         ENCABEZADO
-    ========================== -->
-
+    <!-- ENCABEZADO -->
     <div class="waitlist__header">
       <h1 class="waitlist__title">Clientes esperando</h1>
-
       <p class="waitlist__subtitle">
         {{ users().length }} {{ users().length === 1 ? 'persona esperando una
         mesa.' : 'personas esperando una mesa.' }}
       </p>
     </div>
 
-    <!-- =========================
-         FILTROS
-    ========================== -->
-
+    <!-- FILTROS -->
     <div
       class="waitlist-filters"
       aria-label="Filtrar por cantidad de comensales"
     >
-      @for ( filtro of filtros; track filtro ) {
-
+      @for (filtro of filtros; track filtro) {
       <button
         type="button"
         class="waitlist-filter"
-        [class.waitlist-filter--active]="
-            filtroSeleccionado() === filtro
-          "
+        [class.waitlist-filter--active]="filtroSeleccionado() === filtro"
         (click)="seleccionarFiltro(filtro)"
       >
         {{ filtro === 'todos' ? 'Todos' : filtro === 5 ? '5+' : filtro }}
       </button>
-
       }
     </div>
 
-    <!-- =========================
-         LOADING
-    ========================== -->
-
+    <!-- LOADING -->
     @if (cargando()) {
-
     <div class="waitlist__empty">
       <app-spinner-logo />
     </div>
-
     }
 
-    <!-- =========================
-         SIN RESULTADOS
-    ========================== -->
-
-    @else if ( usuariosFiltrados().length === 0 ) {
-
+    <!-- SIN RESULTADOS -->
+    @else if (usuariosFiltrados().length === 0) {
     <div class="waitlist__empty">
       <p>No hay clientes que coincidan con este filtro.</p>
     </div>
-
     }
 
-    <!-- =========================
-         CARRUSEL
-    ========================== -->
-
+    <!-- CARRUSEL DE TARJETA ÚNICA COMPACTA -->
     @else {
-
-    <div class="waitlist__list">
-      @for ( entry of usuariosFiltrados(); track entry.id ) {
-
-      <article class="waitlist-card">
-        <button
-          class="waitlist-card__main"
-          type="button"
-          [routerLink]="entry.id"
-        >
-          <!-- Avatar -->
-
-          @if (entry.usuarios?.avatar) {
-
-          <img
-            [src]="entry.usuarios.avatar"
-            [alt]="entry.usuarios.nombre"
-            class="waitlist-card__avatar"
-          />
-
-          } @else {
-
-          <div class="waitlist-card__avatar waitlist-card__avatar--empty">
-            {{ entry.usuarios?.nombre ?.charAt(0) ?.toUpperCase() || '?' }}
-          </div>
-
-          }
-
-          <!-- Información -->
-
-          <div class="waitlist-card__info">
-            <p class="waitlist-card__name">
-              {{ entry.usuarios?.nombre || '' }} {{ entry.usuarios?.apellido ||
-              '' }}
-            </p>
-
-            <p class="waitlist-card__details">
-              {{ entry.comensales ?? 1 }} {{ (entry.comensales ?? 1) === 1 ?
-              'comensal' : 'comensales' }} · {{ entry.created_at | date: 'HH:mm'
-              }}
-            </p>
-
-            @if ( (entry.consideraciones ?? []).length > 0 ) {
-
-            <div class="waitlist-card__tags">
-              @for ( consideracion of entry.consideraciones; track consideracion
-              ) {
-
-              <span>
-                {{ consideracion === 'movilidad_reducida' ? 'Movilidad reducida'
-                : consideracion === 'vip' ? 'VIP' : consideracion ===
-                'vip_movilidad_reducida' ? "VIP con Movilidad Reducida" :
-                "Estandar" }}
-              </span>
-
+    <section
+      class="cards-section"
+      (touchstart)="onTouchStart($event)"
+      (touchmove)="onTouchMove($event)"
+      (touchend)="onTouchEnd($event)"
+      (touchcancel)="onTouchEnd($event)"
+    >
+      <div class="cards-track">
+        @for (entry of usuariosFiltrados(); track entry.id; let i = $index) {
+        @if (i === indiceActual()) {
+        <article class="client-card carta-activa">
+          <div class="client-card-inner">
+            <!-- Avatar más compacto -->
+            <div class="client-photo-container">
+              @if (entry.usuarios?.avatar) {
+              <img
+                [src]="entry.usuarios.avatar"
+                [alt]="entry.usuarios.nombre"
+                class="client-avatar"
+              />
+              } @else {
+              <div class="avatar-placeholder">
+                <span>
+                  {{ entry.usuarios?.nombre?.charAt(0)?.toUpperCase() || '?' }}
+                </span>
+              </div>
               }
             </div>
 
+            <!-- Estado / Comensales -->
+            <span class="status">
+              {{ entry.comensales ?? 1 }} {{ (entry.comensales ?? 1) === 1 ?
+              'comensal' : 'comensales' }} · {{ entry.created_at | date: 'HH:mm'
+              }}
+            </span>
+
+            <!-- Nombre -->
+            <h2>
+              {{ entry.usuarios?.apellido || '' }}, {{ entry.usuarios?.nombre ||
+              '' }}
+            </h2>
+
+            <!-- Consideraciones -->
+            @if ((entry.consideraciones ?? []).length > 0) {
+            <div class="client-tags">
+              @for (consideracion of entry.consideraciones; track consideracion)
+              {
+              <span>
+                {{ consideracion === 'movilidad_reducida' ? 'Movilidad reducida'
+                : consideracion === 'silla_bebe' ? 'Silla para bebé' : 'Otra
+                consideración' }}
+              </span>
+              }
+            </div>
             }
+
+            <!-- BOTONES DE ACCIÓN (Aceptar y Eliminar) -->
+            <div class="client-actions">
+              <button
+                type="button"
+                class="approve-button"
+                (click)="aceptar(entry)"
+              >
+                <span class="button-icon">✓</span>
+                Aceptar / Asignar mesa
+              </button>
+
+              <button
+                type="button"
+                class="reject-button"
+                (click)="eliminar(entry)"
+              >
+                <span class="button-icon">×</span>
+                Eliminar de la lista
+              </button>
+            </div>
           </div>
-        </button>
+        </article>
+        } }
+      </div>
+    </section>
 
-        <!-- Eliminar -->
+    <!-- NAVEGACIÓN INFERIOR -->
+    <section class="navigation-section">
+      <button
+        type="button"
+        class="navigation-button"
+        [disabled]="usuariosFiltrados().length <= 1"
+        (click)="irAnterior()"
+        aria-label="Cliente anterior"
+      >
+        <span class="nav-chevron nav-left"></span>
+      </button>
 
-        <button
-          type="button"
-          class="waitlist-card__delete"
-          aria-label="Eliminar cliente de la lista"
-          (click)="eliminar(entry)"
-        >
-          ×
-        </button>
-      </article>
+      <div class="counter">
+        <span class="counter-current">{{ posicionVisible }}</span>
+        <span class="counter-separator">de</span>
+        <span class="counter-total">{{ usuariosFiltrados().length }}</span>
+      </div>
 
-      }
-    </div>
+      <button
+        type="button"
+        class="navigation-button"
+        [disabled]="usuariosFiltrados().length <= 1"
+        (click)="irSiguiente()"
+        aria-label="Cliente siguiente"
+      >
+        <span class="nav-chevron nav-right"></span>
+      </button>
+    </section>
 
+    <p class="swipe-hint">Deslizá para cambiar de cliente</p>
     }
   </div>
 </ion-content>

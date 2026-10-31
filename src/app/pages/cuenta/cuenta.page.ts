@@ -8,6 +8,7 @@ import { Auth, Juegos, SupabaseService, Vibracion } from '@app/services';
 import { CuentaCliente, Pedido } from '@app/services/pedido/pedido';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { Propina } from '@app/services/propina/propina';
 
 const NIVEL_PROPINA: Record<number, string> = {
   20: 'Excelente',
@@ -33,20 +34,27 @@ export class CuentaPage implements OnDestroy {
   private _router = inject(Router);
   private _toastController = inject(ToastController);
 
+  private _propinaService = inject(Propina);
+
   private _canal?: RealtimeChannel;
 
   cuenta = signal<CuentaCliente | null>(null);
   cargando = signal(false);
   pagando = signal(false);
 
-  // el mozo ya confirmó el pago
+  // el mozo ya confirmó el pago ACA ESTA EL ERRORRRR LOCALIZADO
   propinaPorcentaje = signal<number>(10);
 
   pagoConfirmado = signal(false);
 
   lineas = computed(() => this.cuenta()?.lineas ?? []);
 
-  propina = computed(() => this.propinaPorcentaje() ?? 0);
+  propina = computed(() => {
+    const propinaEnPorcentaje = this._propinaService.propinaActual();
+
+    return propinaEnPorcentaje ?? 0
+    // return this.propinaPorcentaje() ?? 0
+  });
 
   subtotal = computed(() => {
     let total = 0;
@@ -99,6 +107,10 @@ export class CuentaPage implements OnDestroy {
     }
 
     this.pagando.set(true);
+
+    console.log("cuenta.page.ts 103 | CUENTAAAAAAAAAAA PROPINAAAAAAAAAAAA")
+    console.log(this.propinaImporte())
+    console.log("cuenta.page.ts 103 | CUENTAAAAAAAAAAA PROPINAAAAAAAAAAAA")
 
     try {
       await this._pedido.pagarCuenta({

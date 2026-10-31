@@ -58,19 +58,34 @@ export class CuentasMozo {
       .in('estado_pedido', ['cuenta_solicitada', 'cuenta_entregada', 'pago_realizado'])
       .order('fecha_emision_pedido', { ascending: true });
 
+    console.log("TODOS LOS PEDIDOS")
+    console.log(pedidos)
+    console.log("------------------------")
+
     if (error) throw new Error('No pudimos cargar las cuentas.');
     if (!pedidos || pedidos.length === 0) {
       this.cuentas.set([]);
       return;
     }
 
-    const porCliente = new Map<string, CuentaDelMozo>();
+    const porCliente = new Map<string, any>();
+    // const porCliente = new Map<string, CuentaDelMozo>();
+
+    console.log("FOR PEDIDOS")
     for (const p of pedidos) {
+      console.log("--")
+      console.log(p)
+      console.log(p.id_usuario)
       const existente = porCliente.get(p.id_usuario);
+      
+      console.log(existente)
+      
       if (existente) {
         existente.subtotal += p.subtotal;
+    
         continue;
       }
+    
       porCliente.set(p.id_usuario, {
         idPedido: p.id_pedido,
         idUsuario: p.id_usuario,
@@ -82,12 +97,19 @@ export class CuentasMozo {
         totalFinal: null,
       });
     }
+    console.log("FOR PEDIDOS TERMINADO--------------------")
 
     const cuentas = Array.from(porCliente.values());
     const idsMesa = Array.from(new Set(cuentas.map((c) => c.idMesa)));
     const idsPagados = cuentas
       .filter((c) => c.estado === 'pago_realizado' || c.estado === 'cuenta_entregada')
       .map((c) => c.idPedido);
+
+    console.log("IDS PAGADOS")
+    console.log(idsPagados)
+    console.log(cuentas)
+    console.log(porCliente)
+    console.log("------------------------")
 
     // Consultamos la tabla ticket para obtener la propina y el total final reales
     const [respuestaMesas, respuestaTickets] = await Promise.all([
@@ -107,7 +129,9 @@ export class CuentasMozo {
       ticketPorPedido.set(t.id_pedido, { propina: t.propina, totalFinal: t.total_final });
     }
 
+    console.log("FOR")
     for (const cuenta of cuentas) {
+      console.log(cuenta)
       cuenta.numeroMesa = numeroPorMesa.get(cuenta.idMesa) ?? 'sin número';
       const ticketInfo = ticketPorPedido.get(cuenta.idPedido);
       if (ticketInfo) {
@@ -115,8 +139,19 @@ export class CuentasMozo {
         cuenta.totalFinal = ticketInfo.totalFinal;
       }
     }
+    console.log("FOR TERMINADO-----------")
+
+    console.log("CUENTAS ANTES DEL SIGNAL")
+    console.log(cuentas)
+    console.log("------------------------")
 
     this.cuentas.set(cuentas);
+
+    console.log("cuenta.ts 121 | LISTADO DE PEDIDO")
+    console.log("Cuentas")
+    console.log(this.cuentasPedidas())
+    console.log("Pagos")
+    console.log(this.cuentas())
   } finally {
     this.cargando.set(false);
   }
@@ -146,6 +181,10 @@ export class CuentasMozo {
 
   // confirma el pago y libera la mesa
   async confirmarPago(cuenta: CuentaDelMozo): Promise<void> {
+    console.log("cuenta.ts 149 | QLWKEJQWLKEJQWLKEJ QWLKJE LKJ")
+    console.log(cuenta)
+    console.log(cuenta.idPedido)
+
     const { data: confirmado, error } = await this._db.client.rpc('pedido_confirmar_pago', {
       p_id_pedido: cuenta.idPedido,
     });
