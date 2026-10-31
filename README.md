@@ -51,7 +51,8 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Consultas al mozo](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#consultas-al-mozo)
   - 🔗 [Administración de platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-platos)
   - 🔗 [Administración de bebidas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-bebidas)
-- 🔗 [Estructura de imágenes](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#estructura-de-imágenes)
+  - 🔗 [Encuestas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#Encuestas)
+
 
 ---
 
@@ -849,3 +850,24 @@ QR correspondiente a la propina del 20%
 
 
 ---
+
+## Encuestas
+
+<p align="center">
+  <img src="images/encuesta-menu.jpg" alt="encuestas" width="250">
+</p>
+
+<p align="center">
+  <img src="images/grafico-torta.jpg" alt="grafico-torta" width="250">
+</p>
+
+<p align="center">
+  <img src="images/grafico-barra.jpg" alt="grafico-barra" width="250">
+</p>
+
+<p align="center">
+  <img src="images/grafico-columna.jpg" alt="grafico-columna" width="250">
+</p>
+
+---
+
