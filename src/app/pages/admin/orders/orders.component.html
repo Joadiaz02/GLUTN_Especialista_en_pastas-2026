@@ -111,12 +111,13 @@
             <ion-button
               class="pedido__boton"
               shape="round"
-              [disabled]="estado() === pedido.id_pedido"
+              /* [disabled]="estado() === pedido.id_pedido" */
               (click)="confirmar(pedido.id_pedido)"
             >
-              @if (estado() === pedido.id_pedido) {
+            Aceptar
+              <!-- @if (estado() === pedido.id_pedido) {
               <app-spinner-logo size="sm" />
-              } @else { Aceptar }
+              } @else { Aceptar } -->
             </ion-button>
           </div>
         </div>
@@ -158,7 +159,14 @@
   <span>Cargando pedidos...</span>
 </div>
 <!-- <div class="cocina-loading">
+  <app-spinner-logo />
+  <span>Cargando pedidos...</span>
+</div> -->
+}
+
+@if (estadoPedidoCarga()) {
+  <div class="quick-loading">
     <app-spinner-logo />
-    <span>Cargando pedidos...</span>
-  </div> -->
+    <span>Cargando...</span>
+  </div>
 }
