@@ -82,7 +82,7 @@ La siguiente distribución corresponde al estado del proyecto luego de las modif
 | **Joaquín Díaz** | 5, 6, 7, 8, **9 y 10 (en conjunto con Javier)**, 17 y 20 |
 | **Javier Vilchez** | 1, 3, 4, **9 y 10 (en conjunto con Joaquín)**, 22 |
 | **Lucas Ponte** |  12, 13, 14, 19 y 21 |
-| **Mariano Pastor** | 2, 11, 15, 16 y 18 |
+| **Mariano Pastor** | 2, 11, 15, 16, 18 y 23 |
 
 > **Nota:** Los puntos **9 y 10** son responsabilidad conjunta de **Joaquín Díaz y Javier Vilchez**. Se decidió trabajarlos en conjunto porque son módulos de mayor tamaño que integran varias funcionalidades relacionadas y requieren coordinación entre distintos flujos de la aplicación.
 
@@ -103,7 +103,8 @@ También se realizó un intercambio de módulos entre **Joaquín Díaz y Javier 
 
 El intercambio se realizó teniendo en cuenta la experiencia y la forma en que cada integrante podía abordar y resolver esas funcionalidades, buscando que cada módulo quedara a cargo del integrante que contaba con mayor familiaridad para desarrollarlo.
 
-
+### Actualización del 17/10/2026
+Se agregaron las funcionalidades de la segunda entrega.
 ---
 
 # 3. Módulos y puntos funcionales
