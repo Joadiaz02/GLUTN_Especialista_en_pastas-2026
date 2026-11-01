@@ -69,8 +69,6 @@ export class PagosPage implements OnDestroy {
   confirmar(cuenta: CuentaDelMozo): Promise<void> {
     return this.procesar(cuenta, async () => {
       await this.cuentasMozo.confirmarPago(cuenta);
-      
-      
     });
   }
 
@@ -118,6 +116,9 @@ export class PagosPage implements OnDestroy {
     if (vista === this.vista()) return;
     this.vista.set(vista);
     this.indiceActual.set(0);
+
+    console.log("pago.page.ts | QWLEKJQWLEKJQQQQQQQQQQQ")
+    console.log(this.cuentasMozo.cuentasPedidas())
 
     const viewport = this._viewport()?.nativeElement;
     if (viewport) {

@@ -9,7 +9,18 @@ import {
   untracked,
 } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { IonContent, IonFooter, IonButton, IonIcon, IonModal, ToastController, ModalController, IonHeader, IonToolbar, IonButtons } from '@ionic/angular';
+import {
+  IonContent,
+  IonFooter,
+  IonButton,
+  IonIcon,
+  IonModal,
+  ToastController,
+  ModalController,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   chevronBackOutline,
@@ -19,7 +30,13 @@ import {
 import { Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Auth } from '../../services/auth/auth';
-import { Carta, MesaCliente, SupabaseService, Vibracion, Waitlist } from '@app/services';
+import {
+  Carta,
+  MesaCliente,
+  SupabaseService,
+  Vibracion,
+  Waitlist,
+} from '@app/services';
 import { EPerfilUsuario } from '@app/enums';
 import { CodigoQr } from '@app/models/qr.model';
 import { CartaItem } from '@app/models/carta.model';
@@ -30,17 +47,9 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { parseTableQr, parseTipQr } from '@app/utils';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
-import { MiCuentaComponent } from '@app/components/ui/mi-cuenta/mi-cuenta.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
-
-const NOMBRE_PERFIL: Record<string, string> = {
-  [EPerfilUsuario.Dueno]: 'Dueño',
-  [EPerfilUsuario.Supervisor]: 'Supervisor',
-  [EPerfilUsuario.Metre]: 'Metre',
-  [EPerfilUsuario.Mozo]: 'Mozo',
-  [EPerfilUsuario.Cocinero]: 'Cocinero',
-  [EPerfilUsuario.Cantinero]: 'Cantinero',
-};
+import { MiCuentaComponent } from '@app/components/ui/mi-cuenta/mi-cuenta.component';
+import { Propina } from '@app/services/propina/propina';
 
 const DEMORA_FOTO_DESTACADO_MS = 3000;
 
@@ -62,9 +71,9 @@ const DEMORA_FOTO_DESTACADO_MS = 3000;
     IonToolbar,
     IonButtons,
     ConfirmDialogComponent,
-    MiCuentaComponent,
     ConfirmVolverComponent,
-],
+    MiCuentaComponent,
+  ],
 })
 export class HomePage implements OnInit, OnDestroy {
   private router = inject(Router);
@@ -80,6 +89,7 @@ export class HomePage implements OnInit, OnDestroy {
   private mesaCliente = inject(MesaCliente);
   private _canalPedido: RealtimeChannel | null = null;
   private _waitlistService = inject(Waitlist);
+  private _propinaService = inject(Propina);
 
   //punto19
 
@@ -115,7 +125,9 @@ export class HomePage implements OnInit, OnDestroy {
     } catch (error) {
       void this.vibracion.error();
       await this.mostrarToast(
-        error instanceof Error ? error.message : 'No pudimos cargar los productos destacados.',
+        error instanceof Error
+          ? error.message
+          : 'No pudimos cargar los productos destacados.',
         'danger'
       );
     } finally {
@@ -126,12 +138,11 @@ export class HomePage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.detenerCicloFotos();
     this.dejarDeEscucharPedido();
-    
   }
 
   // estados
 
-  loading = signal(false)
+  loading = signal(false);
 
   // sesión iniciada
   isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
@@ -143,11 +154,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   mensajeVolver = computed(() => {
     if (this.esPersonal()) {
-      const perfil = NOMBRE_PERFIL[this.perfil() ?? ''];
-
-      return perfil
-        ? `Vas a volver al panel de ${perfil}.`
-        : 'Vas a volver a tu panel.';
+      return 'Vas a volver a la selección de acceso.';
     }
 
     if (this.isLoggedIn()) {
@@ -176,9 +183,17 @@ export class HomePage implements OnInit, OnDestroy {
 
   // el mozo ya confirmó el pedido, en cualquier etapa posterior
   pedidoRecibido = computed(() =>
-  ['confirmado', 'en_preparacion', 'listo', 'entregado', 'recibido', 'cuenta_solicitada', 'cuenta_entregada', 'pago_realizado']
-    .includes(this.estadoPedido() ?? '')
-);
+    [
+      'confirmado',
+      'en_preparacion',
+      'listo',
+      'entregado',
+      'recibido',
+      'cuenta_solicitada',
+      'cuenta_entregada',
+      'pago_realizado',
+    ].includes(this.estadoPedido() ?? '')
+  );
 
   // botones que ve cada perfil
   botones = computed(() => {
@@ -186,7 +201,6 @@ export class HomePage implements OnInit, OnDestroy {
     const cliente = this.esCliente();
     const enMesa = this.enMesa();
     const pedidoRecibido = this.pedidoRecibido();
-   
 
     return {
       // reservas oculto hasta la segunda entrega
@@ -200,7 +214,10 @@ export class HomePage implements OnInit, OnDestroy {
       escaner: cliente,
       consultas: (cliente && enMesa) || perfil === EPerfilUsuario.Mozo,
       estadoPedido: cliente && this.pedido.idUltimoPedido() !== null,
-      verCuenta: cliente && (this.estadoPedido() === 'cuenta_entregada' || this.estadoPedido() === 'pago_realizado'),
+      verCuenta:
+        cliente &&
+        (this.estadoPedido() === 'cuenta_entregada' ||
+          this.estadoPedido() === 'pago_realizado'),
     };
   });
 
@@ -271,9 +288,8 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async volver(): Promise<void> {
-    // el panel de cada perfil es /admin (muestra solo sus tarjetas)
     if (this.esPersonal()) {
-      void this.router.navigate(['/admin']);
+      void this.router.navigate(['/seleccion-acceso']);
       return;
     }
 
@@ -357,50 +373,46 @@ export class HomePage implements OnInit, OnDestroy {
       const { camera } = await BarcodeScanner.requestPermissions();
 
       if (camera !== 'granted' && camera !== 'limited') {
-        await this.mostrarToast('Necesitamos permiso de cámara para escanear el código.');
-      
+        await this.mostrarToast(
+          'Necesitamos permiso de cámara para escanear el código.'
+        );
+
         return;
       }
 
       const { barcodes } = await BarcodeScanner.scan();
-      
+
       if (barcodes.length === 0) return;
 
       const valor = barcodes[0].rawValue ?? '';
 
-      // if ('ingreso-local' === 'ingreso-local') {
       if (valor === 'ingreso-local') {
         this.loading.set(true);
 
         await this.procesarCodigo({ tipo: 'ingreso-local' });
 
         this.loading.set(false);
+
         return;
       }
 
       // el cliente con mesa asignada también puede escanearla desde acá
-      // if (parseTableQr('ingreso-local')) {
-      //   await this.vincularMesa('ingreso-local');
+      // if (parseTableQr(valor)) {
+      //   await this.vincularMesa(valor);
       //   return;
       // }
 
-      if (parseTableQr(valor)) {
-        await this.vincularMesa(valor);
-
-        return;
-      }
-
       // QR de propina: el cliente pide la cuenta
-      // const porcentaje = parseTipQr('ingreso-local');
-      const porcentaje = parseTipQr(valor);
-
-      if (porcentaje !== null) {
-        this.pedirCuenta(porcentaje);
-        return;
-      }
+      // const porcentaje = parseTipQr(valor);
+      // if (porcentaje !== null) {
+      //   this.pedirCuenta(porcentaje);
+      //   return;
+      // }
 
       await this.vibracion.error();
-      await this.mostrarToast('Ese código QR no corresponde al ingreso, a una mesa ni a una propina.');
+      await this.mostrarToast(
+        'Ese código QR no corresponde al ingreso, a una mesa ni a una propina.'
+      );
     } finally {
       this.escaneando.set(false);
     }
@@ -414,14 +426,15 @@ export class HomePage implements OnInit, OnDestroy {
 
     try {
       await this.pedido.solicitarCuenta(usuario.id, porcentaje);
-      
-    } catch (error)  {
-        console.error('Error al pedir la cuenta:', JSON.stringify(error));
-        await this.vibracion.error();
-        await this.mostrarToast(
-          error instanceof Error ? error.message : 'No pudimos pedir la cuenta. Intentá de nuevo.',
-          'danger'
-          
+      // await this.vibracion.confirmacion();
+    } catch (error) {
+      console.error('Error al pedir la cuenta:', JSON.stringify(error));
+      await this.vibracion.error();
+      await this.mostrarToast(
+        error instanceof Error
+          ? error.message
+          : 'No pudimos pedir la cuenta. Intentá de nuevo.',
+        'danger'
       );
     }
   }
@@ -434,26 +447,31 @@ export class HomePage implements OnInit, OnDestroy {
           const currentUser = this.authService.usuarioActual();
 
           // si ya está anotado no lo agrega de nuevo
-          // const entrada = await this._waitlistService.getMyEntry(currentUser.id);
+          const entrada = await this._waitlistService.getMyEntry(
+            currentUser.id
+          );
 
-          // if (!entrada) {
-          // }
-            
+          if (!entrada) {
             const nueva = await this._waitlistService.add({
               usuario_id: currentUser.id,
               estado: 'esperando',
             });
+
             // avisa al metre que hay un cliente nuevo
             try {
               await this._waitlistService.notifyNewWaitlist(nueva.id);
             } catch (error) {
               console.warn('No se pudo notificar al metre:', error);
             }
+          }
 
           this.router.navigate(['/waiting-room']);
         } catch {
           await this.vibracion.error();
-          await this.mostrarToast('No pudimos anotarte en la lista de espera. Probá de nuevo.');
+
+          await this.mostrarToast(
+            'No pudimos anotarte en la lista de espera. Probá de nuevo.'
+          );
         }
 
         break;
@@ -464,7 +482,10 @@ export class HomePage implements OnInit, OnDestroy {
   private async vincularMesa(valor: string): Promise<void> {
     try {
       const usuario = this.authService.usuarioActual();
-      const resultado = await this._waitlistService.linkTable(usuario.id, valor);
+      const resultado = await this._waitlistService.linkTable(
+        usuario.id,
+        valor
+      );
 
       if (resultado.ok) {
         await this.mesaCliente.actualizar();
@@ -475,18 +496,27 @@ export class HomePage implements OnInit, OnDestroy {
       await this.vibracion.error();
 
       if (resultado.reason === 'wrong_table') {
-        await this.mostrarToast(`Esta no es tu mesa. Tenés asignada la mesa ${resultado.correctTableNumber}.`);
+        await this.mostrarToast(
+          `Esta no es tu mesa. Tenés asignada la mesa ${resultado.correctTableNumber}.`
+        );
       } else {
-        await this.mostrarToast('Todavía no tenés una mesa asignada. Pedile una al metre.');
+        await this.mostrarToast(
+          'Todavía no tenés una mesa asignada. Pedile una al metre.'
+        );
       }
     } catch (error) {
       console.error('Error vinculando mesa:', error);
       await this.vibracion.error();
-      await this.mostrarToast('No pudimos vincularte con la mesa. Intentá nuevamente.');
+      await this.mostrarToast(
+        'No pudimos vincularte con la mesa. Intentá nuevamente.'
+      );
     }
   }
 
-  private async mostrarToast(mensaje: string, color = 'primary'): Promise<void> {
+  private async mostrarToast(
+    mensaje: string,
+    color = 'primary'
+  ): Promise<void> {
     const toast = await this.toastController.create({
       message: mensaje,
       duration: 3000,
@@ -536,24 +566,78 @@ export class HomePage implements OnInit, OnDestroy {
 
   // solicitar cuenta
   goToCuenta() {
-  this.router.navigate(['/cuenta']);
-}
-
+    this.router.navigate(['/cuenta']);
+  }
 
   async verEstadoPedido(idPedido: string) {
-  const modal = await this.modalController.create({
-    component: EstadoPedidoComponent,
-    componentProps: { idPedido },
-    breakpoints: [0, 0.4],
-    initialBreakpoint: 0.2,
-  });
+    const modal = await this.modalController.create({
+      component: EstadoPedidoComponent,
+      componentProps: { idPedido },
+      breakpoints: [0, 0.4],
+      initialBreakpoint: 0.2,
+    });
 
-  await modal.present();
+    await modal.present();
 
-  const { data } = await modal.onWillDismiss();
+    const { data } = await modal.onWillDismiss();
 
-  if (data === 'solicitar-cuenta') {
-    await this.escanear();
+    if (data === 'solicitar-cuenta') {
+      if (this.escaneando()) return;
+
+      this.escaneando.set(true);
+
+      try {
+        const { camera } = await BarcodeScanner.requestPermissions();
+
+        if (camera !== 'granted' && camera !== 'limited') {
+          await this.mostrarToast(
+            'Necesitamos permiso de cámara para escanear el código.'
+          );
+
+          return;
+        }
+
+        const { barcodes } = await BarcodeScanner.scan();
+
+        if (barcodes.length === 0) return;
+
+        const valor = barcodes[0].rawValue ?? '';
+
+        if (
+          valor === 'propina:0' ||
+          valor === 'propina:5' ||
+          valor === 'propina:10' ||
+          valor === 'propina:15' ||
+          valor === 'propina:20'
+        ) {
+          const porcentaje = parseTipQr(valor);
+
+          if (porcentaje !== null) {
+            this.pedirCuenta(porcentaje);
+
+            this._propinaService.setPropinaPorcentaje(porcentaje)
+
+            await this.toastController.create({
+              message: 'El mozo ahora te llevara la cuenta. Disfruta del lugar mientras esperas.',
+  
+              duration: 3000,
+  
+              position: 'bottom',
+  
+            });
+
+            return;
+          }
+        } else {
+          await this.vibracion.error();
+
+          await this.mostrarToast(
+            'El codigo escaneado no es de propina. Por favor, vuelva a intentarlo.'
+          );
+        }
+      } finally {
+        this.escaneando.set(false);
+      }
+    }
   }
-}
 }

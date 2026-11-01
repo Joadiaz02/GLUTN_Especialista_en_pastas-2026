@@ -41,15 +41,18 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Gestión de pedidos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos)
   - 🔗 [Gestión de pedidos de cocina](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-cocina)
   - 🔗 [Gestión de pedidos de bar](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-bar)
+  - 🔗 [Mi cuenta](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#mi-cuenta)
   - 🔗 [Modales del menú principal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#modales-del-menú-principal)
   - 🔗 [Carta](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#carta)
   - 🔗 [Platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#platos)
   - 🔗 [Pedido](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#pedido)
+  - 🔗 [Pagos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#pagos)
   - 🔗 [Panel administrativo](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#panel-administrativo)
   - 🔗 [Consultas al mozo](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#consultas-al-mozo)
   - 🔗 [Administración de platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-platos)
   - 🔗 [Administración de bebidas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-bebidas)
-- 🔗 [Estructura de imágenes](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#estructura-de-imágenes)
+  - 🔗 [Encuestas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#Encuestas)
+
 
 ---
 
@@ -79,7 +82,7 @@ La siguiente distribución corresponde al estado del proyecto luego de las modif
 | **Joaquín Díaz** | 5, 6, 7, 8, **9 y 10 (en conjunto con Javier)**, 17 y 20 |
 | **Javier Vilchez** | 1, 3, 4, **9 y 10 (en conjunto con Joaquín)**, 22 |
 | **Lucas Ponte** |  12, 13, 14, 19 y 21 |
-| **Mariano Pastor** | 2, 11, 15, 16 y 18 |
+| **Mariano Pastor** | 2, 11, 15, 16, 18 y 23 |
 
 > **Nota:** Los puntos **9 y 10** son responsabilidad conjunta de **Joaquín Díaz y Javier Vilchez**. Se decidió trabajarlos en conjunto porque son módulos de mayor tamaño que integran varias funcionalidades relacionadas y requieren coordinación entre distintos flujos de la aplicación.
 
@@ -100,7 +103,8 @@ También se realizó un intercambio de módulos entre **Joaquín Díaz y Javier 
 
 El intercambio se realizó teniendo en cuenta la experiencia y la forma en que cada integrante podía abordar y resolver esas funcionalidades, buscando que cada módulo quedara a cargo del integrante que contaba con mayor familiaridad para desarrollarlo.
 
-
+### Actualización del 17/10/2026
+Se agregaron las funcionalidades de la segunda entrega.
 ---
 
 # 3. Módulos y puntos funcionales
@@ -188,18 +192,18 @@ Los módulos se documentan individualmente indicando:
 
 **Qué se realiza:** recepción en el sector bar de los productos correspondientes a cada pedido, mostrando número de mesa, fecha, hora, productos y cantidades, agrupados para facilitar la gestión del cantinero.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
+**Inicio:** 31/09/2026
+**Finalización:** 17/10/2026  
+**Estado:** Finalizado  
 **Branch:** `Joaquin-Diaz`
 
 ### Punto 20 - Encuestas y gráficos
 
 **Qué se realiza:** acceso del cliente a la encuesta de satisfacción, limitación a una encuesta por estadía y visualización de los resultados mediante distintos tipos de gráficos estadísticos.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
+**Inicio:** 22/10/2026 
+**Finalización:** 25/10/2026
+**Estado:** Finalizado
 **Branch:** `Joaquin-Diaz`
 
 ---
@@ -261,9 +265,9 @@ Los módulos se documentan individualmente indicando:
 
 **Qué se realiza:** confirmación del pago por parte del mozo, notificación al dueño y supervisor, liberación de la mesa y posterior verificación de disponibilidad. El punto también contempla la visualización de los resultados de las encuestas desde el QR correspondiente.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
+**Inicio:** 26/10/2026 
+**Finalización:** 29/10/2026
+**Estado:** Finalizado  
 **Branch:** `Javier-Vilchez`
 
 ---
@@ -305,19 +309,19 @@ Los módulos se documentan individualmente indicando:
 
 **Qué se realiza:** entrega del pedido completo al cliente, confirmación de recepción y actualización del estado del pedido.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** Aún no iniciado  
+**Inicio:** 18/10/2026  
+**Finalización:** 27/10/2026  
+**Estado:** Finalizado 
 **Branch:** `Lucas-ponte`
 
 ### Punto 21 - Solicitud de la cuenta y pago
 
 **Qué se realiza:** solicitud de la cuenta al mozo, selección de propina mediante QR, detalle de consumos, descuentos, propina y total, seguido del pago simulado y las notificaciones correspondientes.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
-**Branch:** `Lucas-ponte`
+**Inicio:** 18/10/2026  
+**Finalización:** 27/10/2026  
+**Estado:** Finalizado 
+**Branch:** `Lucas-ponte
 
 ---
 
@@ -356,18 +360,18 @@ Los módulos se documentan individualmente indicando:
 
 **Qué se realiza:** recepción en el sector cocina de los productos correspondientes al pedido, mostrando número de mesa, fecha, hora, productos y cantidades, agrupados por mesa.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** Aún no iniciado  
+**Inicio:** 10/10/2026  
+**Finalización:** 14/10/2026 
+**Estado:** Finalizado  
 **Branch:** `Mariano-Pastor`
 
 ### Punto 18 - Cocina y bar informan que el pedido está listo
 
 **Qué se realiza:** comunicación de finalización de los productos por parte de cocina y bar, actualización del pedido y notificación al mozo cuando todos los sectores intervinientes finalizaron.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** Aún no iniciado  
+**Inicio:** 10/10/2026  
+**Finalización:** 15/10/2026  
+**Estado:** FInalizado 
 **Branch:** `Mariano-Pastor`
 
 ---
@@ -499,6 +503,56 @@ QR correspondiente a la Mesa 5.
 
 <p align="center">
   <img src="images/qr-mesa-5.png" alt="QR Mesa 5" width="250">
+</p>
+
+---
+
+### QR Propina 0%
+
+QR correspondiente a la propina del 0%
+
+<p align="center">
+  <img src="images/propina-cero.jpg" alt="QR Propina 0" width="250">
+</p>
+
+---
+
+### QR Propina 5%
+
+QR correspondiente a la propina del 5%
+
+<p align="center">
+  <img src="images/propina-cinco.jpg" alt="QR Propina 5" width="250">
+</p>
+
+---
+
+### QR Propina 10%
+
+QR correspondiente a la propina del 10%
+
+<p align="center">
+  <img src="images/propina-diez.jpg" alt="QR Propina 10" width="250">
+</p>
+
+---
+
+### QR Propina 15%
+
+QR correspondiente a la propina del 15%
+
+<p align="center">
+  <img src="images/propina-quince.jpg" alt="QR Propina 15" width="250">
+</p>
+
+---
+
+### QR Propina 20%
+
+QR correspondiente a la propina del 20%
+
+<p align="center">
+  <img src="images/propina-veinte.jpg" alt="QR Propina 20" width="250">
 </p>
 
 ---
@@ -669,16 +723,26 @@ QR correspondiente a la Mesa 5.
   <img src="images/gestion-pedidos-cocina.jpg" alt="Gestión de pedidos de cocina" width="250">
 </p>
 ---
+
 ## Gestión de pedidos de bar
 
 <p align="center">
   <img src="images/gestion-pedidos-bar.jpg" alt="Gestión de pedidos de bar" width="250">
 </p>
 ---
+
 ## Menú principal
 
 <p align="center">
   <img src="images/menu-principal.jpg" alt="Menú principal" width="250">
+</p>
+
+---
+
+## Mi cuenta
+
+<p align="center">
+  <img src="images/mi-cuenta.jpg" alt="Mi cuenta" width="250">
 </p>
 
 ---
@@ -723,6 +787,19 @@ QR correspondiente a la Mesa 5.
   <img src="images/pedido-sheet.jpg" alt="Resumen del pedido" width="250">
 </p>
 
+
+---
+
+## Pagos
+
+<p align="center">
+  <img src="images/pagos-uno.jpg" alt="Pagos" width="250">
+</p>
+
+
+<p align="center">
+  <img src="images/pagos-dos.jpg" alt="Pagos dos" width="250">
+</p>
 
 ---
 
@@ -774,3 +851,24 @@ QR correspondiente a la Mesa 5.
 
 
 ---
+
+## Encuestas
+
+<p align="center">
+  <img src="images/encuesta-menu.jpg" alt="encuestas" width="250">
+</p>
+
+<p align="center">
+  <img src="images/grafico-torta.jpg" alt="grafico-torta" width="250">
+</p>
+
+<p align="center">
+  <img src="images/grafico-barra.jpg" alt="grafico-barra" width="250">
+</p>
+
+<p align="center">
+  <img src="images/grafico-columna.jpg" alt="grafico-columna" width="250">
+</p>
+
+---
+

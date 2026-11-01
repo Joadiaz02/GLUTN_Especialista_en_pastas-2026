@@ -87,19 +87,25 @@ export class OrdersComponent implements OnInit {
     this.cargando.set(false);
   }
 
+  estadoPedidoCarga = signal(false)
+
   async confirmar(idPedido: string): Promise<void> {
     const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
     if (!pedidoActual) return;
     this.estado.set(idPedido);
     try{
+      this.estadoPedidoCarga.set(true)
+
       await this.pedidoService.actualizarEstado(idPedido, pedidoActual.id_usuario, 'confirmado');
       this.mostrarToast('Pedido confirmado con éxito y derivado a Cocina / Bar.', 'success');
+
       await this.cargarpedido();
     
     }catch (error){
       console.error('Error al confirmar el pedido:', error);
       this.mostrarToast('No se pudo confirmar el pedido. Intentá de nuevo.', 'danger');
     }finally {
+    this.estadoPedidoCarga.set(false)
     this.estado.set(null);
     }
   }
