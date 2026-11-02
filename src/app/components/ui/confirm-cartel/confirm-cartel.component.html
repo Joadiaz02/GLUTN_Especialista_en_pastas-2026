@@ -1,14 +1,14 @@
 @if (!esContenidoModal) {
 <ion-button
-  fill="outline"
+  class="boton-salir"
+  fill="solid"
   shape="round"
-  size="small"
   color="danger"
+  aria-label="Cerrar sesión"
   (click)="abrirConfirmacion()"
 >
   <ion-icon
     slot="icon-only"
-    color="danger"
     src="assets/icons/logout.svg"
   ></ion-icon>
 </ion-button>
