@@ -23,6 +23,17 @@
 
     @if (!sopaLetras.iniciada()) {
       <div class="sopa-inicio">
+        <!-- grilla tapada: muestra el juego antes de empezar -->
+        <div
+          class="sopa-grilla sopa-grilla--tapada"
+          aria-hidden="true"
+          [style.grid-template-columns]="'repeat(' + sopaLetras.tamanoGrilla + ', 1fr)'"
+        >
+          @for (celda of celdasTapadas; track $index) {
+            <span class="sopa-celda">?</span>
+          }
+        </div>
+
         <p class="sopa-inicio__texto">
           Encontrá {{ palabrasPorPartida }} palabras en {{ duracionSegundos }} segundos.
         </p>

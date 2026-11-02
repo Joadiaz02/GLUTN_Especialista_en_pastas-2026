@@ -40,6 +40,7 @@ export class SopaLetrasPage implements OnInit, OnDestroy {
   readonly porcentaje = CONFIG_JUEGOS['sopa-de-letras'].porcentaje;
   readonly palabrasPorPartida = SOPA_LETRAS_PALABRAS_POR_PARTIDA;
   readonly duracionSegundos = SOPA_LETRAS_DURACION_SEGUNDOS;
+  readonly celdasTapadas = Array.from({ length: this.sopaLetras.tamanoGrilla ** 2 });
 
   celdaInicio: CeldaSeleccionada | null = null;
   ngOnInit(): void {

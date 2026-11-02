@@ -30,7 +30,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  width: min(260px, 40vh);
+  // usa casi todo el ancho sin pasarse del alto disponible
+  width: min(360px, 88vw, 46vh);
   margin-bottom: min(24px, 3vh);
 }
 
@@ -44,7 +45,7 @@
   border: none;
   border-radius: 14px;
   background: var(--ion-color-light);
-  font-size: 42px;
+  font-size: 52px;
   font-weight: 800;
   line-height: 1;
   display: flex;
@@ -80,6 +81,6 @@
   }
 
   .ta-te-ti-tablero {
-    width: 34vh;
+    width: min(88vw, 40vh);
   }
 }
