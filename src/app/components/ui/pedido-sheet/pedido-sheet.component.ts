@@ -17,6 +17,8 @@ import {
   PedidoSheetService,
 } from '@app/services/pedido-sheet/pedido-sheet';
 
+import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.directive';
+
 @Component({
   selector: 'app-pedido-sheet',
 
@@ -25,6 +27,7 @@ import {
   imports: [
     CommonModule,
     CurrencyPipe,
+    ListaFilasDirective,
   ],
 
   templateUrl:
@@ -60,6 +63,12 @@ export class PedidoSheetComponent {
     signal(false);
 
   private inicioY = 0;
+
+  /*
+   * Si el dedo empezó sobre la lista de productos y esta ya está scrolleada,
+   * el gesto es para scrollear la lista: el panel no se arrastra.
+   */
+  private puedeArrastrar = true;
 
   private readonly UMBRAL_CIERRE = 90;
 
@@ -226,6 +235,18 @@ export class PedidoSheetComponent {
     this.inicioY =
       evento.touches[0]?.clientY ?? 0;
 
+    /*
+     * ¿El dedo empezó sobre la lista de productos?
+     * Si la lista no está arriba de todo, el gesto
+     * es para scrollearla y no para arrastrar el panel.
+     */
+    const lista =
+      (evento.target as HTMLElement | null)
+        ?.closest('.pedido-items') as HTMLElement | null;
+
+    this.puedeArrastrar =
+      !lista || lista.scrollTop <= 0;
+
     this.desplazamientoY.set(0);
 
     /*
@@ -246,7 +267,10 @@ export class PedidoSheetComponent {
     evento: TouchEvent
   ): void {
 
-    if (this.cerrando()) {
+    if (
+      this.cerrando() ||
+      !this.puedeArrastrar
+    ) {
       return;
     }
 
@@ -296,7 +320,10 @@ export class PedidoSheetComponent {
     evento: TouchEvent
   ): void {
 
-    if (this.cerrando()) {
+    if (
+      this.cerrando() ||
+      !this.puedeArrastrar
+    ) {
       return;
     }
 

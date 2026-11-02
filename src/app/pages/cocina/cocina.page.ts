@@ -11,7 +11,7 @@ import {
 import { DatePipe } from '@angular/common';
 import { IonButton, IonContent, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-
+import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.directive';
 import { Auth, Cocina, Confirm, PedidoCocina, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
@@ -32,7 +32,7 @@ export interface SlideCocina extends PedidoCocina {
   standalone: true,
   templateUrl: './cocina.page.html',
   styleUrls: ['./cocina.page.scss'],
-  imports: [HeaderComponent, DatePipe, IonButton, IonContent, SpinnerLogoComponent],
+  imports: [HeaderComponent, DatePipe, IonButton, IonContent, SpinnerLogoComponent, ListaFilasDirective],
 })
 export class CocinaPage implements OnDestroy {
   cocina = inject(Cocina);

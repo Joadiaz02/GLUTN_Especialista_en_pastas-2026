@@ -207,14 +207,14 @@
   }
 
   .barra-tiempo__icon {
-    flex-basis: 30px;
-    width: 30px;
-    height: 30px;
+    flex-basis: 17px;
+    width: 22px;
+    height: 22px;
   }
 
   .barra-boton {
-    --padding-start: 10px;
-    --padding-end: 8px;
+    --padding-start: 3px;
+    --padding-end: 3px;
 
     font-size: 13px;
   }
@@ -228,20 +228,58 @@
 
 /* Celulares muy estrechos */
 
-@media (max-width: 350px) {
-  .barra-pedido {
-    gap: 5px;
+@media (max-width: 360px) {
+.barra-pedido {
+    gap: 6px;
+    padding-top: 9px;
+  }
+
+  .barra-carrito-icono {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .barra-carrito-icono > img {
+    width: 21px;
+    height: 21px;
+  }
+
+  .barra-cantidad {
+    font-size: 13px;
+  }
+
+  .barra-total {
+    font-size: 19px;
+  }
+
+  .barra-total strong {
+    font-size: 18px;
   }
 
   .barra-tiempo {
-    display: none;
+    gap: 4px;
+    padding-left: 3px;
+    font-size: 20px;
+  }
+
+  .barra-tiempo__icon {
+    flex-basis: 8px;
+    width: 23px;
+    height: 23px;
   }
 
   .barra-boton {
-    --padding-start: 9px;
-    --padding-end: 8px;
+    --padding-start: 4px;
+    --padding-end: 4px;
 
-    font-size: 16px;
+    font-size: 13px;
+  }
+
+  .barra-boton__flecha {
+    flex-basis: 16px;
+    width: 16px;
+    height: 16px;
   }
 }
 

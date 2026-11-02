@@ -73,7 +73,8 @@
               </div>
 
               <!-- cada parte del pedido con su estado -->
-              <div class="pedido__items">
+              <div class="pedido__items-wrap">
+              <div class="pedido__items" appListaFilas>
                 @for (parte of pedido.partes; track parte.sector) {
                   <div class="parte">
                     <span class="parte__sector">{{ nombreSector(parte.sector) }}</span>
@@ -93,7 +94,7 @@
                   }
                 }
               </div>
-
+              </div>
               @if (pedido.entregado) {
               <p class="pedido__aviso">Entregado. Esperando que el cliente confirme la recepción.</p>
             } @else if (pedido.completo) {

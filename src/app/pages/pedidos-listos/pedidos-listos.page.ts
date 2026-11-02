@@ -11,7 +11,7 @@ import {
 import { DatePipe } from '@angular/common';
 import { IonContent, ToastController, IonButton } from '@ionic/angular';
 import { Router } from '@angular/router';
-
+import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.directive';
 import {
   Auth,
   EstadoParte,
@@ -43,7 +43,7 @@ export type VistaMozo = 'listos' | 'en_preparacion';
   standalone: true,
   templateUrl: './pedidos-listos.page.html',
   styleUrls: ['../cocina/cocina.page.scss', './pedidos-listos.page.scss'],
-  imports: [HeaderComponent, DatePipe, IonContent, SpinnerLogoComponent, IonButton],
+  imports: [HeaderComponent, DatePipe, IonContent, SpinnerLogoComponent, IonButton, ListaFilasDirective],
 })
 export class PedidosListosPage implements OnDestroy {
   pedidosListos = inject(PedidosListos);
