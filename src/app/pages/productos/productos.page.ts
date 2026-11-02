@@ -29,6 +29,8 @@ import {
 
 import { Carrito } from '../carrito/carrito';
 
+import { EPerfilUsuario } from '@app/enums';
+
 import { SpinnerLogoComponent } from
   '@app/components/ui/spinner-logo/spinner-logo.component';
 
@@ -92,6 +94,13 @@ export class ProductosPage implements OnInit {
   private toastController = inject(ToastController);
 
   private vibracion = inject(Vibracion);
+
+  // solo los clientes (registrados o anónimos) pueden armar un pedido
+  puedePedir = computed(() =>
+    [EPerfilUsuario.ClienteRegistrado, EPerfilUsuario.ClienteAnonimo].includes(
+      this.authService.obtenerPerfil(this.authService.usuarioActual()) as EPerfilUsuario
+    )
+  );
 
   clientesPendientes =signal<any[]>([]);
 

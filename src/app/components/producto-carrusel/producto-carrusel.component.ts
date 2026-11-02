@@ -64,6 +64,10 @@ export class ProductoCarruselComponent
   @Input()
   acciones: TemplateRef<{ $implicit: CartaItem }> | null = null;
 
+  // en la carta, el personal y quien entra sin sesión solo miran (sin agregar)
+  @Input()
+  puedePedir = true;
+
   @ViewChild('productosViewport')
   productosViewport?: ElementRef<HTMLElement>;
 

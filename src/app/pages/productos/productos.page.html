@@ -17,7 +17,7 @@
   <div
     class="products-wrapper"
     [class.con-barra-pedido]="
-      carrito.totalItems() > 0
+      puedePedir() && carrito.totalItems() > 0
     "
   >
     <!-- BUSCADOR -->
@@ -69,6 +69,7 @@
 
     <app-producto-carrusel
       [productos]="productosFiltrados()"
+      [puedePedir]="puedePedir()"
       [etiqueta]="
           tipo() === 'plato'
             ? 'platos'
@@ -89,5 +90,7 @@
 
   <!-- BARRA DEL PEDIDO -->
 
+  @if (puedePedir()) {
   <app-barra-pedido></app-barra-pedido>
+  }
 </ion-content>

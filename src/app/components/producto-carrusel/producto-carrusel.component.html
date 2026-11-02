@@ -79,6 +79,7 @@
               <ng-container
                 *ngTemplateOutlet="acciones; context: { $implicit: producto }"
               ></ng-container>
+              } @else if (!puedePedir) {
               } @else if (cantidadActual(producto) === 0) {
               <button
                 type="button"
