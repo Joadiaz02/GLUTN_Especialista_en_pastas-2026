@@ -63,9 +63,6 @@
           >
             <img [src]="'assets/icons/' + fila.red + '.svg'" [alt]="fila.nombre" />
           </span>
-          <small>
-            {{ estaVinculada(fila.red) ? 'Vinculado: ingresá sin contraseña' : 'Ingresá sin contraseña' }}
-          </small>
         </div>
 
         @if (estaVinculada(fila.red)) {

@@ -37,7 +37,8 @@ export class MiCuentaComponent {
   subiendoFoto = signal<boolean>(false);
 
   readonly redes: FilaRed[] = [
-    { red: 'google', nombre: 'Google' },
+    // Google queda oculto por ahora, solo se vincula Discord
+    // { red: 'google', nombre: 'Google' },
     { red: 'discord', nombre: 'Discord' },
   ];
 
