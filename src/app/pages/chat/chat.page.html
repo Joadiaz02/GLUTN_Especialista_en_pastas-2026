@@ -40,6 +40,10 @@
       [class.mensaje--mozo]="esDeMozo(mensaje)"
     >
       <div class="mensaje__encabezado">
+        @if (esPropio(mensaje)) {
+        <!-- los mensajes propios no muestran foto ni nombre, solo "Yo" -->
+        <span class="mensaje__nombre">Yo</span>
+        } @else {
         <app-avatar
           class="mensaje__avatar"
           [image]="avatarUrl(mensaje)"
@@ -53,7 +57,7 @@
         <span class="mensaje__etiqueta">Mozo</span>
         } @else if (mensaje.numero_mesa) {
         <span class="mensaje__etiqueta">Mesa {{ mensaje.numero_mesa }}</span>
-        }
+        } }
 
         <span class="mensaje__hora"
           >{{ mensaje.created_at | date: 'dd/MM HH:mm' }}</span
@@ -62,7 +66,7 @@
 
       @if (citado(mensaje); as cita) {
       <div class="mensaje__cita">
-        <strong>{{ cita.nombre }}:</strong> {{ resumen(cita.texto) }}
+        <strong>{{ esPropio(cita) ? 'Yo' : cita.nombre }}:</strong> {{ resumen(cita.texto) }}
       </div>
       }
 
@@ -91,7 +95,7 @@
   } @if (respondiendoA(); as destino) {
   <div class="chat-respondiendo">
     <span class="chat-respondiendo__texto">
-      Respondiendo a <strong>{{ destino.nombre }}</strong>: {{
+      Respondiendo a <strong>{{ esPropio(destino) ? 'Yo' : destino.nombre }}</strong>: {{
       resumen(destino.texto) }}
     </span>
     <button
