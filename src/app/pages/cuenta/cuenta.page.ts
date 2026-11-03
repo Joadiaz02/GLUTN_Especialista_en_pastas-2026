@@ -2,6 +2,9 @@ import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonButton, IonContent, ToastController } from '@ionic/angular';
+import { Capacitor } from '@capacitor/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 import { Auth, Juegos, SupabaseService, Vibracion } from '@app/services';
@@ -47,6 +50,10 @@ export class CuentaPage implements OnDestroy {
 
   pagoConfirmado = signal(false);
 
+  // pedido del pago confirmado; con él se pide la factura
+  idPedidoPagado = signal<string | null>(null);
+  descargandoFactura = signal(false);
+
   lineas = computed(() => this.cuenta()?.lineas ?? []);
 
   propina = computed(() => {
@@ -66,6 +73,7 @@ export class CuentaPage implements OnDestroy {
 
   ionViewWillEnter(): void {
     this.pagoConfirmado.set(false);
+    this.idPedidoPagado.set(null);
     void this.cargar();
     this.suscribir();
   }
@@ -86,9 +94,9 @@ export class CuentaPage implements OnDestroy {
     return Math.round((this.subtotal() * this.descuentoPorcentaje()) / 100);
   }
 
-  // la propina se calcula sobre la cuenta ya con el descuento
+  // la propina se calcula sobre el subtotal, igual que en la factura
   propinaImporte(): number {
-    return Math.round(((this.subtotal() - this.descuentoImporte()) * this.propina()) / 100);
+    return Math.round((this.subtotal() * this.propina()) / 100);
   }
 
   total(): number {
@@ -137,6 +145,67 @@ export class CuentaPage implements OnDestroy {
     void this._router.navigate(['/home']);
   }
 
+  // la factura se arma en el servidor con los datos del ticket; no queda guardada en Supabase
+  async descargarFactura(): Promise<void> {
+    const idPedido = this.idPedidoPagado();
+
+    if (!idPedido || this.descargandoFactura()) {
+      return;
+    }
+
+    this.descargandoFactura.set(true);
+
+    try {
+      const { data, error } = await this._db.client.functions.invoke('factura', {
+        body: { idPedido },
+      });
+
+      if (error || !(data instanceof Blob)) {
+        throw new Error('No pudimos generar la factura.');
+      }
+
+      const nombreArchivo = `factura-glutn-${idPedido.slice(0, 8)}.pdf`;
+
+      if (Capacitor.isNativePlatform()) {
+        const { uri } = await Filesystem.writeFile({
+          path: nombreArchivo,
+          data: await this.aBase64(data),
+          directory: Directory.Cache,
+        });
+
+        await Share.share({
+          title: 'Factura GLUTN',
+          url: uri,
+          dialogTitle: 'Guardar factura',
+        });
+      } else {
+        const url = URL.createObjectURL(data);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = nombreArchivo;
+        enlace.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      // cerrar el menú de compartir no es un error
+      if (!String(error).toLowerCase().includes('cancel')) {
+        void this._vibracion.error();
+        await this.avisar('No pudimos descargar la factura. Intentá nuevamente.', 'danger');
+      }
+    } finally {
+      this.descargandoFactura.set(false);
+    }
+  }
+
+  private aBase64(archivo: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const lector = new FileReader();
+      lector.onload = () => resolve(String(lector.result).split(',')[1]);
+      lector.onerror = () => reject(lector.error);
+      lector.readAsDataURL(archivo);
+    });
+  }
+
   private async cargar(): Promise<void> {
     this.cargando.set(true);
 
@@ -182,6 +251,7 @@ export class CuentaPage implements OnDestroy {
         },
         (payload) => {
           if (payload.new['estado_pedido'] === 'pagado') {
+            this.idPedidoPagado.set(payload.new['id_pedido'] ?? null);
             this.pagoConfirmado.set(true);
             this.cuenta.set(null);
             return;
