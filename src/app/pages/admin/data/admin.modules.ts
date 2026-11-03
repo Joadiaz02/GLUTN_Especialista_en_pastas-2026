@@ -119,14 +119,15 @@ export const ADMIN_MODULES: AdminModule[] = [
     path: 'ready-orders',
   },
 
-  {
-    id: 'entrega-pedidos',
-    title: 'Entrega de pedidos',
-    description: 'Gestionar la entrega de pedidos',
-    icon: 'bag',
-    roles: [EPerfilUsuario.Mozo],
-    path: 'order-delivery',
-  },
+  // oculto hasta la tercera entrega (pedidos a domicilio)
+  // {
+  //   id: 'entrega-pedidos',
+  //   title: 'Entrega de pedidos',
+  //   description: 'Gestionar la entrega de pedidos',
+  //   icon: 'bag',
+  //   roles: [EPerfilUsuario.Mozo],
+  //   path: 'order-delivery',
+  // },
 
   {
     id: 'pagos',
