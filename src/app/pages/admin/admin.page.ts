@@ -260,7 +260,7 @@ getLengthModulosVisibles() {
 
   volver(): void {
     console.log('qwe');
-    void this.router.navigate(['/seleccion-acceso']);
+    void this.router.navigate(['/home']);
   }
 
 async cerrarSesion(): Promise<void> {

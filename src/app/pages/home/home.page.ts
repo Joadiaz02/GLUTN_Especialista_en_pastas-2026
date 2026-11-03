@@ -289,7 +289,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   async volver(): Promise<void> {
     if (this.esPersonal()) {
-      void this.router.navigate(['/seleccion-acceso']);
+      // el personal vuelve a su panel
+      void this.router.navigate(['/admin']);
       return;
     }
 

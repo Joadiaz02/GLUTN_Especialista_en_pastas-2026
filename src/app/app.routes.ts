@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { authGuard, staffGuard, roleGuard } from './guards/auth.guard';
+import {
+  authGuard,
+  staffGuard,
+  roleGuard,
+  rutaInexistenteGuard,
+} from './guards/auth.guard';
 import { navegacionInternaGuard } from './guards/navegacion-interna.guard';
 import { EPerfilUsuario } from './enums';
 
@@ -46,6 +51,7 @@ export const routes: Routes = [
   },
   {
   path: 'encuestas/grafico/:tipo',
+  canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/encuestas/encuestas.page')
       .then(m => m.EncuestasPage),
@@ -76,6 +82,8 @@ export const routes: Routes = [
 
   {
     path: 'admin/clients',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/clients/clients.page').then((m) => m.ClientsPage),
   },
@@ -90,11 +98,15 @@ export const routes: Routes = [
   },
   {
     path: 'admin/tables',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/tables/tables.page').then((m) => m.TablesPage),
   },
   {
     path: 'admin/tables/create',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/tables/components/create-table/create-table.page').then(
         (m) => m.CreateTablePage
@@ -102,6 +114,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin/tables/edit/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/tables/components/edit-table/edit-table.page').then(
         (m) => m.EditTablePage
@@ -109,11 +123,15 @@ export const routes: Routes = [
   },
   {
     path: 'admin/drinks',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cantinero] },
     loadComponent: () =>
       import('./pages/drinks/drinks.page').then((m) => m.DrinksPage),
   },
   {
     path: 'admin/drinks/create',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cantinero] },
     loadComponent: () =>
       import('./pages/drinks/components/create-drink/create-drink.page').then(
         (m) => m.CreateDrinkPage
@@ -121,6 +139,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin/drinks/edit/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cantinero] },
     loadComponent: () =>
       import('./pages/drinks/components/edit-drink/edit-drink.page').then(
         (m) => m.EditDrinkPage
@@ -214,6 +234,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin/orders',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
     loadComponent: () =>
       import('./pages/admin/orders/orders.component').then(
         (m) => m.OrdersComponent
@@ -221,6 +243,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin/orders/orders-detalles/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
     loadComponent: () =>
       import(
         './pages/admin/orders/orders-detalles/orders-detalles.component'
@@ -296,11 +320,13 @@ export const routes: Routes = [
   },
   {
     path: 'carta',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/carta/carta.page').then((m) => m.CartaPage),
   },
   {
     path: 'carta/:tipo',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/productos/productos.page').then((m) => m.ProductosPage),
   },
@@ -330,16 +356,22 @@ export const routes: Routes = [
   },
   {
     path: 'pedido',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.ClienteRegistrado, EPerfilUsuario.ClienteAnonimo] },
     loadComponent: () =>
       import('./pages/pedido/pedido.component').then((m) => m.PedidoComponent),
   },
   {
     path: 'admin/waitlist',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Metre] },
     loadComponent: () =>
       import('./pages/waitlist/waitlist.page').then((m) => m.WaitlistPage),
   },
   {
     path: 'admin/waitlist/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Metre] },
     loadComponent: () =>
       import('./pages/table-assignment/table-assignment.page').then(
         (m) => m.TableAssignmentPage
@@ -347,6 +379,8 @@ export const routes: Routes = [
   },
   {
     path: 'waiting-room',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.ClienteRegistrado, EPerfilUsuario.ClienteAnonimo] },
     loadComponent: () =>
       import('./pages/waiting-room/waiting-room.page').then(
         (m) => m.WaitingRoomPage
@@ -354,11 +388,15 @@ export const routes: Routes = [
   },
   {
     path: 'admin/employees',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/employees/employees.page').then((m) => m.EmployeesPage),
   },
   {
     path: 'admin/employees/create',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/employees/create-employee/create-employee.page').then(
         (m) => m.CreateEmployeePage
@@ -366,6 +404,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin/employees/edit/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/employees/edit-employee/edit-employee.page').then(
         (m) => m.EditEmployeePage
@@ -379,6 +419,8 @@ export const routes: Routes = [
   },
   {
     path: 'pagos',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
     loadComponent: () =>
       import('./pages/pagos/pagos.page').then((m) => m.PagosPage),
   },
@@ -388,5 +430,11 @@ export const routes: Routes = [
     data: { roles: [EPerfilUsuario.Mozo] },
     loadComponent: () =>
       import('./pages/pagos/pagos.page').then((m) => m.PagosPage),
+  },
+  {
+    // cualquier dirección que no existe: el guard decide a dónde va
+    path: '**',
+    canActivate: [rutaInexistenteGuard],
+    children: [],
   },
 ];
