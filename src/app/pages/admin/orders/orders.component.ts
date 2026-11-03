@@ -27,7 +27,7 @@ import { Pedido } from '@app/services/pedido/pedido';
 import { Carrito } from '@app/pages/carrito/carrito';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
-
+import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.directive';
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -42,7 +42,8 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     IonContent,
     CommonModule,
     IonButton,
-    SpinnerLogoComponent
+    SpinnerLogoComponent,
+    ListaFilasDirective
 ],
 })
 export class OrdersComponent implements OnInit {

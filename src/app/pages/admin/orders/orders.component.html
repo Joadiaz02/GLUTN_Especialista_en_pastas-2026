@@ -20,10 +20,7 @@
 <ion-content class="cocina-content" [scrollY]="false">
   <div class="cocina-wrapper">
     @if (cargando()) {
-    <!-- <div class="cocina-loading">
-      <app-spinner-logo />
-      <span>Cargando pedidos...</span>
-    </div> -->
+    <!-- el spinner se muestra más abajo, como overlay -->
     } @else if (pedidos().length === 0) {
     <div class="cocina-vacio">
       <p class="sin-pedidos">No hay pedidos pendientes.</p>
@@ -56,14 +53,10 @@
             </span>
           </div>
 
-          <!-- DETALLE DE PRODUCTOS INTEGRADO DENTRO DE LA TARJETA -->
-          <div class="pedido__items-container">
-            <span class="usuario-txt"
-              >Usuario: {{ pedido.usuarios?.nombre }}
-            </span>
-
-            @if (pedido.items && pedido.items.length > 0) {
-            <div class="lista-productos">
+          @if (pedido.items && pedido.items.length > 0) {
+          <!-- Única zona que scrollea: cada producto es una fila del mismo alto -->
+          <div class="pedido__items-wrap">
+            <div class="lista-productos" appListaFilas>
               @for (item of pedido.items; track item.id_item) {
               <div class="producto-card">
                 <div class="card-header-item">
@@ -81,21 +74,22 @@
               </div>
               }
             </div>
-
-            <div class="producto-card total-card">
-              <div class="resumen-fila">
-                <span>Total a pagar:</span>
-                <span class="item-precio">{{
-                  pedido.subtotal | currency : "ARS" : "$" : "1.0-0"
-                }}</span>
-              </div>
-            </div>
-            } @else {
-            <p class="sin-items">Cargando detalles...</p>
-            }
           </div>
 
-          <!-- Botones de acción (Rechazar y Aceptar sin el botón de detalles) -->
+          <!-- Total fijo: siempre visible, no scrollea con los productos -->
+          <div class="producto-card total-card">
+            <div class="resumen-fila">
+              <span>Total a pagar:</span>
+              <span class="item-precio">{{
+                pedido.subtotal | currency : "ARS" : "$" : "1.0-0"
+              }}</span>
+            </div>
+          </div>
+          } @else {
+          <p class="sin-items">Cargando detalles...</p>
+          }
+
+          <!-- Botones de acción -->
           <div class="pedido__acciones">
             <ion-button
               class="pedido__boton"
@@ -108,16 +102,13 @@
               Rechazar
             </ion-button>
 
+            <!-- el overlay de carga ya bloquea la pantalla mientras se confirma -->
             <ion-button
               class="pedido__boton"
               shape="round"
-              /* [disabled]="estado() === pedido.id_pedido" */
               (click)="confirmar(pedido.id_pedido)"
             >
-            Aceptar
-              <!-- @if (estado() === pedido.id_pedido) {
-              <app-spinner-logo size="sm" />
-              } @else { Aceptar } -->
+              Aceptar
             </ion-button>
           </div>
         </div>
@@ -158,10 +149,6 @@
   <app-spinner-logo />
   <span>Cargando pedidos...</span>
 </div>
-<!-- <div class="cocina-loading">
-  <app-spinner-logo />
-  <span>Cargando pedidos...</span>
-</div> -->
 }
 
 @if (estadoPedidoCarga()) {

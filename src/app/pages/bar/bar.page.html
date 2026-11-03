@@ -80,8 +80,8 @@
                   {{ pedido.estadoBar ? 'En preparación' : 'Nuevo' }}
                 </span>
               </div>
-
-              <ul class="pedido__items">
+              <div class="pedido__items-wrap">
+              <ul class="pedido__items" appListaFilas>
                 @for (item of pedido.items; track $index) {
                   <li class="pedido__item">
                     <span class="pedido__cantidad">{{ item.cantidad }}</span>
@@ -89,7 +89,7 @@
                   </li>
                 }
               </ul>
-
+              </div>
               <div class="pedido__acciones">
                 <ion-button
                   class="pedido__boton"

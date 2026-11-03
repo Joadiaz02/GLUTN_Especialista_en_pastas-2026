@@ -2,7 +2,7 @@ import { Component, computed, effect, ElementRef, inject, OnDestroy, signal, vie
 import { DatePipe } from '@angular/common';
 import { IonButton, IonContent, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-
+import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.directive';
 import { Auth, Bar, Confirm, PedidoBar, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
@@ -22,7 +22,7 @@ export interface SlideBar extends PedidoBar {
   standalone: true,
   templateUrl: './bar.page.html',
   styleUrls: ['./bar.page.scss'],
-  imports: [HeaderComponent, DatePipe, IonButton, IonContent, SpinnerLogoComponent],
+  imports: [HeaderComponent, DatePipe, IonButton, IonContent, SpinnerLogoComponent, ListaFilasDirective],
 })
 export class BarPage implements OnDestroy {
   bar = inject(Bar);

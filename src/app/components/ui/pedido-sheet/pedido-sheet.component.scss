@@ -1,9 +1,7 @@
 :host {
   position: relative;
-
   z-index: 10000;
 }
-
 
 /* ==========================================
    OVERLAY
@@ -11,18 +9,12 @@
 
 .pedido-overlay {
   position: fixed;
-
   inset: 0;
-
   z-index: 10000;
-
   display: flex;
-
   align-items: flex-end;
-
   justify-content: center;
 }
-
 
 /* ==========================================
    BACKDROP
@@ -30,32 +22,14 @@
 
 .pedido-backdrop {
   position: absolute;
-
   inset: 0;
-
   width: 100%;
-
   height: 100%;
-
   padding: 0;
-
   border: 0;
-
-  background:
-    rgba(
-      18,
-      24,
-      14,
-      0.66
-    );
-
+  background: rgb(18 24 14 / 66%);
   opacity: 1;
-
-  transition:
-    opacity
-    280ms
-    ease;
-
+  transition: opacity 280ms ease;
   cursor: pointer;
 }
 
@@ -63,103 +37,38 @@
   opacity: 0;
 }
 
-
 /* ==========================================
    SHEET
 ========================================== */
 
 .pedido-sheet {
   position: relative;
-
-  width:
-    min(
-      100%,
-      680px
-    );
-
-  max-height:
-    min(
-      88dvh,
-      850px
-    );
-
   display: flex;
-
   flex-direction: column;
-
-  // background:
-  //   #f8f6f2;
-  background:
-    #3a2417;
-
-  border-radius:
-    26px
-    26px
-    0
-    0;
-
+  width: min(100%, 680px);
+  max-height: min(88dvh, 850px);
   overflow: hidden;
-
-  box-shadow:
-    0 -10px 40px
-    rgba(
-      0,
-      0,
-      0,
-      0.25
-    );
-
-  animation:
-    subir-sheet
-    280ms
-    cubic-bezier(
-      .22,
-      .8,
-      .25,
-      1
-    );
+  border-radius: 26px 26px 0 0;
+  background: #3a2417;
+  box-shadow: 0 -10px 40px rgb(0 0 0 / 25%);
+  animation: subir-sheet 280ms cubic-bezier(0.22, 0.8, 0.25, 1);
 }
 
-
-/* ==========================================
-   ARRASTRE
-========================================== */
+/* ARRASTRE */
 
 .pedido-sheet--arrastrando {
   transition: none;
 }
 
-.pedido-sheet:not(
-  .pedido-sheet--arrastrando
-) {
-  transition:
-    transform
-    280ms
-    cubic-bezier(
-      .22,
-      .8,
-      .25,
-      1
-    );
+.pedido-sheet:not(.pedido-sheet--arrastrando) {
+  transition: transform 280ms cubic-bezier(0.22, 0.8, 0.25, 1);
 }
 
-
-/* ==========================================
-   CIERRE
-========================================== */
+/* CIERRE */
 
 .pedido-sheet--cerrando {
-  transition:
-    transform
-    280ms
-    cubic-bezier(
-      .55,
-      0,
-      1,
-      0.45
-    );
+  transition: transform 280ms cubic-bezier(0.55, 0, 1, 0.45);
 }
-
 
 /* ==========================================
    HANDLE
@@ -167,30 +76,18 @@
 
 .pedido-handle {
   display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
   flex-shrink: 0;
-
-  padding:
-    10px
-    0
-    4px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0 4px;
 }
 
 .pedido-handle span {
   width: 42px;
-
   height: 5px;
-
   border-radius: 10px;
-
-  // background: #3a2417;
   background: #c8c5be;
 }
-
 
 /* ==========================================
    HEADER
@@ -198,141 +95,165 @@
 
 .pedido-header {
   display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding:
-    8px
-    20px
-    12px;
-
   flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px 12px;
 }
 
 .pedido-header h2 {
   margin: 0;
-
   color: #ffc983;
-  // color: #302a25;
-
   font-size: 24px;
-
   font-weight: 800;
 }
 
 .pedido-cerrar {
-  width: 40px;
-
-  height: 40px;
-
-  padding: 0;
-
-  border: 0;
-
-  border-radius: 50%;
-
-  background: #ffc983;
-  // background: #ece9e3;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ffc983;
 }
 
 .pedido-cerrar img {
-  width: 21px;
-
-  height: 21px;
-
   display: block;
+  width: 21px;
+  height: 21px;
 }
 
-
 /* ==========================================
-   ITEMS
+   LISTA DE PRODUCTOS
+   Es lo único que scrollea dentro del panel.
+
+   La directiva appListaFilas calcula cuántas filas completas entran en el
+   alto que le deja el panel y les da a todas el mismo alto (--fila-alto).
+   Cada fila es un punto de reposo, así nunca queda un producto cortado
+   arriba ni abajo. Con pocos productos el panel se ajusta a su contenido.
 ========================================== */
 
-.pedido-items {
-  overflow-y: auto;
-
-  padding:
-    4px
-    20px
-    12px;
-
-  overscroll-behavior: contain;
-
-  flex: 1;
-
+.pedido-items-wrap {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;                    // basado en el contenido: el panel no tiene alto fijo, solo un máximo
+  flex-direction: column;
   min-height: 0;
+  padding-block: 4px 12px;
+
+  // líneas que avisan que hay más productos arriba / abajo (la directiva activa las clases)
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgb(255 255 255 / 45%);
+    opacity: 0;
+    transition: opacity 150ms ease;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: 0;
+  }
+
+  &::after {
+    bottom: 0;
+  }
+
+  &.tiene-arriba::before,
+  &.tiene-abajo::after {
+    opacity: 1;
+  }
+}
+
+.pedido-items {
+  --fila-min: 92px;                  // alto mínimo de una fila (la directiva lo lee)
+  --fila-alto: var(--fila-min);      // alto real: lo calcula la directiva
+
+  display: flex;
+  flex: 1 1 auto;                    // idem: crece con los productos y se achica hasta el máximo del panel
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+  padding: 0 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > .pedido-item {
+    flex: 0 0 var(--fila-alto);
+    height: var(--fila-alto);
+    scroll-snap-align: start;
+  }
 }
 
 .pedido-item {
   display: flex;
-
   align-items: center;
-
   gap: 12px;
-
-  padding:
-    12px 0;
-
-  border-bottom:
-    1px solid
-    rgba(
-      60,
-      55,
-      48,
-      0.12
-    );
+  box-sizing: border-box;
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
 }
 
 .pedido-item__imagen {
   width: 64px;
-
   height: 64px;
-
   flex-shrink: 0;
-
   object-fit: cover;
-
   border-radius: 13px;
 }
 
 .pedido-item__info {
-  min-width: 0;
-
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
 }
 
+// el nombre ocupa hasta 2 líneas; si es más largo termina en "…"
 .pedido-item__info h3 {
-  margin:
-    0
-    0
-    4px;
-
-  // color: #302a25;
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
   color: #ffc983;
-
-  font-size: 18px;
-
-  line-height: 1.2;
-
+  font-size: 17px;
   font-weight: 800;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
-.pedido-item__info strong {
-  display: block;
+// precio a la izquierda, controles a la derecha
+.pedido-item__linea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 
+.pedido-item__linea strong {
+  flex: 0 0 auto;
   color: #e76f45;
-
   font-size: 18px;
 }
-
 
 /* ==========================================
    CONTROLES
@@ -340,95 +261,68 @@
 
 .pedido-item__controles {
   display: flex;
-
+  flex: 0 0 auto;
   align-items: center;
-
-  justify-content: flex-end;
-
   gap: 6px;
-
-  margin-top: 7px;
 }
 
 .control {
-  width: 30px;
-
-  height: 30px;
-
-  min-width: 30px;
-
-  padding: 0;
-
-  border: 0;
-
-  border-radius: 50%;
-
-  background: #e76f45;
-
-  color: #ffc983;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #e76f45;
+  color: #ffc983;
 }
 
 .control img {
-  width: 16px;
-
-  height: 16px;
-
   display: block;
+  width: 16px;
+  height: 16px;
 }
 
 .control.eliminar {
   margin-right: 3px;
-
   background: transparent;
-
   color: #6d665e;
 }
 
 .control.eliminar img {
   width: 31px;
-
   height: 24px;
 }
 
 .control--mas {
   background: #e76f45;
-
   color: white;
 }
 
 .cantidad-item {
   min-width: 24px;
-
-  text-align: center;
-
-  font-size: 18px;
-
-  font-weight: 800;
-
   color: #ffc983;
+  font-size: 18px;
+  font-weight: 800;
+  text-align: center;
 }
-
 
 /* ==========================================
    VACÍO
 ========================================== */
 
 .pedido-vacio {
-  padding:
-    40px
-    20px;
-
+  padding: 40px 20px;
+  color: #ffc983;
   text-align: center;
-
-  color: #6b625a;
 }
 
+.pedido-vacio p {
+  margin: 0;
+}
 
 /* ==========================================
    RESUMEN
@@ -436,222 +330,174 @@
 
 .pedido-resumen {
   flex-shrink: 0;
-
-  padding:
-    14px
-    20px
-    calc(
-      16px +
-      env(
-        safe-area-inset-bottom
-      )
-    );
-
+  padding: 14px 20px calc(16px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgb(255 255 255 / 12%);
   background: #3a2417;
-
-  border-top:
-    1px solid
-    rgba(
-      50,
-      45,
-      40,
-      0.12
-    );
 }
 
-
-/* ==========================================
-   TOTAL
-========================================== */
+/* TOTAL */
 
 .pedido-total {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   margin-bottom: 13px;
 }
 
 .pedido-total span {
-  color: #FFF;
-
+  color: #fff;
   font-size: 20px;
-
   font-weight: 800;
 }
 
 .pedido-total strong {
   color: #e76f45;
-
   font-size: 21px;
-
   font-weight: 800;
 }
 
-
-/* ==========================================
-   TIEMPO
-========================================== */
+/* TIEMPO */
 
 .pedido-tiempo {
   display: flex;
-
   align-items: center;
-
   gap: 10px;
-
   margin-bottom: 14px;
-
   color: #ffc983;
 }
 
 .pedido-tiempo > img {
-  width: 23px;
-
-  height: 23px;
-
-  flex-shrink: 0;
-
   display: block;
+  width: 23px;
+  height: 23px;
+  flex-shrink: 0;
 }
 
 .pedido-tiempo span {
   display: block;
-
   color: #ffc983;
-
   font-size: 18px;
 }
 
 .pedido-tiempo strong {
   display: block;
-
   margin-top: 2px;
-
   color: #ffc983;
-
   font-size: 18px;
 }
 
-
-/* ==========================================
-   CONTINUAR
-========================================== */
+/* CONTINUAR */
 
 .continuar-pedido {
-  width: 100%;
-
-  min-height: 50px;
-
-  padding:
-    0
-    18px;
-
-  border: 0;
-
-  border-radius: 26px;
-
-  background: #e76f45;
-
-  color: white;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 7px;
-
+  width: 100%;
+  min-height: 50px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 26px;
+  background: #e76f45;
+  color: white;
   font-size: 16px;
-
   font-weight: 800;
-
-  box-shadow:
-    0 5px 14px
-    rgba(
-      231,
-      111,
-      69,
-      0.25
-    );
+  box-shadow: 0 5px 14px rgb(231 111 69 / 25%);
 }
 
 .continuar-pedido img {
-  width: 20px;
-
-  height: 20px;
-
   display: block;
+  width: 20px;
+  height: 20px;
 }
-
 
 /* ==========================================
    ANIMACIÓN ENTRADA
 ========================================== */
 
 @keyframes subir-sheet {
-
   from {
-    transform:
-      translateY(100%);
+    transform: translateY(100%);
   }
 
   to {
-    transform:
-      translateY(0);
+    transform: translateY(0);
   }
-
 }
 
+/* ==========================================
+   PANTALLAS BAJAS
+========================================== */
+
+@media (max-height: 700px) {
+  .pedido-items {
+    --fila-min: 84px;
+  }
+
+  .pedido-item__imagen {
+    width: 56px;
+    height: 56px;
+  }
+
+  .pedido-header {
+    padding-bottom: 8px;
+  }
+
+  .pedido-total {
+    margin-bottom: 8px;
+  }
+
+  .pedido-tiempo {
+    margin-bottom: 10px;
+  }
+}
 
 /* ==========================================
-   CELULAR PEQUEÑO
+   CELULAR ANGOSTO
 ========================================== */
 
 @media (max-width: 360px) {
-
   .pedido-header {
     padding-left: 15px;
-
     padding-right: 15px;
   }
 
   .pedido-items {
     padding-left: 15px;
-
     padding-right: 15px;
+  }
+
+  .pedido-items-wrap::before,
+  .pedido-items-wrap::after {
+    left: 15px;
+    right: 15px;
   }
 
   .pedido-resumen {
     padding-left: 15px;
-
     padding-right: 15px;
   }
 
   .pedido-item__imagen {
     width: 56px;
-
     height: 56px;
   }
 
-}
+  .pedido-item {
+    gap: 10px;
+  }
 
+  .pedido-item__controles {
+    gap: 4px;
+  }
+}
 
 /* ==========================================
    TABLET
 ========================================== */
 
 @media (min-width: 700px) {
-
   .pedido-sheet {
-    border-radius:
-      28px
-      28px
-      0
-      0;
+    border-radius: 28px 28px 0 0;
   }
-
 }
