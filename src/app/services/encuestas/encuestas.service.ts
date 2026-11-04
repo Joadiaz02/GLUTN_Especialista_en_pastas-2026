@@ -2,7 +2,7 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 
-export type TipoPregunta = 'escala' | 'opcion' | 'multiple' | 'texto';
+export type TipoPregunta = 'escala' | 'opcion' | 'multiple' | 'slider' | 'texto';
 
 export interface PreguntaEncuesta {
   id: string;
@@ -97,10 +97,9 @@ async obtenerEncuestaActiva(): Promise<Encuesta | null> {
     id: fila.id,
     titulo: fila.titulo,
     descripcion: fila.descripcion ?? null,
-    preguntas: (fila.encuesta_preguntas ?? []).sort(
-      (a: PreguntaEncuesta, b: PreguntaEncuesta) =>
-        a.orden - b.orden,
-    ),
+    preguntas: (fila.encuesta_preguntas ?? [])
+  .filter((p: PreguntaEncuesta) => p.tipo !== 'texto')
+  .sort((a: PreguntaEncuesta, b: PreguntaEncuesta) => a.orden - b.orden),
   };
 }
 

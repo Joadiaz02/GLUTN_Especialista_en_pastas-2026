@@ -162,7 +162,7 @@ p {
 .surveys-intro {
   margin: 0;
   color: var(--survey-light-soft);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
   text-align: center;
 }
@@ -252,7 +252,7 @@ p {
 
   .notice-footnote {
     margin-top: 2px;
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 
@@ -278,7 +278,8 @@ p {
   border-radius: 11px;
   color: #702817;
   background: #f9d9cc;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
@@ -302,12 +303,12 @@ p {
   gap: 4px;
 
   h2 {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   p {
     margin: 0;
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.35;
   }
 }
@@ -323,13 +324,13 @@ p {
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  font-size: 13px;
+  font-size: 18px;
   font-weight: 750;
 }
 
 .step-progress__track {
   width: 100%;
-  height: 6px;
+  height: 8px;
   overflow: hidden;
   border-radius: 999px;
   background: #e1d0bc;
@@ -362,20 +363,20 @@ p {
   border: 1px solid rgb(255 250 243 / 55%);
   border-radius: 15px;
   background: var(--survey-orange-light);
-  overflow-y: auto;            // solo aparece en pantallas muy chicas, para que nada quede cortado
-  scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  // Solo aparece si el texto del sistema es muy grande: se deja una barra fina
+  // visible para que la persona sepa que hay más contenido y nada quede cortado.
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(48 53 38 / 45%) transparent;
 
   .question-title {
     flex: 0 0 auto;
     margin: 0;
     color: var(--survey-text);
-    font-size: 19px;
+    font-size: 25px;
     font-weight: 800;
-    line-height: 1.3;
+    line-height: 1.25;
     overflow-wrap: anywhere;
   }
 }
@@ -385,11 +386,14 @@ p {
   color: var(--survey-orange-dark);
 }
 
+// Ayuda de cada pregunta: siempre visible, con buen tamaño y contraste
 .question-hint {
   display: block;
+  flex: 0 0 auto;
   margin: 0;
   color: var(--survey-text);
-  font-size: 14px;
+  font-size: 22px;
+  font-weight: 600;
   line-height: 1.35;
 }
 
@@ -414,7 +418,7 @@ p {
   &.is-selected {
     border-color: var(--survey-green);
     background: #dce5d1;
-    box-shadow: 0 0 0 1px rgb(185 79 45 / 12%);
+    box-shadow: 0 0 0 2px rgb(101 122 77 / 55%);
   }
 
   &:has(input:focus-visible) {
@@ -437,7 +441,7 @@ p {
     justify-content: center;
     min-height: clamp(64px, 12vh, 104px);
     padding: 8px 4px;
-    font-size: 26px;
+    font-size: 30px;
     font-weight: 800;
 
     &.is-selected {
@@ -472,10 +476,11 @@ p {
     justify-content: flex-start;
     width: 100%;
     gap: 12px;
-    min-height: 44px;
+    min-height: 48px;
     max-height: 72px;
     padding: 9px 14px;
-    font-size: 17px;
+    font-size: 20px;
+    font-weight: 600;
   }
 
   // Control propio: reemplaza el punto negro nativo del WebView
@@ -483,10 +488,10 @@ p {
     display: grid;
     flex: 0 0 auto;
     place-content: center;
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
     margin: 0;
-    border: 2px solid var(--survey-green);
+    border: 3px solid var(--survey-green);
     border-radius: 50%;
     background: #fff;
     appearance: none;
@@ -494,8 +499,8 @@ p {
 
     &::before {
       content: '';
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: var(--survey-green);
       transform: scale(0);
@@ -507,39 +512,53 @@ p {
     }
 
     &[type='checkbox'] {
-      border-radius: 6px;
+      border-radius: 7px;
 
       &::before {
-        border-radius: 2px;
+        border-radius: 3px;
       }
     }
   }
 }
 
-textarea {
-  display: block;
-  flex: 1 1 auto;
+// Slider
+.slider-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   width: 100%;
-  min-height: 90px;
-  padding: 11px;
-  box-sizing: border-box;
-  border: 1px solid #cba990;
-  border-radius: 11px;
+  margin-block: auto;
+}
+
+.slider-value {
   color: var(--survey-text);
-  background: #fff0e3;
-  font: inherit;
-  font-size: 16px;
-  line-height: 1.4;
-  resize: none;
+  font-size: clamp(44px, 9vh, 68px);
+  font-weight: 800;
+  line-height: 1;
 
-  &::placeholder {
-    color: #786759;
-    opacity: 1;
+  &.is-empty {
+    opacity: 0.45;
   }
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--survey-orange-dark);
-    outline-offset: 2px;
+.survey-range {
+  width: 100%;
+  padding: 0;
+  color: var(--survey-text);
+  font-size: 22px;
+  font-weight: 800;
+
+  --bar-height: 10px;
+  --bar-background: rgb(255 250 243 / 65%);
+  --bar-background-active: var(--survey-green);
+  --knob-background: var(--survey-green);
+  --knob-size: 38px;
+
+  [slot='start'],
+  [slot='end'] {
+    font-size: 22px;
+    font-weight: 800;
   }
 }
 
@@ -554,15 +573,20 @@ textarea {
   ion-button {
     flex: 1 1 0;
     min-width: 0;
-    min-height: 46px;
+    min-height: 52px;
     margin: 0;
-    font-size: 16px;
+    font-size: 19px;
   }
 }
 
 /* ===== Resultados: tarjeta de gráfico (una por pantalla) ===== */
 
 .result-card {
+  // Alto que ocupan el título, los márgenes y la leyenda. El tamaño de la torta
+  // usa lo que sobra, así todo entra en la pantalla sin cortarse.
+  // --filas lo publica el HTML (cantidad de filas de la leyenda).
+  --reservado: calc(var(--filas, 5) * 32px + 190px);
+
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -584,7 +608,7 @@ textarea {
 
 .result-total {
   margin: 0;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.4;
 }
 
@@ -601,15 +625,20 @@ textarea {
 
   p {
     margin: 0;
-    font-size: 17px;
+    font-size: 18px;
     line-height: 1.4;
   }
 }
 
-/* Torta: el tamaño escala con el alto disponible */
+/* Torta: ocupa el alto que queda después del título y la leyenda */
 .pie-chart {
   align-self: center;
-  width: min(calc(var(--alto-visible, 500px) * 0.36), 82%);
+  flex: 0 0 auto;
+  width: clamp(
+    96px,
+    calc(var(--alto-visible, 500px) - var(--reservado)),
+    min(82%, 260px)
+  );
   aspect-ratio: 1;
   margin-block: auto;
   border: 4px solid var(--survey-light-soft);
@@ -621,8 +650,19 @@ textarea {
 .pie-legend {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: auto;
+}
+
+// Muchas opciones (ej. slider 1-10): leyenda en 2 columnas para no hacerla más chica
+.pie-legend--2col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+
+  .pie-row {
+    gap: 8px;
+  }
 }
 
 .pie-row {
@@ -630,10 +670,10 @@ textarea {
   grid-template-columns: 14px minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
-  font-size: 17px;
+  font-size: 18px;
 
   strong {
-    font-size: 17px;
+    font-size: 18px;
     text-align: right;
     white-space: nowrap;
   }
@@ -671,7 +711,7 @@ textarea {
   align-items: baseline;
   justify-content: space-between;
   gap: 10px;
-  font-size: 17px;
+  font-size: 18px;
 
   span {
     min-width: 0;
@@ -685,7 +725,7 @@ textarea {
 
   small {
     color: var(--survey-muted);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
   }
 }
@@ -703,6 +743,40 @@ textarea {
   border-radius: inherit;
   transform-origin: left center;
   animation: bar-grow 750ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+// Muchas opciones (ej. slider 1-10): cada barra en una sola fila
+// [opción] [barra] [cantidad y porcentaje]
+.bar-chart--compacto {
+  gap: 8px;
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: 2.2ch minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 10px;
+  }
+
+  .bar-label {
+    display: contents;
+
+    > span {
+      grid-column: 1;
+      grid-row: 1;
+      font-weight: 700;
+    }
+
+    > strong {
+      grid-column: 3;
+      grid-row: 1;
+      white-space: nowrap;
+    }
+  }
+
+  .bar-track {
+    grid-column: 2;
+    grid-row: 1;
+  }
 }
 
 /* Columnas: crecen con el alto y las etiquetas reservan 3 líneas
@@ -763,7 +837,7 @@ textarea {
   justify-content: center;
   width: 100%;
   min-height: 3.6em;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
@@ -772,8 +846,28 @@ textarea {
 
 .column-chart__percentage {
   min-height: 1.4em;
-  font-size: 13px;
+  font-size: 14px;
   text-align: center;
+}
+
+// Muchas opciones (ej. slider 1-10): columnas finas, número grande y sin porcentaje
+// (con 10 columnas el porcentaje no entra sin hacerse ilegible; la cantidad sí se ve).
+.column-chart--compacto {
+  gap: 2px;
+  padding-inline: 0;
+
+  .column-chart__label {
+    min-height: 1.4em;
+    font-size: 16px;
+  }
+
+  .column-chart__percentage {
+    display: none;
+  }
+
+  .column-chart__track {
+    width: min(100%, 26px);
+  }
 }
 
 /* ===== Overlay de carga (mismo patrón que Cocina) ===== */
@@ -790,7 +884,7 @@ textarea {
   gap: 16px;
   color: var(--survey-light);
   background: var(--survey-green);
-  font-size: 16px;
+  font-size: 18px;
 }
 
 /* ===== Responsive ===== */
@@ -812,7 +906,7 @@ textarea {
   }
 
   .surveys-intro {
-    font-size: 12px;
+    font-size: 15px;
   }
 
   .results-shortcut,
@@ -825,6 +919,10 @@ textarea {
   .results-shortcut,
   .surveys-notice {
     padding: 12px;
+  }
+
+  .result-card {
+    padding: 18px 14px;
   }
 
   .chart-links ion-button {
@@ -843,21 +941,47 @@ textarea {
   }
 }
 
-// Encuesta en pantallas bajas: se compacta el header para ganar lugar
-@media (max-height: 700px) {
+// Encuesta y gráficos en pantallas de alto medio o bajo (ej. 360x710):
+// se saca lo repetido (descripción y encabezado de la tarjeta) para que el contenido
+// entre completo con letra grande.
+@media (max-height: 800px) {
   .surveys-layout.is-survey {
     .surveys-intro,
-    .survey-form__heading p {
+    .survey-form__heading {
       display: none;
     }
 
     .surveys-page__logo {
-      height: 44px;
+      width: 72px;
+      height: 46px;
+    }
+  }
+
+  .surveys-layout.is-grafico {
+    .surveys-intro {
+      display: none;
+    }
+
+    .surveys-page__logo {
+      width: 72px;
+      height: 46px;
+    }
+  }
+}
+
+@media (max-height: 700px) {
+  .surveys-layout.is-survey {
+    .surveys-page__logo {
+      height: 42px;
     }
 
     .rating-options label {
       min-height: 54px;
     }
+  }
+
+  .surveys-layout.is-grafico .surveys-page__logo {
+    height: 40px;
   }
 }
 
@@ -884,10 +1008,14 @@ textarea {
     font-size: 20px;
   }
 
+  .result-card {
+    --reservado: calc(var(--filas, 5) * 30px + 170px);
+  }
+
   .pie-row,
   .pie-row strong,
   .bar-label {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .surveys-notice {
@@ -903,6 +1031,20 @@ textarea {
     width: 34px;
     height: 34px;
     font-size: 20px;
+  }
+
+  // Pantallas muy bajas: un escalón menos de letra, pero nunca por debajo de 16px
+  .question-card .question-title {
+    font-size: 22px;
+  }
+
+  .choice-list label {
+    min-height: 44px;
+    font-size: 18px;
+  }
+
+  .question-hint {
+    font-size: 18px;
   }
 }
 

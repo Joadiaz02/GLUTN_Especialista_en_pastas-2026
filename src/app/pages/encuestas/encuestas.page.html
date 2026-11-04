@@ -4,7 +4,11 @@
   [mostrarCerrarSesion]="false"
 />
 <ion-content class="surveys-page" [scrollY]="false">
-  <div class="surveys-layout" [class.is-survey]="modoEncuesta()">
+  <div
+    class="surveys-layout"
+    [class.is-survey]="modoEncuesta()"
+    [class.is-grafico]="esPantallaGrafico()"
+  >
     <!-- Header fijo: no scrollea -->
     <header class="surveys-header">
       <img
@@ -63,7 +67,10 @@
         } @else {
           @for (resultado of resultados(); track resultado.pregunta_id) {
             @if (resultado.tipo !== 'texto') {
-              <section class="result-card">
+              <section
+                class="result-card"
+                [style.--filas]="filasLeyenda(resultado)"
+              >
                 <div class="result-card__heading">
                   <h2>{{ resultado.pregunta }}</h2>
 
@@ -93,7 +100,10 @@
                     "
                   ></div>
 
-                  <div class="pie-legend">
+                  <div
+                    class="pie-legend"
+                    [class.pie-legend--2col]="muchasOpciones(resultado)"
+                  >
                     @for (
                       opcion of opcionesGrafico(resultado);
                       track opcion;
@@ -106,7 +116,7 @@
                         ></span>
 
                         <span class="pie-row__label">
-                          {{ etiquetaOpcion(opcion) }}
+                          {{ etiquetaOpcion(opcion, resultado.tipo) }}
                         </span>
 
                         <strong>
@@ -119,7 +129,10 @@
                     }
                   </div>
                 } @else if (tipoGrafico() === 'barras') {
-                  <div class="bar-chart">
+                  <div
+                    class="bar-chart"
+                    [class.bar-chart--compacto]="muchasOpciones(resultado)"
+                  >
                     @for (
                       opcion of opcionesGrafico(resultado);
                       track opcion;
@@ -127,7 +140,7 @@
                     ) {
                       <div class="bar-row">
                         <div class="bar-label">
-                          <span>{{ etiquetaOpcion(opcion) }}</span>
+                          <span>{{ etiquetaOpcion(opcion, resultado.tipo) }}</span>
 
                           <strong>
                             {{ resultado.conteos?.[opcion] ?? 0 }}
@@ -150,6 +163,7 @@
                 } @else {
                   <div
                     class="column-chart"
+                    [class.column-chart--compacto]="muchasOpciones(resultado)"
                     role="img"
                     [attr.aria-label]="
                       'Comparación de respuestas para ' + resultado.pregunta
@@ -174,7 +188,7 @@
                         </div>
 
                         <span class="column-chart__label">
-                          {{ etiquetaOpcion(opcion) }}
+                          {{ etiquetaOpcion(opcion, resultado.tipo) }}
                         </span>
 
                         <span class="column-chart__percentage">
@@ -370,6 +384,10 @@
                       </label>
                     }
                   </div>
+
+                  <small class="question-hint">
+                    Elegí una sola opción.
+                  </small>
                 } @else if (pregunta.tipo === 'multiple') {
                   <div class="choice-list">
                     @for (opcion of pregunta.opciones; track opcion) {
@@ -400,19 +418,35 @@
                   <small class="question-hint">
                     Podés elegir más de una opción.
                   </small>
-                } @else {
-                  <textarea
-                    rows="3"
-                    maxlength="1000"
-                    [value]="respuestas()[pregunta.id] ?? ''"
-                    (input)="
-                      actualizarRespuesta(
-                        pregunta.id,
-                        $any($event.target).value
-                      )
-                    "
-                    placeholder="Escribí tu respuesta..."
-                  ></textarea>
+                } @else if (pregunta.tipo === 'slider') {
+                  <div class="slider-box">
+                    <div
+                      class="slider-value"
+                      [class.is-empty]="!respuestas()[pregunta.id]"
+                    >
+                      {{ respuestas()[pregunta.id] || '—' }}
+                    </div>
+
+                    <ion-range
+                      class="survey-range"
+                      aria-label="Valoración de 1 a 10"
+                      [min]="1"
+                      [max]="10"
+                      [step]="1"
+                      [snaps]="true"
+                      [ticks]="true"
+                      [value]="valorSlider(pregunta.id)"
+                      (ionInput)="actualizarSlider(pregunta.id, $event)"
+                      (ionChange)="actualizarSlider(pregunta.id, $event)"
+                    >
+                      <span slot="start">1</span>
+                      <span slot="end">10</span>
+                    </ion-range>
+                  </div>
+
+                  <small class="question-hint">
+                    Deslizá para elegir: 1 es nada probable y 10 muy probable.
+                  </small>
                 }
               </div>
             }
@@ -453,7 +487,7 @@
                     <ion-spinner name="crescent" />
                     Enviando...
                   } @else {
-                    Enviar encuesta
+                    Enviar
                   }
                 </ion-button>
               }
