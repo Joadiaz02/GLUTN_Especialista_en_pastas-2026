@@ -1,7 +1,11 @@
-<!-- <ion-header class="ion-no-border">
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+      <img
+        src="assets/images/LOGO-GLUTN.png"
+        alt="GLUTN - Especialista en Pastas"
+        class="logo"
+      />
     </ion-buttons>
 
     <ion-title>Administración</ion-title>
@@ -15,34 +19,33 @@
       ></app-confirm-dialog>
     </ion-buttons>
   </ion-toolbar>
-</ion-header> -->
+</ion-header>
 
-<app-header
-  title="Administración"
-  action="logout"
-  backHref="/seleccion-acceso"
-/>
-
-<ion-content>
-  <div class="admin-container">
+<ion-content class="admin-content" [scrollY]="false">
+  <div class="admin-layout">
     <div class="header-section">
-      <!-- <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver> -->
-
-      <h1>Panel de administración</h1>
-
-      <p>Seleccioná una sección para continuar.</p>
+      <h1 [class.admin-title--fill]="getLengthModulosVisibles()">Panel de administración</h1>
+      <p [class.admin-description--fill]="getLengthModulosVisibles()">Seleccioná una sección para continuar.</p>
     </div>
 
-    <div class="modules-container">
-      @for (modulo of modulosVisibles; track modulo.id) {
-      <app-admin-module-card
-        [module]="modulo"
-        (selected)="seleccionarModulo($event)"
-        [routerLink]="modulo.path"
-        [icon]="modulo.icon"
-      >
-      </app-admin-module-card>
-      }
+    <!-- Solo esta zona scrollea. Su alto lo calcula la página (filas completas)
+         y el scroll frena al ras de cada fila: ninguna tarjeta queda cortada. -->
+    <div
+      class="admin-scroller"
+      [class.admin-scroller--fill]="getLengthModulosVisibles()"
+      /* [class.admin-scroller--fill]="modulosVisibles.length == 2" */
+    >
+      <div class="modules-container">
+        @for (modulo of modulosVisibles; track modulo.id) {
+        <app-admin-module-card
+          [module]="modulo"
+          [agrandar]="getLengthModulosVisibles()"
+          (selected)="seleccionarModulo($event)"
+          [routerLink]="modulo.path"
+          [icon]="modulo.icon"
+        ></app-admin-module-card>
+        }
+      </div>
     </div>
   </div>
 </ion-content>

@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { authGuard, staffGuard, roleGuard } from './guards/auth.guard';
+import {
+  authGuard,
+  staffGuard,
+  roleGuard,
+  rutaInexistenteGuard,
+} from './guards/auth.guard';
 import { navegacionInternaGuard } from './guards/navegacion-interna.guard';
 import { EPerfilUsuario } from './enums';
 
@@ -29,6 +34,29 @@ export const routes: Routes = [
   },
 
   {
+    // cliente nuevo que entró con Google o Discord (tiene sesión, no perfil)
+    path: 'registro/social',
+    canActivate: [authGuard],
+
+    loadComponent: () =>
+      import('./pages/registro-social/registro-social.page').then(
+        (m) => m.RegistroSocialPage
+      ),
+  },
+  {
+    path: 'encuestas',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/encuestas/encuestas.page').then((m) => m.EncuestasPage),
+  },
+  {
+  path: 'encuestas/grafico/:tipo',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/encuestas/encuestas.page')
+      .then(m => m.EncuestasPage),
+},
+  {
     path: 'acceso_rapido',
 
     loadComponent: () =>
@@ -43,7 +71,6 @@ export const routes: Routes = [
       import('./pages/guest/guest.page').then((m) => m.GuestPage),
   },
 
-
   {
     path: 'admin',
 
@@ -55,6 +82,8 @@ export const routes: Routes = [
 
   {
     path: 'admin/clients',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/clients/clients.page').then((m) => m.ClientsPage),
   },
@@ -69,11 +98,15 @@ export const routes: Routes = [
   },
   {
     path: 'admin/tables',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/tables/tables.page').then((m) => m.TablesPage),
   },
   {
     path: 'admin/tables/create',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/tables/components/create-table/create-table.page').then(
         (m) => m.CreateTablePage
@@ -81,6 +114,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin/tables/edit/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/tables/components/edit-table/edit-table.page').then(
         (m) => m.EditTablePage
@@ -88,11 +123,15 @@ export const routes: Routes = [
   },
   {
     path: 'admin/drinks',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cantinero] },
     loadComponent: () =>
       import('./pages/drinks/drinks.page').then((m) => m.DrinksPage),
   },
   {
     path: 'admin/drinks/create',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cantinero] },
     loadComponent: () =>
       import('./pages/drinks/components/create-drink/create-drink.page').then(
         (m) => m.CreateDrinkPage
@@ -100,6 +139,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin/drinks/edit/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cantinero] },
     loadComponent: () =>
       import('./pages/drinks/components/edit-drink/edit-drink.page').then(
         (m) => m.EditDrinkPage
@@ -109,62 +150,66 @@ export const routes: Routes = [
     path: 'admin/dishes',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'plato' },
 
     loadComponent: () =>
-      import('./pages/dishes/dishes.page').then((m) => m.DishesPage),
+      import('./pages/carta-cocina/carta-cocina.page').then(
+        (m) => m.CartaCocinaPage
+      ),
   },
   {
     path: 'admin/dishes/create',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'plato' },
 
     loadComponent: () =>
-      import('./pages/dishes/components/create-dish/create-dish.page').then(
-        (m) => m.CreateDishPage
+      import('./pages/carta-cocina/form-carta-cocina/form-carta-cocina.page').then(
+        (m) => m.FormCartaCocinaPage
       ),
   },
   {
     path: 'admin/dishes/edit/:id',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'plato' },
 
     loadComponent: () =>
-      import('./pages/dishes/components/edit-dish/edit-dish.page').then(
-        (m) => m.EditDishPage
+      import('./pages/carta-cocina/form-carta-cocina/form-carta-cocina.page').then(
+        (m) => m.FormCartaCocinaPage
       ),
   },
   {
     path: 'admin/postres',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'postre' },
 
     loadComponent: () =>
-      import('./pages/postres/postres.page').then((m) => m.PostresPage),
+      import('./pages/carta-cocina/carta-cocina.page').then(
+        (m) => m.CartaCocinaPage
+      ),
   },
   {
     path: 'admin/postres/create',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'postre' },
 
     loadComponent: () =>
-      import(
-        './pages/postres/components/create-postre/create-postre.page'
-      ).then((m) => m.CreatePostrePage),
+      import('./pages/carta-cocina/form-carta-cocina/form-carta-cocina.page').then(
+        (m) => m.FormCartaCocinaPage
+      ),
   },
   {
     path: 'admin/postres/edit/:id',
 
     canActivate: [authGuard, roleGuard],
-    data: { roles: [EPerfilUsuario.Cocinero] },
+    data: { roles: [EPerfilUsuario.Cocinero], tipo: 'postre' },
 
     loadComponent: () =>
-      import('./pages/postres/components/edit-postre/edit-postre.page').then(
-        (m) => m.EditPostrePage
+      import('./pages/carta-cocina/form-carta-cocina/form-carta-cocina.page').then(
+        (m) => m.FormCartaCocinaPage
       ),
   },
   {
@@ -189,6 +234,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin/orders',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
     loadComponent: () =>
       import('./pages/admin/orders/orders.component').then(
         (m) => m.OrdersComponent
@@ -196,18 +243,19 @@ export const routes: Routes = [
   },
   {
     path: 'admin/orders/orders-detalles/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
     loadComponent: () =>
       import(
         './pages/admin/orders/orders-detalles/orders-detalles.component'
       ).then((m) => m.OrdersDetallesComponent),
   },
   {
-  path: 'admin/bar',
-  canActivate: [authGuard, roleGuard],
-  data: { roles: [EPerfilUsuario.Cantinero] },
-  loadComponent: () =>
-    import('./pages/bar/bar.page').then((m) => m.BarPage),
-},
+    path: 'admin/bar',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Cantinero] },
+    loadComponent: () => import('./pages/bar/bar.page').then((m) => m.BarPage),
+  },
   {
     path: 'juegos',
 
@@ -272,11 +320,13 @@ export const routes: Routes = [
   },
   {
     path: 'carta',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/carta/carta.page').then((m) => m.CartaPage),
   },
   {
     path: 'carta/:tipo',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/productos/productos.page').then((m) => m.ProductosPage),
   },
@@ -306,16 +356,22 @@ export const routes: Routes = [
   },
   {
     path: 'pedido',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.ClienteRegistrado, EPerfilUsuario.ClienteAnonimo] },
     loadComponent: () =>
       import('./pages/pedido/pedido.component').then((m) => m.PedidoComponent),
   },
   {
     path: 'admin/waitlist',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Metre] },
     loadComponent: () =>
       import('./pages/waitlist/waitlist.page').then((m) => m.WaitlistPage),
   },
   {
     path: 'admin/waitlist/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Metre] },
     loadComponent: () =>
       import('./pages/table-assignment/table-assignment.page').then(
         (m) => m.TableAssignmentPage
@@ -323,28 +379,62 @@ export const routes: Routes = [
   },
   {
     path: 'waiting-room',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.ClienteRegistrado, EPerfilUsuario.ClienteAnonimo] },
     loadComponent: () =>
       import('./pages/waiting-room/waiting-room.page').then(
         (m) => m.WaitingRoomPage
       ),
   },
   {
-    path: 'assigned-table',
-    loadComponent: () =>
-      import('./pages/assigned-table/assigned-table.page').then(
-        (m) => m.AssignedTablePage
-      ),
-  },
-  {
     path: 'admin/employees',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/employees/employees.page').then((m) => m.EmployeesPage),
   },
   {
     path: 'admin/employees/create',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
     loadComponent: () =>
       import('./pages/employees/create-employee/create-employee.page').then(
         (m) => m.CreateEmployeePage
       ),
+  },
+  {
+    path: 'admin/employees/edit/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
+    loadComponent: () =>
+      import('./pages/employees/edit-employee/edit-employee.page').then(
+        (m) => m.EditEmployeePage
+      ),
+  },
+  {
+    path: 'cuenta',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/cuenta/cuenta.page').then((m) => m.CuentaPage),
+  },
+  {
+    path: 'pagos',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
+    loadComponent: () =>
+      import('./pages/pagos/pagos.page').then((m) => m.PagosPage),
+  },
+  {
+    path: 'admin/payments',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Mozo] },
+    loadComponent: () =>
+      import('./pages/pagos/pagos.page').then((m) => m.PagosPage),
+  },
+  {
+    // cualquier dirección que no existe: el guard decide a dónde va
+    path: '**',
+    canActivate: [rutaInexistenteGuard],
+    children: [],
   },
 ];

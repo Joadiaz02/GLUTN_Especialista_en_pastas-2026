@@ -1,0 +1,124 @@
+:host {
+  display: block;
+  --sheet-ink: #24301a;
+  --sheet-ink-soft: #4e5f38;
+  --sheet-card: #aebe90;
+  --sheet-avatar-bg: #5b6e43;
+  --sheet-danger-ink: #9a3414;
+  --sheet-danger-soft: #f6ddd2;
+  --sheet-focus: #24301a;
+}
+
+.employee-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px 20px calc(24px + env(safe-area-inset-bottom));
+  color: var(--sheet-ink);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 52px;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 3px solid var(--sheet-card);
+    border-radius: 50%;
+    background: var(--sheet-avatar-bg);
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__initials {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  &__identity {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFF;
+  }
+
+  &__role {
+    color: #FFF;
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 16px;
+    background: #e4e1cc;
+    color: var(--sheet-ink);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--sheet-focus);
+      outline-offset: 2px;
+    }
+
+    // &--danger {
+    //   background: #9a3414;
+    //   color: #;
+    // }
+
+    &--primary {
+      background: var(--sheet-ink-soft);
+      color: #f3f0df;
+    }
+  }
+
+  &__cancel {
+    height: 48px;
+    border: 0;
+    background: transparent;
+    color: var(--sheet-ink-soft);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--sheet-focus);
+      outline-offset: -2px;
+    }
+  }
+}

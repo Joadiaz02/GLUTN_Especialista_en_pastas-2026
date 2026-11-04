@@ -17,6 +17,8 @@ const MENSAJES: Record<string, string> = {
   rechazado: 'Tu pedido fue rechazado. Podés modificarlo y reenviarlo.',
   listo: 'Tu pedido está listo.',
   entregado: 'Tu pedido fue entregado, ¡buen provecho!',
+  cuenta_entregada: 'Tu cuenta está lista. Ya podés verla y pagar.',
+  pagado: 'Pago confirmado. ¡Gracias por tu visita!',
 };
 
 Deno.serve(async (req) => {

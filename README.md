@@ -27,6 +27,7 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Logo del proyecto](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#logo-del-proyecto)
   - 🔗 [Splash Screen](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#splash-screen)
   - 🔗 [Login](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#login)
+  - 🔗 [Acceso rápido](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#acceso-rápido)
   - 🔗 [Registro de clientes](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#registro-de-clientes)
   - 🔗 [Registro de invitados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#registro-de-invitados)
   - 🔗 [Registro completado](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#registro-completado)
@@ -35,18 +36,23 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Lista de espera](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#lista-de-espera)
   - 🔗 [Asinación de mesa](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#asignación-de-mesa)
   - 🔗 [Administración de empleados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-empleados)
+  - 🔗 [Creación de empleados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#creación-de-empleados)
+  - 🔗 [Administración de mesas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-mesas)
   - 🔗 [Gestión de pedidos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos)
   - 🔗 [Gestión de pedidos de cocina](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-cocina)
+  - 🔗 [Gestión de pedidos de bar](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-bar)
+  - 🔗 [Mi cuenta](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#mi-cuenta)
   - 🔗 [Modales del menú principal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#modales-del-menú-principal)
   - 🔗 [Carta](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#carta)
   - 🔗 [Platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#platos)
   - 🔗 [Pedido](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#pedido)
-  - 🔗 [Acceso de personal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#acceso-de-personal)
+  - 🔗 [Pagos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#pagos)
   - 🔗 [Panel administrativo](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#panel-administrativo)
   - 🔗 [Consultas al mozo](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#consultas-al-mozo)
   - 🔗 [Administración de platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-platos)
   - 🔗 [Administración de bebidas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-bebidas)
-- 🔗 [Estructura de imágenes](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#estructura-de-imágenes)
+  - 🔗 [Encuestas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#Encuestas)
+
 
 ---
 
@@ -75,8 +81,8 @@ La siguiente distribución corresponde al estado del proyecto luego de las modif
 |---|---|
 | **Joaquín Díaz** | 5, 6, 7, 8, **9 y 10 (en conjunto con Javier)**, 17 y 20 |
 | **Javier Vilchez** | 1, 3, 4, **9 y 10 (en conjunto con Joaquín)**, 22 |
-| **Lucas Ponte** | 11, 12, 13, 14, 19 y 21 |
-| **Mariano Pastor** | 2, 15, 16 y 18 |
+| **Lucas Ponte** |  12, 13, 14, 19 y 21 |
+| **Mariano Pastor** | 2, 11, 15, 16, 18 y 23 |
 
 > **Nota:** Los puntos **9 y 10** son responsabilidad conjunta de **Joaquín Díaz y Javier Vilchez**. Se decidió trabajarlos en conjunto porque son módulos de mayor tamaño que integran varias funcionalidades relacionadas y requieren coordinación entre distintos flujos de la aplicación.
 
@@ -97,7 +103,8 @@ También se realizó un intercambio de módulos entre **Joaquín Díaz y Javier 
 
 El intercambio se realizó teniendo en cuenta la experiencia y la forma en que cada integrante podía abordar y resolver esas funcionalidades, buscando que cada módulo quedara a cargo del integrante que contaba con mayor familiaridad para desarrollarlo.
 
-
+### Actualización del 17/10/2026
+Se agregaron las funcionalidades de la segunda entrega.
 ---
 
 # 3. Módulos y puntos funcionales
@@ -162,9 +169,9 @@ Los módulos se documentan individualmente indicando:
 **Qué se realiza:** registro de clientes anónimos, ingreso mediante QR del local, incorporación a la lista de espera, actualización del listado del metre, eliminación de clientes de la lista y restricciones de acceso hasta recibir una mesa.
 
 **Responsables:** Joaquín Díaz + Javier Vilchez  
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** En construcción  
+**Inicio:** 23/09/2026  
+**Finalización:** 26/09/2026 
+**Estado:** Finalizado
 **Branches:** `Joaquin-Diaz` + `Javier-Vilchez`
 
 > **Cambio:** desde el 27/09/2026 este módulo se desarrolla en conjunto debido a su tamaño y a la cantidad de funcionalidades que integra.
@@ -174,9 +181,9 @@ Los módulos se documentan individualmente indicando:
 **Qué se realiza:** asignación de una mesa por parte del metre, notificación al cliente, lectura del QR de la mesa asignada y validación para impedir que el cliente se vincule con otra mesa o que la misma mesa sea asignada a otro cliente.
 
 **Responsables:** Joaquín Díaz + Javier Vilchez  
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** En construcción  
+**Inicio:** 26/09/2026  
+**Finalización:** 17/10/2026  
+**Estado:** Finalizado 
 **Branches:** `Joaquin-Diaz` + `Javier-Vilchez`
 
 > **Cambio:** desde el 27/09/2026 este módulo se desarrolla en conjunto debido a su tamaño y a la cantidad de funcionalidades que integra.
@@ -185,18 +192,18 @@ Los módulos se documentan individualmente indicando:
 
 **Qué se realiza:** recepción en el sector bar de los productos correspondientes a cada pedido, mostrando número de mesa, fecha, hora, productos y cantidades, agrupados para facilitar la gestión del cantinero.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
+**Inicio:** 31/09/2026
+**Finalización:** 17/10/2026  
+**Estado:** Finalizado  
 **Branch:** `Joaquin-Diaz`
 
 ### Punto 20 - Encuestas y gráficos
 
 **Qué se realiza:** acceso del cliente a la encuesta de satisfacción, limitación a una encuesta por estadía y visualización de los resultados mediante distintos tipos de gráficos estadísticos.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
+**Inicio:** 22/10/2026 
+**Finalización:** 25/10/2026
+**Estado:** Finalizado
 **Branch:** `Joaquin-Diaz`
 
 ---
@@ -209,9 +216,9 @@ Los módulos se documentan individualmente indicando:
 
 **Qué se realiza:** alta de empleados por parte del dueño o supervisor, incluyendo datos personales, DNI/CUIL, correo, contraseña, perfil, fotografía tomada desde el dispositivo, lectura de QR del DNI y validación de todos los campos.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
+**Inicio:** 30/09/2026 
+**Finalización:** 05/10/2026 
+**Estado:** Finalizado  
 **Branch:** `Javier-Vilchez`
 
 > **Reasignación:** originalmente correspondía a Joaquín Díaz. El 27/09/2026 fue cedido a Javier como parte del intercambio de módulos.
@@ -239,9 +246,9 @@ Los módulos se documentan individualmente indicando:
 **Qué se realiza:** registro de clientes anónimos, ingreso mediante QR del local, incorporación a la lista de espera, actualización del listado del metre, eliminación de clientes de la lista y restricciones de acceso hasta recibir una mesa.
 
 **Responsables:** Joaquín Díaz + Javier Vilchez  
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** En construcción  
+**Inicio:** 23/09/2026  
+**Finalización:** 26/09/2026 
+**Estado:** Finalizado  
 **Branches:** `Joaquin-Diaz` + `Javier-Vilchez`
 
 ### Punto 10 - Asignación de mesa a un cliente
@@ -249,18 +256,18 @@ Los módulos se documentan individualmente indicando:
 **Qué se realiza:** asignación de una mesa por parte del metre, notificación al cliente, lectura del QR de la mesa asignada y validación para impedir que el cliente se vincule con otra mesa o que la misma mesa sea asignada a otro cliente.
 
 **Responsables:** Joaquín Díaz + Javier Vilchez  
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** En construcción  
+**Inicio:** 26/09/2026  
+**Finalización:** 17/10/2026  
+**Estado:** Finalizado  
 **Branches:** `Joaquin-Diaz` + `Javier-Vilchez`
 
 ### Punto 22 - Confirmación del pago y liberación de la mesa
 
 **Qué se realiza:** confirmación del pago por parte del mozo, notificación al dueño y supervisor, liberación de la mesa y posterior verificación de disponibilidad. El punto también contempla la visualización de los resultados de las encuestas desde el QR correspondiente.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
+**Inicio:** 26/10/2026 
+**Finalización:** 29/10/2026
+**Estado:** Finalizado  
 **Branch:** `Javier-Vilchez`
 
 ---
@@ -269,14 +276,7 @@ Los módulos se documentan individualmente indicando:
 
 **Branch principal de trabajo:** `Lucas-ponte`
 
-### Punto 11 - Visualización del menú y consulta al mozo
 
-**Qué se realiza:** visualización del menú mediante el QR de la mesa y sistema de consultas al mozo, incluyendo sala de conversación y notificaciones para clientes y mozos.
-
-**Inicio:** 07/09/2026  
-**Finalización:** No informada  
-**Estado:** En desarrollo  
-**Branch:** `Lucas-ponte`
 
 ### Punto 12 - Realización del pedido
 
@@ -309,19 +309,19 @@ Los módulos se documentan individualmente indicando:
 
 **Qué se realiza:** entrega del pedido completo al cliente, confirmación de recepción y actualización del estado del pedido.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** Aún no iniciado  
+**Inicio:** 18/10/2026  
+**Finalización:** 27/10/2026  
+**Estado:** Finalizado 
 **Branch:** `Lucas-ponte`
 
 ### Punto 21 - Solicitud de la cuenta y pago
 
 **Qué se realiza:** solicitud de la cuenta al mozo, selección de propina mediante QR, detalle de consumos, descuentos, propina y total, seguido del pago simulado y las notificaciones correspondientes.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** No informado  
-**Branch:** `Lucas-ponte`
+**Inicio:** 18/10/2026  
+**Finalización:** 27/10/2026  
+**Estado:** Finalizado 
+**Branch:** `Lucas-ponte
 
 ---
 
@@ -338,6 +338,15 @@ Los módulos se documentan individualmente indicando:
 **Estado:** Finalizado  
 **Branch:** `Mariano-Pastor`
 
+### Punto 11 - Visualización del menú y consulta al mozo
+
+**Qué se realiza:** visualización del menú mediante el QR de la mesa y sistema de consultas al mozo, incluyendo sala de conversación y notificaciones para clientes y mozos.
+
+**Inicio:** 07/09/2026  
+**Finalización:** 25/09/2026  
+**Estado:** Finalizado 
+**Branch:** `Mariano-Pastor`
+
 ### Punto 15 - Juegos y descuentos
 
 **Qué se realiza:** implementación de los juegos disponibles para los clientes y aplicación de descuentos obtenidos según las condiciones establecidas en la consigna.
@@ -351,147 +360,19 @@ Los módulos se documentan individualmente indicando:
 
 **Qué se realiza:** recepción en el sector cocina de los productos correspondientes al pedido, mostrando número de mesa, fecha, hora, productos y cantidades, agrupados por mesa.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** Aún no iniciado  
+**Inicio:** 10/10/2026  
+**Finalización:** 14/10/2026 
+**Estado:** Finalizado  
 **Branch:** `Mariano-Pastor`
 
 ### Punto 18 - Cocina y bar informan que el pedido está listo
 
 **Qué se realiza:** comunicación de finalización de los productos por parte de cocina y bar, actualización del pedido y notificación al mozo cuando todos los sectores intervinientes finalizaron.
 
-**Inicio:** No informado  
-**Finalización:** No informada  
-**Estado:** Aún no iniciado  
+**Inicio:** 10/10/2026  
+**Finalización:** 15/10/2026  
+**Estado:** FInalizado 
 **Branch:** `Mariano-Pastor`
-
----
-
-# 4. Tareas complementarias y extras
-
-Además de los puntos funcionales principales, se desarrollaron tareas complementarias necesarias para la integración y el funcionamiento general de la aplicación.
-
-## Correos electrónicos y notificaciones Push
-
-**Responsable:** Joaquín Díaz
-
-Implementación del sistema de comunicación para informar el estado de las solicitudes de clientes registrados.
-
-Incluye:
-
-- Envío de correo electrónico cuando un cliente se registra.
-- Notificación del estado de la solicitud.
-- Comunicación automática de aprobación.
-- Comunicación automática de rechazo.
-- Notificación Push a los usuarios correspondientes cuando existe un nuevo cliente pendiente de aprobación.
-- Integración mediante Supabase Edge Functions.
-
-**Inicio:** 21/09/2026  
-**Finalización:** 23/09/2026  
-**Estado:** Finalizado
-
-## ↩️ Modales de volver y cerrar sesión
-
-**Responsable:** Lucas Ponte
-
-Desarrollo de modales reutilizables para confirmar:
-
-- Volver.
-- Cerrar sesión.
-
-**Inicio:** 05/09/2026  
-**Finalización:** 15/09/2026  
-**Estado:** Finalizado
-
-## 💬 Chat / Consulta al mozo
-
-Implementación del sistema de consulta entre cliente y mozo como parte del Punto 11.
-
-**Inicio:** 07/09/2026  
-**Finalización:** No informada  
-**Estado:** En desarrollo
-
-## 🏠 Home / Menú principal
-
-Desarrollo del menú principal de la aplicación, incluyendo los accesos a las diferentes funcionalidades disponibles para el cliente.
-
-**Inicio:** 24/08/2026  
-**Finalización:** No informada  
-**Estado:** En desarrollo
-
-## 📷 Escáner QR del Home
-
-Implementación del escáner QR desde el menú principal para funcionalidades relacionadas con:
-
-- Ingreso.
-- Mesa.
-- Propinas.
-
-**Inicio:** 23/09/2026  
-**Finalización:** No informada  
-**Estado:** En desarrollo
-
-> La implementación completa depende de funcionalidades relacionadas con la lista de espera, asignación de mesas y propinas.
-
-## 🍝 Carta conectada a datos
-
-Integración de la carta con los datos de los productos.
-
-**Inicio:** 12/09/2026  
-**Finalización:** 18/09/2026  
-**Estado:** Finalizado
-
-## 📅 Reservas
-
-Implementación de la interfaz visual correspondiente al módulo de reservas.
-
-**Inicio:** 14/09/2026  
-**Finalización:** 18/09/2026  
-**Estado:** Finalizado
-
-> La implementación de la lógica restante depende de las funcionalidades correspondientes a las etapas posteriores del proyecto.
-
-## ⏳ Spinner con logo y feedback compartido
-
-Implementación de un sistema reutilizable de espera y feedback para la aplicación, incluyendo:
-
-- Spinner con logo.
-- Vibración.
-- Sonidos.
-
-**Inicio:** 11/09/2026  
-**Finalización:** 12/09/2026  
-**Estado:** Finalizado
-
-## 🟢 Logo unificado y optimizado
-
-Optimización y unificación del logo utilizado en las distintas secciones de la aplicación.
-
-**Inicio:** 18/09/2026  
-**Finalización:** 22/09/2026  
-**Estado:** Finalizado
-
-## 🧭 Header reutilizable
-
-Implementación de un header reutilizable para las distintas pantallas de la aplicación.
-
-Incluye:
-
-- Botón volver.
-- Botón cerrar sesión.
-- Confirmación de acciones.
-
-**Inicio:** 23/09/2026  
-**Finalización:** 24/09/2026  
-**Estado:** Finalizado
-
-## 📱 Ícono y Splash de la aplicación
-
-Actualización del ícono y Splash Screen de la aplicación utilizando la identidad visual en verde.
-
-**Inicio:** 24/09/2026  
-**Finalización:** 24/09/2026  
-**Estado:** Finalizado
 
 ---
 
@@ -529,9 +410,10 @@ Además, se utilizan funcionalidades nativas de los dispositivos móviles, como:
 | Logo | Mariano Pastor | 23/08/2026 | 24/08/2026 | Realizado |
 | Splash Screen | Joaquín Díaz | 23/08/2026 | 24/08/2026 | Realizado |
 | Registro de usuarios | Javier Vilchez | 24/08/2026 | 28/08/2026 | Realizado |
-| Login de usuarios registrados y personal | Lucas Ponte | 25/08/2026 | 03/09/2026 | Realizado |
 | Menú principal | Mariano Pastor | 24/08/2026 | — | En desarrollo |
+| Login de usuarios registrados y personal | Lucas Ponte | 25/08/2026 | 03/09/2026 | Realizado |
 | Panel administrativo | Joaquín Díaz | 01/09/2026 | 03/09/2026 | Realizado |
+| Administración de bebidas | Javier Vilchez | 04/09/2026 | 15/09/2026 | Realizado |
 | Modales volver/cerrar sesión | Lucas Ponte | 05/09/2026 | 15/09/2026 | Realizado |
 | Chat / consulta al mozo | Mariano Pastor | 07/09/2026 | — | En desarrollo |
 | Spinner, vibración y sonido | Mariano Pastor | 11/09/2026 | 12/09/2026 | Realizado |
@@ -540,18 +422,25 @@ Además, se utilizan funcionalidades nativas de los dispositivos móviles, como:
 | Juegos | Mariano Pastor | 13/09/2026 | 21/09/2026 | Realizado |
 | Reservas - interfaz | Mariano Pastor | 14/09/2026 | 18/09/2026 | Realizado |
 | Puntos 5, 6, 7 y 8 - Clientes registrados | Joaquín Díaz | 15/09/2026 | 21/09/2026 | Realizado |
-| Administración de bebidas | Javier Vilchez | 04/09/2026 | 15/09/2026 | Realizado |
 | Realización del pedido | Lucas Ponte | 15/09/2026 | 23/09/2026 | Realizado |
 | Rechazo del pedido | Lucas Ponte | 15/09/2026 | 23/09/2026 | Realizado |
-| Correos y Push - clientes pendientes | Joaquín Díaz | 21/09/2026 | 23/09/2026 | Realizado |
-| Logo unificado | Mariano Pastor | 18/09/2026 | 22/09/2026 | Realizado |
-| Escáner QR del Home | Javier Vilchez | 23/09/2026 | — | En desarrollo |
-| Header reutilizable | Lucas Ponte | 23/09/2026 | 24/09/2026 | Realizado |
-| Administración de mesas | Javier Vilchez | 20/09/2026 | 24/09/2026 | Realizado |
-| Ícono y Splash en verde | Mariano Pastor | 24/09/2026 | 24/09/2026 | Realizado |
 | Confirmación del pedido | Lucas Ponte | 15/09/2026 | 02/10/2026 | Realizado |
+| Logo unificado | Mariano Pastor | 18/09/2026 | 22/09/2026 | Realizado |
+| Administración de mesas | Javier Vilchez | 20/09/2026 | 24/09/2026 | Realizado |
+| Correos y Push - Configuración inicial | Joaquín Díaz | 21/09/2026 | 23/09/2026 | Realizado |
+| Header reutilizable | Lucas Ponte | 23/09/2026 | 24/09/2026 | Realizado |
+| Escáner QR del Home | Javier Vilchez | 23/09/2026 | — | En desarrollo |
+| Ícono y Splash en verde | Mariano Pastor | 24/09/2026 | 24/09/2026 | Realizado |
+| Agregado de sonidos | Joaquín Díaz | 26/09/2026 | 26/09/2026 | Realizado |
+| Colocación de vibraciones ante errores en toda la app | Joaquín Díaz | 28/09/2026 | 28/09/2026 | Realizado |
+| Colocación de spinner en toda la app | Joaquín Díaz | 29/09/2026 | 29/09/2026 | Realizado |
+| Agregado de push notifications módulo 9 | Joaquín Díaz | 30/09/2026 | 02/10/2026 | Realizado |
+| Mejoras UX lista de espera | Joaquín Díaz | 30/09/2026 | 02/10/2026 | Realizado |
+| Agregado de scroll bar | Joaquín Díaz | 01/10/2026 | 02/10/2026 | Realizado |
+| Lógica funcional para eliminar clientes en lista de espera | Joaquín Díaz | 01/10/2026 | 02/10/2026 | Realizado |
+| Correcciones visuales de Splash Screen y clientes pendientes | Joaquín Díaz | 07/10/2026 | 09/10/2026 | Realizado |
+| Correcciones de acceso rápido | Joaquín Díaz | 07/10/2026 | 09/10/2026 | Realizado |
 
----
 ---
 
 ## Códigos QR del restaurante
@@ -618,6 +507,56 @@ QR correspondiente a la Mesa 5.
 
 ---
 
+### QR Propina 0%
+
+QR correspondiente a la propina del 0%
+
+<p align="center">
+  <img src="images/propina-cero.jpg" alt="QR Propina 0" width="250">
+</p>
+
+---
+
+### QR Propina 5%
+
+QR correspondiente a la propina del 5%
+
+<p align="center">
+  <img src="images/propina-cinco.jpg" alt="QR Propina 5" width="250">
+</p>
+
+---
+
+### QR Propina 10%
+
+QR correspondiente a la propina del 10%
+
+<p align="center">
+  <img src="images/propina-diez.jpg" alt="QR Propina 10" width="250">
+</p>
+
+---
+
+### QR Propina 15%
+
+QR correspondiente a la propina del 15%
+
+<p align="center">
+  <img src="images/propina-quince.jpg" alt="QR Propina 15" width="250">
+</p>
+
+---
+
+### QR Propina 20%
+
+QR correspondiente a la propina del 20%
+
+<p align="center">
+  <img src="images/propina-veinte.jpg" alt="QR Propina 20" width="250">
+</p>
+
+---
+
 
 # 📸 Capturas de la aplicación
 
@@ -645,18 +584,26 @@ QR correspondiente a la Mesa 5.
 
 ---
 
+## Acceso rápido
+
+<p align="center">
+  <img src="images/seleccion-acceso.jpg" alt="Selección de acceso del personal" width="250">
+</p>
+
+---
+
 ## Registro de clientes
 
 <p align="center">
-  <img src="images/Registro_cliente_uno.jpg" alt="Registro cliente - Paso 1" width="250">
+  <img src="images/Registro-cliente-uno.jpg" alt="Registro cliente - Paso 1" width="250">
 </p>
 
 <p align="center">
-  <img src="images/Registro_cliente_dos.jpg" alt="Registro cliente - Paso 2" width="250">
+  <img src="images/Registro-cliente-dos.jpg" alt="Registro cliente - Paso 2" width="250">
 </p>
 
 <p align="center">
-  <img src="images/Registro_cliente_tres.jpg" alt="Registro cliente - Paso 3" width="250">
+  <img src="images/Registro-cliente-tres.jpg" alt="Registro cliente - Paso 3" width="250">
 </p>
 
 ---
@@ -726,6 +673,34 @@ QR correspondiente a la Mesa 5.
 
 ---
 
+## Creación de empleados
+
+<p align="center">
+  <img src="images/creacion-empleado-uno.jpg" alt="Creación de empleados - Paso 1" width="250">
+</p>
+
+<p align="center">
+  <img src="images/creacion-empleado-dos.jpg" alt="Creación de empleados - Paso 2" width="250">
+</p>
+
+<p align="center">
+  <img src="images/creacion-empleado-tres.jpg" alt="Creación de empleados - Paso 3" width="250">
+</p>
+
+---
+
+## Administración de mesas
+
+<p align="center">
+  <img src="images/editar-mesa.jpg" alt="Edición de mesa" width="250">
+</p>
+
+<p align="center">
+  <img src="images/crear-mesa.jpg" alt="Creación de mesa" width="250">
+</p>
+
+---
+
 ## Gestión de pedidos
 
 ### Pedidos generales
@@ -747,12 +722,27 @@ QR correspondiente a la Mesa 5.
 <p align="center">
   <img src="images/gestion-pedidos-cocina.jpg" alt="Gestión de pedidos de cocina" width="250">
 </p>
-
 ---
+
+## Gestión de pedidos de bar
+
+<p align="center">
+  <img src="images/gestion-pedidos-bar.jpg" alt="Gestión de pedidos de bar" width="250">
+</p>
+---
+
 ## Menú principal
 
 <p align="center">
   <img src="images/menu-principal.jpg" alt="Menú principal" width="250">
+</p>
+
+---
+
+## Mi cuenta
+
+<p align="center">
+  <img src="images/mi-cuenta.jpg" alt="Mi cuenta" width="250">
 </p>
 
 ---
@@ -800,10 +790,15 @@ QR correspondiente a la Mesa 5.
 
 ---
 
-## Acceso de personal
+## Pagos
 
 <p align="center">
-  <img src="images/seleccion-acceso.jpg" alt="Selección de acceso del personal" width="250">
+  <img src="images/pagos-uno.jpg" alt="Pagos" width="250">
+</p>
+
+
+<p align="center">
+  <img src="images/pagos-dos.jpg" alt="Pagos dos" width="250">
 </p>
 
 ---
@@ -830,6 +825,14 @@ QR correspondiente a la Mesa 5.
   <img src="images/administracion-platos.jpg" alt="Administración de platos" width="250">
 </p>
 
+<p align="center">
+  <img src="images/administracion-platos-dos.jpg" alt="Administración de platos" width="250">
+</p>
+
+<p align="center">
+  <img src="images/administracion-platos-tres.jpg" alt="Administración de platos" width="250">
+</p>
+
 ---
 
 ## Administración de bebidas
@@ -846,18 +849,26 @@ QR correspondiente a la Mesa 5.
   <img src="images/creacion_bebidas_tres.jpg" alt="Creación de bebidas - Paso 3" width="250">
 </p>
 
+
+---
+
+## Encuestas
+
 <p align="center">
-  <img src="images/Creacion_bebidas_cuatro.jpg" alt="Creación de bebidas - Paso 4" width="250">
+  <img src="images/encuesta-menu.jpg" alt="encuestas" width="250">
+</p>
+
+<p align="center">
+  <img src="images/grafico-torta.jpg" alt="grafico-torta" width="250">
+</p>
+
+<p align="center">
+  <img src="images/grafico-barra.jpg" alt="grafico-barra" width="250">
+</p>
+
+<p align="center">
+  <img src="images/grafico-columna.jpg" alt="grafico-columna" width="250">
 </p>
 
 ---
 
-# 10. 🗂️ Estructura de imágenes
-
-Las capturas utilizadas en este README se encuentran dentro de la carpeta:
-
-```text
-images/
-
-
----

@@ -1,0 +1,109 @@
+.social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 8px;
+}
+
+.social__intro {
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.social__foto {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 4px;
+
+  .step__title,
+  .step__subtitle {
+    align-self: flex-start;
+  }
+}
+
+// la foto de la red ocupa el paso entero, como en el registro normal
+.social__circulo {
+  position: relative;
+  width: min(300px, 75vw);
+  height: min(300px, 75vw);
+  margin-top: 16px;
+}
+
+.social__imagen {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--text-secondary);
+}
+
+.social__badge {
+  position: absolute;
+  right: 8%;
+  bottom: 8%;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid var(--ion-background-color);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social__badge--discord {
+  background: #5865f2;
+}
+
+.social__badge-logo {
+  width: 26px;
+  height: 26px;
+}
+
+.social__chico {
+  margin: 8px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.social__link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--ion-color-primary);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+// los pasos ocupan todo el ancho
+app-personal-step,
+app-credentials-step,
+app-profile-step {
+  width: 100%;
+}
+
+.page-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  width: 100vw;
+  height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(31, 45, 24, 0.52);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}

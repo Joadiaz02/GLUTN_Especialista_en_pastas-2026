@@ -53,47 +53,94 @@
   opacity: 1;
 }
 
-/* Estructura general de la tarjeta de pedido */
+/* Estructura general de la tarjeta de pedido (Marrón) */
 .pedido {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 10px;
   padding: 16px;
   border-radius: 24px;
-  background: var(--ion-color-light, #f4ebdd);
-  color: #2f3d24;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  background: #6b5c4e;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
 }
 
-.pedido__mesa {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
+/* ===== Encabezado: mesa + cliente en una sola fila ===== */
 
-  h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 800;
+.pedido__mesa {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pedido__mesa-numero {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 76px;
+  padding: 8px 14px;
+  border-radius: 14px;
+  background: #3a2417;
+  color: #ffc983;
+
+  small {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-transform: uppercase;
   }
 
-  span {
-    font-size: 12px;
-    font-weight: 600;
+  strong {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+}
+
+.pedido__cliente {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  small {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  strong {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #ffffff;
+    overflow-wrap: anywhere;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 }
 
 .pedido__encabezado {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
   padding-bottom: 6px;
-  border-bottom: 1px solid rgba(47, 61, 36, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .pedido__momento {
@@ -102,88 +149,150 @@
 }
 
 .pedido__hora {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
 }
 
 .pedido__fecha {
-  font-size: 12px;
+  font-size: 18px;
+  opacity: 0.85;
 }
 
 .pedido__estado {
   flex-shrink: 0;
   padding: 4px 10px;
   border-radius: 999px;
-  background: #2f3d24;
+  background: #3a2417;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 17px;
   font-weight: 700;
 }
 
-/* Contenedor central de los items dentro de la tarjeta */
-.pedido__items-container {
-  flex: 1;
+/* ==========================================================================
+   Lista de productos: es lo único que scrollea dentro de la tarjeta.
+
+   La directiva appListaFilas calcula cuántas filas completas entran y les da
+   a todas el mismo alto (--fila-alto). Cada fila es un punto de reposo, así
+   nunca queda un producto cortado arriba ni abajo, en cualquier pantalla.
+   El nombre se corta a 2 líneas con "…" para que todas las filas midan igual.
+   El total queda fuera de la lista: siempre se ve.
+   ========================================================================== */
+
+.pedido__items-wrap {
+  position: relative;
+  flex: 1 1 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  overflow-y: auto;
-  padding-right: 2px;
-}
+  padding-block: 5px;
 
-.usuario-txt {
-  font-size: 13px;
-  font-weight: 700;
-  opacity: 0.8;
+  // líneas que avisan que hay más productos arriba / abajo (la directiva activa las clases)
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.45);
+    opacity: 0;
+    transition: opacity 150ms ease;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: 0;
+  }
+
+  &::after {
+    bottom: 0;
+  }
+
+  &.tiene-arriba::before,
+  &.tiene-abajo::after {
+    opacity: 1;
+  }
 }
 
 .lista-productos {
+  --fila-min: 72px;                 // alto mínimo de una fila (la directiva lo lee)
+  --fila-alto: var(--fila-min);     // alto real: lo calcula la directiva
+
+  flex: 1 1 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > * {
+    flex: 0 0 var(--fila-alto);
+    height: var(--fila-alto);
+    min-height: 0;
+    box-sizing: border-box;
+    scroll-snap-align: start;
+  }
 }
 
 .producto-card {
-  background: rgba(255, 255, 255, 0.6);
-  padding: 8px 12px;
+  background: rgba(58, 36, 23, 0.45);
+  padding: 0 12px;
   border-radius: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .card-header-item {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
 .item-nombre {
-  font-size: 13px;
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 18px;
   font-weight: 700;
-  color: #2f3d24;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  color: #ffffff;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .item-descripcion {
-  font-size: 11px;
-  opacity: 0.7;
-  color: #2f3d24;
+  font-size: 19px;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .item-precio {
-  font-size: 13px;
+  flex-shrink: 0;
+  font-size: 22px;
   font-weight: 800;
-  color: #2f3d24;
+  color: #ffc983;
   white-space: nowrap;
 }
 
-/* Total a pagar más grande al fondo de los ítems */
+/* Total a pagar: fijo debajo de la lista */
 .total-card {
-  background: rgba(47, 61, 36, 0.12);
-  margin-top: 8px;
+  flex-shrink: 0;
   padding: 10px 14px;
   border-radius: 12px;
+  background: rgba(58, 36, 23, 0.65);
 
   .resumen-fila {
     width: 100%;
@@ -191,42 +300,51 @@
     justify-content: space-between;
     align-items: center;
     font-weight: 800;
-    font-size: 15px;
-    color: #2f3d24;
+    font-size: 24px;
+    color: #ffffff;
 
     .item-precio {
-      font-size: 16px;
+      font-size: 26px;
+      color: #ffc983;
     }
   }
 }
 
 .sin-items {
-  font-size: 12px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-size: 14px;
   font-style: italic;
-  opacity: 0.6;
+  color: rgba(255, 255, 255, 0.7);
   text-align: center;
-  margin: auto 0;
 }
 
 /* Botones de acción al final de la tarjeta */
 .pedido__acciones {
-  flex-shrink: 0;
   display: flex;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 12px;
 }
 
-.pedido__boton {
+.pedido__boton--icono {
   flex: 1;
   min-width: 0;
   margin: 0;
-  min-height: 40px;
-  font-weight: 700;
+  min-height: 44px;
   --border-radius: 16px;
-  font-size: 12px;
+  padding: 0;
 }
 
-/* Controles de navegación inferiores (Texto en blanco) */
+.pedido__boton--icono img {
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+/* Controles de navegación inferiores */
 .contador {
   display: flex;
   align-items: center;
@@ -234,7 +352,7 @@
   gap: 12px;
   margin-top: 12px;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   color: #ffffff;
   flex-shrink: 0;
 
@@ -248,12 +366,12 @@
   background: #f26838;
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   color: #ffffff;
   cursor: pointer;
@@ -266,5 +384,38 @@
   &:disabled {
     opacity: 0.4;
     cursor: default;
+  }
+}
+
+/* Pantallas bajas: filas y textos un poco más compactos */
+@media (max-height: 720px) {
+  .cocina-wrapper {
+    padding-block: 10px;
+  }
+
+  .pedido {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .lista-productos {
+    --fila-min: 66px;               // antes 54px
+    gap: 6px;
+  }
+
+  .item-nombre {
+    font-size: 17px;                // antes 15px
+  }
+
+  .item-descripcion {
+    font-size: 18px;                // antes 17px
+  }
+
+  .item-precio {
+    font-size: 21px;
+  }
+
+  .pedido__boton {
+    min-height: 40px;
   }
 }

@@ -27,6 +27,15 @@ Deno.serve(async (req) => {
 
     const supabaseAdmin = crearClienteAdmin();
 
+    // el pedido manda el UUID de la mesa, acá buscamos su número
+    const { data: mesa } = await supabaseAdmin
+      .from('mesas')
+      .select('numero')
+      .eq('id', idMesa)
+      .maybeSingle();
+
+    const numeroMesa = mesa ? String(mesa.numero) : 'sin número';
+
     const { data: personal, error: errorPersonal } = await supabaseAdmin
       .from('usuarios')
       .select('id, perfil')
@@ -34,7 +43,7 @@ Deno.serve(async (req) => {
 
     if (errorPersonal) throw new Error('No se pudo obtener el personal de cocina/bar.');
 
-    const idsPersonal = (personal ?? []).map((p) => p.id);
+    const idsPersonal = (personal ?? []).map((p: { id: any; }) => p.id);
 
     if (idsPersonal.length === 0) {
       return new Response(
@@ -59,7 +68,7 @@ Deno.serve(async (req) => {
     }
 
     const titulo = 'Pedido confirmado';
-    const cuerpo = `Hay un pedido nuevo para preparar de la mesa ${idMesa}.`;
+    const cuerpo = `Hay un pedido nuevo para preparar de la mesa ${numeroMesa}.`;
 
     let enviados = 0;
     let errores = 0;

@@ -4,7 +4,7 @@ import { Vibracion } from '@app/services/vibracion';
 
 // vibra cuando un campo del formulario queda inválido
 @Directive({
-  selector: 'form[appVibrarErrores]',
+  selector: 'form[appVibrarErrores], [formGroup][appVibrarErrores]',
 })
 export class VibrarErrores {
   private formGroup = inject(FormGroupDirective);

@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonFooter, IonButton, IonInput, IonSpinner, ToastController } from '@ionic/angular';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonFooter, IonButton, IonInput, IonSpinner, ToastController, NavController } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { Router } from '@angular/router';
 import { GtnUploader } from '@app/components';
@@ -9,6 +9,7 @@ import { Storage, Table } from '@app/services';
 import { Vibracion } from '@app/services/vibracion';
 import { VibrarErrores } from '@app/directives';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { uniqueTableNumberValidator } from '@app/validators';
 
 type TipoMesa = 'vip' | 'estandar' | 'movilidad_reducida';
 
@@ -34,16 +35,24 @@ type TipoMesa = 'vip' | 'estandar' | 'movilidad_reducida';
     SpinnerLogoComponent
 ],
 })
-export class CreateTablePage {
+export class CreateTablePage implements OnInit {
   private _router = inject(Router);
   private _tableService = inject(Table);
   private _storageService = inject(Storage);
   private _toastController = inject(ToastController);
   private _vibracion = inject(Vibracion);
+   private _navCtrl = inject(NavController); 
   isLoading = signal<boolean>(false);
 
+    private readonly _takenNumbers = signal<ReadonlySet<number>>(new Set());
+
+  readonly nextNumber = computed(() => Math.max(0, ...this._takenNumbers()) + 1);
+
   form = new FormGroup({
-    number: new FormControl('', Validators.required),
+    number: new FormControl('', [
+        Validators.required,
+        uniqueTableNumberValidator(() => this._takenNumbers()),
+      ]),
     diners: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(20)]),
     type: new FormControl<any | null>(null, Validators.required),
     file: new FormControl<File | null>(null, Validators.required)
@@ -55,6 +64,10 @@ export class CreateTablePage {
     { type: 'vip', value: 'VIP', },
     { type: 'movilidad_reducida', value: 'Movilidad reducida' },
   ];
+
+  async ngOnInit() {
+    this._takenNumbers.set(new Set(await this._tableService.getTableNumbers()));
+  }
 
   getFormControl(controlName: string) {
     return this.form.get(controlName);
@@ -99,19 +112,25 @@ export class CreateTablePage {
         capacidad: data.diners,
         foto: image,
         tipo: data.type,
-        baja_logica: false
+        baja_logica: false,
+        disponibilidad: true,
       })
 
       const toast = await this._toastController.create({
         message:
-          'La mesa se creo correctamente',
+          'La mesa se creó correctamente.',
         duration: 5000,
         position: 'bottom',
       });
 
       await toast.present();
 
-      await this._router.navigate(['/admin/tables']);
+      // await this._router.navigate(['/admin/tables']);
+      await this._navCtrl.navigateRoot('/admin/tables', {
+        animated: true,
+        animationDirection: 'back',
+        replaceUrl: true,
+      });
     } catch {
       await this._vibracion.error();
       const toast = await this._toastController.create({

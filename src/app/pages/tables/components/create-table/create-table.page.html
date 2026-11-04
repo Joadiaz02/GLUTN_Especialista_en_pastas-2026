@@ -1,9 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <app-confirm-volver
-        (confirmadoVolver)="volver()"
-      />
+      <app-confirm-volver (confirmadoVolver)="volver()" />
     </ion-buttons>
 
     <ion-title>Crear Mesa</ion-title>
@@ -18,15 +16,9 @@
     />
   </div>
 
-  <form
-    class="fields"
-    [formGroup]="form"
-    appVibrarErrores
-  >
+  <form class="fields" [formGroup]="form" appVibrarErrores>
     <div class="field">
-      <label class="field__label">
-        Número
-      </label>
+      <label class="field__label"> Número </label>
 
       <ion-input
         fill="outline"
@@ -35,23 +27,20 @@
         formControlName="number"
       />
 
-      @if (
-        getFormControl('number')?.invalid &&
-        (
-          getFormControl('number')?.touched ||
-          getFormControl('number')?.dirty
-        )
-      ) {
-        <p class="field__error">
-          El campo es obligatorio.
-        </p>
-      }
+      @if ( getFormControl('number')?.invalid && (
+      getFormControl('number')?.touched || getFormControl('number')?.dirty ) ) {
+      @if ( getFormControl('number')?.hasError('required') ) {
+      <p class="field__error">El campo es obligatorio.</p>
+      } @if ( getFormControl('number')?.hasError('numberTaken') ) {
+      <p class="field__error">
+        La mesa {{ getFormControl('number')?.value }} ya existe. Elegí otro
+        número.
+      </p>
+      } }
     </div>
 
     <div class="field">
-      <label class="field__label">
-        Comensales
-      </label>
+      <label class="field__label"> Comensales </label>
 
       <div class="stepper">
         <button
@@ -62,9 +51,7 @@
           <span>−</span>
         </button>
 
-        <span class="stepper__value">
-          {{ form.get('diners')?.value }}
-        </span>
+        <span class="stepper__value"> {{ form.get('diners')?.value }} </span>
 
         <button
           type="button"
@@ -77,43 +64,34 @@
     </div>
 
     <div class="field">
-      <label class="field__label">
-        Tipo
-      </label>
+      <label class="field__label"> Tipo </label>
 
       <div class="chips">
         @for (t of types; track t.type) {
-          <button
-            type="button"
-            class="chip"
-            [class.chip-activo]="form.get('type')?.value === t.type"
-            (click)="selectType(t.type)"
-          >
-            {{ t.value }}
-          </button>
+        <button
+          type="button"
+          class="chip"
+          [class.chip-activo]="form.get('type')?.value === t.type"
+          (click)="selectType(t.type)"
+        >
+          {{ t.value }}
+        </button>
         }
       </div>
 
-      @if (
-        getFormControl('type')?.invalid &&
-        (
-          getFormControl('type')?.touched ||
-          getFormControl('type')?.dirty
-        )
-      ) {
-        <p class="field__error">
-          Debe seleccionar un tipo de mesa.
-        </p>
+      @if ( getFormControl('type')?.invalid && ( getFormControl('type')?.touched
+      || getFormControl('type')?.dirty ) ) {
+      <p class="field__error">Debe seleccionar un tipo de mesa.</p>
       }
     </div>
   </form>
 </ion-content>
 
 @if (isLoading()) {
-  <div class="page-loading">
-    <app-spinner-logo />
-    <span>Creando mesa...</span>
-  </div>
+<div class="page-loading">
+  <app-spinner-logo />
+  <span>Creando mesa...</span>
+</div>
 }
 
 <ion-footer class="ion-no-border">

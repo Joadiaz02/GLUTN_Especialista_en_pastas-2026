@@ -1,0 +1,105 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        [titulo]="'¿Salir de ' + (config.plural | titlecase) + '?'"
+        mensaje="Vas a volver al panel de administración."
+        textoConfirmar="Salir"
+        colorConfirmar="primary"
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
+    </ion-buttons>
+
+    <ion-title>{{ config.plural | titlecase }}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button routerLink="create">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="carta-cocina-content">
+  <div class="carta-cocina-wrapper">
+    <!-- <ion-searchbar
+      [placeholder]="'Buscar ' + config.singular"
+      [debounce]="200"
+      (ionInput)="onBuscar($event.detail.value ?? '')"
+    ></ion-searchbar> -->
+
+    <!-- spinner solo en la carga inicial -->
+    @if (isLoading() && productos().length === 0) {
+    <!-- el cartel "Cargando..." está al final de la página -->
+    } @else if (productosFiltrados().length === 0) {
+    <div class="carta-cocina-vacio">
+      <p>
+        {{ productos().length === 0 ? 'Todavía no cargaste ningún ' + config.singular + '.' : 'No
+        encontramos nada que coincida con tu búsqueda.' }}
+      </p>
+    </div>
+    } @else {
+    <app-producto-carrusel
+      [productos]="productosFiltrados()"
+      [etiqueta]="config.plural"
+      [mostrarNavegacion]="true"
+      [decimales]="true"
+      [acciones]="accionesProducto"
+    ></app-producto-carrusel>
+    }
+  </div>
+
+  <!-- botones de destacar, editar y dar de baja -->
+  <ng-template #accionesProducto let-item>
+    <div class="acciones">
+      @if (item.baja_logica) {
+      <span class="acciones__baja">Baja</span>
+      } @else {
+      <button
+        type="button"
+        class="acciones__boton"
+        [class.acciones__boton--activo]="item.sugerencia"
+        [attr.aria-label]="item.sugerencia ? 'Quitar de destacados' : 'Destacar'"
+        (click)="destacar(item); $event.stopPropagation()"
+      >
+        <ion-icon [name]="item.sugerencia ? 'star' : 'star-outline'"></ion-icon>
+      </button>
+      }
+
+      <button
+        type="button"
+        class="acciones__boton"
+        aria-label="Editar"
+        (click)="editar(item); $event.stopPropagation()"
+      >
+        <ion-icon name="create-outline"></ion-icon>
+      </button>
+
+      @if (item.baja_logica) {
+      <button
+        type="button"
+        class="acciones__boton acciones__boton--activo"
+        aria-label="Reactivar"
+        (click)="reactivar(item); $event.stopPropagation()"
+      >
+        <ion-icon name="refresh-outline"></ion-icon>
+      </button>
+      } @else {
+      <button
+        type="button"
+        class="acciones__boton acciones__boton--peligro"
+        aria-label="Dar de baja"
+        (click)="darDeBaja(item); $event.stopPropagation()"
+      >
+        <ion-icon name="trash-outline"></ion-icon>
+      </button>
+      }
+    </div>
+  </ng-template>
+</ion-content>
+@if (isLoading() && productos().length === 0) {
+<div class="quick-loading">
+  <app-spinner-logo />
+  <span>Cargando...</span>
+</div>
+}

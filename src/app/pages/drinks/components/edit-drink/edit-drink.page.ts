@@ -9,13 +9,15 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonFooter, ToastController, IonInput, IonToggle, IonTextarea } from '@ionic/angular';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonFooter, ToastController, IonInput, IonToggle, IonTextarea, IonRouterOutlet, NavController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Drink, Storage } from '@app/services';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { GtnUploader } from '@app/components';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { VibrarErrores } from '@app/directives';
+import { HeaderComponent } from '@app/components/ui';
+import { PrecioInput } from '@app/directives';
 
 @Component({
   selector: 'app-edit-drink',
@@ -34,11 +36,13 @@ import { VibrarErrores } from '@app/directives';
     IonInput,
     ReactiveFormsModule,
     IonToggle,
+    PrecioInput,
     ConfirmVolverComponent,
     GtnUploader,
     SpinnerLogoComponent,
     IonTextarea,
-    VibrarErrores
+    VibrarErrores,
+    HeaderComponent
 ],
 })
 export class EditDrinkPage implements OnInit {
@@ -60,6 +64,8 @@ export class EditDrinkPage implements OnInit {
   private _toastController = inject(ToastController);
   private _vibracion = inject(Vibracion);
   private _drinkService = inject(Drink);
+  private _routerOutlet = inject(IonRouterOutlet, { optional: true });
+  private _navCtrl = inject(NavController);
 
   form = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -95,7 +101,12 @@ export class EditDrinkPage implements OnInit {
     this.isLoadingDrink.set(true);
 
     try {
-      const drink = await this._drinkService.getById(id)!;
+      const drink = await this._drinkService.getById(id);
+
+      if (!drink) {
+        await this.avisarNoEncontrado();
+        return;
+      }
 
       this.drink.set(drink);
 
@@ -107,7 +118,7 @@ export class EditDrinkPage implements OnInit {
         title: drink.nombre,
         description: drink.descripcion,
         preparation: String(drink.tiempo_elaboracion),
-        price: String(drink.precio),
+        price: Number(drink.precio).toFixed(2),
         ml: String(drink.medida_ml),
         contieneAlcohol: drink.tiene_alcohol ?? false,
         sugerencia: drink.sugerencia,
@@ -132,6 +143,22 @@ export class EditDrinkPage implements OnInit {
 
   async volver() {
     await this._router.navigate(['/admin/drinks']);
+  }
+
+  // si lo borraron o el enlace es viejo, avisa y vuelve al listado
+  private async avisarNoEncontrado(): Promise<void> {
+    await this._vibracion.error();
+
+    const toast = await this._toastController.create({
+      message: 'No encontramos esa bebida. Puede que lo hayan borrado.',
+      duration: 5000,
+      position: 'top',
+      color: 'danger',
+    });
+
+    await toast.present();
+
+    await this._router.navigateByUrl('/admin/drinks');
   }
 
   private async resolverFoto(
@@ -178,7 +205,12 @@ export class EditDrinkPage implements OnInit {
 
       await toast.present();
 
-      this._router.navigateByUrl('/admin/drinks');
+      // this._router.navigateByUrl('/admin/drinks');
+      await this._navCtrl.navigateRoot('/admin/drinks', {
+        animated: true,
+        animationDirection: 'back',
+        replaceUrl: true,
+      });
     } catch (error) {
       await this._vibracion.error();
       const toast = await this._toastController.create({

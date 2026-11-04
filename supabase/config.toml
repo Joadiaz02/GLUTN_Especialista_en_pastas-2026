@@ -435,3 +435,9 @@ entrypoint = "./functions/send-client-status-email/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/send-client-status-email/*.html" ]
+
+[functions.factura]
+enabled = true
+verify_jwt = true
+# el logo de la factura viaja junto con la función
+static_files = [ "./functions/factura/logo.png" ]

@@ -8,6 +8,8 @@ describe('TurnRingComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TurnRingComponent);
+    fixture.componentRef.setInput('position', 1);
+    fixture.componentRef.setInput('total', 3);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

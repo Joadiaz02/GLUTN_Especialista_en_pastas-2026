@@ -2,7 +2,7 @@ import { Component, computed, effect, ElementRef, inject, OnDestroy, signal, vie
 import { DatePipe } from '@angular/common';
 import { IonButton, IonContent, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-
+import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.directive';
 import { Auth, Bar, Confirm, PedidoBar, Vibracion } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
@@ -22,7 +22,7 @@ export interface SlideBar extends PedidoBar {
   standalone: true,
   templateUrl: './bar.page.html',
   styleUrls: ['./bar.page.scss'],
-  imports: [HeaderComponent, DatePipe, IonButton, IonContent, SpinnerLogoComponent],
+  imports: [HeaderComponent, DatePipe, IonButton, IonContent, SpinnerLogoComponent, ListaFilasDirective],
 })
 export class BarPage implements OnDestroy {
   bar = inject(Bar);
@@ -89,7 +89,6 @@ export class BarPage implements OnDestroy {
     return this.procesar(pedido, async () => {
       const recibido = await this.bar.recibir(pedido);
       if (recibido) {
-        await this._vibracion.confirmacion();
         await this.avisar('Pedido recibido. Lo tenés en "En preparación" y el cliente ya lo ve.', 'success');
       } else {
         void this._vibracion.errorValidacion();
@@ -101,7 +100,6 @@ export class BarPage implements OnDestroy {
   entregar(pedido: PedidoBar): Promise<void> {
     return this.procesar(pedido, async () => {
       const completo = await this.bar.entregar(pedido);
-      await this._vibracion.confirmacion();
       await this.avisar(
         completo
           ? 'Pedido listo. Se les avisó a los mozos.'
@@ -125,7 +123,6 @@ export class BarPage implements OnDestroy {
     return this.procesar(pedido, async () => {
       const rechazado = await this.bar.rechazar(pedido);
       if (rechazado) {
-        await this._vibracion.confirmacion();
         await this.avisar('Pedido rechazado. Se le avisó al cliente.', 'success');
       } else {
         void this._vibracion.errorValidacion();
@@ -138,7 +135,6 @@ export class BarPage implements OnDestroy {
     return this.procesar(pedido, async () => {
       const devuelto = await this.bar.devolver(pedido);
       if (devuelto) {
-        await this._vibracion.confirmacion();
         await this.avisar('El pedido volvió a "Por recibir".', 'success');
       } else {
         void this._vibracion.errorValidacion();

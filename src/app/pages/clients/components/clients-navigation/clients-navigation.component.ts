@@ -20,6 +20,24 @@ export class ClientsNavigationComponent {
 
   @Input()
   deshabilitada = false;
+  
+  @Input()
+  showButtons = true;
+  
+  @Input()
+  message = 'Deslizá para cambiar de cliente';
+
+  
+  // Textos configurables (por defecto, los de Clientes)
+  @Input()
+  etiquetaAnterior = 'Cliente anterior';
+
+  @Input()
+  etiquetaSiguiente = 'Cliente siguiente';
+
+  // Muestra el cartel "Deslizá para cambiar de cliente"
+  @Input()
+  mostrarAyuda = true;
 
   @Output()
   anterior = new EventEmitter<void>();

@@ -1,396 +1,328 @@
-/* =========================
-   ION CONTENT
-========================= */
-
-.waitlist-content {
-  --padding-top: 8px;
-  --padding-bottom: 20px;
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-/* =========================
-   CONTENEDOR PRINCIPAL
-========================= */
+.waitlist-content {
+  --background: #657a4d;
+  --padding-top: 4px;
+  --padding-bottom: 12px;
+}
 
 .waitlist {
   height: 100%;
   min-height: 100%;
-
   display: flex;
   flex-direction: column;
-
-  padding: 0 12px 0 16px;
-
+  padding: 0 16px env(safe-area-inset-bottom, 12px) 16px;
   box-sizing: border-box;
+  justify-content: space-between; /* Distribuye el espacio vertical de forma equitativa */
+  gap: 8px;
 }
 
-/* =========================
-   ENCABEZADO
-========================= */
-
 .waitlist__header {
-  margin-bottom: 18px;
-
+  margin-bottom: 2px;
   flex-shrink: 0;
 }
 
 .waitlist__title {
-  margin: 0 0 8px;
-
-  font-size: 24px;
+  margin: 0 0 2px;
+  font-size: 21px;
   font-weight: 700;
-
   color: #fff;
 }
 
 .waitlist__subtitle {
   margin: 0;
-
-  font-size: 15px;
-
+  font-size: 13px;
   color: #d5e0c9;
 }
 
-/* =========================
-   FILTROS
-========================= */
-
+/* FILTROS */
 .waitlist-filters {
   display: grid;
-
-  grid-template-columns:
-    1.4fr
-    repeat(5, 1fr);
-
+  grid-template-columns: 1.4fr repeat(5, 1fr);
   gap: 6px;
-
   width: 100%;
-
-  padding: 0 0 12px;
-
+  padding-bottom: 2px;
   box-sizing: border-box;
-
   flex-shrink: 0;
 }
 
 .waitlist-filter {
   width: 100%;
   min-width: 0;
-
-  min-height: 40px;
-
+  min-height: 32px;
   padding: 0 4px;
-
   border: 0;
   border-radius: 999px;
-
   background: #8ca273;
-
   color: #fff;
-
   font: inherit;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-
   white-space: nowrap;
-}
-
-.waitlist-filter:active {
-  transform: scale(0.96);
+  cursor: pointer;
 }
 
 .waitlist-filter--active {
   background: #e76f45;
 }
 
-/* =========================
-   LISTA CON SCROLL
-========================= */
-
-.waitlist__list {
-  flex: 1;
-
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 12px;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  /* Más espacio para la scrollbar */
-  padding: 4px 10px 24px 0;
-
-  box-sizing: border-box;
-
-  -webkit-overflow-scrolling: touch;
-
-  scrollbar-width: auto;
-  scrollbar-color:
-    #d9a441
-    rgba(255, 255, 255, 0.10);
-}
-
-/* =========================
-   SCROLLBAR ANDROID / CHROME
-========================= */
-
-.waitlist__list::-webkit-scrollbar {
-  width: 12px;
-}
-
-.waitlist__list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.10);
-  border-radius: 999px;
-  margin: 4px 0;
-}
-
-.waitlist__list::-webkit-scrollbar-thumb {
-  background: #d9a441;
-  border-radius: 999px;
-  min-height: 55px;
-  border: 2px solid rgba(101, 122, 77, 0.35);
-}
-
-.waitlist__list::-webkit-scrollbar-thumb:hover {
-  background: #e76f45;
-}
-
-.waitlist__list::-webkit-scrollbar-thumb:active {
-  background: #e76f45;
-}
-
-/* =========================
-   ESTADO VACÍO
-========================= */
-
 .waitlist__empty {
   flex: 1;
-
-  min-height: 240px;
-
+  min-height: 180px;
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   text-align: center;
-
   color: #d5e0c9;
 }
 
-/* =========================
-   TARJETAS
-========================= */
-
-.waitlist-card {
-  display: flex;
-  align-items: stretch;
-
+/* SECCIÓN DE TARJETA */
+.cards-section {
+  position: relative;
   width: 100%;
-  min-width: 0;
-
-  flex-shrink: 0;
-
-  overflow: hidden;
-
-  border-radius: 18px;
-
-  background: #a8b68a;
-}
-
-.waitlist-card__main {
+  max-width: 440px;
+  margin: 0 auto;
   flex: 1;
-
-  min-width: 0;
-
   display: flex;
-  align-items: center;
-
-  gap: 12px;
-
-  padding: 14px;
-
-  border: 0;
-
-  background: transparent;
-
-  color: #fff;
-
-  text-align: left;
-
-  font: inherit;
-}
-
-.waitlist-card__avatar {
-  flex: 0 0 52px;
-
-  width: 52px;
-  height: 52px;
-
-  border-radius: 14px;
-
-  object-fit: cover;
-
-  background: #657a4d;
-}
-
-.waitlist-card__avatar--empty {
-  display: flex;
-
   align-items: center;
   justify-content: center;
-
-  color: #fff;
-
-  font-size: 19px;
-  font-weight: 800;
+  touch-action: pan-y;
+  min-height: 0;
 }
 
-.waitlist-card__info {
-  min-width: 0;
-
-  flex: 1;
-}
-
-.waitlist-card__name,
-.waitlist-card__details {
-  margin: 0;
-}
-
-.waitlist-card__name {
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  white-space: nowrap;
-
-  font-size: 16px;
-
-  font-weight: 800;
-}
-
-.waitlist-card__details {
-  margin-top: 4px;
-
-  color: rgba(255, 255, 255, 0.88);
-
-  font-size: 13px;
-}
-
-.waitlist-card__tags {
+.cards-track {
+  width: 100%;
+  height: 100%;
   display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 5px;
-
-  margin-top: 7px;
+  align-items: center;
+  justify-content: center;
 }
 
-.waitlist-card__tags span {
-  padding: 4px 8px;
+.client-card {
+  width: 100%;
+  max-width: 440px;
+  height: 100%;
+  max-height: 500px; /* Altura ideal para que la tarjeta se vea grande pero deje ver las flechas abajo */
+  box-sizing: border-box;
+  display: flex;
+}
 
+.client-card-inner {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 16px 18px;
+  border-radius: 28px;
+  background: #8ca273;
+  border: 2px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* FOTO DE PERFIL */
+.client-photo-container {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #657a4d;
+  background: #657a4d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.client-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #657a4d;
+  color: #fff;
+  font-size: 36px;
+  font-weight: 800;
+}
+
+/* ESTADO / TAGS */
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
   border-radius: 999px;
-
-  background: rgba(231, 111, 69, 0.95);
-
+  background: rgba(231, 111, 69, 0.25);
   color: #fff;
-
-  font-size: 10px;
-
-  font-weight: 700;
+  font-size:20px;
+  font-weight: 800;
+  flex-shrink: 0;
 }
 
-.waitlist-card__delete {
-  flex: 0 0 48px;
-
-  border: 0;
-
-  background: rgba(0, 0, 0, 0.12);
-
+.client-card h2 {
+  margin: 0;
   color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
 
+.client-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  flex-shrink: 0;
+
+  span {
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(231, 111, 69, 0.95);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+  }
+}
+
+/* BOTONES DE ACCIÓN */
+.client-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.approve-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 70px;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  background: #657a4d;
+  border: 2px solid #657a4d;
+  color: #fff;
+  transition: transform 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.reject-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 70px;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  background: #e76f45;
+  border: 2px solid #e76f45;
+  color: #fff;
+  transition: transform 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.button-icon {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+/* CONTROLES DE NAVEGACIÓN INFERIOR (AHORA SÍ VISIBLES) */
+.navigation-section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  margin-bottom: max(90px, env(safe-area-inset-bottom));;
+  flex-shrink: 0;
+}
+
+.navigation-button {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: #8ca273;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.nav-chevron {
+  width: 15px;
+  height: 15px;
+  border-top: 3px solid #fff;
+  border-right: 3px solid #fff;
+}
+
+.nav-left {
+  transform: rotate(-135deg);
+  margin-left: 2px;
+}
+
+.nav-right {
+  transform: rotate(45deg);
+  margin-right: 2px;
+}
+
+.counter {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: #fff;
+}
+
+.counter-current {
   font-size: 28px;
-
-  transition: background 0.2s ease;
+  font-weight: 900;
 }
 
-.waitlist-card__delete:active {
-  background: rgba(0, 0, 0, 0.22);
+.counter-separator {
+  font-size: 16px;
+  opacity: 0.85;
 }
 
-/* =========================
-   PANTALLAS PEQUEÑAS
-========================= */
-
-@media (max-width: 380px) {
-
-  .waitlist {
-    padding-left: 12px;
-    padding-right: 8px;
-  }
-
-  .waitlist__title {
-    font-size: 21px;
-  }
-
-  .waitlist-card__main {
-    padding: 11px;
-    gap: 9px;
-  }
-
-  .waitlist-card__avatar {
-    width: 44px;
-    height: 44px;
-
-    flex-basis: 44px;
-
-    border-radius: 12px;
-  }
-
-  .waitlist-card__name {
-    font-size: 14px;
-  }
-
-  .waitlist-card__details {
-    font-size: 12px;
-  }
-
-  .waitlist-card__delete {
-    flex-basis: 42px;
-
-    font-size: 25px;
-  }
-
-  .waitlist__list::-webkit-scrollbar {
-    width: 7px;
-  }
+.counter-total {
+  font-size: 20px;
+  font-weight: 800;
 }
 
-/* =========================
-   POCA ALTURA
-========================= */
-
-@media (max-height: 720px) {
-
-  .waitlist__header {
-    margin-bottom: 10px;
-  }
-
-  .waitlist__title {
-    font-size: 21px;
-  }
-
-  .waitlist-card__main {
-    padding: 10px;
-  }
-
-  .waitlist-card__avatar {
-    width: 44px;
-    height: 44px;
-
-    flex-basis: 44px;
-  }
+.swipe-hint {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  text-align: center;
+  flex-shrink: 0;
 }

@@ -1,4 +1,5 @@
 <app-header
+  routeBackName="/juegos"
   tituloVolver="¿Salir del ta-te-ti?"
   [mensajeVolver]="mensajeVolver()"
   textoConfirmarVolver="Salir"
@@ -24,10 +25,12 @@
     } @else {
       @switch (resultadoTipo()) {
         @case ('gana') {
-          @if (esClienteRegistrado()) {
+          @if (ganoDescuento()) {
             🎉 ¡Ganaste {{ porcentaje }}% de descuento en tu cuenta!
-          } @else {
+          } @else if (!esClienteRegistrado()) {
             🎉 ¡Ganaste! Registrate para poder cobrar el descuento la próxima vez.
+          } @else {
+            🎉 ¡Ganaste! Ya usaste tu oportunidad de descuento: esta partida fue por diversión.
           }
         }
         @case ('pierde') {

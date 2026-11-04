@@ -38,7 +38,8 @@
 .home-button {
   flex: 1 1 0;
   min-height: 38px;
-  max-height: 110px;
+  // con pocos botones crecen hasta llenar el hueco
+  max-height: 160px;
   width: 90%;
   margin: 0 auto;
   container-type: size;
@@ -86,7 +87,7 @@
 .acceso__titulo,
 .acceso__subtitulo {
   margin: 0;
-  font-size: min(14px, 1.9vh);
+  font-size: min(18px, 1.9vh);
   font-weight: 600;
   color: var(--ion-text-color);
 }
@@ -293,4 +294,37 @@ ion-modal.home-modal {
   color: var(--ion-text-color);
   line-height: 1.6;
   margin: 0;
+}
+
+// el encabezado flota para que el logo suba a la altura del botón de salir
+ion-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+ion-header ion-buttons {
+  pointer-events: auto;
+}
+
+ion-header ion-toolbar {
+  --background: transparent;
+  --border-width: 0;
+}
+
+.home-content {
+  --padding-top: 0;
+}
+
+// el logo arranca a la mitad del botón de salir y los botones se centran abajo
+.home-botones .logo-container.logo-fijo {
+  margin-top: calc(38px + var(--ion-safe-area-top, 0px));
+  margin-bottom: auto;
+}
+
+.home-botones > :last-child {
+  margin-bottom: auto;
 }

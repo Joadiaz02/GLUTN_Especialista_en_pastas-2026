@@ -6,12 +6,9 @@ import { Haptics } from '@capacitor/haptics';
 })
 export class Vibracion {
 
+  // la vibración es solo para errores
   async error(durationMs = 300): Promise<void> {
     await this.vibrar(durationMs);
-
-    this.reproducir(
-      'assets/sounds/spongebob-fail.mp3'
-    );
   }
 
   async errorValidacion(
@@ -20,14 +17,13 @@ export class Vibracion {
     await this.vibrar(durationMs);
   }
 
-  async confirmacion(
-    durationMs = 100
-  ): Promise<void> {
-    await this.vibrar(durationMs);
-
+  // push recibida con la app abierta
+  async aviso(): Promise<void> {
     this.reproducir(
-      'assets/sounds/among-us.mp3'
+      'assets/sounds/aviso.wav'
     );
+
+    await this.vibrar(400);
   }
 
 

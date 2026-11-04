@@ -1,0 +1,91 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-confirm-volver
+        titulo="¿Salir del registro?"
+        mensaje="Si salís ahora, tu cuenta no se va a crear."
+        textoConfirmar="Salir"
+        (confirmadoVolver)="cancelar()"
+      />
+    </ion-buttons>
+
+    <ion-title>{{ tituloPaso() }}</ion-title>
+  </ion-toolbar>
+
+  <app-progress-bar [currentStep]="pasoActual()"></app-progress-bar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (datos(); as datos) {
+  <div class="social">
+    @switch (pasoActual()) { @case (1) {
+    <p class="social__intro">
+      Tomamos tus datos de {{ nombreRed() }}. Faltan algunos para terminar.
+    </p>
+
+    <app-personal-step [control]="personal" />
+    } @case (2) {
+    <app-credentials-step [control]="credenciales" />
+    } @default { @if (!cambiarFoto()) {
+    <div class="social__foto">
+      <h1 class="step__title">Tu foto</h1>
+      <p class="step__subtitle">Así el mozo y el metre te reconocen apenas llegás.</p>
+
+      <div class="social__circulo">
+        <img [src]="datos.avatar" alt="Foto de perfil" class="social__imagen" />
+        <span class="social__badge" [class.social__badge--discord]="datos.red === 'discord'">
+          <img
+            [src]="'assets/icons/' + datos.red + '.svg'"
+            alt=""
+            class="social__badge-logo"
+          />
+        </span>
+      </div>
+      <p class="social__chico">
+        Foto de {{ nombreRed() }} ·
+        <button type="button" class="social__link" (click)="cambiarFoto.set(true)">
+          Usar otra foto
+        </button>
+      </p>
+    </div>
+    } @else {
+    <app-profile-step [control]="perfil" />
+    } } }
+  </div>
+  }
+</ion-content>
+
+@if (guardando()) {
+<div class="page-loading">
+  <app-spinner-logo />
+  <span>Creando cuenta...</span>
+</div>
+}
+
+<ion-footer class="ion-no-border">
+  <div class="footer-actions">
+    @if (pasoActual() < 3) {
+    <ion-button expand="block" shape="round" (click)="siguientePaso()">
+      Continuar
+    </ion-button>
+    } @else {
+    <ion-button
+      expand="block"
+      shape="round"
+      (click)="finalizar()"
+      [disabled]="guardando()"
+    >
+      Finalizar registro
+    </ion-button>
+    } @if (pasoActual() > 1) {
+    <ion-button
+      expand="block"
+      shape="round"
+      fill="outline"
+      (click)="pasoAnterior()"
+    >
+      Volver
+    </ion-button>
+    }
+  </div>
+</ion-footer>

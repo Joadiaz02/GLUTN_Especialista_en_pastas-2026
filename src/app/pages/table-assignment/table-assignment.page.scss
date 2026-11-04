@@ -1,3 +1,14 @@
+/* ==========================================================================
+   Asignar mesa
+   Fijo arriba: cliente + título · Scrollea: solo la grilla · Fijo abajo: botón
+   ========================================================================== */
+
+:host {
+  --asig-green: #657a4d;
+  --asig-max-width: 720px;
+}
+
+/* ===== Header / footer de Ionic ===== */
 
 ion-header {
   position: relative;
@@ -5,38 +16,59 @@ ion-header {
 }
 
 ion-toolbar {
-  --background: #657a4d;
+  --background: var(--asig-green);
   --color: #fff;
   --border-width: 0;
   --min-height: 56px;
 }
 
+ion-footer {
+  background: var(--asig-green);
+}
+
+.footer-actions {
+  max-width: var(--asig-max-width);
+  margin: 0 auto;
+  padding: 8px 20px max(12px, env(safe-area-inset-bottom));
+}
+
+/* ===== Contenido ===== */
+
 ion-content {
-  --background: #657a4d;
+  --background: var(--asig-green);
+  --padding-start: 20px;
+  --padding-end: 20px;
   --padding-top: 8px;
-  --padding-bottom: 20px;
+  --padding-bottom: 8px;
 }
 
 .assignment {
-  min-height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: clamp(10px, 1.8vh, 16px);
+  height: 100%;
+  max-width: var(--asig-max-width);
+  margin: 0 auto;
 }
 
+/* ===== Zona fija: cliente ===== */
+
 .assignment-client {
+  --avatar: clamp(44px, 7.5vh, 64px);
+
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
-  gap: 14px;
-  padding: 16px;
+  gap: 12px;
+  padding: clamp(10px, 1.8vh, 16px);
   border-radius: 20px;
   background: #a8b68a;
 
   img,
   .assignment-client__avatar {
-    flex: 0 0 64px;
-    width: 64px;
-    height: 64px;
+    flex: 0 0 var(--avatar);
+    width: var(--avatar);
+    height: var(--avatar);
     border-radius: 16px;
     object-fit: cover;
   }
@@ -45,7 +77,7 @@ ion-content {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #657a4d;
+    background: var(--asig-green);
     color: #fff;
     font-size: 22px;
     font-weight: 800;
@@ -53,16 +85,21 @@ ion-content {
 
   h1 {
     margin: 0;
-    font-size: 19px;
-    font-weight: 800;
     color: #fff;
+    font-size: clamp(16px, 2.5vh, 19px);
+    font-weight: 800;
+    overflow-wrap: anywhere;
   }
 
   p {
     margin: 4px 0 0;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgb(255 255 255 / 90%);
+    font-size: clamp(12px, 1.9vh, 14px);
   }
+}
+
+.assignment-client__info {
+  min-width: 0;
 }
 
 .assignment-tags {
@@ -76,35 +113,68 @@ ion-content {
     border-radius: 999px;
     background: #e76f45;
     color: #fff;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
   }
 }
 
+/* ===== Zona fija: título ===== */
+
 .assignment-title {
+  flex: 0 0 auto;
+
   h2 {
     margin: 0;
-    font-size: 20px;
-    font-weight: 800;
     color: #fff;
+    font-size: clamp(18px, 2.7vh, 20px);
+    font-weight: 800;
   }
 
   p {
     margin: 6px 0 0;
     color: #d5e0c9;
-    font-size: 13px;
+    font-size: clamp(12px, 1.8vh, 13px);
     line-height: 1.4;
+  }
+}
+
+/* ===== Zona que scrollea: grilla de mesas =====
+   Cada fila mide la mitad del alto visible, así siempre se ven 2 filas
+   completas y el scroll "salta" fila por fila: ninguna tarjeta queda
+   cortada ni arriba ni abajo, en cualquier dispositivo. */
+
+.tables-scroller {
+  --tables-gap: clamp(8px, 1.4vh, 12px);
+
+  flex: 1 1 0;
+  min-height: 0;
+  container-type: size;            // habilita las unidades cqh de abajo
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
 .tables {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  padding-bottom: 20px;
+  gap: var(--tables-gap);
+  grid-auto-rows: 190px;           // respaldo para WebViews sin unidades cqh
+  grid-auto-rows: max(150px, calc((100cqh - var(--tables-gap)) / 2));
 }
 
+/* ===== Tarjeta de mesa ===== */
+
 .table-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   min-width: 0;
   overflow: hidden;
   padding: 0;
@@ -114,14 +184,18 @@ ion-content {
   color: #fff;
   text-align: left;
   font: inherit;
+  scroll-snap-align: start;
   transition:
     transform 0.15s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
+    border-color 0.2s ease;
 
-.table-card:active:not(:disabled) {
-  transform: scale(0.98);
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
 
 .table-card--available {
@@ -138,210 +212,141 @@ ion-content {
   opacity: 0.75;
 }
 
-.table-card:disabled {
-  cursor: not-allowed;
-}
-
+// Borde blanco: se ve sobre cualquier color y no se corta en los bordes del scroll
 .table-card--selected {
-  border-color: #e76f45;
-  box-shadow:
-    0 0 0 2px
-      rgba(231, 111, 69, 0.25);
+  border-color: #fff;
 }
 
+// La foto absorbe el alto sobrante de la fila; la info mantiene su tamaño
 .table-card__media {
   position: relative;
-  aspect-ratio: 4 / 3;
-  background: rgba(0, 0, 0, 0.15);
+  flex: 1 1 0;
+  min-height: 0;
+  background: rgb(0 0 0 / 15%);
 
   img {
+    position: absolute;
+    inset: 0;
+    display: block;
     width: 100%;
     height: 100%;
-    display: block;
     object-fit: cover;
   }
 }
 
-.table-card__number {
+.table-card__number,
+.table-card__status {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 6px;
   padding: 4px 8px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.5);
-  font-size: 12px;
+  color: #fff;
   font-weight: 800;
+}
+
+.table-card__number {
+  left: 6px;
+  background: rgb(0 0 0 / 50%);
+  font-size: 11px;
 }
 
 .table-card__status {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.45);
-  color: #fff;
+  right: 6px;
+  background: rgb(0 0 0 / 45%);
   font-size: 10px;
-  font-weight: 800;
 }
 
-.table-card--unavailable
-  .table-card__status {
-  background: rgba(0, 0, 0, 0.12);
+.table-card--unavailable .table-card__status {
+  background: rgb(0 0 0 / 12%);
   color: #34402a;
 }
 
 .table-card__info {
-  padding: 12px;
+  flex: 0 0 auto;
+  padding: clamp(8px, 1.4vh, 12px) 10px;
 
   h2 {
     margin: 0;
-    font-size: 17px;
+    font-size: clamp(15px, 2.1vh, 17px);
   }
 
   p,
   span {
     display: block;
-    margin: 4px 0 0;
+    margin: 3px 0 0;
+    color: rgb(255 255 255 / 88%);
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.88);
+    overflow-wrap: anywhere;
   }
 }
 
-.table-card--unavailable
-  .table-card__info
+.table-card--unavailable .table-card__info {
+  h2,
   p,
-.table-card--unavailable
-  .table-card__info
-  span,
-.table-card--unavailable
-  .table-card__info
-  h2 {
-  color: #34402a;
+  span {
+    color: #34402a;
+  }
 }
 
+/* ===== Sin mesas ===== */
+
 .assignment-empty {
-  flex: 1;
-  min-height: 180px;
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
+  min-height: 180px;
   padding: 20px;
   border-radius: 18px;
-  background: rgba(0, 0, 0, 0.12);
-  text-align: center;
+  background: rgb(0 0 0 / 12%);
   color: #d5e0c9;
+  text-align: center;
 
   p {
-    margin: 0;
     max-width: 320px;
+    margin: 0;
     line-height: 1.5;
   }
 }
+
+/* ===== Overlay de carga ===== */
 
 .assignment-loading {
   position: fixed;
   inset: 0;
   z-index: 100000;
-
-  width: 100vw;
-  height: 100dvh;
-  box-sizing: border-box;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 14px;
-
-  padding:
-    max(24px, env(safe-area-inset-top))
-    24px
-    max(24px, env(safe-area-inset-bottom));
-
-  background: rgba(31, 45, 24, 0.55);
-
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-
+  width: 100vw;
+  height: 100dvh;
+  padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  background: rgb(31 45 24 / 55%);
   color: #fff;
   font-size: 14px;
   font-weight: 700;
 }
 
-.footer-actions {
-  padding:
-    10px
-    16px
-    max(10px, env(safe-area-inset-bottom));
-}
+/* ===== Responsive ===== */
 
-@media (max-width: 430px) {
-  .tables {
-    grid-template-columns: 1fr 1fr;
-    gap: 9px;
-  }
-
-  .table-card__info {
-    padding: 9px;
-
-    h2 {
-      font-size: 15px;
-    }
-
-    p,
-    span {
-      font-size: 11px;
-    }
-  }
-
-  .table-card__number {
-    top: 6px;
-    left: 6px;
-    font-size: 10px;
-  }
-
-  .table-card__status {
-    right: 6px;
-    top: 6px;
-    font-size: 9px;
-  }
-}
-
-@media (max-height: 720px) {
-  .assignment {
-    gap: 12px;
-  }
-
-  .assignment-client {
-    padding: 11px;
-
-    img,
-    .assignment-client__avatar {
-      width: 48px;
-      height: 48px;
-      flex-basis: 48px;
-    }
-
-    h1 {
-      font-size: 16px;
-    }
-
-    p {
-      font-size: 12px;
-    }
-  }
-
-  .assignment-title h2 {
-    font-size: 18px;
-  }
-
+// Pantallas bajas: se oculta la descripción para darle más lugar a las mesas
+@media (max-height: 680px) {
   .assignment-title p {
-    font-size: 12px;
+    display: none;
   }
 
   .assignment-loading {
     gap: 10px;
     font-size: 13px;
+  }
+}
+
+// Pantallas anchas: 3 columnas
+@media (min-width: 560px) {
+  .tables {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

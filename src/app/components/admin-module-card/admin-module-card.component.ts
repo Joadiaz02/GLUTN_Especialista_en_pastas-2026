@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, input, Input, Output } from '@angular/core';
 import { AdminModule } from '@app/models/admin.model';
 
 import { IonCard, IonCardContent, IonIcon } from '@ionic/angular';
@@ -15,6 +15,8 @@ import { iceCreamOutline, chevronForwardOutline } from 'ionicons/icons';
 export class AdminModuleCardComponent {
   @Input() module!: AdminModule;
   @Input() icon!: string;
+
+  @Input() agrandar: boolean = false;
 
   @Output() selected = new EventEmitter<AdminModule>();
 

@@ -12,6 +12,9 @@ export class Juegos {
 
   private _descuentoJuego = signal<number | null>(null);
 
+  // la última partida terminada le dio el descuento
+  readonly ganoDescuento = signal(false);
+
   // el primer intento se está jugando
   private _intentoEnCurso = false;
 
@@ -28,6 +31,7 @@ export class Juegos {
       const idUsuario = this.idUsuario();
       untracked(() => {
         this._descuentoJuego.set(null);
+        this.ganoDescuento.set(false);
         this._intentoEnCurso = false;
 
         if (idUsuario) {
@@ -43,15 +47,16 @@ export class Juegos {
 
     if (!idUsuario || this._intentoEnCurso) return;
 
+    // espera que se guarde lo jugado para no leer un resultado viejo
+    await this._cola;
+
     const { data, error } = await this._db.client.rpc('juego_descuento_actual');
 
     // descarta la respuesta si cambió algo
     if (error || this.idUsuario() !== idUsuario || this._intentoEnCurso) return;
 
-    // un null de la base no borra lo jugado
-    if (data !== null) {
-      this._descuentoJuego.set(data as number);
-    }
+    // manda la base: null es una estadía nueva sin jugar
+    this._descuentoJuego.set(data as number | null);
   }
 
   descuentoActual(): number | null {
@@ -95,9 +100,14 @@ export class Juegos {
     // sin usuario no hay intento
     if (this.idUsuario() === null) return;
 
-    if (!this.puedeJugarPorPrimeraVez()) return;
+    // partida por diversión: ganar no da descuento
+    if (!this.puedeJugarPorPrimeraVez()) {
+      this.ganoDescuento.set(false);
+      return;
+    }
 
     this._intentoEnCurso = false;
+    this.ganoDescuento.set(gano && this.esClienteRegistrado());
     this._descuentoJuego.set(gano && this.esClienteRegistrado() ? porcentaje : 0);
 
     this.encolar(() => this._db.client.rpc('juego_terminar', { p_gano: gano }));

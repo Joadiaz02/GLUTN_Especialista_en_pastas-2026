@@ -62,11 +62,11 @@ export class BarraPedidoComponent {
       this.carrito.tiempoTotalEstimado();
 
     if (minutos <= 0) {
-      return '0 min';
+      return '0 ';
     }
 
     if (minutos < 60) {
-      return `${minutos} min`;
+      return `${minutos} `;
     }
 
     const horas =Math.floor(minutos / 60);

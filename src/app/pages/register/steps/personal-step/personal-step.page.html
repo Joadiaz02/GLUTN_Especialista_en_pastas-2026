@@ -1,4 +1,4 @@
-<div [formGroup]="formGroup">
+<div [formGroup]="formGroup" appVibrarErrores>
   <h1 class="step__title">Identificate</h1>
   <p class="step__subtitle">
     Escaneá tu DNI o completá tus datos manualmente para empezar.
@@ -78,8 +78,16 @@
     </div>
   </div>
 
-  <button (click)="scanDNI()" class="button-scan">
-    <ion-icon src="assets/icons/scan.svg"></ion-icon>
-    Escanear DNI
+  <button type="button" class="scan-card" (click)="scanDNI()">
+    <span class="scan-card__icon-wrapper">
+      <ion-icon class="scan-card__icon" src="assets/icons/scan.svg"></ion-icon>
+    </span>
+
+    <span class="scan-card__content">
+      <span class="scan-card__title">Escanear DNI</span>
+      <span class="scan-card__subtitle"
+        >Completá tus datos automáticamente</span
+      >
+    </span>
   </button>
 </div>

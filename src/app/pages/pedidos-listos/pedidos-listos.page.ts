@@ -9,9 +9,9 @@ import {
   viewChild,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { IonContent, ToastController } from '@ionic/angular';
+import { IonContent, ToastController, IonButton } from '@ionic/angular';
 import { Router } from '@angular/router';
-
+import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.directive';
 import {
   Auth,
   EstadoParte,
@@ -22,6 +22,7 @@ import {
 } from '@app/services';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
+import { Pedido } from '@app/services/pedido/pedido';
 
 const NOMBRE_SECTOR: Record<SectorPedido, string> = {
   cocina: 'Cocina',
@@ -42,7 +43,7 @@ export type VistaMozo = 'listos' | 'en_preparacion';
   standalone: true,
   templateUrl: './pedidos-listos.page.html',
   styleUrls: ['../cocina/cocina.page.scss', './pedidos-listos.page.scss'],
-  imports: [HeaderComponent, DatePipe, IonContent, SpinnerLogoComponent],
+  imports: [HeaderComponent, DatePipe, IonContent, SpinnerLogoComponent, IonButton, ListaFilasDirective],
 })
 export class PedidosListosPage implements OnDestroy {
   pedidosListos = inject(PedidosListos);
@@ -51,6 +52,10 @@ export class PedidosListosPage implements OnDestroy {
   private _vibracion = inject(Vibracion);
   private _toastController = inject(ToastController);
   private _router = inject(Router);
+
+//punto19
+  private _pedido = inject(Pedido);
+  procesando = signal<string | null>(null);
 
   private _viewport = viewChild<ElementRef<HTMLElement>>('viewport');
 
@@ -176,5 +181,33 @@ export class PedidosListosPage implements OnDestroy {
 
       await toast.present();
     }
+  }
+
+  //entrega del pedido al usuario
+  async entregar(pedido: PedidoDelMozo): Promise<void> {
+  this.procesando.set(pedido.idPedido);
+
+    try {
+      await this._pedido.actualizarEstado(pedido.idPedido, pedido.idUsuario, 'entregado');
+    } catch (error) {
+      void this._vibracion.error();
+      await this.avisar(
+        error instanceof Error ? error.message : 'No pudimos entregar el pedido.',
+        'danger'
+      );
+    } finally {
+      this.procesando.set(null);
+    }
+  }
+
+  private async avisar(mensaje: string, color: 'success' | 'danger'): Promise<void> {
+    const toast = await this._toastController.create({
+      message: mensaje,
+      duration: 3000,
+      position: 'top',
+      color,
+    });
+
+    await toast.present();
   }
 }

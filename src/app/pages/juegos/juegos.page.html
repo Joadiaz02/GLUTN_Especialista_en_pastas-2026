@@ -1,4 +1,5 @@
 <app-header
+  routeBackName="/home"
   tituloVolver="¿Salir de Juegos?"
   mensajeVolver="Vas a volver al menú principal."
   textoConfirmarVolver="Salir"
@@ -38,7 +39,7 @@
           <a class="juego-card__enlace" [routerLink]="juego.ruta" [state]="{ origenValido: true }">
             <span class="juego-card__nombre">{{ juego.nombre }}</span>
             <span class="juego-card__porcentaje">
-              @if (puedeJugarPorPrimeraVez()) {
+              @if (esClienteRegistrado() && puedeJugarPorPrimeraVez()) {
                 {{ juego.porcentaje }}% de descuento
               } @else {
                 Jugá por diversión

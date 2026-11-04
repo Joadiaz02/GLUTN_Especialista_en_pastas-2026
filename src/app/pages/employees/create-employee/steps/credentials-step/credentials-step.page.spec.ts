@@ -14,6 +14,7 @@ describe('CredentialsStepPage', () => {
       new FormGroup({
         email: new FormControl(''),
         password: new FormControl(''),
+        confirmPassword: new FormControl(''),
       })
     );
     component = fixture.componentInstance;

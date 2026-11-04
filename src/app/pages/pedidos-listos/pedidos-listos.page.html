@@ -1,15 +1,8 @@
-<app-header
-  tituloVolver="¿Salir de Pedidos?"
-  mensajeVolver="Vas a volver al panel de administración."
-  textoConfirmarVolver="Salir"
-  colorConfirmarVolver="primary"
-  (volver)="volver()"
-  (cerrarSesion)="cerrarSesion()"
-></app-header>
+<app-header routeBackName="/admin" />
 
 <ion-content class="cocina-content" [scrollY]="false">
   <div class="cocina-wrapper">
-    <div class="logo-container logo-fijo">
+    <div class="logo-container">
       <img
         src="assets/images/LOGO-GLUTN.png"
         alt="GLUTN - Especialista en Pastas"
@@ -52,11 +45,7 @@
     } @else if (pedidos().length === 0) {
       <div class="cocina-vacio">
         <p>
-          {{
-            vista() === 'listos'
-              ? 'No hay pedidos listos para llevar a las mesas.'
-              : 'No hay pedidos en preparación.'
-          }}
+          {{ vista() === 'listos' ? 'No hay pedidos listos para llevar a las mesas.' : 'No hay pedidos en preparación.' }}
         </p>
       </div>
     } @else {
@@ -79,16 +68,20 @@
                   class="pedido__estado"
                   [class.pedido__estado--preparando]="pedido.completo"
                 >
-                  {{ pedido.completo ? 'Completo' : 'En preparación' }}
+                  {{ pedido.entregado ? 'Entregado' : pedido.completo ? 'Completo' : 'En preparación' }}
                 </span>
               </div>
 
               <!-- cada parte del pedido con su estado -->
-              <div class="pedido__items">
+              <div class="pedido__items-wrap">
+              <div class="pedido__items" appListaFilas>
                 @for (parte of pedido.partes; track parte.sector) {
                   <div class="parte">
                     <span class="parte__sector">{{ nombreSector(parte.sector) }}</span>
-                    <span class="parte__estado" [class]="'parte__estado--' + parte.estado">
+                    <span
+                      class="parte__estado"
+                      [class]="'parte__estado--' + parte.estado"
+                    >
                       {{ nombreEstado(parte.estado) }}
                     </span>
                   </div>
@@ -101,10 +94,23 @@
                   }
                 }
               </div>
+              </div>
+              @if (pedido.entregado) {
+              <p class="pedido__aviso">Entregado. Esperando que el cliente confirme la recepción.</p>
+            } @else if (pedido.completo) {
+              <p class="pedido__aviso">Cocina y bar terminaron: ya se puede llevar a la mesa.</p>
 
-              @if (pedido.completo) {
-                <p class="pedido__aviso">Cocina y bar terminaron: ya se puede llevar a la mesa.</p>
-              }
+              <div class="pedido__acciones">
+                <ion-button
+                  class="pedido__boton"
+                  shape="round"
+                  [disabled]="procesando() !== null"
+                  (click)="entregar(pedido)"
+                >
+                  Entregar pedido
+                </ion-button>
+              </div>
+            }
             </div>
           </article>
         }

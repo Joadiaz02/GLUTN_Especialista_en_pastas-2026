@@ -1,4 +1,5 @@
 <app-header
+  routeBackName="/juegos"
   tituloVolver="¿Salir de la sopa de letras?"
   [mensajeVolver]="mensajeVolver()"
   textoConfirmarVolver="Salir"
@@ -22,6 +23,17 @@
 
     @if (!sopaLetras.iniciada()) {
       <div class="sopa-inicio">
+        <!-- grilla tapada: muestra el juego antes de empezar -->
+        <div
+          class="sopa-grilla sopa-grilla--tapada"
+          aria-hidden="true"
+          [style.grid-template-columns]="'repeat(' + sopaLetras.tamanoGrilla + ', 1fr)'"
+        >
+          @for (celda of celdasTapadas; track $index) {
+            <span class="sopa-celda">?</span>
+          }
+        </div>
+
         <p class="sopa-inicio__texto">
           Encontrá {{ palabrasPorPartida }} palabras en {{ duracionSegundos }} segundos.
         </p>
@@ -79,10 +91,12 @@
         <p class="sopa-resultado" [class.sopa-resultado--pierde]="sopaLetras.perdioPorTiempo()">
           @if (sopaLetras.perdioPorTiempo()) {
             ⏱ ¡Se acabó el tiempo! Podés seguir jugando por diversión.
-          } @else if (esClienteRegistrado()) {
+          } @else if (ganoDescuento()) {
             🎉 ¡Encontraste todas las palabras! Ganaste {{ porcentaje }}% de descuento en tu cuenta.
-          } @else {
+          } @else if (!esClienteRegistrado()) {
             🎉 ¡Encontraste todas las palabras! Registrate para poder cobrar el descuento la próxima vez.
+          } @else {
+            🎉 ¡Encontraste todas las palabras! Ya usaste tu oportunidad de descuento: esta partida fue por diversión.
           }
         </p>
 

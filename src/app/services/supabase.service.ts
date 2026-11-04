@@ -13,7 +13,13 @@ export class SupabaseService {
   constructor() {
     this.supabase = createClient(
       environment.supabaseUrl,
-      environment.supabaseKey
+      environment.supabaseKey,
+      {
+        auth: {
+          // el login con redes vuelve con un ?code= que la app canjea por la sesión
+          flowType: 'pkce',
+        },
+      }
     );
 
     this.statelessSupabase = createClient(

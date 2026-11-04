@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -52,7 +52,7 @@ import { HeaderComponent } from '@app/components/ui';
     HeaderComponent
 ],
 })
-export class DrinksPage implements OnInit {
+export class DrinksPage {
   textoBusqueda = signal('');
 
   private _drinkService = inject(Drink);
@@ -87,8 +87,9 @@ export class DrinksPage implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    // No hace falta cargar nada acá: toSignal ya se suscribe solo
+  
+  ionViewWillEnter(): void {
+    void this._drinkService.refresh();
   }
 
   onBuscar(texto: string): void {
@@ -141,7 +142,6 @@ export class DrinksPage implements OnInit {
 
     try {
       await this._drinkService.update(item.id_carta, { sugerencia: activar });
-      await this._vibracion.confirmacion();
       await this.mostrarAviso(
         activar ? 'Bebida destacada correctamente.' : 'Bebida retirada de destacadas.'
       );
@@ -163,7 +163,6 @@ export class DrinksPage implements OnInit {
 
     try {
       await this._drinkService.update(item.id_carta, { baja_logica: true });
-      await this._vibracion.confirmacion();
       await this.mostrarAviso('Bebida dada de baja correctamente.');
     } catch (error) {
       await this.mostrarError();
@@ -183,7 +182,6 @@ export class DrinksPage implements OnInit {
 
     try {
       await this._drinkService.update(item.id_carta, { baja_logica: false });
-      await this._vibracion.confirmacion();
       await this.mostrarAviso('Bebida reactivada correctamente.');
     } catch (error) {
       await this.mostrarError();

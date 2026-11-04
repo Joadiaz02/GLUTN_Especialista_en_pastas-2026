@@ -20,6 +20,9 @@ import { Auth } from '../../services/auth/auth';
 import {PushNotificationService} from '../../services/push-notification.service';
 import {SupabaseService} from '../../services/supabase.service';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { IngresoSocial } from '@app/services/auth/ingreso-social';
+import type { RedSocial } from '@app/services/auth/auth';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector:'app-login',
@@ -47,6 +50,7 @@ export class LoginPage {
   private readonly pushNotificationService = inject(PushNotificationService);
   private readonly supabaseService = inject(SupabaseService);
   private readonly cdr = inject(ChangeDetectorRef);
+  protected readonly ingresoSocial = inject(IngresoSocial);
   email = '';
 
   contrasena = '';
@@ -85,7 +89,25 @@ const navigationState =
       window.location.href
     );
   }
+
+  // web: la red volvió a /login?code=... (o ?error=...)
+  const parametros = new URLSearchParams(window.location.search);
+
+  if (
+    !Capacitor.isNativePlatform() &&
+    (parametros.has('code') || parametros.has('error'))
+  ) {
+    void this.ingresoSocial.procesarRetorno(window.location.href);
+  }
 }
+
+  async ingresarConRed(red: RedSocial): Promise<void> {
+    if (this.cargando()) {
+      return;
+    }
+
+    await this.ingresoSocial.ingresar(red);
+  }
 
   
   get formularioValido(): boolean {
@@ -166,18 +188,14 @@ async iniciarSesion(): Promise<void> {
 
     // 2. NOTIFICACIONES PUSH
     // Un error de Push no debe presentarse como un error de contraseña.
-    try {
-      await this.pushNotificationService.inicializar();
-
-      if (this.authService.esPersonal(usuario)) {
-        await this.probarPush(usuario.id);
+      try {
+        await this.pushNotificationService.inicializar();
+      } catch (error) {
+        console.error(
+          'La autenticación fue correcta, pero falló la inicialización de Push:',
+          error
+        );
       }
-    } catch (error) {
-      console.error(
-        'La autenticación fue correcta, pero falló la inicialización de Push:',
-        error
-      );
-    }
 
     // 3. REDIRECCIÓN SEGÚN EL PERFIL
     if (this.authService.esPersonal(usuario)) {

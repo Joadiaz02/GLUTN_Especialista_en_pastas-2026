@@ -1,0 +1,96 @@
+@if (visible()) {
+<button
+  type="button"
+  class="mi-cuenta__boton"
+  aria-label="Mi cuenta"
+  (click)="abrir()"
+>
+  @if (avatar()) {
+  <img [src]="avatar()" alt="" class="mi-cuenta__avatar" />
+  } @else {
+  <span class="mi-cuenta__avatar mi-cuenta__avatar--iniciales">{{ iniciales() }}</span>
+  }
+</button>
+
+<!-- mismo desplegable que "Quiénes somos" del home -->
+<ion-modal class="home-modal" [isOpen]="abierto()" (didDismiss)="cerrar()">
+  <ng-template>
+    <div class="home-modal__contenido mi-cuenta">
+      <h2 class="mi-cuenta__titulo">Mi cuenta</h2>
+
+      <div class="mi-cuenta__yo">
+        <div class="mi-cuenta__foto-marco">
+          @if (avatar()) {
+          <img [src]="avatar()" alt="" class="mi-cuenta__foto" />
+          } @else {
+          <span class="mi-cuenta__foto mi-cuenta__avatar--iniciales">{{ iniciales() }}</span>
+          }
+
+          <button
+            type="button"
+            class="mi-cuenta__camara"
+            aria-label="Sacar una foto nueva"
+            [disabled]="subiendoFoto()"
+            (click)="cambiarFoto()"
+          >
+            @if (subiendoFoto()) {
+            <ion-spinner name="crescent" />
+            } @else {
+            <ion-icon src="assets/icons/camera.svg" />
+            }
+          </button>
+        </div>
+        <strong class="mi-cuenta__nombre">{{ nombreCompleto() }}</strong>
+        <span class="mi-cuenta__perfil">{{ perfil() }}</span>
+      </div>
+
+      <div class="mi-cuenta__fila">
+        <div class="mi-cuenta__correo">
+          <span class="mi-cuenta__logo mi-cuenta__logo--correo">
+            <ion-icon src="assets/icons/mail.svg" aria-label="Correo" />
+          </span>
+          <small>{{ email() }}</small>
+        </div>
+        <span class="chip chip--ok">✔</span>
+      </div>
+
+      @for (fila of redes; track fila.red) {
+      <div class="mi-cuenta__fila">
+        <div class="mi-cuenta__red">
+          <span
+            class="mi-cuenta__logo"
+            [class.mi-cuenta__logo--discord]="fila.red === 'discord'"
+          >
+            <img [src]="'assets/icons/' + fila.red + '.svg'" [alt]="fila.nombre" />
+          </span>
+        </div>
+
+        @if (estaVinculada(fila.red)) {
+        <span class="chip chip--ok">✔ Vinculado</span>
+        } @else {
+        <button
+          type="button"
+          class="chip"
+          [class.chip--google]="fila.red === 'google'"
+          [class.chip--discord]="fila.red === 'discord'"
+          [disabled]="cargandoRedes() || ingresoSocial.procesando()"
+          (click)="vincular(fila.red)"
+        >
+          Vincular
+        </button>
+        }
+      </div>
+      }
+
+      <ion-button
+        class="home-modal__cerrar"
+        expand="block"
+        shape="round"
+        (click)="cerrar()"
+      >
+        Cerrar
+      </ion-button>
+    </div>
+  </ng-template>
+</ion-modal>
+}

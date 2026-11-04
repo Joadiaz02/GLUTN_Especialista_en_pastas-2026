@@ -1,4 +1,15 @@
+// La tarjeta ocupa todo el alto de su fila: así todas miden lo mismo y el
+// scroll de la página puede frenar siempre al ras de cada una.
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
 .module-card {
+  flex: 1 1 auto;
+  min-height: 0;
   margin: 0;
   border-radius: 12px;
   background: #A8B68A;
@@ -6,14 +17,25 @@
   transition: transform 0.2s ease;
 }
 
+// El botón nativo de ion-card pasa a llenar la tarjeta completa.
+.module-card::part(native) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .module-card:active {
   transform: scale(0.97);
 }
 
+// Ícono arriba y texto abajo: si la fila crece, el espacio extra queda
+// repartido entre ambos y la tarjeta nunca se ve vacía ni apretada.
 .module-card ion-card-content {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
-  gap: 24px;
+  justify-content: space-between;
+  gap: 12px;
   padding: 16px;
 }
 
@@ -42,7 +64,7 @@
 }
 
 .module-info {
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .module-info h2 {
@@ -50,13 +72,13 @@
 
   font-size: 18px;
   font-weight: 700;
+  line-height: 1.25;
 
   color: #3f452f;
 }
 
 .module-info p {
-  margin: 0;
-  margin-top: 4px;
+  margin: 4px 0 0;
 
   font-size: 16px;
   line-height: 24px;
@@ -67,4 +89,71 @@
 .arrow-icon {
   font-size: 22px;
   color: #657a4d;
+}
+
+// Diseño compacto en una sola línea (ícono | texto | flecha): se usa en
+// celulares en horizontal y cuando la página detecta que, en vertical, las
+// tarjetas quedarían con demasiado aire adentro.
+@mixin compacto {
+  .module-card ion-card-content {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .top {
+    display: contents;
+  }
+
+  .module-icon {
+    order: 0;
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+  }
+
+  .module-icon ion-icon {
+    font-size: 24px;
+  }
+
+  .module-info {
+    order: 1;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .arrow-icon {
+    order: 2;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-height: 480px) {
+  @include compacto;
+}
+
+:host-context(.modules-container--compact) {
+  @include compacto;
+}
+
+.module-icon-wrapper--large {
+  width: 64px;
+  height: 64px;
+}
+
+.module-icon--large {
+  font-size: 32px !important;
+}
+
+.title--large {
+  font-size: 24px !important;
+}
+
+.description--large {
+  font-size: 18px !important;
+}
+
+.card-content--large {
+  padding: 24px !important;
 }

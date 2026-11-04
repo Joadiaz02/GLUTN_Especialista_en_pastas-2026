@@ -9,7 +9,13 @@
     <ion-title>Crear Bebida</ion-title>
   </ion-toolbar>
 </ion-header> -->
-<app-header title="Crear Bebida" [mostrarCerrarSesion]="true" />
+<!-- <app-header title="Crear Bebida" [mostrarCerrarSesion]="true" /> -->
+
+<app-header
+  title="Crear Bebida"
+  [mostrarCerrarSesion]="true"
+  routeBackName="/admin/drinks"
+/>
 
 <ion-content [fullscreen]="true">
   <div class="upload-container">
@@ -66,9 +72,11 @@
           maxlength="3"
           fill="outline"
           class="field__input"
-          placeholder="Elaboración"
+          placeholder="0"
           formControlName="preparation"
-        />
+        >
+          <span slot="end" class="field__suffix">min</span>
+        </ion-input>
 
         @if ( getFormControl('preparation')?.invalid && (
         getFormControl('preparation')?.touched ||
@@ -83,18 +91,25 @@
 
         <ion-input
           type="text"
-          inputmode="numeric"
-          maxlength="6"
+          inputmode="decimal"
+          maxlength="9"
           fill="outline"
           class="field__input"
-          placeholder="Precio"
+          placeholder="0.00"
           formControlName="price"
-        />
+          appPrecioInput
+        >
+          <span slot="start" class="field__prefix">$</span>
+        </ion-input>
 
         @if ( getFormControl('price')?.invalid && (
         getFormControl('price')?.touched || getFormControl('price')?.dirty ) ) {
         @if ( getFormControl('price')?.hasError('required') ) {
         <p class="field__error">El campo es obligatorio.</p>
+        } @else if ( getFormControl('price')?.hasError('pattern') ) {
+        <p class="field__error">Ingresá un precio válido (por ejemplo, 8500 o 8500.50).</p>
+        } @else if ( getFormControl('price')?.hasError('min') ) {
+        <p class="field__error">Tiene que ser mayor a 0.</p>
         } }
       </div>
     </div>
@@ -123,19 +138,17 @@
       } }
     </div>
 
+    <!-- "Bebida con alcohol" no se usa por ahora
     <div class="toggle-group">
-      <h3 class="toggle-group__title">Contiene alcohol</h3>
-
       <div class="toggle-group__row">
         <span class="toggle-group__row-label"> Bebida con alcohol </span>
 
         <ion-toggle formControlName="contieneAlcohol" />
       </div>
     </div>
+    -->
 
     <div class="toggle-group">
-      <h3 class="toggle-group__title">Sugerencia de la casa</h3>
-
       <div class="toggle-group__row">
         <span class="toggle-group__row-label"> Mostrar como recomendada </span>
 

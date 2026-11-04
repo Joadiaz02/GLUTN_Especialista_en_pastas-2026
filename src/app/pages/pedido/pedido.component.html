@@ -3,77 +3,137 @@
     <ion-buttons slot="start">
       <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
     </ion-buttons>
+
     <h1 class="titulo-toolbar">Pedido</h1>
-    <app-confirm-dialog slot="end" (confirmado)="cerrarSesion()"></app-confirm-dialog>
+
+    <app-confirm-dialog
+      slot="end"
+      (confirmado)="cerrarSesion()"
+    ></app-confirm-dialog>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="productos-content">
-  <div class="pedido-container">
-    
-  
-    <div class="lista-productos">
+<!-- scrollY=false: la página no scrollea; solo lo hace la lista de productos -->
+<ion-content class="productos-content" [scrollY]="false">
+  <div class="pedido-container" #contenedor>
+    <!-- Única zona que scrollea. El alto de cada tarjeta lo calcula el .ts (--alto-card);
+         la foto absorbe el espacio que sobra, así nunca quedan huecos. -->
+    <div class="lista-productos" #lista>
       @for (item of carrito.items(); track item.producto.id_carta) {
         <div class="producto-card">
-          <div class="card-header-item">
-            <span class="item-nombre">{{item.producto.nombre}}</span>
-            <span class="item-precio " >{{ item.cantidad }} x {{ item.producto.precio | currency:'ARS':'symbol':'1.0-0' }}</span>
+          <div class="item-foto">
+            @if (item.producto.foto_1) {
+              <img
+                [src]="item.producto.foto_1"
+                [alt]="item.producto.nombre"
+                decoding="async"
+                (error)="$any($event.target).style.display = 'none'"
+              />
+            }
           </div>
-          <p class="item-descripcion">{{item.producto.descripcion}}</p>
-          <div class="item-controles">
-              
+
+          <div class="item-info">
+            <div class="card-header-item">
+              <span class="item-nombre">{{ item.producto.nombre }}</span>
+              <span class="item-precio">
+                
+                {{ item.producto.precio | currency : "ARS" : "$" : "1.0-0" }}
+              </span>
+            </div>
+
+            @if (item.producto.descripcion) {
+              <p class="item-descripcion">{{ item.producto.descripcion }}</p>
+            }
+
+            <div class="item-controles">
               <div class="controles-cantidad">
-                <button class="boton-quitar" (click)="quitarProducto(item.producto)">−</button>
+                <button
+                  type="button"
+                  class="boton-quitar"
+                  aria-label="Quitar uno"
+                  (click)="quitarProducto(item.producto)"
+                >
+                  −
+                </button>
+
                 <span class="producto-cantidad">{{ item.cantidad }}</span>
-                <button class="boton-agregar" (click)="agregarProducto(item.producto)">+</button>
+
+                <button
+                  type="button"
+                  class="boton-agregar"
+                  aria-label="Agregar uno"
+                  (click)="agregarProducto(item.producto)"
+                >
+                  +
+                </button>
               </div>
 
-              
               <div class="item-derecha">
-                <button class="boton-eliminar" (click)="eliminarProducto(item.producto)">
+                <button
+                  type="button"
+                  class="boton-eliminar"
+                  aria-label="Eliminar producto"
+                  (click)="eliminarProducto(item.producto)"
+                >
                   <ion-icon name="trash-outline"></ion-icon>
                 </button>
-                <span class="item-precio" style="color: #000;">{{ item.producto.precio * item.cantidad | currency:'ARS':'symbol':'1.0-0' }}</span>
+
+                <span class="item-precio">
+                  {{
+                    item.producto.precio * item.cantidad
+                      | currency : "ARS" : "$" : "1.0-0"
+                  }}
+                </span>
               </div>
             </div>
+          </div>
         </div>
-
       }
     </div>
 
-    <div class="producto-card resumen-card">
-        <span class="resumen-fila">
-       Tiempo estimado: 
-          @if (carrito.tiempoTotalEstimado() > 60) {
-            <strong class="resumen-fila" >
-              {{ (carrito.tiempoTotalEstimado() - (carrito.tiempoTotalEstimado() % 60)) / 60 }}h:
-              @if (carrito.tiempoTotalEstimado() % 60 > 0) {
-                {{ carrito.tiempoTotalEstimado() % 60 }}min
-              }
-            </strong>
-          } @else {
-            <strong class="resumen-fila">{{ carrito.tiempoTotalEstimado() }} min</strong>
-          }
-       </span>
-      
+    <!-- Fijo debajo de la lista -->
+    <div class="producto-card resumen-card" #resumen>
+      <span class="resumen-fila">
+        Tiempo estimado:
+        @if (carrito.tiempoTotalEstimado() > 60) {
+          <strong class="resumen-fila">
+            {{
+              (carrito.tiempoTotalEstimado() -
+                (carrito.tiempoTotalEstimado() % 60)) /
+                60
+            }}h:
+            @if (carrito.tiempoTotalEstimado() % 60 > 0) {
+              {{ carrito.tiempoTotalEstimado() % 60 }}min
+            }
+          </strong>
+        } @else {
+          <strong class="resumen-fila">{{ carrito.tiempoTotalEstimado() }} Minutos</strong>
+        }
+      </span>
+
       <div class="resumen-fila">
         <span>Total productos:</span>
-        <strong>{{this.carrito.totalItems()}}</strong>
+        <strong>{{ carrito.totalItems() }}</strong>
       </div>
+
       <div class="resumen-fila total-pagar">
         <span>Total a pagar:</span>
-        <strong >{{this.carrito.importeTotal() | currency:'ARS':'symbol':'1.0-0'}}</strong>
+        <strong>{{ carrito.importeTotal() | currency : "ARS" : "$" : "1.0-0" }}</strong>
       </div>
     </div>
-
   </div>
 </ion-content>
 
-
 <ion-footer class="ion-no-border footer-pedido">
   <ion-toolbar>
-    <ion-button expand="block" shape="round" class="btn-confirmar" [disabled]="enviando()" (click)="solicitarPedido()">
-        Confirmar pedido
+    <ion-button
+      expand="block"
+      shape="round"
+      class="btn-confirmar"
+      [disabled]="enviando()"
+      (click)="solicitarPedido()"
+    >
+      Confirmar pedido
     </ion-button>
   </ion-toolbar>
 </ion-footer>

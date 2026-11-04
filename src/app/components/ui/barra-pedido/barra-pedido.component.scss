@@ -1,379 +1,296 @@
+
+:host {
+  display: contents;
+}
+
+/* Barra fija inferior */
+
 .barra-pedido {
   position: fixed;
-
   left: 0;
   right: 0;
   bottom: 0;
-
   z-index: 999;
 
-  min-height: 72px;
-
-  padding:
-    8px
-    max(
-      10px,
-      env(
-        safe-area-inset-left
-      )
-    )
-    calc(
-      8px +
-      env(
-        safe-area-inset-bottom
-      )
-    )
-    max(
-      10px,
-      env(
-        safe-area-inset-right
-      )
-    );
-
   display: flex;
-
   align-items: center;
+  gap: 8px;
 
-  gap: 10px;
+  box-sizing: border-box;
+  min-height: 82px;
+  padding:
+    10px
+    max(10px, env(safe-area-inset-left, 0px))
+    calc(10px + env(safe-area-inset-bottom, 0px))
+    max(10px, env(safe-area-inset-right, 0px));
 
-  background: #536b40;
-
-  border-radius:
-    20px
-    20px
-    0
-    0;
-
-  box-shadow:
-    0 -5px 18px
-    rgba(
-      0,
-      0,
-      0,
-      0.18
-    );
+  background: #3f542f;
+  border-top: 1px solid rgb(255 250 242 / 25%);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -5px 18px rgb(0 0 0 / 22%);
 }
 
-
-/* ==========================================
-   ICONO CARRITO
-========================================== */
+/* Icono del carrito */
 
 .barra-carrito-icono {
   position: relative;
 
-  width: 42px;
-
-  height: 42px;
-
-  min-width: 42px;
-
-  flex-shrink: 0;
-
-  border-radius: 50%;
-
-  background:
-    rgba(
-      40,
-      55,
-      30,
-      0.35
-    );
-
   display: flex;
-
+  flex: 0 0 38px;
   align-items: center;
-
   justify-content: center;
+
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #304324;
 }
 
 .barra-carrito-icono > img {
-  width: 23px;
-
-  height: 23px;
-
   display: block;
+  width: 23px;
+  height: 23px;
+  object-fit: contain;
 }
 
-
-/* ==========================================
-   CONTADOR
-========================================== */
+/* Contador de productos */
 
 .contador {
   position: absolute;
-
-  top: -3px;
-
-  right: -2px;
-
-  min-width: 18px;
-
-  height: 18px;
-
-  padding:
-    0
-    4px;
-
-  border-radius: 10px;
-
-  background: #e76f45;
-
-  color: white;
+  top: -5px;
+  right: -4px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  font-size: 10px;
-
-  font-weight: 800;
-
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
   box-sizing: border-box;
+  border-radius: 12px;
+
+  background: #e76f45;
+  color: #fffaf2;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
 }
 
-
-/* ==========================================
-   INFO
-========================================== */
+/* Información del pedido */
 
 .barra-pedido__info {
-  min-width: 0;
-
-  flex: 1;
-
   display: flex;
-
+  flex: 1 1 0;
   flex-direction: column;
+  justify-content: center;
+  gap: 4px;
 
-  gap: 2px;
+  min-width: 0;
 }
 
 .barra-cantidad {
-  color: white;
-
-  font-size: 13px;
-
-  font-weight: 600;
-
-  white-space: nowrap;
-
   overflow: hidden;
-
+  color: #fffaf2;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 800;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .barra-total {
-  color: white;
-
-  font-size: 12px;
-
+  color: #fffaf2;
+  font-size: 20px;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
 .barra-total strong {
-  color: #ff8a61;
-
-  font-size: 14px;
+  color: #ffdda0;
+  font-size: 20px;
+  font-weight: 900;
 }
 
-
-/* ==========================================
-   TIEMPO
-========================================== */
+/* Tiempo estimado */
 
 .barra-tiempo {
-  flex-shrink: 0;
-
   display: flex;
-
+  flex: 0 0 auto;
   align-items: center;
-
   gap: 5px;
 
-  color: white;
+  padding-left: 8px;
+  border-left: 1px solid rgb(255 250 242 / 35%);
 
-  font-size: 13px;
-
-  font-weight: 700;
-
+  color: #fffaf2;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 800;
   white-space: nowrap;
-
-  padding:
-    0
-    8px;
-
-  border-left:
-    1px solid
-    rgba(
-      255,
-      255,
-      255,
-      0.3
-    );
 }
 
-
-/*
- * Imagen del reloj.
- */
 .barra-tiempo__icon {
-  width: 18px;
-
-  height: 18px;
-
   display: block;
-
-  flex-shrink: 0;
+  flex: 0 0 18px;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
 }
 
-
-/* ==========================================
-   BOTÓN
-========================================== */
+/* Botón para ver el pedido */
 
 .barra-boton {
-  flex-shrink: 0;
-
-  --background: #ef7045;
-
-  --background-activated: #d95f37;
-
-  --color: white;
-
-  --border-radius: 25px;
-
-  --padding-start: 15px;
-
-  --padding-end: 12px;
-
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
   min-height: 48px;
-
   margin: 0;
 
+  --background: #f0784d;
+  --background-activated: #d95f37;
+  --background-focused: #d95f37;
+  --color: #fffaf2;
+  --border-radius: 25px;
+  --padding-start: 12px;
+  --padding-end: 10px;
+
   font-size: 14px;
-
-  font-weight: 800;
-
+  font-weight: 900;
   text-transform: none;
 }
 
-
-/*
- * Flecha SVG.
- */
 .barra-boton__flecha {
-  width: 19px;
-
-  height: 19px;
-
-  margin-left: 4px;
-
   display: block;
-
-  flex-shrink: 0;
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  margin-left: 3px;
+  object-fit: contain;
 }
 
-
-/* ==========================================
-   CELULAR CHICO
-========================================== */
+/* Celulares de hasta 390 px */
 
 @media (max-width: 390px) {
-
   .barra-pedido {
     gap: 6px;
+    padding-top: 9px;
   }
 
   .barra-carrito-icono {
-    width: 36px;
-
-    height: 36px;
-
-    min-width: 36px;
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
   }
 
   .barra-carrito-icono > img {
-    width: 20px;
+    width: 21px;
+    height: 21px;
+  }
 
-    height: 20px;
+  .barra-cantidad {
+    font-size: 13px;
+  }
+
+  .barra-total {
+    font-size: 19px;
+  }
+
+  .barra-total strong {
+    font-size: 18px;
   }
 
   .barra-tiempo {
-    padding:
-      0
-      5px;
-
-    font-size: 11px;
+    gap: 4px;
+    padding-left: 10px;
+    font-size: 20px;
   }
 
   .barra-tiempo__icon {
-    width: 16px;
-
-    height: 16px;
+    flex-basis: 17px;
+    width: 22px;
+    height: 22px;
   }
 
   .barra-boton {
-    --padding-start: 11px;
+    --padding-start: 3px;
+    --padding-end: 3px;
 
-    --padding-end: 9px;
-
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .barra-boton__flecha {
-    width: 17px;
-
-    height: 17px;
+    flex-basis: 16px;
+    width: 16px;
+    height: 16px;
   }
-
 }
 
+/* Celulares muy estrechos */
 
-/* ==========================================
-   CELULAR MUY CHICO
-========================================== */
+@media (max-width: 360px) {
+.barra-pedido {
+    gap: 6px;
+    padding-top: 9px;
+  }
 
-@media (max-width: 350px) {
+  .barra-carrito-icono {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .barra-carrito-icono > img {
+    width: 21px;
+    height: 21px;
+  }
+
+  .barra-cantidad {
+    font-size: 13px;
+  }
+
+  .barra-total {
+    font-size: 19px;
+  }
+
+  .barra-total strong {
+    font-size: 18px;
+  }
 
   .barra-tiempo {
-    display: none;
+    gap: 4px;
+    padding-left: 3px;
+    font-size: 20px;
+  }
+
+  .barra-tiempo__icon {
+    flex-basis: 8px;
+    width: 23px;
+    height: 23px;
   }
 
   .barra-boton {
-    min-width: 105px;
+    --padding-start: 4px;
+    --padding-end: 4px;
+
+    font-size: 13px;
   }
 
+  .barra-boton__flecha {
+    flex-basis: 16px;
+    width: 16px;
+    height: 16px;
+  }
 }
 
-
-/* ==========================================
-   TABLET
-========================================== */
+/* Tablet y escritorio */
 
 @media (min-width: 700px) {
-
   .barra-pedido {
     left: 50%;
-
     right: auto;
-
-    width:
-      min(
-        680px,
-        calc(100% - 30px)
-      );
-
-    transform:
-      translateX(-50%);
-
-    border-radius:
-      22px
-      22px
-      0
-      0;
+    width: min(680px, calc(100% - 30px));
+    transform: translateX(-50%);
+    border-radius: 20px 20px 0 0;
   }
-
 }

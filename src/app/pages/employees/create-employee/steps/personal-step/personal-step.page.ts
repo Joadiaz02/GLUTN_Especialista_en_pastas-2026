@@ -147,24 +147,6 @@ export class PersonalStepPage {
       dni: parsed.dni,
       cuil: this.calculateCuil(parsed.dni, parsed.gender),
     });
-
-    // if (fields.length < 5) {
-    //   this.scanError = 'El código escaneado no tiene el formato esperado.';
-
-    //   return;
-    // }
-
-    // const lastName = fields[1]?.trim() ?? '';
-
-    // const name = fields[2]?.trim() ?? '';
-
-    // const dni = fields[4]?.trim() ?? '';
-
-    // this.formGroup.patchValue({
-    //   lastName,
-    //   name,
-    //   dni,
-    // });
   }
 
   private extractDniData(raw: string) {

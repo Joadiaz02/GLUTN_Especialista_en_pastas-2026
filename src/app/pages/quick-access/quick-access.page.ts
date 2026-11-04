@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Haptics } from '@capacitor/haptics';
+import { Vibracion } from '../../services/vibracion/vibracion';
 import {
   IonContent,
   IonIcon,
@@ -43,6 +43,7 @@ export class QuickAccessPage {
   private readonly toastController = inject(ToastController);
   private readonly supabaseService = inject(SupabaseService);
   private readonly pushNotificationService = inject(PushNotificationService);
+  private readonly vibracion = inject(Vibracion);
   usuarioIngresando: string | null = null;
   readonly usuarios: UsuarioAccesoRapido[] = [
 
@@ -202,7 +203,7 @@ async ingresar(
       'No se pudo abrir el inicio de sesión.'
     );
 
-    await Haptics.vibrate({ duration: 300 });
+    await this.vibracion.error();
   }
 }
 

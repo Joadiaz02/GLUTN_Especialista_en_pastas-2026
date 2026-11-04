@@ -133,7 +133,49 @@ export const roleGuard: CanActivateFn =
     }
 
 
+    // sin permiso para esta pantalla: vuelve a su pantalla principal
     return router.createUrlTree([
-      '/seleccion-acceso'
+      pantallaPrincipal(auth, usuario)
     ]);
   };
+
+
+// ruta que no existe (**): manda a cada uno a su pantalla principal
+export const rutaInexistenteGuard: CanActivateFn =
+  async () => {
+
+    const auth = inject(Auth);
+    const router = inject(Router);
+
+    const usuario =
+      await auth.obtenerUsuarioActual();
+
+    if (!usuario) {
+
+      return router.createUrlTree([
+        '/login'
+      ]);
+
+    }
+
+
+    return router.createUrlTree([
+      pantallaPrincipal(auth, usuario)
+    ]);
+  };
+
+
+// el personal va a su panel y el cliente al home; sin perfil, termina el registro con la red social
+function pantallaPrincipal(auth: Auth, usuario: any): string {
+
+  if (!auth.obtenerPerfil(usuario)) {
+
+    return '/registro/social';
+
+  }
+
+
+  return auth.esPersonal(usuario)
+    ? '/admin'
+    : '/home';
+}

@@ -1,35 +1,18 @@
-import {
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  ToastController,
-} from '@ionic/angular';
-import { Router } from '@angular/router';
-import {
-  Auth,
-  PushNotificationService,
-  Waitlist,
-} from '@app/services';
+import { IonButton, IonContent, IonHeader, IonTitle, IonToolbar, ToastController, IonRouterLink } from '@ionic/angular';
+import { Router, RouterLink } from '@angular/router';
+import { Auth, PushNotificationService, SupabaseService, Vibracion, Waitlist } from '@app/services';
 import { TurnRingComponent } from '@app/components';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 
 @Component({
   selector: 'app-waiting-room',
-  templateUrl:
-    './waiting-room.page.html',
-  styleUrls: [
-    './waiting-room.page.scss',
-  ],
+  templateUrl: './waiting-room.page.html',
+  styleUrls: ['./waiting-room.page.scss'],
   imports: [
+    RouterLink,
     IonContent,
     IonHeader,
     IonTitle,
@@ -38,52 +21,46 @@ import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
     FormsModule,
     IonButton,
     TurnRingComponent,
-  ],
+    IonRouterLink
+],
 })
-export class WaitingRoomPage {
-  private _router =
-    inject(Router);
+export class WaitingRoomPage implements OnInit, OnDestroy {
+  private _router = inject(Router);
 
-  private _authService =
-    inject(Auth);
+  private _authService = inject(Auth);
 
-  private _waitlistService =
-    inject(Waitlist);
+  private _waitlistService = inject(Waitlist);
 
-  private _pushNotificationService =
-    inject(PushNotificationService);
+  private _pushNotificationService = inject(PushNotificationService);
 
-  private _toastController =
-    inject(ToastController);
+  private _toastController = inject(ToastController);
 
-  position =
-    signal<number | null>(null);
+  private readonly vibracion = inject(Vibracion);
 
-  total =
-    signal<number>(1);
+  private readonly _supabase = inject(SupabaseService);
 
-  isTableAssigned =
-    signal(true);
+  position = signal<number | null>(null);
 
-  table =
-    signal<any>({
-      numero: 1
-    });
+  total = signal<number>(1);
 
-  private _unsubscribe:
-    (() => void) | null = null;
+  loading = signal(true);
+
+  isTableAssigned = signal(false);
+
+  isTableCancelled = signal(false);
+
+  tableStatus = signal("")
+
+  table = signal<any | null>(null);
+  private _unsubscribe: (() => void) | null = null;
 
   private _userId = '';
 
   async ngOnInit(): Promise<void> {
-    const user =
-      await this._authService
-        .obtenerUsuarioActual();
+    const user = await this._authService.obtenerUsuarioActual();
 
     if (!user?.id) {
-      await this._router.navigate([
-        '/login',
-      ]);
+      await this._router.navigate(['/login']);
 
       return;
     }
@@ -91,23 +68,18 @@ export class WaitingRoomPage {
     this._userId = user.id;
 
     try {
-      await this._pushNotificationService
-        .inicializar();
+      await this._pushNotificationService.inicializar();
     } catch (error) {
-      console.warn(
-        'No se pudo inicializar Push Notifications:',
-        error
-      );
+      console.warn('No se pudo inicializar Push Notifications:', error);
     }
 
     await this._refrescar();
 
-    this._unsubscribe =
-      this._waitlistService.subscribeToChanges(
-        () => {
-          void this._refrescar();
-        }
-      );
+    this.loading.set(false);
+
+    this._unsubscribe = this._waitlistService.subscribeToChanges(() => {
+      void this._refrescar();
+    });
   }
 
   ngOnDestroy(): void {
@@ -115,94 +87,85 @@ export class WaitingRoomPage {
   }
 
   async scanQR(): Promise<void> {
-    const { camera } =
-      await BarcodeScanner.requestPermissions();
+    const { camera } = await BarcodeScanner.requestPermissions();
 
-    if (
-      camera !== 'granted' &&
-      camera !== 'limited'
-    ) {
+    if (camera !== 'granted' && camera !== 'limited') {
       await this._showError(
         'Necesitamos permiso de cámara para escanear el código.'
       );
 
+      await this.vibracion.error();
+
       return;
     }
 
-    const { barcodes } =
-      await BarcodeScanner.scan();
+    const { barcodes } = await BarcodeScanner.scan();
 
     if (barcodes.length === 0) {
       return;
     }
 
-    const valueBarcode =
-      barcodes[0].rawValue as string;
+    const valueBarcode = barcodes[0].rawValue as string;
 
     try {
-      const result =
-        await this._waitlistService.linkTable(
-          this._userId,
-          valueBarcode
-        );
+      // const result = await this._waitlistService.linkTable(
+      //   this._userId,
+      //   "mesa:c80da3b5-fa09-4029-8dfd-b8966141d3ce"
+      // );
+
+      const result = await this._waitlistService.linkTable(
+        this._userId,
+        valueBarcode
+      );
 
       if (result.ok) {
-        await this._router.navigateByUrl(
-          '/carta',
-          {
-            replaceUrl: true,
-          }
-        );
+        await this._router.navigateByUrl('/carta', {
+          replaceUrl: true,
+        });
 
         return;
       }
 
-      if (
-        result.reason ===
-        'wrong_table'
-      ) {
+      if (result.reason === 'wrong_table') {
         await this._showError(
           `Esta no es tu mesa. Tenés asignada la mesa ${result.correctTableNumber}.`
         );
 
-        return;
-      }
-
-      if (
-        result.reason ===
-        'no_table_assigned'
-      ) {
-        await this._showError(
-          'Todavía no tenés una mesa asignada.'
-        );
+        await this.vibracion.error();
 
         return;
       }
 
-      if (
-        result.reason ===
-        'invalid_qr'
-      ) {
-        await this._showError(
-          'El código QR no corresponde a una mesa válida.'
-        );
+      if (result.reason === 'no_table_assigned') {
+        await this._showError('Todavía no tenés una mesa asignada.');
+
+        await this.vibracion.error();
 
         return;
       }
 
-      await this._showError(
-        'No pudimos validar la mesa.'
-      );
+      if (result.reason === 'invalid_qr') {
+        await this._showError('El código QR no corresponde a una mesa válida.');
+
+        await this.vibracion.error();
+
+        return;
+      }
+
+      await this._showError('No pudimos validar la mesa.');
+
+      await this.vibracion.error();
     } catch (error) {
-      console.error(
-        'Error vinculando mesa:',
-        error
-      );
+      console.error('Error vinculando mesa:', error);
 
-      await this._showError(
-        'No pudimos validar la mesa. Intentá nuevamente.'
-      );
+      await this._showError('No pudimos validar la mesa. Intentá nuevamente.');
+
+      await this.vibracion.error();
     }
+  }
+
+  irAEncuestas(): void {
+    void this._router.navigate(['/encuestas']);
   }
 
   private async _refrescar(): Promise<void> {
@@ -211,80 +174,68 @@ export class WaitingRoomPage {
     }
 
     try {
-      const miEntrada =
-        await this._waitlistService
-          .getMyEntry(
-            this._userId
-          );
+      const miEntrada = await this._waitlistService.getMyEntry(this._userId);
+      
+      console.log("lista_espera")
+      console.log(this._userId)
+      console.log(miEntrada)
+      console.log(miEntrada?.estado)
 
-      if (
-        miEntrada?.estado ===
-          'asignado' &&
-        miEntrada.mesa_id
-      ) {
-        const mesa =
-          await this._waitlistService
-            .getTableById(
-              miEntrada.mesa_id
-            );
+      // if (miEntrada?.estado === 'esperando') {
+      //   this.tableStatus.set("esperando");
+        
+      //   return;
+      // }
 
-        this.isTableAssigned.set(
-          true
+      if (miEntrada?.estado === 'asignado' && miEntrada.mesa_id) {
+        const mesa = await this._waitlistService.getTableById(
+          miEntrada.mesa_id
         );
 
-        this.table.set(
-          mesa
-        );
+        this.tableStatus.set("asignado");
+        
+        this.table.set(mesa);
 
         return;
       }
 
-      this.isTableAssigned.set(
-        false
-      );
+      
+      if (miEntrada?.estado === 'cancelado') {
+        this.tableStatus.set("cancelado");
+        
+        return;
+      }
 
-      this.table.set(
-        null
-      );
+      if (miEntrada?.estado === 'esperando') {
+        const [position, listaCompleta] = await Promise.all([
+          this._waitlistService.getPosition(this._userId),
+          this._waitlistService.getList(),
+        ]);
+  
+        this.position.set(position);
+  
+        this.total.set(Math.max(listaCompleta.length, 1));
+      }
+      
+      // this.tableStatus.set("");
+      // this.isTableAssigned.set(false);
 
-      const [
-        position,
-        listaCompleta,
-      ] = await Promise.all([
-        this._waitlistService.getPosition(
-          this._userId
-        ),
-        this._waitlistService.getList(),
-      ]);
+      // this.table.set(null);
 
-      this.position.set(
-        position
-      );
-
-      this.total.set(
-        Math.max(
-          listaCompleta.length,
-          1
-        )
-      );
     } catch (error) {
-      console.error(
-        'Error actualizando sala de espera:',
-        error
-      );
+      console.error('Error actualizando sala de espera:', error);
+
+      await this.vibracion.error();
     }
   }
 
-  private async _showError(
-    mensaje: string
-  ): Promise<void> {
-    const toast =
-      await this._toastController.create({
-        message: mensaje,
-        duration: 3000,
-        position: 'top',
-        color: 'danger',
-      });
+  private async _showError(mensaje: string): Promise<void> {
+    const toast = await this._toastController.create({
+      message: mensaje,
+      duration: 3000,
+      position: 'top',
+      color: 'danger',
+    });
 
     await toast.present();
   }

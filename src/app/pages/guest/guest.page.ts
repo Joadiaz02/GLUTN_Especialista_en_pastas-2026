@@ -24,6 +24,7 @@ import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { Router } from '@angular/router';
 import { Auth, Waitlist } from '@app/services';
 import { fullNameValidator } from '@app/validators';
+import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 
 @Component({
   selector: 'app-guest',
@@ -43,7 +44,8 @@ import { fullNameValidator } from '@app/validators';
     IdentityStepPage,
     ReactiveFormsModule,
     LocationStepPage,
-  ],
+    SpinnerLogoComponent
+],
 })
 export class GuestPage {
   private _toastController = inject(ToastController);
@@ -56,25 +58,19 @@ export class GuestPage {
   form = new FormGroup({
     file: new FormControl<File | null>(null, Validators.required),
 
-    fullName: new FormControl(
-      '',
-      [
-  Validators.required,
-  Validators.maxLength(60),
-  fullNameValidator(),
-]
-    ),
+    fullName: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(60),
+      fullNameValidator(),
+    ]),
 
-    comensales: new FormControl(
-      1,
-      [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(20),
-      ]
-    ),
+    comensales: new FormControl(1, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(20),
+    ]),
 
-    consideraciones: new FormControl<string[]>([]),
+    consideraciones: new FormControl<string>('', Validators.required),
   });
 
   currentStep = signal<number>(1);
@@ -93,185 +89,135 @@ export class GuestPage {
   }
 
   ajustarComensales(delta: number): void {
-    const actual =
-      this.form.controls.comensales.value ?? 1;
+    const actual = this.form.controls.comensales.value ?? 1;
 
-    const siguiente = Math.min(
-      20,
-      Math.max(1, actual + delta)
-    );
+    const siguiente = Math.min(20, Math.max(1, actual + delta));
 
-    this.form.controls.comensales.setValue(
-      siguiente
-    );
+    this.form.controls.comensales.setValue(siguiente);
   }
 
   tieneConsideracion(valor: string): boolean {
-    return (
-      this.form.controls.consideraciones.value?.includes(
-        valor
-      ) ?? false
-    );
+    return this.form.controls.consideraciones.value == valor ? true : false;
   }
 
   toggleConsideracion(valor: string): void {
-    const actual =
-      this.form.controls.consideraciones.value ?? [];
+    // const actual = this.form.controls.consideraciones.value ?? [];
 
-    const siguiente = actual.includes(valor)
-      ? actual.filter(
-          (item) => item !== valor
-        )
-      : [...actual, valor];
+    // const siguiente = actual.includes(valor)
+    //   ? actual.filter((item) => item !== valor)
+    //   : [...actual, valor];
 
-    this.form.controls.consideraciones.setValue(
-      siguiente
-    );
+    this.form.controls.consideraciones.setValue(valor);
   }
 
   nextStep(): void {
     const step = this.currentStep();
 
     if (step < 3) {
-      this.currentStep.update(
-        (current) => current + 1
-      );
+      this.currentStep.update((current) => current + 1);
     }
   }
 
   previousStep(): void {
     if (this.currentStep() > 1) {
-      this.currentStep.update(
-        (current) => current - 1
-      );
+      this.currentStep.update((current) => current - 1);
     }
   }
 
   async scanQR(): Promise<void> {
-    // const { camera } =
-    //   await BarcodeScanner.requestPermissions();
+    const { camera } = await BarcodeScanner.requestPermissions();
 
-    // if (
-    //   camera !== 'granted' &&
-    //   camera !== 'limited'
-    // ) {
-    //   await this._showError(
-    //     'Necesitamos permiso de cámara para escanear el código.'
-    //   );
+    if (camera !== 'granted' && camera !== 'limited') {
+      await this._showError(
+        'Necesitamos permiso de cámara para escanear el código.'
+      );
 
-    //   return;
-    // }
+      return;
+    }
 
-    // const { barcodes } =
-    //   await BarcodeScanner.scan();
+    const { barcodes } = await BarcodeScanner.scan();
 
-    // if (barcodes.length === 0) {
-    //   return;
-    // }
+    if (barcodes.length === 0) {
+      return;
+    }
 
-    // const rawValue =
-    //   barcodes[0].rawValue;
+    const rawValue = barcodes[0].rawValue;
 
-    // if (rawValue !== 'ingreso-local') {
-    //   await this._showError(
-    //     'Ese código QR no corresponde al ingreso del local.'
-    //   );
+    if (rawValue !== 'ingreso-local') {
+      await this._showError(
+        'Ese código QR no corresponde al ingreso del local.'
+      );
 
-    //   return;
-    // }
+      return;
+    }
 
     // console.log("guest.page.ts 178")
     // console.log("ESCANEO CORRECTO")
-    
+
     this.scanning.set(true);
 
     try {
-      const {
-        file,
-        fullName,
-        comensales,
-        consideraciones,
-      } = this.form.getRawValue();
+      const { file, fullName, comensales, consideraciones } =
+        this.form.getRawValue();
 
       if (!file || !fullName) {
-        await this._showError(
-          'Completá todos los datos antes de continuar.'
-        );
+        await this._showError('Completá todos los datos antes de continuar.');
 
         return;
       }
 
       /*
-      * 1. Crear / iniciar sesión como invitado
-      */
-      const usuarioId =
-        await this._authService.loginAnonymous(
-          fullName,
-          file
-        );
+       * 1. Crear / iniciar sesión como invitado
+       */
+      const usuarioId = await this._authService.loginAnonymous(fullName, file);
 
-      console.log("guest.page.ts 208")
-      console.log(usuarioId)
+      console.log('guest.page.ts 208');
+      console.log(usuarioId);
+
+      const tipo = consideraciones as string
 
       /*
        * 2. Agregar el cliente a la lista de espera
        */
-      const entry =
-        await this._waitlistService.add({
-          usuario_id: usuarioId,
-          estado: 'esperando',
-          comensales: comensales ?? 1,
-          consideraciones:
-            consideraciones ?? [],
-        });
+      const entry = await this._waitlistService.add({
+        usuario_id: usuarioId,
+        estado: 'esperando',
+        comensales: comensales ?? 1,
+        consideraciones: [tipo],
+      });
 
-      console.log("guest.page.ts 223")
-      console.log(entry)
+      console.log('guest.page.ts 223');
+      console.log(entry);
 
       /*
        * 3. Avisar al metre
        */
       try {
-        await this._waitlistService.notifyNewWaitlist(
-          entry.id
-        );
+        await this._waitlistService.notifyNewWaitlist(entry.id);
       } catch (error) {
-        console.warn(
-          'No se pudo notificar al metre:',
-          error
-        );
+        console.warn('No se pudo notificar al metre:', error);
       }
 
       /*
        * 4. Llevar al invitado a la sala de espera
        */
-      await this._router.navigate([
-        '/waiting-room',
-      ]);
+      await this._router.navigate(['/waiting-room']);
     } catch (error) {
-      console.error(
-        'Error creando invitado:',
-        error
-      );
+      console.error('Error creando invitado:', error);
 
-      await this._showError(
-        'No pudimos anotarte en la lista. Probá de nuevo.'
-      );
+      await this._showError('No pudimos anotarte en la lista. Probá de nuevo.');
     } finally {
       this.scanning.set(false);
     }
   }
 
-  private async _showError(
-    mensaje: string
-  ): Promise<void> {
-    const toast =
-      await this._toastController.create({
-        message: mensaje,
-        duration: 3000,
-        position: 'top',
-        color: 'danger',
-      });
+  private async _showError(mensaje: string): Promise<void> {
+    const toast = await this._toastController.create({
+      message: mensaje,
+      duration: 3000,
+      position: 'top',
+      color: 'danger',
+    });
 
     await toast.present();
   }

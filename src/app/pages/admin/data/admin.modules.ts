@@ -65,14 +65,14 @@ export const ADMIN_MODULES: AdminModule[] = [
     path: 'waitlist',
   },
 
-  {
-    id: 'asignacion-mesas',
-    title: 'Asignación de mesas',
-    description: 'Asignar mesas a los clientes',
-    icon: 'table',
-    roles: [EPerfilUsuario.Metre],
-    path: 'table-assignment',
-  },
+  // {
+  //   id: 'asignacion-mesas',
+  //   title: 'Asignación de mesas',
+  //   description: 'Asignar mesas a los clientes',
+  //   icon: 'table',
+  //   roles: [EPerfilUsuario.Metre],
+  //   path: 'table-assignment',
+  // },
 
   {
     id: 'consultas',
@@ -119,14 +119,15 @@ export const ADMIN_MODULES: AdminModule[] = [
     path: 'ready-orders',
   },
 
-  {
-    id: 'entrega-pedidos',
-    title: 'Entrega de pedidos',
-    description: 'Gestionar la entrega de pedidos',
-    icon: 'bag',
-    roles: [EPerfilUsuario.Mozo],
-    path: 'order-delivery',
-  },
+  // oculto hasta la tercera entrega (pedidos a domicilio)
+  // {
+  //   id: 'entrega-pedidos',
+  //   title: 'Entrega de pedidos',
+  //   description: 'Gestionar la entrega de pedidos',
+  //   icon: 'bag',
+  //   roles: [EPerfilUsuario.Mozo],
+  //   path: 'order-delivery',
+  // },
 
   {
     id: 'pagos',
@@ -136,4 +137,21 @@ export const ADMIN_MODULES: AdminModule[] = [
     roles: [EPerfilUsuario.Mozo],
     path: 'payments',
   },
+  {
+  id: 'menu-principal',
+  title: 'Menú principal',
+  description: 'Volver al menú principal de GLUTN',
+  icon: 'spoon-and-fork',
+  roles: [
+    EPerfilUsuario.Dueno,
+    EPerfilUsuario.Supervisor,
+    EPerfilUsuario.Metre,
+    EPerfilUsuario.Mozo,
+    EPerfilUsuario.Cocinero,
+    EPerfilUsuario.Cantinero,
+    EPerfilUsuario.ClienteRegistrado,
+    EPerfilUsuario.ClienteAnonimo,
+  ],
+  path: '/home',
+},
 ];

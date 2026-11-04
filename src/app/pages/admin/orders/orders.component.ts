@@ -7,15 +7,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-import {
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonTitle,
-  IonContent,
-  IonButton,
-  IonRouterLink,
-} from '@ionic/angular';
+import { IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, IonButton, IonRouterLink, ToastController, IonIcon } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { Auth } from '@app/services';
@@ -26,7 +18,7 @@ import { Pedido } from '@app/services/pedido/pedido';
 import { Carrito } from '@app/pages/carrito/carrito';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
-
+import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.directive';
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -41,13 +33,16 @@ import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-lo
     IonContent,
     CommonModule,
     IonButton,
-    SpinnerLogoComponent
+    SpinnerLogoComponent,
+    ListaFilasDirective,
+    IonIcon
 ],
 })
 export class OrdersComponent implements OnInit {
   private auth = inject(Auth);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private toastController = inject(ToastController);
 
   pedidoService = inject(Pedido); // Renombrado para evitar conflicto con la variable tipada si existiera
   carrito = inject(Carrito);
@@ -85,14 +80,38 @@ export class OrdersComponent implements OnInit {
     this.cargando.set(false);
   }
 
+  estadoPedidoCarga = signal(false)
+
   async confirmar(idPedido: string): Promise<void> {
     const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);
     if (!pedidoActual) return;
     this.estado.set(idPedido);
-    await this.pedidoService.actualizarEstado(idPedido, pedidoActual.id_usuario, 'confirmado');
-    await this.cargarpedido();
+    try{
+      this.estadoPedidoCarga.set(true)
+
+      await this.pedidoService.actualizarEstado(idPedido, pedidoActual.id_usuario, 'confirmado');
+      this.mostrarToast('Pedido confirmado con éxito y derivado a Cocina / Bar.', 'success');
+
+      await this.cargarpedido();
+    
+    }catch (error){
+      console.error('Error al confirmar el pedido:', error);
+      this.mostrarToast('No se pudo confirmar el pedido. Intentá de nuevo.', 'danger');
+    }finally {
+    this.estadoPedidoCarga.set(false)
     this.estado.set(null);
+    }
   }
+
+  private async mostrarToast(message: string, color: string): Promise<void> {
+  const toast = await this.toastController.create({ 
+    message, 
+    duration: 3000, 
+    position: 'top', 
+    color 
+  });
+  await toast.present();
+}
 
   async rechazar(idPedido: string): Promise<void> {
     const pedidoActual = this.pedidos().find(p => p.id_pedido === idPedido);

@@ -78,6 +78,32 @@ export class Waitlist {
     }
   }
 
+  async getLastUserTable(userId: string): Promise<any | null> {
+    const { data, error } = await this._db.client
+      .from(this._tableName)
+      .select(`
+        id,
+        usuario_id,
+        estado,
+        mesa_id,
+        comensales,
+        consideraciones,
+        created_at,
+        updated_at,
+        usuarios(*)
+      `)
+      .eq('usuario_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data ?? null;
+  }
+
   async getById(id: string): Promise<any | null> {
     const { data, error } =
       await this._db.client
@@ -323,8 +349,10 @@ export class Waitlist {
       throw error;
     }
 
+    console.log("NOTICATIONNNNNNNNNNNNNNNNNNNNNNNN MESAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
     try {
-      await this._db.client.functions.invoke(
+      const { data } = await this._db.client.functions.invoke(
         'notify-table-assigned',
         {
           body: {
@@ -333,6 +361,8 @@ export class Waitlist {
           },
         }
       );
+
+      console.log(data)
     } catch (error) {
       console.warn(
         'La mesa fue asignada, pero no se pudo enviar el push:',
@@ -359,6 +389,24 @@ async remove(
       'No se pudo eliminar el cliente de la lista de espera.'
     );
   }
+}
+
+async removeUserFromWaitlist(userId: string, waitlistId: string) {
+
+const { data, error } = await this._db.client
+  .from(this._tableName)
+  .update({ estado: "cancelado" })
+  .eq('id', waitlistId)
+  .eq('usuario_id', userId)
+  .select()
+  .maybeSingle();
+
+  console.log(data)
+
+if (error) throw new Error(`Failed to update table: ${error.message}`);
+if (!data) throw new Error('No se encontró la fila o no tenés permiso para modificarla');
+
+return data;
 }
 
   async getPosition(
@@ -482,6 +530,7 @@ async remove(
         .in('estado', [
           'esperando',
           'asignado',
+          "cancelado"
         ])
         // toma la última por si quedó anotado más de una vez
         .order('created_at', { ascending: false })
