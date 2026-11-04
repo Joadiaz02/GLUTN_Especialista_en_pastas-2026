@@ -7,16 +7,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-import {
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonTitle,
-  IonContent,
-  IonButton,
-  IonRouterLink,
-  ToastController,
-} from '@ionic/angular';
+import { IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, IonButton, IonRouterLink, ToastController, IonIcon } from '@ionic/angular';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { Auth } from '@app/services';
@@ -43,7 +34,8 @@ import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.dir
     CommonModule,
     IonButton,
     SpinnerLogoComponent,
-    ListaFilasDirective
+    ListaFilasDirective,
+    IonIcon
 ],
 })
 export class OrdersComponent implements OnInit {

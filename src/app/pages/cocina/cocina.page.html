@@ -101,22 +101,24 @@
           <div class="pedido__acciones">
             <ion-button
               class="pedido__boton"
-              fill="outline"
+              fill="solid"
               color="danger"
               shape="round"
               [disabled]="procesando() !== null"
               (click)="pedido.estadoCocina ? devolver(pedido) : rechazar(pedido)"
             >
-              {{ pedido.estadoCocina ? 'Devolver' : 'Rechazar' }}
+              <img src="assets/icons/close.svg" alt="Rechazar" />
             </ion-button>
 
             <ion-button
               class="pedido__boton"
+              fill="solid"
+              color="success"
               shape="round"
               [disabled]="procesando() !== null"
               (click)="pedido.estadoCocina ? entregar(pedido) : recibir(pedido)"
             >
-              {{ pedido.estadoCocina ? 'Entregar' : 'Recibir' }}
+              <img src="assets/icons/check.svg" alt="Aceptar" />
             </ion-button>
           </div>
         </div>

@@ -32,7 +32,7 @@
       <article class="slide" [class.slide--activo]="i === indiceActual()">
         <div class="pedido">
           <header class="pedido__mesa">
-            <h2>Mesa N°: {{ pedido.mesas?.numero }}</h2>
+            <h2>Mesa número: {{ pedido.mesas?.numero }}</h2>
             <span
               >Cliente: {{ pedido.usuarios?.nombre }}
               {{ pedido.usuarios?.apellido }}</span
@@ -62,10 +62,8 @@
                 <div class="card-header-item">
                   <span class="item-nombre">{{ item.carta.nombre }}</span>
                   <span class="item-descripcion"
-                    >{{ item.cantidad }} x
-                    {{
-                      item.precio_unitario | currency : "ARS" : "$" : "1.0-0"
-                    }}</span
+                    >Cantidad: {{ item.cantidad }}
+                     </span
                   >
                 </div>
                 <span class="item-precio">{{
@@ -90,25 +88,30 @@
           }
 
           <!-- Botones de acción -->
-          <div class="pedido__acciones">
+         <div class="pedido__acciones">
+            <!-- Botón Rechazar -->
             <ion-button
-              class="pedido__boton"
-              fill="outline"
+              class="pedido__boton pedido__boton--icono"
+              fill="solid"
               color="danger"
               shape="round"
               [disabled]="estado() === pedido.id_pedido"
+              aria-label="Rechazar pedido"
               (click)="rechazar(pedido.id_pedido)"
             >
-              Rechazar
+              <img src="assets/icons/close.svg" alt="Rechazar" />
             </ion-button>
 
-            <!-- el overlay de carga ya bloquea la pantalla mientras se confirma -->
+            <!-- Botón Aceptar -->
             <ion-button
-              class="pedido__boton"
+              class="pedido__boton pedido__boton--icono"
+              fill="solid"
+              color="success"
               shape="round"
+              aria-label="Aceptar pedido"
               (click)="confirmar(pedido.id_pedido)"
             >
-              Aceptar
+              <img src="assets/icons/check.svg" alt="Aceptar" />
             </ion-button>
           </div>
         </div>

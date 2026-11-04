@@ -339,6 +339,7 @@
   flex-shrink: 0;
   display: flex;
   gap: 12px;
+  margin-top: auto;
 }
 
 .pedido__boton {
@@ -348,6 +349,19 @@
   min-height: 52px;
   font-weight: 700;
   --border-radius: 16px;
+  
+  /* Asegura que tanto la imagen como el spinner queden perfectamente centrados */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pedido__boton img {
+  display: block;
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  margin-top: 2px; /* Mantiene la misma alineación visual fina que logramos antes */
 }
 
 .cocina-loading {

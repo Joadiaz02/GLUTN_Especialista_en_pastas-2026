@@ -36,7 +36,7 @@
             <div class="card-header-item">
               <span class="item-nombre">{{ item.producto.nombre }}</span>
               <span class="item-precio">
-                {{ item.cantidad }} x
+                
                 {{ item.producto.precio | currency : "ARS" : "$" : "1.0-0" }}
               </span>
             </div>
@@ -107,7 +107,7 @@
             }
           </strong>
         } @else {
-          <strong class="resumen-fila">{{ carrito.tiempoTotalEstimado() }} min</strong>
+          <strong class="resumen-fila">{{ carrito.tiempoTotalEstimado() }} Minutos</strong>
         }
       </span>
 
