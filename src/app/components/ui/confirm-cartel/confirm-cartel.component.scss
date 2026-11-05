@@ -122,3 +122,11 @@ ion-icon {
     color: #ffffff;
   }
 }
+
+// cancelar: borde blanco grueso y letra blanca en negrita para que se note
+.boton-cancelar {
+  --border-color: #ffffff !important; // el estilo global de botones con borde lo deja casi transparente
+  --border-width: 3px;
+  --color: #ffffff;
+  font-weight: 700;
+}

@@ -211,10 +211,12 @@
   cursor: default;
 }
 
+// borde blanco grueso y letra en negrita, igual que el resto de los botones de cancelar
 .modal-cancel-button {
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  border: 3px solid #ffffff;
   background: transparent;
   color: #fff;
+  font-weight: 700;
 }
 
 .modal-confirm-button {
