@@ -61,8 +61,18 @@ Deno.serve(async (req) => {
 
     if (errorPedido || !pedido) throw new Error('No se encontró el pedido.');
 
-    // cada cliente solo puede bajar su propia factura
-    if (pedido.id_usuario !== usuario.id) throw new Error('Este pedido no es tuyo.');
+    // cada cliente solo puede bajar su propia factura; el dueño y el supervisor, todas
+    if (pedido.id_usuario !== usuario.id) {
+      const { data: perfil } = await supabaseAdmin
+        .from('usuarios')
+        .select('perfil')
+        .eq('id', usuario.id)
+        .maybeSingle();
+
+      if (!['dueno', 'supervisor'].includes(perfil?.perfil ?? '')) {
+        throw new Error('Este pedido no es tuyo.');
+      }
+    }
 
     // todos los pedidos pagados de la misma estadía van en la misma factura
     let idsPedidos = [pedido.id_pedido];
@@ -71,9 +81,10 @@ Deno.serve(async (req) => {
       const { data: pedidos, error: errorPedidos } = await supabaseAdmin
         .from('pedido')
         .select('id_pedido')
-        .eq('id_usuario', usuario.id)
+        .eq('id_usuario', pedido.id_usuario)
         .eq('id_estadia', pedido.id_estadia)
-        .eq('estado_pedido', 'pagado');
+        .eq('estado_pedido', 'pagado')
+        .order('fecha_emision_pedido', { ascending: true });
 
       if (errorPedidos) throw new Error('No se pudieron leer los pedidos.');
 
@@ -116,8 +127,8 @@ Deno.serve(async (req) => {
 
     const [{ data: mesa }, { data: cliente }, { data: cuenta }] = await Promise.all([
       supabaseAdmin.from('mesas').select('numero').eq('id', pedido.id_mesa).maybeSingle(),
-      supabaseAdmin.from('usuarios').select('nombre, apellido, documento, perfil').eq('id', usuario.id).maybeSingle(),
-      supabaseAdmin.auth.admin.getUserById(usuario.id),
+      supabaseAdmin.from('usuarios').select('nombre, apellido, documento, perfil').eq('id', pedido.id_usuario).maybeSingle(),
+      supabaseAdmin.auth.admin.getUserById(pedido.id_usuario),
     ]);
 
     const anonimo = cliente?.perfil === 'cliente_anonimo';
@@ -126,13 +137,14 @@ Deno.serve(async (req) => {
       {
         numero: ticket.id_ticket.slice(0, 8).toUpperCase(),
         fecha: new Date(ticket.fecha_emision_ticket),
-        numeroPedido: ticket.id_pedido.slice(0, 8).toUpperCase(),
+        // todos los pedidos de la cuenta, en el orden en que se hicieron: pedido a - pedido b - pedido c
+        numeroPedido: idsPedidos.map((id) => id.slice(0, 8).toUpperCase()).join(' - '),
         mesa: mesa?.numero != null ? String(mesa.numero) : null,
         cliente: {
           nombre: cliente?.nombre ?? 'Cliente',
           apellido: anonimo ? null : cliente?.apellido,
           documento: cliente?.documento,
-          correo: cuenta?.user?.email ?? usuario.email,
+          correo: cuenta?.user?.email ?? null,
           anonimo,
         },
         lineas,

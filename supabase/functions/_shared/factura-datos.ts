@@ -50,7 +50,8 @@ export async function armarFactura(
       .select('id_pedido')
       .eq('id_usuario', pedido.id_usuario)
       .eq('id_estadia', pedido.id_estadia)
-      .eq('estado_pedido', 'pagado');
+      .eq('estado_pedido', 'pagado')
+      .order('fecha_emision_pedido', { ascending: true });
 
     if (errorPedidos) throw new Error('No se pudieron leer los pedidos.');
 
@@ -109,7 +110,8 @@ export async function armarFactura(
   const datos: DatosFactura = {
     numero: numeroFactura,
     fecha: new Date(ticket.fecha_emision_ticket),
-    numeroPedido: ticket.id_pedido.slice(0, 8).toUpperCase(),
+    // todos los pedidos de la cuenta, en el orden en que se hicieron: pedido a - pedido b - pedido c
+    numeroPedido: idsPedidos.map((id) => id.slice(0, 8).toUpperCase()).join(' - '),
     mesa: numeroMesa,
     cliente: {
       nombre: cliente?.nombre ?? 'Cliente',

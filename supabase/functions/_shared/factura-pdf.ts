@@ -102,6 +102,72 @@ function renglones(texto: string, fuente: PDFFont, tamano: number, ancho: number
   return resultado;
 }
 
+// como renglones, pero también parte lo que no tiene espacios (un correo largo):
+// primero después de la @ y, si igual no entra, letra por letra
+function renglonesLargos(texto: string, fuente: PDFFont, tamano: number, ancho: number): string[] {
+  const entra = (parte: string) => fuente.widthOfTextAtSize(parte, tamano) <= ancho;
+  const resultado: string[] = [];
+
+  for (const renglon of renglones(texto, fuente, tamano, ancho)) {
+    if (entra(renglon)) {
+      resultado.push(renglon);
+      continue;
+    }
+
+    const arroba = renglon.indexOf('@');
+    const partes = arroba > 0 ? [renglon.slice(0, arroba + 1), renglon.slice(arroba + 1)] : [renglon];
+
+    for (const parte of partes) {
+      let actual = '';
+
+      for (const letra of parte) {
+        if (actual && !entra(actual + letra)) {
+          // si se puede, corta después de un punto para no partir una palabra
+          const punto = actual.lastIndexOf('.');
+
+          if (punto > 0) {
+            resultado.push(actual.slice(0, punto + 1));
+            actual = actual.slice(punto + 1);
+          } else {
+            resultado.push(actual);
+            actual = '';
+          }
+        }
+        actual += letra;
+      }
+
+      if (actual) {
+        resultado.push(actual);
+      }
+    }
+  }
+
+  return resultado;
+}
+
+// arma "a - b - c" en renglones; cuando corta, el guion queda al final del renglón
+function renglonesDePedidos(numeros: string[], fuente: PDFFont, tamano: number, ancho: number): string[] {
+  const resultado: string[] = [];
+  let actual = '';
+
+  for (const numero of numeros) {
+    const prueba = actual ? `${actual} - ${numero}` : numero;
+
+    if (fuente.widthOfTextAtSize(prueba, tamano) <= ancho || !actual) {
+      actual = prueba;
+    } else {
+      resultado.push(`${actual} -`);
+      actual = numero;
+    }
+  }
+
+  if (actual) {
+    resultado.push(actual);
+  }
+
+  return resultado;
+}
+
 function aLaDerecha(pagina: PDFPage, texto: string, x: number, y: number, fuente: PDFFont, tamano: number, color = TEXTO) {
   pagina.drawText(texto, { x: x - fuente.widthOfTextAtSize(texto, tamano), y, size: tamano, font: fuente, color });
 }
@@ -137,31 +203,49 @@ export async function generarFacturaPdf(datos: DatosFactura, logoPng?: Uint8Arra
 
   // datos del cliente y del pedido en dos cajas
   y -= 22;
-  const altoCaja = 92;
   const anchoCaja = (ANCHO - MARGEN * 2 - 14) / 2;
+  const anchoValor = anchoCaja - 80;
   const cliente = datos.cliente;
   const nombreCompleto = [cliente.nombre, cliente.apellido].filter(Boolean).join(' ');
 
-  const cajas: [string, [string, string][]][] = [
+  // si la cuenta juntó varios pedidos, van todos: pedido a - pedido b - pedido c
+  const variosPedidos = datos.numeroPedido.includes(' - ');
+
+  const cajas: [string, [string, string[]][]][] = [
     [
       'Datos del cliente',
-      cliente.anonimo
+      (cliente.anonimo
         ? [['Nombre', nombreCompleto], ['Tipo', 'Cliente anónimo']]
-        : [['Nombre', nombreCompleto], ['DNI', cliente.documento ?? '-'], ['Correo', cliente.correo ?? '-']],
+        : [['Nombre', nombreCompleto], ['DNI', cliente.documento ?? '-'], ['Correo', cliente.correo ?? '-']]
+      ).map(([etiqueta, valor]) => [etiqueta, renglonesLargos(valor, normal, 10, anchoValor)] as [string, string[]]),
     ],
-    ['Datos del pedido', [['Pedido', `Número ${datos.numeroPedido}`], ['Mesa', datos.mesa ?? '-']]],
+    [
+      'Datos del pedido',
+      [
+        variosPedidos
+          ? ['Pedidos', renglonesDePedidos(datos.numeroPedido.split(' - '), normal, 10, anchoValor)]
+          : ['Pedido', [`Número ${datos.numeroPedido}`]],
+        ['Mesa', [datos.mesa ?? '-']],
+      ],
+    ],
   ];
+
+  // la caja crece si los pedidos ocupan más de un renglón
+  const renglonesPorCaja = cajas.map(([, filas]) => filas.reduce((suma, [, valor]) => suma + valor.length, 0));
+  const altoCaja = Math.max(92, 58 + (Math.max(...renglonesPorCaja) - 1) * 17);
 
   cajas.forEach(([titulo, filas], i) => {
     const x = MARGEN + i * (anchoCaja + 14);
     pagina.drawRectangle({ x, y: y - altoCaja, width: anchoCaja, height: altoCaja, color: VERDE_CLARO, borderColor: VERDE, borderWidth: 1 });
     pagina.drawText(titulo, { x: x + 12, y: y - 20, size: 11, font: negrita, color: VERDE });
 
-    filas.forEach(([etiqueta, valor], j) => {
-      const fila = y - 40 - j * 17;
+    let fila = y - 40;
+    filas.forEach(([etiqueta, valor]) => {
       pagina.drawText(`${etiqueta}:`, { x: x + 12, y: fila, size: 10, font: negrita, color: TEXTO });
-      const texto = renglones(valor, normal, 10, anchoCaja - 80)[0];
-      pagina.drawText(texto, { x: x + 64, y: fila, size: 10, font: normal, color: TEXTO });
+      valor.forEach((texto) => {
+        pagina.drawText(texto, { x: x + 64, y: fila, size: 10, font: normal, color: TEXTO });
+        fila -= 17;
+      });
     });
   });
 
