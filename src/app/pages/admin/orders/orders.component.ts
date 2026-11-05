@@ -19,6 +19,7 @@ import { Carrito } from '@app/pages/carrito/carrito';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { ListaFilasDirective } from '@app/directives/lista-filas/lista-filas.directive';
+import { RealtimeChannel } from '@supabase/supabase-js';
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -54,17 +55,21 @@ export class OrdersComponent implements OnInit {
   indiceActual = signal<number>(0);
   @ViewChild('viewport') viewport!: ElementRef<HTMLDivElement>;
 
+  private canalPedidos: RealtimeChannel | null = null;
+private temporizadorRecarga: ReturnType<typeof setTimeout> | null = null;
+
   constructor() {
     addIcons({
       'log-out-outline': logOutOutline,
     });
   }
 
-  async cargarpedido() {
-    this.cargando.set(true);
+  async cargarpedido(silencioso = false) {
+  if (!silencioso) this.cargando.set(true);
+
+  try {
     const listaPedidos = await this.pedidoService.traer_pedido();
 
-    // Consultamos los detalles/items para cada pedido en paralelo usando la lógica de obtenerPedidoConItems
     const pedidosConDetalle = await Promise.all(
       listaPedidos.map(async (p: any) => {
         try {
@@ -77,8 +82,17 @@ export class OrdersComponent implements OnInit {
     );
 
     this.pedidos.set(pedidosConDetalle);
-    this.cargando.set(false);
+
+    const ultimo = Math.max(0, pedidosConDetalle.length - 1);
+    if (this.indiceActual() > ultimo) {
+      this.indiceActual.set(ultimo);
+    }
+  } catch (error) {
+    console.error('Error al cargar los pedidos:', error);
+  } finally {
+    if (!silencioso) this.cargando.set(false);
   }
+}
 
   estadoPedidoCarga = signal(false)
 
@@ -123,8 +137,10 @@ export class OrdersComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.cargarpedido();
-  }
+  await this.cargarpedido();
+
+  this.canalPedidos = this.pedidoService.suscribirCambiosPedidos(() => this.programarRecarga());
+}
 
   volver(): void {
     void this.router.navigate(['/admin']);
@@ -168,4 +184,17 @@ export class OrdersComponent implements OnInit {
       this.indiceActual.set(closestIndex);
     }
   }
+
+  ngOnDestroy(): void {
+  if (this.temporizadorRecarga) clearTimeout(this.temporizadorRecarga);
+  if (this.canalPedidos) void this.pedidoService.cancelarSuscripcion(this.canalPedidos);
+}
+
+// junta varios eventos seguidos (pedido + items) en una sola recarga
+private programarRecarga(): void {
+  if (this.temporizadorRecarga) clearTimeout(this.temporizadorRecarga);
+  this.temporizadorRecarga = setTimeout(() => {
+    void this.cargarpedido(true);
+  }, 400);
+}
 }

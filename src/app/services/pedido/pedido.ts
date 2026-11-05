@@ -2,6 +2,7 @@ import { effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 import { Carrito } from '@app/pages/carrito/carrito';
 import { MesaCliente } from '../mesa-cliente/mesa-cliente';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 // Interfaz sin propina_porcentaje (ya que la propina va directo al ticket)
 export interface CuentaCliente {
@@ -346,4 +347,24 @@ if (!pedido.id_estadia) {
         body: { idPedido: data[0].id_pedido, idMesa: data[0].id_mesa },
       });
     }
+
+    suscribirCambiosPedidos(alCambiar: () => void): RealtimeChannel {
+  return this.sup.client
+    .channel('pedidos-mozo')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'pedido' }, (payload) => {
+      console.log('[realtime] pedido', payload.eventType);
+      alCambiar();
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'pedido_item' }, (payload) => {
+      console.log('[realtime] pedido_item', payload.eventType);
+      alCambiar();
+    })
+    .subscribe((status, err) => {
+      console.log('[realtime] estado del canal:', status, err ?? '');
+    });
+}
+
+async cancelarSuscripcion(canal: RealtimeChannel): Promise<void> {
+  await this.sup.client.removeChannel(canal);
+}
 }

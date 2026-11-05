@@ -109,6 +109,9 @@ export class CocinaPage implements OnDestroy {
   }
 
   recibir(pedido: PedidoCocina): Promise<void> {
+    console.log("COCINERO POR RECIBIR | CLICK EN ACEPTAR")
+    console.log(pedido)
+    
     return this.procesar(pedido, async () => {
       const recibido = await this.cocina.recibir(pedido);
 

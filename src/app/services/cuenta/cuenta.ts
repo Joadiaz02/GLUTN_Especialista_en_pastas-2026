@@ -206,7 +206,7 @@ export class CuentasMozo {
     });
 
     void this._db.client.functions.invoke('notify-pago', {
-      body: { idMesa: cuenta.idMesa, evento: 'confirmado' },
+      body: { idMesa: cuenta.idMesa, idPedido: cuenta.idPedido, evento: 'confirmado' },
     });
   }
 
