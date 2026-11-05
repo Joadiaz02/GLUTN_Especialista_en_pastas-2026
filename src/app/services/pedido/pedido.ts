@@ -301,6 +301,9 @@ if (!pedido.id_estadia) {
       propinaImporte: number;
       totalFinal: number;
     }): Promise<void> {
+      console.log("PAGAR CUENTA | PEDIDO.TS")
+      console.log(datos)
+      console.log("PAGAR CUENTA | PEDIDO.TS")
       const { error: errorTicket } = await this.sup.client.from('ticket').insert({
         id_pedido: datos.idsPedidos[0],
         propina: datos.propinaImporte,
@@ -321,9 +324,13 @@ if (!pedido.id_estadia) {
         throw new Error('No pudimos registrar el pago.');
       }
 
+      // void this.sup.client.functions.invoke('notify-pago', {
+      //   body: { idMesa: datos.idMesa, evento: 'realizado' },
+      // });
+
       void this.sup.client.functions.invoke('notify-pago', {
-        body: { idMesa: datos.idMesa, evento: 'realizado' },
-      });
+  body: { idMesa: datos.idMesa, idPedido: datos.idsPedidos[0], evento: 'realizado' },
+});
     }
 
     // SOLICITAR CUENTA (Sin propina_porcentaje en la tabla pedido)

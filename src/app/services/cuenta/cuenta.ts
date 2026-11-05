@@ -181,7 +181,7 @@ export class CuentasMozo {
 
   // confirma el pago y libera la mesa
   async confirmarPago(cuenta: CuentaDelMozo): Promise<void> {
-    console.log("cuenta.ts 149 | QLWKEJQWLKEJQWLKEJ QWLKJE LKJ")
+    console.log("cuenta.ts 149 | CONFIRMAR PAGO CUENTA.TS")
     console.log(cuenta)
     console.log(cuenta.idPedido)
 

@@ -13,6 +13,9 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+// perfiles que reciben el aviso de pago
+const PERFILES_DESTINO = ['mozo', 'dueno', 'supervisor'];
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
@@ -30,12 +33,11 @@ Deno.serve(async (req) => {
 
     await obtenerUsuarioAutenticado(authorization);
 
-    const { idPedido } = await req.json();
+    const { idPedido, evento } = await req.json();
     if (!idPedido) throw new Error('Falta idPedido.');
 
     const supabaseAdmin = crearClienteAdmin();
 
-    // Datos del pedido y la mesa, leídos del servidor (no confiamos en lo que manda el front)
     const { data: pedido, error: errorPedido } = await supabaseAdmin
       .from('pedido')
       .select('id_pedido, id_mesa, mesas ( numero )')
@@ -46,42 +48,54 @@ Deno.serve(async (req) => {
 
     const numeroMesa = (pedido as any).mesas?.numero ?? '';
 
-    // Dispositivos activos de todos los mozos
-    const { data: mozos, error: errorMozos } = await supabaseAdmin
+    const { data: destinatarios, error: errorDestinatarios } = await supabaseAdmin
       .from('usuarios')
       .select('id')
-      .eq('perfil', 'mozo');
+      .in('perfil', PERFILES_DESTINO);
 
-    if (errorMozos) throw new Error('No se pudieron obtener los mozos.');
+    if (errorDestinatarios) throw new Error('No se pudieron obtener los destinatarios.');
 
-    const idsMozos = (mozos ?? []).map((m) => m.id);
-    if (idsMozos.length === 0) {
-      return json({ ok: true, enviados: 0, mensaje: 'No hay mozos registrados.' });
+    const idsDestinatarios = (destinatarios ?? []).map((u) => u.id);
+    if (idsDestinatarios.length === 0) {
+      return json({ ok: true, enviados: 0, mensaje: 'No hay destinatarios registrados.' });
     }
 
     const { data: dispositivos, error: errorDispositivos } = await supabaseAdmin
       .from('dispositivos_push')
       .select('id, token')
-      .in('usuario_id', idsMozos)
+      .in('usuario_id', idsDestinatarios)
       .eq('activo', true);
 
     if (errorDispositivos) throw new Error('No se pudieron obtener los dispositivos.');
 
-    if (!dispositivos || dispositivos.length === 0) {
-      return json({ ok: true, enviados: 0, mensaje: 'Los mozos no tienen dispositivos activos.' });
+    // un mismo token puede estar en más de un usuario: se envía una sola vez
+    const dispositivosUnicos: any[] = [
+      ...new Map((dispositivos ?? []).map((d) => [d.token, d])).values(),
+    ];
+
+    if (dispositivosUnicos.length === 0) {
+      return json({ ok: true, enviados: 0, mensaje: 'No hay dispositivos activos.' });
     }
 
-    const cuerpo = numeroMesa
-      ? `La mesa ${numeroMesa} realizó el pago. Falta confirmarlo.`
-      : 'Un cliente realizó el pago. Falta confirmarlo.';
+    const confirmado = evento === 'confirmado';
+
+    const titulo = confirmado ? 'Pago confirmado' : 'Pago realizado';
+    const tipo = confirmado ? 'pago_confirmado' : 'pago_realizado';
+    const cuerpo = confirmado
+      ? numeroMesa
+        ? `Se confirmó el pago de la mesa ${numeroMesa}.`
+        : 'Se confirmó el pago de una cuenta.'
+      : numeroMesa
+        ? `La mesa ${numeroMesa} realizó el pago. Falta confirmarlo.`
+        : 'Un cliente realizó el pago. Falta confirmarlo.';
 
     let enviados = 0;
     let errores = 0;
 
-    for (const dispositivo of dispositivos) {
+    for (const dispositivo of dispositivosUnicos) {
       try {
-        await enviarNotificacionFirebase(dispositivo.token, 'Pago realizado', cuerpo, {
-          tipo: 'pago_realizado',
+        await enviarNotificacionFirebase(dispositivo.token, titulo, cuerpo, {
+          tipo,
           idPedido: String(idPedido),
         });
         enviados++;
