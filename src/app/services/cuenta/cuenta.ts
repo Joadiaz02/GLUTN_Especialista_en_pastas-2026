@@ -208,6 +208,11 @@ export class CuentasMozo {
     void this._db.client.functions.invoke('notify-pago', {
       body: { idMesa: cuenta.idMesa, evento: 'confirmado' },
     });
+
+    // factura: correo, notificación con enlace y aviso al dueño y supervisores
+    void this._db.client.functions.invoke('enviar-factura', {
+      body: { idPedido: cuenta.idPedido },
+    });
   }
 
   private suscribir(): void {
