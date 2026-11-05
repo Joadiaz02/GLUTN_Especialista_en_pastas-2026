@@ -2,16 +2,15 @@ import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonButton, IonContent, ToastController } from '@ionic/angular';
-import { Capacitor } from '@capacitor/core';
-import { Directory, Filesystem } from '@capacitor/filesystem';
-import { Share } from '@capacitor/share';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 import { Auth, Juegos, SupabaseService, Vibracion } from '@app/services';
 import { CuentaCliente, Pedido } from '@app/services/pedido/pedido';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
+import { LoadingOverlayComponent } from '@app/components/ui/loading-overlay/loading-overlay.component';
 import { Propina } from '@app/services/propina/propina';
+import { Factura } from '@app/services/factura/factura';
 
 const NIVEL_PROPINA: Record<number, string> = {
   20: 'Excelente',
@@ -26,7 +25,7 @@ const NIVEL_PROPINA: Record<number, string> = {
   standalone: true,
   templateUrl: './cuenta.page.html',
   styleUrls: ['./cuenta.page.scss'],
-  imports: [HeaderComponent, CurrencyPipe, IonButton, IonContent, SpinnerLogoComponent],
+  imports: [HeaderComponent, CurrencyPipe, IonButton, IonContent, SpinnerLogoComponent, LoadingOverlayComponent],
 })
 export class CuentaPage implements OnDestroy {
   private _auth = inject(Auth);
@@ -38,6 +37,7 @@ export class CuentaPage implements OnDestroy {
   private _toastController = inject(ToastController);
 
   private _propinaService = inject(Propina);
+  private _factura = inject(Factura);
 
   private _canal?: RealtimeChannel;
 
@@ -145,7 +145,6 @@ export class CuentaPage implements OnDestroy {
     void this._router.navigate(['/home']);
   }
 
-  // la factura se arma en el servidor con los datos del ticket; no queda guardada en Supabase
   async descargarFactura(): Promise<void> {
     const idPedido = this.idPedidoPagado();
 
@@ -156,36 +155,7 @@ export class CuentaPage implements OnDestroy {
     this.descargandoFactura.set(true);
 
     try {
-      const { data, error } = await this._db.client.functions.invoke('factura', {
-        body: { idPedido },
-      });
-
-      if (error || !(data instanceof Blob)) {
-        throw new Error('No pudimos generar la factura.');
-      }
-
-      const nombreArchivo = `factura-glutn-${idPedido.slice(0, 8)}.pdf`;
-
-      if (Capacitor.isNativePlatform()) {
-        const { uri } = await Filesystem.writeFile({
-          path: nombreArchivo,
-          data: await this.aBase64(data),
-          directory: Directory.Cache,
-        });
-
-        await Share.share({
-          title: 'Factura GLUTN',
-          url: uri,
-          dialogTitle: 'Guardar factura',
-        });
-      } else {
-        const url = URL.createObjectURL(data);
-        const enlace = document.createElement('a');
-        enlace.href = url;
-        enlace.download = nombreArchivo;
-        enlace.click();
-        URL.revokeObjectURL(url);
-      }
+      await this._factura.descargar(idPedido);
     } catch (error) {
       // cerrar el menú de compartir no es un error
       if (!String(error).toLowerCase().includes('cancel')) {
@@ -195,15 +165,6 @@ export class CuentaPage implements OnDestroy {
     } finally {
       this.descargandoFactura.set(false);
     }
-  }
-
-  private aBase64(archivo: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const lector = new FileReader();
-      lector.onload = () => resolve(String(lector.result).split(',')[1]);
-      lector.onerror = () => reject(lector.error);
-      lector.readAsDataURL(archivo);
-    });
   }
 
   private async cargar(): Promise<void> {

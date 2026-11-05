@@ -1,0 +1,150 @@
+<app-header routeBackName="/admin" />
+
+<ion-content class="facturacion-content">
+  <div class="facturacion-wrapper">
+    <h1 class="titulo-pagina">Facturación</h1>
+
+    <!-- filtro de día: flechas para moverse y el calendario al tocar la fecha -->
+    <div class="filtro-dia">
+      <button type="button" class="filtro-dia__flecha" aria-label="Día anterior" (click)="cambiarDia(-1)">
+        <ion-icon src="assets/icons/arrow-left.svg"></ion-icon>
+      </button>
+
+      <button type="button" class="filtro-dia__fecha" aria-label="Elegir día en el calendario" (click)="abrirCalendario()">
+        <span class="filtro-dia__texto">{{ esHoy() ? 'Hoy' : nombreDia() }}</span>
+        <span class="filtro-dia__numero">{{ dia() | date: 'dd/MM/yyyy' }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="filtro-dia__flecha"
+        aria-label="Día siguiente"
+        [disabled]="esHoy()"
+        (click)="cambiarDia(1)"
+      >
+        <ion-icon class="filtro-dia__icono--siguiente" src="assets/icons/arrow-left.svg"></ion-icon>
+      </button>
+    </div>
+
+    <section class="facturacion-tarjeta">
+      @if (cargando() && facturas().length === 0) {
+        <div class="facturacion-vacio">
+          <app-spinner-logo />
+        </div>
+      } @else if (facturas().length === 0) {
+        <div class="facturacion-vacio">
+          <p>No hay facturas este día.</p>
+          <p class="facturacion-vacio__detalle">Usá las flechas o tocá la fecha para ver otro día.</p>
+        </div>
+      } @else {
+        <div class="facturacion-resumen">
+          <span>{{ facturas().length }} {{ facturas().length === 1 ? 'factura' : 'facturas' }}</span>
+          <span class="facturacion-resumen__total">{{ totalDelDia() | currency:'ARS':'$':'1.0-0' }}</span>
+        </div>
+
+        <ul class="facturacion-lista">
+          @for (factura of facturas(); track factura.idTicket) {
+            <li class="factura">
+              <div class="factura__info">
+                <span class="factura__cliente">
+                  {{ factura.cliente }}
+                  @if (factura.anonimo) {
+                    <span class="factura__etiqueta">Anónimo</span>
+                  }
+                </span>
+                <!-- la fecha ya está en el filtro de arriba: acá va solo la hora -->
+                <span class="factura__detalle">{{ factura.fecha | date: 'HH:mm' }}</span>
+              </div>
+
+              <span class="factura__total">{{ factura.total | currency:'ARS':'$':'1.0-0' }}</span>
+
+              <ion-button
+                class="factura__descargar"
+                aria-label="Descargar factura"
+                [disabled]="descargando() !== null"
+                (click)="descargar(factura)"
+              >
+                <ion-icon slot="icon-only" src="assets/icons/download.svg"></ion-icon>
+              </ion-button>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </div>
+
+  <!-- calendario, con el mismo estilo que productos destacados del home -->
+  <ion-modal
+    class="calendario-modal"
+    [isOpen]="mostrarCalendario()"
+    (didDismiss)="cerrarCalendario()"
+  >
+    <ng-template>
+      <div class="calendario-modal__contenido">
+        <h2 class="calendario__titulo">Elegí un día</h2>
+
+        <div class="calendario__mes">
+          <button
+            type="button"
+            class="calendario__flecha"
+            aria-label="Mes anterior"
+            (click)="cambiarMes(-1)"
+          >
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </button>
+
+          <span class="calendario__nombre-mes">{{ tituloMes() }}</span>
+
+          <button
+            type="button"
+            class="calendario__flecha"
+            aria-label="Mes siguiente"
+            [disabled]="esMesActual()"
+            (click)="cambiarMes(1)"
+          >
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </button>
+        </div>
+
+        <div class="calendario__tarjeta">
+          <div class="calendario__grilla">
+            @for (nombre of diasDeLaSemana; track nombre) {
+              <span class="calendario__dia-semana">{{ nombre }}</span>
+            }
+
+            @for (dia of diasDelMes(); track $index) {
+              @if (dia.fecha) {
+                <button
+                  type="button"
+                  class="calendario__dia"
+                  [class.calendario__dia--hoy]="dia.hoy"
+                  [class.calendario__dia--elegido]="dia.elegido"
+                  [disabled]="dia.futuro"
+                  (click)="elegirDia(dia)"
+                >
+                  {{ dia.numero }}
+                </button>
+              } @else {
+                <span></span>
+              }
+            }
+          </div>
+        </div>
+
+        <ion-button
+          class="calendario-modal__cerrar"
+          expand="block"
+          shape="round"
+          (click)="cerrarCalendario()"
+        >
+          Cerrar
+        </ion-button>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+<!-- mientras se arma la factura, el spinner con el logo como en el resto de la app -->
+@if (descargando()) {
+  <app-loading-overlay mensaje="Generando factura..." />
+}

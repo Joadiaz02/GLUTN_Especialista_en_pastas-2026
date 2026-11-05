@@ -115,6 +115,15 @@
       >
         <span class="home-button__texto">Juegos</span>
       </ion-button>
+      } @if (botones().facturas) {
+      <ion-button
+        class="home-button"
+        expand="block"
+        shape="round"
+        (click)="goToFacturas()"
+      >
+        <span class="home-button__texto">Mis facturas</span>
+      </ion-button>
       } @if (botones().encuestas) {
       <ion-button
         class="home-button"
