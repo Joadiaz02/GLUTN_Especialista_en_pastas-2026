@@ -1,4 +1,3 @@
-
 import { Injectable, inject } from '@angular/core';
 import {
   ActionPerformed,
@@ -6,6 +5,7 @@ import {
   PushNotifications,
   Token,
 } from '@capacitor/push-notifications';
+import { Browser } from '@capacitor/browser';
 import { Platform, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -148,6 +148,17 @@ export class PushNotificationService {
       typeof datos?.['tipo'] === 'string'
         ? (datos['tipo'] as string)
         : null;
+
+    // factura del cliente anónimo: se abre el enlace para descargar el PDF
+    const url =
+      typeof datos?.['url'] === 'string'
+        ? (datos['url'] as string)
+        : null;
+
+    if (tipo === 'factura_lista' && url?.startsWith('https://')) {
+      void Browser.open({ url });
+      return;
+    }
 
     const ruta = tipo ? RUTA_POR_TIPO[tipo] : undefined;
 

@@ -418,6 +418,20 @@ export const routes: Routes = [
       import('./pages/cuenta/cuenta.page').then((m) => m.CuentaPage),
   },
   {
+    path: 'admin/facturacion',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor] },
+    loadComponent: () =>
+      import('./pages/facturacion/facturacion.page').then((m) => m.FacturacionPage),
+  },
+  {
+    path: 'facturas',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [EPerfilUsuario.ClienteRegistrado] },
+    loadComponent: () =>
+      import('./pages/facturas/facturas.page').then((m) => m.FacturasPage),
+  },
+  {
     path: 'pagos',
     canActivate: [authGuard, roleGuard],
     data: { roles: [EPerfilUsuario.Mozo] },

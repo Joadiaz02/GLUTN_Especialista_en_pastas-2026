@@ -1,3 +1,25 @@
+export interface AdjuntoCorreo {
+  nombreArchivo: string;
+  tipoMime: string;
+  contenido: Uint8Array;
+}
+
+function bytesABase64(bytes: Uint8Array): string {
+  let binario = '';
+  const tamanoBloque = 8192;
+
+  for (let i = 0; i < bytes.length; i += tamanoBloque) {
+    binario += String.fromCharCode(...bytes.subarray(i, i + tamanoBloque));
+  }
+
+  return btoa(binario);
+}
+
+// los correos exigen líneas de, como máximo, 76 caracteres
+function partirEnLineas(base64: string): string {
+  return base64.match(/.{1,76}/g)?.join('\r\n') ?? '';
+}
+
 function encodeHeader(
   value: string
 ): string {
@@ -94,10 +116,70 @@ async function obtenerAccessTokenGoogle(): Promise<string> {
   return data.access_token;
 }
 
+// Sin adjuntos el mensaje sale igual que siempre.
+// Con adjuntos se arma un correo "multipart" con el HTML y los archivos.
+function crearMensajeMime(
+  from: string,
+  fromName: string,
+  destinatario: string,
+  asunto: string,
+  html: string,
+  adjuntos: AdjuntoCorreo[]
+): string {
+
+  const cabeceras = [
+    `From: ${encodeHeader(fromName)} <${from}>`,
+    `To: ${destinatario}`,
+    `Subject: ${encodeHeader(asunto)}`,
+    'MIME-Version: 1.0',
+  ];
+
+  if (adjuntos.length === 0) {
+    return [
+      ...cabeceras,
+      'Content-Type: text/html; charset=UTF-8',
+      '',
+      html,
+    ].join('\r\n');
+  }
+
+  const frontera =
+    `glutn_${crypto.randomUUID().replaceAll('-', '')}`;
+
+  const partes = [
+    ...cabeceras,
+    `Content-Type: multipart/mixed; boundary="${frontera}"`,
+    '',
+    `--${frontera}`,
+    'Content-Type: text/html; charset=UTF-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    partirEnLineas(
+      bytesABase64(new TextEncoder().encode(html))
+    ),
+  ];
+
+  for (const adjunto of adjuntos) {
+    partes.push(
+      `--${frontera}`,
+      `Content-Type: ${adjunto.tipoMime}; name="${adjunto.nombreArchivo}"`,
+      `Content-Disposition: attachment; filename="${adjunto.nombreArchivo}"`,
+      'Content-Transfer-Encoding: base64',
+      '',
+      partirEnLineas(bytesABase64(adjunto.contenido))
+    );
+  }
+
+  partes.push(`--${frontera}--`, '');
+
+  return partes.join('\r\n');
+}
+
 export async function enviarGmail(
   destinatario: string,
   asunto: string,
-  html: string
+  html: string,
+  adjuntos: AdjuntoCorreo[] = []
 ): Promise<void> {
 
   const from =
@@ -122,15 +204,14 @@ export async function enviarGmail(
   const accessToken =
     await obtenerAccessTokenGoogle();
 
-  const rawMessage = [
-    `From: ${encodeHeader(fromName)} <${from}>`,
-    `To: ${destinatario}`,
-    `Subject: ${encodeHeader(asunto)}`,
-    'MIME-Version: 1.0',
-    'Content-Type: text/html; charset=UTF-8',
-    '',
+  const rawMessage = crearMensajeMime(
+    from,
+    fromName,
+    destinatario,
+    asunto,
     html,
-  ].join('\r\n');
+    adjuntos
+  );
 
   const encodedMessage =
     encodeBase64Url(

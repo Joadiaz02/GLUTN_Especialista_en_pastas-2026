@@ -21,11 +21,11 @@
           <ion-button
             expand="block"
             shape="round"
-            fill="outline"
+            class="boton-factura"
             [disabled]="descargandoFactura()"
             (click)="descargarFactura()"
           >
-            {{ descargandoFactura() ? 'Generando factura...' : 'Descargar factura' }}
+            Descargar factura
           </ion-button>
         }
 
@@ -101,3 +101,8 @@
     }
   </div>
 </ion-content>
+
+<!-- mientras se arma la factura, el spinner con el logo como en el resto de la app -->
+@if (descargandoFactura()) {
+  <app-loading-overlay mensaje="Generando factura..." />
+}

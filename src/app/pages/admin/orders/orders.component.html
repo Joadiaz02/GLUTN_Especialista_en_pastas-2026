@@ -31,13 +31,19 @@
       @for (pedido of pedidos(); track pedido.id_pedido; let i = $index) {
       <article class="slide" [class.slide--activo]="i === indiceActual()">
         <div class="pedido">
-          <header class="pedido__mesa">
-            <h2>Mesa número: {{ pedido.mesas?.numero }}</h2>
-            <span
-              >Cliente: {{ pedido.usuarios?.nombre }}
-              {{ pedido.usuarios?.apellido }}</span
-            >
-          </header>
+<header class="pedido__mesa">
+  <div class="pedido__mesa-numero">
+    <small>Mesa</small>
+    <strong>{{ pedido.mesas?.numero }}</strong>
+  </div>
+
+  <div class="pedido__cliente">
+    <small>Cliente</small>
+    <strong>
+      {{ pedido.usuarios?.nombre }} {{ pedido.usuarios?.apellido }}
+    </strong>
+  </div>
+</header>
           <div class="pedido__encabezado">
             <div class="pedido__momento">
               <span class="pedido__hora">

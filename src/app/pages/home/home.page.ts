@@ -207,6 +207,8 @@ export class HomePage implements OnInit, OnDestroy {
       reservas: false,
       carta: cliente ? enMesa : perfil !== null,
       juegos: cliente && pedidoRecibido,
+      // el anónimo es un usuario nuevo en cada visita: no tiene facturas anteriores
+      facturas: perfil === EPerfilUsuario.ClienteRegistrado,
       encuestas:
         cliente ||
         perfil === EPerfilUsuario.Dueno ||
@@ -360,6 +362,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   goToEncuestas() {
     this.router.navigate(['/encuestas']);
+  }
+
+  goToFacturas() {
+    this.router.navigate(['/facturas']);
   }
 
   // escáner qr

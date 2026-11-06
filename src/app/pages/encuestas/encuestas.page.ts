@@ -20,16 +20,14 @@ import {
   IonTitle,
   IonToolbar,
   IonSpinner,
+  IonRange,
   ToastController,
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 import {
-  EncuestasService,
-  EstadoEncuesta,
-  PreguntaEncuesta,
-  ResultadoEncuesta,
-  ResultadoTemporalEncuesta,
+  EncuestasService, EstadoEncuesta, PreguntaEncuesta,
+  ResultadoEncuesta, ResultadoTemporalEncuesta, TipoPregunta,
 } from '@app/services/encuestas/encuestas.service';
 
 @Component({
@@ -42,6 +40,7 @@ import {
     IonTitle,
     IonToolbar,
     IonSpinner,
+    IonRange,
     HeaderComponent,
     SpinnerLogoComponent
   ],
@@ -172,9 +171,9 @@ private resolverOrigen(): '/home' | '/waiting-room' {
 
 /**
  * Hace que el último bloque pueda alinearse arriba de todo.
- * El espaciador final ocupa lo que sobra del área visible, así el scroll
- * máximo cae justo al inicio del último bloque: ni arriba ni abajo queda
- * un bloque cortado.
+ * Publica el alto visible del scroller (--alto-visible): cada tarjeta de
+ * resultados lo usa para ocupar exactamente una pantalla y para calcular
+ * el tamaño de la torta.
  */
 private ajustarFinal(): void {
   const scroller = this.scroller?.nativeElement;
@@ -227,14 +226,10 @@ private bloquesDeScroll(): HTMLElement[] {
   }
 
   colorOpcion(indice: number): string {
-    const colores = [
-      '#3639fc',
-      '#657a4d',
-      '#7ad467',
-      '#8b79a8',
-      '#6b9bb8',
-      '#b94f2d',
-    ];
+const colores = [
+  '#3639fc', '#657a4d', '#7ad467', '#8b79a8', '#6b9bb8',
+  '#b94f2d', '#e0a526', '#c94c7c', '#2f8f83', '#8a5a3c',
+];
 
     return colores[indice % colores.length];
   }
@@ -431,6 +426,18 @@ private bloquesDeScroll(): HTMLElement[] {
     ];
   }
 
+  /** Más de 6 opciones (ej. slider 1-10): los gráficos usan su versión compacta. */
+  muchasOpciones(resultado: ResultadoEncuesta): boolean {
+    return this.opcionesGrafico(resultado).length > 6;
+  }
+
+  /** Filas que ocupa la leyenda de la torta (2 columnas si hay muchas opciones). */
+  filasLeyenda(resultado: ResultadoEncuesta): number {
+    const cantidad = this.opcionesGrafico(resultado).length;
+
+    return this.muchasOpciones(resultado) ? Math.ceil(cantidad / 2) : cantidad;
+  }
+
 gradienteTorta(resultado: ResultadoEncuesta): string {
   const opciones = this.opcionesGrafico(resultado);
   const total = this.cantidadTotal(resultado);
@@ -477,17 +484,24 @@ gradienteTorta(resultado: ResultadoEncuesta): string {
     );
   }
 
-  etiquetaOpcion(opcion: string): string {
-    const etiquetas: Record<string, string> = {
-      '1': 'Muy mala',
-      '2': 'Mala',
-      '3': 'Regular',
-      '4': 'Buena',
-      '5': 'Muy buena',
-    };
+actualizarSlider(id: string, ev: Event): void {
+  const v = (ev as CustomEvent).detail?.value;
+  if (typeof v === 'number') this.actualizarRespuesta(id, String(v));
+}
 
-    return etiquetas[opcion] ?? opcion;
-  }
+valorSlider(id: string): number {
+  const v = Number(this.respuestas()[id]);
+  return Number.isFinite(v) && v > 0 ? v : 1;
+}
+
+etiquetaOpcion(opcion: string, tipo?: TipoPregunta): string {
+  if (tipo !== 'escala') return opcion;
+
+  const etiquetas: Record<string, string> = {
+    '1': 'Muy mala', '2': 'Mala', '3': 'Regular', '4': 'Buena', '5': 'Muy buena',
+  };
+  return etiquetas[opcion] ?? opcion;
+}
 
 irAGrafico(tipo: 'torta' | 'barras' | 'columnas'): void {
   void this.router.navigate(['/encuestas/grafico', tipo], {

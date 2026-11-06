@@ -1,0 +1,332 @@
+.facturacion-content {
+  --background: var(--ion-background-color);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+.facturacion-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+}
+
+// filtro de día
+.filtro-dia {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.filtro-dia__flecha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+  color: #ffffff;
+  font-size: 22px;
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+// la flecha de siguiente es la misma que la de anterior, girada
+.filtro-dia__icono--siguiente {
+  transform: rotate(180deg);
+}
+
+.filtro-dia__fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 16px;
+  background: #6b5c4e;
+  color: #ffffff;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.filtro-dia__texto {
+  font-size: 15px;
+  color: #ffc983;
+  font-weight: 700;
+}
+
+.filtro-dia__numero {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+// tarjeta marrón que ocupa el resto de la pantalla
+.facturacion-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  background: #6b5c4e;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.facturacion-resumen {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.25);
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.facturacion-resumen__total {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffc983;
+}
+
+.facturacion-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+}
+
+.factura {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(58, 36, 23, 0.4);
+  padding: 10px 8px 10px 16px;
+  border-radius: 16px;
+}
+
+.factura__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.factura__cliente {
+  font-size: 17px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.factura__etiqueta {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: rgba(255, 201, 131, 0.2);
+  color: #ffc983;
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.factura__detalle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.factura__total {
+  font-size: 18px;
+  font-weight: 800;
+  white-space: nowrap;
+  color: #ffc983;
+}
+
+// redondel naranja con la flecha de descarga en blanco, igual que en Mis facturas
+.factura__descargar {
+  --background: var(--ion-color-primary);
+  --background-activated: #c95a35;
+  --color: #ffffff;
+  --border-radius: 50%;
+  --padding-start: 0;
+  --padding-end: 0;
+  --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  margin: 0;
+  flex: 0 0 48px;
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+
+  ion-icon {
+    font-size: 26px;
+  }
+}
+
+.facturacion-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  text-align: center;
+  padding: 24px;
+
+  p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.facturacion-vacio__detalle {
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+// calendario: mismos valores que la ventana de productos destacados del home
+ion-modal.calendario-modal {
+  --width: 90%;
+  --max-width: 420px;
+  --height: auto;
+  --max-height: 85%;
+  --border-radius: 24px;
+  --background: var(--ion-background-color);
+  --backdrop-opacity: 0.6;
+}
+
+.calendario-modal__contenido {
+  padding: 28px 24px 24px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+.calendario__titulo {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.calendario__mes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.calendario__nombre-mes {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+}
+
+.calendario__flecha {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--ion-color-light);
+  color: var(--ion-color-primary);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.calendario__tarjeta {
+  background: var(--ion-color-light);
+  border-radius: 16px;
+  border: 2px solid var(--ion-border-color);
+  padding: 12px;
+}
+
+.calendario__grilla {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendario__dia-semana {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+  padding-bottom: 4px;
+}
+
+.calendario__dia {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #3a2417;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+}
+
+.calendario__dia--hoy {
+  box-shadow: inset 0 0 0 2px var(--ion-color-primary);
+  color: var(--ion-color-primary);
+  font-weight: 800;
+}
+
+.calendario__dia--elegido {
+  background: var(--ion-color-primary);
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.calendario-modal__cerrar {
+  margin-top: 20px;
+  --background: var(--ion-color-primary);
+  --border-radius: 18px;
+  height: 52px;
+  font-size: 18px;
+  font-weight: 600;
+}

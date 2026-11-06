@@ -137,6 +137,15 @@ export const ADMIN_MODULES: AdminModule[] = [
     roles: [EPerfilUsuario.Mozo],
     path: 'payments',
   },
+
+  {
+    id: 'facturacion',
+    title: 'Facturación',
+    description: 'Consultar y descargar las facturas',
+    icon: 'receipt-edit',
+    roles: [EPerfilUsuario.Dueno, EPerfilUsuario.Supervisor],
+    path: 'facturacion',
+  },
   {
   id: 'menu-principal',
   title: 'Menú principal',

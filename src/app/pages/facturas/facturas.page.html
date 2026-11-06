@@ -1,0 +1,55 @@
+<app-header routeBackName="/home" />
+
+<ion-content class="facturas-content">
+  <div class="facturas-wrapper">
+    <div class="logo-container logo-fijo">
+      <img
+        src="assets/images/LOGO-GLUTN.png"
+        alt="GLUTN - Especialista en Pastas"
+        class="logo"
+      />
+    </div>
+
+    <h1 class="titulo-pagina">Mis facturas</h1>
+
+    <section class="facturas-tarjeta">
+      @if (cargando() && facturas().length === 0) {
+        <div class="facturas-vacio">
+          <app-spinner-logo />
+        </div>
+      } @else if (facturas().length === 0) {
+        <div class="facturas-vacio">
+          <p>Todavía no tenés facturas.</p>
+          <p class="facturas-vacio__detalle">Cuando el mozo confirme el pago de tu cuenta, vas a poder descargarla desde acá.</p>
+        </div>
+      } @else {
+        <ul class="facturas-lista">
+          @for (factura of facturas(); track factura.idTicket) {
+            <li class="factura">
+              <div class="factura__info">
+                <span class="factura__fecha">{{ factura.fecha | date: 'dd/MM/yyyy' }}</span>
+                <span class="factura__hora">{{ factura.fecha | date: 'HH:mm' }}</span>
+              </div>
+
+              <span class="factura__total">{{ factura.total | currency:'ARS':'$':'1.0-0' }}</span>
+
+              <ion-button
+                class="factura__descargar"
+                aria-label="Descargar factura"
+                [disabled]="descargando() !== null"
+                (click)="descargar(factura)"
+              >
+                <ion-icon slot="icon-only" src="assets/icons/download.svg"></ion-icon>
+              </ion-button>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </div>
+</ion-content>
+
+<!-- mientras se arma la factura, el spinner con el logo como en el resto de la app -->
+@if (descargando()) {
+  <app-loading-overlay mensaje="Generando factura..." />
+}
