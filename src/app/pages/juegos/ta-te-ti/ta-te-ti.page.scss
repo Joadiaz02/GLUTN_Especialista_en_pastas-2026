@@ -6,6 +6,13 @@
   --padding-bottom: 24px;
 }
 
+// logo chico propio del juego: el general es más alto y hace aparecer el scroll
+.logo-container.logo-fijo {
+  flex-shrink: 0;
+  width: min(140px, 17vh);
+  margin: 0 auto 12px;
+}
+
 // el juego ocupa el alto disponible sin scroll
 .ta-te-ti-wrapper {
   width: 100%;

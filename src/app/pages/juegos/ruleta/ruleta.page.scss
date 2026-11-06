@@ -6,6 +6,13 @@
   --padding-bottom: 24px;
 }
 
+// logo chico propio del juego: el general es más alto y hace aparecer el scroll
+.logo-container.logo-fijo {
+  flex-shrink: 0;
+  width: min(140px, 17vh);
+  margin: 0 auto 12px;
+}
+
 // el juego ocupa el alto disponible sin scroll
 .ruleta-wrapper {
   width: 100%;
@@ -158,5 +165,13 @@
 
   .ruleta-boton {
     margin-top: 4px;
+  }
+}
+
+// en pantallas muy bajas, más chica para que entre el resultado
+@media (max-height: 680px) {
+  .ruleta-contenedor {
+    width: min(85vw, 28vh);
+    height: min(85vw, 28vh);
   }
 }
