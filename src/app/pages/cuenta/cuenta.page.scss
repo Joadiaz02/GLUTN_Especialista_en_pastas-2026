@@ -166,3 +166,38 @@
   margin: 0;
   font-size: 16px;
 }
+// modal de pago confirmado: igual que quiénes somos y destacados del home, con los colores de la tarjeta
+ion-modal.cuenta-modal {
+  --width: 90%;
+  --max-width: 420px;
+  --height: auto;
+  --max-height: 85%;
+  --border-radius: 24px;
+  --background: #6b5c4e;
+  --backdrop-opacity: 0.6;
+}
+
+.cuenta-modal__contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px 24px 24px;
+  background: #6b5c4e;
+  color: #ffffff;
+  text-align: center;
+
+  .cuenta-ticket__titulo {
+    font-size: 24px;
+  }
+
+  ion-button {
+    height: 52px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+// mientras se genera la factura el modal no se ve, así el spinner ocupa toda la pantalla
+ion-modal.cuenta-modal.cuenta-modal--oculto {
+  visibility: hidden;
+}

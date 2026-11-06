@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { IonButton, IonContent, ToastController } from '@ionic/angular';
+import { IonButton, IonContent, IonModal, ToastController } from '@ionic/angular';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 import { Auth, Juegos, SupabaseService, Vibracion } from '@app/services';
@@ -25,7 +25,7 @@ const NIVEL_PROPINA: Record<number, string> = {
   standalone: true,
   templateUrl: './cuenta.page.html',
   styleUrls: ['./cuenta.page.scss'],
-  imports: [HeaderComponent, CurrencyPipe, IonButton, IonContent, SpinnerLogoComponent, LoadingOverlayComponent],
+  imports: [HeaderComponent, CurrencyPipe, IonButton, IonContent, IonModal, SpinnerLogoComponent, LoadingOverlayComponent],
 })
 export class CuentaPage implements OnDestroy {
   private _auth = inject(Auth);
@@ -79,6 +79,8 @@ export class CuentaPage implements OnDestroy {
   }
 
   ionViewWillLeave(): void {
+    // el modal de pago confirmado no debe quedar abierto en la pantalla siguiente
+    this.pagoConfirmado.set(false);
     this.dejarDeEscuchar();
   }
 

@@ -13,26 +13,7 @@
     <h1 class="titulo-pagina">Tu cuenta</h1>
 
     @if (pagoConfirmado()) {
-      <section class="cuenta-ticket">
-        <h2 class="cuenta-ticket__titulo">¡Pago confirmado!</h2>
-        <p class="cuenta-gracias">Gracias por tu visita. ¡Esperamos verte pronto!</p>
-
-        @if (idPedidoPagado()) {
-          <ion-button
-            expand="block"
-            shape="round"
-            class="boton-factura"
-            [disabled]="descargandoFactura()"
-            (click)="descargarFactura()"
-          >
-            Descargar factura
-          </ion-button>
-        }
-
-        <ion-button expand="block" shape="round" (click)="irAlInicio()">
-          Volver al inicio
-        </ion-button>
-      </section>
+      <!-- el pago confirmado se muestra en el modal de abajo -->
     } @else if (cargando() && !cuenta()) {
       <div class="cuenta-vacio">
         <app-spinner-logo />
@@ -100,9 +81,40 @@
       </div>
     }
   </div>
+
+  <!-- pago confirmado, con el mismo estilo que quiénes somos y productos destacados del home -->
+  <ion-modal
+    class="cuenta-modal"
+    [isOpen]="pagoConfirmado()"
+    [backdropDismiss]="false"
+    [class.cuenta-modal--oculto]="descargandoFactura()"
+  >
+    <ng-template>
+      <div class="cuenta-modal__contenido">
+        <h2 class="cuenta-ticket__titulo">¡Pago confirmado!</h2>
+        <p class="cuenta-gracias">Gracias por tu visita. ¡Esperamos verte pronto!</p>
+
+        @if (idPedidoPagado()) {
+          <ion-button
+            expand="block"
+            shape="round"
+            class="boton-factura"
+            [disabled]="descargandoFactura()"
+            (click)="descargarFactura()"
+          >
+            Descargar factura
+          </ion-button>
+        }
+
+        <ion-button expand="block" shape="round" (click)="irAlInicio()">
+          Volver al inicio
+        </ion-button>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 
-<!-- mientras se arma la factura, el spinner con el logo como en el resto de la app -->
+<!-- mientras se arma la factura, el spinner con el logo como en el resto de la app (el modal se oculta un momento) -->
 @if (descargandoFactura()) {
   <app-loading-overlay mensaje="Generando factura..." />
 }
