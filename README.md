@@ -552,7 +552,7 @@ QR correspondiente a la propina del 15%
 QR correspondiente a la propina del 20%
 
 <p align="center">
-  <img src="images/propina-veinte.jpg" alt="QR Propina 20" width="250">
+  <img src="images/propina veinte.jpg" alt="QR Propina 20" width="250">
 </p>
 
 ---
