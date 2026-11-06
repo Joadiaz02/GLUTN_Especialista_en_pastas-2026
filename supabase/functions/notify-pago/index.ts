@@ -7,20 +7,19 @@ import {
   enviarNotificacionFirebase,
 } from '../_shared/firebase.ts';
 
+// avisa a los mozos cuando el pedido está completo
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-// perfiles que reciben el aviso de pago
-const PERFILES_DESTINO = ['mozo', 'dueno', 'supervisor'];
-
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
+function responder(cuerpo: unknown, status = 200): Response {
+  return new Response(JSON.stringify(cuerpo), {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
+}
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -33,70 +32,63 @@ Deno.serve(async (req) => {
 
     await obtenerUsuarioAutenticado(authorization);
 
-    const { idPedido, evento } = await req.json();
-    if (!idPedido) throw new Error('Falta idPedido.');
+    const { idPedido } = await req.json();
+    if (!idPedido) throw new Error('Falta el pedido.');
 
     const supabaseAdmin = crearClienteAdmin();
 
+    // solo avisa si el pedido está listo
     const { data: pedido, error: errorPedido } = await supabaseAdmin
       .from('pedido')
-      .select('id_pedido, id_mesa, mesas ( numero )')
+      .select('id_mesa, estado_pedido')
       .eq('id_pedido', idPedido)
-      .single();
+      .maybeSingle();
 
     if (errorPedido || !pedido) throw new Error('No se encontró el pedido.');
 
-    const numeroMesa = (pedido as any).mesas?.numero ?? '';
+    if (pedido.estado_pedido !== 'listo') {
+      return responder({ ok: true, enviados: 0, mensaje: 'El pedido todavía no está listo.' });
+    }
 
-    const { data: destinatarios, error: errorDestinatarios } = await supabaseAdmin
+    const { data: mesa } = await supabaseAdmin
+      .from('mesas')
+      .select('numero')
+      .eq('id', pedido.id_mesa)
+      .maybeSingle();
+
+    const { data: mozos, error: errorMozos } = await supabaseAdmin
       .from('usuarios')
       .select('id')
-      .in('perfil', PERFILES_DESTINO);
+      .eq('perfil', 'mozo');
 
-    if (errorDestinatarios) throw new Error('No se pudieron obtener los destinatarios.');
+    if (errorMozos) throw new Error('No se pudieron obtener los mozos.');
 
-    const idsDestinatarios = (destinatarios ?? []).map((u) => u.id);
-    if (idsDestinatarios.length === 0) {
-      return json({ ok: true, enviados: 0, mensaje: 'No hay destinatarios registrados.' });
+    const mozoIds = (mozos ?? []).map((m) => m.id);
+
+    if (mozoIds.length === 0) {
+      return responder({ ok: true, enviados: 0, mensaje: 'No hay mozos registrados.' });
     }
 
     const { data: dispositivos, error: errorDispositivos } = await supabaseAdmin
       .from('dispositivos_push')
       .select('id, token')
-      .in('usuario_id', idsDestinatarios)
+      .in('usuario_id', mozoIds)
       .eq('activo', true);
 
     if (errorDispositivos) throw new Error('No se pudieron obtener los dispositivos.');
 
-    // un mismo token puede estar en más de un usuario: se envía una sola vez
-    const dispositivosUnicos: any[] = [
-      ...new Map((dispositivos ?? []).map((d) => [d.token, d])).values(),
-    ];
-
-    if (dispositivosUnicos.length === 0) {
-      return json({ ok: true, enviados: 0, mensaje: 'No hay dispositivos activos.' });
-    }
-
-    const confirmado = evento === 'confirmado';
-
-    const titulo = confirmado ? 'Pago confirmado' : 'Pago realizado';
-    const tipo = confirmado ? 'pago_confirmado' : 'pago_realizado';
-    const cuerpo = confirmado
-      ? numeroMesa
-        ? `Se confirmó el pago de la mesa ${numeroMesa}.`
-        : 'Se confirmó el pago de una cuenta.'
-      : numeroMesa
-        ? `La mesa ${numeroMesa} realizó el pago. Falta confirmarlo.`
-        : 'Un cliente realizó el pago. Falta confirmarlo.';
+    const cuerpo = mesa
+      ? `El pedido de la mesa ${mesa.numero} está completo. Ya podés llevarlo.`
+      : 'Hay un pedido completo. Ya podés llevarlo.';
 
     let enviados = 0;
     let errores = 0;
 
-    for (const dispositivo of dispositivosUnicos) {
+    for (const dispositivo of dispositivos ?? []) {
       try {
-        await enviarNotificacionFirebase(dispositivo.token, titulo, cuerpo, {
-          tipo,
-          idPedido: String(idPedido),
+        await enviarNotificacionFirebase(dispositivo.token, 'Pedido listo', cuerpo, {
+          tipo: 'pedido_listo',
+          idPedido,
         });
         enviados++;
       } catch (error) {
@@ -105,12 +97,12 @@ Deno.serve(async (req) => {
       }
     }
 
-    return json({ ok: true, enviados, errores });
+    return responder({ ok: true, enviados, errores });
   } catch (error) {
-    console.error('Error en notify-pago:', error);
-    return json(
+    console.error('Error en notify-pedido-listo:', error);
+    return responder(
       { ok: false, error: error instanceof Error ? error.message : 'Error desconocido.' },
-      400,
+      400
     );
   }
 });

@@ -14,6 +14,7 @@ const corsHeaders = {
 
 const MENSAJES: Record<string, string> = {
   confirmado: 'Tu pedido fue confirmado y ya se está preparando.',
+  en_preparacion: 'Tu pedido está en preparación.',
   rechazado: 'Tu pedido fue rechazado. Podés modificarlo y reenviarlo.',
   listo: 'Tu pedido está listo.',
   entregado: 'Tu pedido fue entregado, ¡buen provecho!',
