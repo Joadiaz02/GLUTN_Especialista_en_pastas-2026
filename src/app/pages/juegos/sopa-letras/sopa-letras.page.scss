@@ -6,6 +6,13 @@
   --padding-bottom: 24px;
 }
 
+// logo chico propio del juego: el general es más alto y hace aparecer el scroll
+.logo-container.logo-fijo {
+  flex-shrink: 0;
+  width: min(140px, 17vh);
+  margin: 0 auto 12px;
+}
+
 // el juego ocupa el alto disponible sin scroll
 .sopa-wrapper {
   width: 100%;
@@ -161,6 +168,17 @@
   height: 52px;
   font-size: 18px;
   font-weight: 600;
+}
+
+// en pantallas bajas se achica la grilla para que entre el botón
+@media (max-height: 780px) {
+  .sopa-inicio {
+    gap: 12px;
+  }
+
+  .sopa-grilla {
+    max-width: min(360px, 36vh);
+  }
 }
 
 // en pantallas bajas se achica el título
