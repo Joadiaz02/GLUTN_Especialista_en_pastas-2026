@@ -67,6 +67,8 @@ export class PagosPage implements OnDestroy {
   }
 
   confirmar(cuenta: CuentaDelMozo): Promise<void> {
+    console.log("PAGOS PAGE | CLICK EN CONFIRMAR PAGO MOZO")
+
     return this.procesar(cuenta, async () => {
       await this.cuentasMozo.confirmarPago(cuenta);
     });

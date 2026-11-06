@@ -89,14 +89,14 @@
             </span>
           </div>
           <div class="pedido__items-wrap">
-          <ul class="pedido__items" appListaFilas>
-            @for (item of pedido.items; track $index) {
-            <li class="pedido__item">
-              <span class="pedido__cantidad"> {{ item.cantidad }} </span>
-              <span class="pedido__nombre"> {{ item.nombre }} </span>
-            </li>
-            }
-          </ul>
+            <ul class="pedido__items" appListaFilas>
+              @for (item of pedido.items; track $index) {
+              <li class="pedido__item">
+                <span class="pedido__cantidad"> {{ item.cantidad }} </span>
+                <span class="pedido__nombre"> {{ item.nombre }} </span>
+              </li>
+              }
+            </ul>
           </div>
           <div class="pedido__acciones">
             <ion-button

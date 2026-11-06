@@ -171,6 +171,9 @@ export class Cocina {
 
   // marca la parte de la cocina lista, true si el pedido quedó completo
   async entregar(pedido: PedidoCocina): Promise<boolean> {
+    console.log("COCINA.TS | PEDIDOOOOO")
+    console.log(pedido)
+
     const { data: estado, error } = await this._db.client.rpc(
       'pedido_sector_listo',
       { p_id_pedido: pedido.idPedido, p_sector: 'cocina' }
@@ -240,6 +243,9 @@ export class Cocina {
   }
 
   private avisarCliente(pedido: PedidoCocina, nuevoEstado: string): void {
+    console.log("AVISARCLIENTE() | ESTADO DE en_preparacion")
+    console.log(nuevoEstado)
+
     void this._db.client.functions.invoke('notify-pedido-stado', {
       body: { idUsuario: pedido.idUsuario, idPedido: pedido.idPedido, nuevoEstado },
     });

@@ -2,6 +2,7 @@ import { effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { SupabaseService } from '../supabase.service';
 import { Carrito } from '@app/pages/carrito/carrito';
 import { MesaCliente } from '../mesa-cliente/mesa-cliente';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 // Interfaz sin propina_porcentaje (ya que la propina va directo al ticket)
 export interface CuentaCliente {
@@ -300,6 +301,9 @@ if (!pedido.id_estadia) {
       propinaImporte: number;
       totalFinal: number;
     }): Promise<void> {
+      console.log("PAGAR CUENTA | PEDIDO.TS")
+      console.log(datos)
+      console.log("PAGAR CUENTA | PEDIDO.TS")
       const { error: errorTicket } = await this.sup.client.from('ticket').insert({
         id_pedido: datos.idsPedidos[0],
         propina: datos.propinaImporte,
@@ -320,9 +324,13 @@ if (!pedido.id_estadia) {
         throw new Error('No pudimos registrar el pago.');
       }
 
+      // void this.sup.client.functions.invoke('notify-pago', {
+      //   body: { idMesa: datos.idMesa, evento: 'realizado' },
+      // });
+
       void this.sup.client.functions.invoke('notify-pago', {
-        body: { idMesa: datos.idMesa, evento: 'realizado' },
-      });
+  body: { idMesa: datos.idMesa, idPedido: datos.idsPedidos[0], evento: 'realizado' },
+});
     }
 
     // SOLICITAR CUENTA (Sin propina_porcentaje en la tabla pedido)
@@ -346,4 +354,24 @@ if (!pedido.id_estadia) {
         body: { idPedido: data[0].id_pedido, idMesa: data[0].id_mesa },
       });
     }
+
+    suscribirCambiosPedidos(alCambiar: () => void): RealtimeChannel {
+  return this.sup.client
+    .channel('pedidos-mozo')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'pedido' }, (payload) => {
+      console.log('[realtime] pedido', payload.eventType);
+      alCambiar();
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'pedido_item' }, (payload) => {
+      console.log('[realtime] pedido_item', payload.eventType);
+      alCambiar();
+    })
+    .subscribe((status, err) => {
+      console.log('[realtime] estado del canal:', status, err ?? '');
+    });
+}
+
+async cancelarSuscripcion(canal: RealtimeChannel): Promise<void> {
+  await this.sup.client.removeChannel(canal);
+}
 }
