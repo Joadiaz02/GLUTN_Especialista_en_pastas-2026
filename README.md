@@ -58,6 +58,7 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Administración de platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-platos)
   - 🔗 [Administración de bebidas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-bebidas)
   - 🔗 [Encuestas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#encuestas)
+  - 🔗 [Correos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#correos)
 
 ---
 
@@ -1027,3 +1028,32 @@ QR correspondiente a la propina del 20%
 </p>
 
 ---
+## Correos
+
+<p align="center">
+  <img src="images/correo-rechazo-uno.jpg" alt="correos" width="250">
+</p>
+
+<p align="center">
+  <img src="images/correo-rechazo-dos.jpg" alt="correo rechazo" width="250">
+</p>
+
+<p align="center">
+  <img src="images/correo-aprobado-uno.jpg" alt="correo aprobado" width="250">
+</p>
+
+<p align="center">
+  <img src="images/correo-aprobado-dos.jpg" alt="correo aprobado dos" width="250">
+</p>
+
+<p align="center">
+  <img src="images/correo-factura-uno.jpg" alt="correo factura" width="250">
+</p>
+
+<p align="center">
+  <img src="images/correo-factura-dos.jpg" alt="Correo factura dos" width="250">
+</p>
+
+<p align="center">
+  <img src="images/correo-factura-tres.jpg" alt="Correo factura tres" width="250">
+</p>
