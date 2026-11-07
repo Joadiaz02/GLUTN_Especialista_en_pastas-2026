@@ -62,7 +62,7 @@ export class TableActionSheetComponent {
   async darDeBaja(item: any): Promise<void> {
       const confirmado = await this._confirm.preguntar({
         titulo: '¿Dar de baja la Mesa?',
-        mensaje: `La mesa ${item.numero} va a hacer dada de baja. Vas a poder reactivarla cuando quieras.`,
+        mensaje: `La mesa ${item.numero} va a ser dada de baja. Vas a poder reactivarla cuando quieras.`,
         textoConfirmar: 'Dar de baja',
         colorConfirmar: 'danger',
         icono: 'trash-outline',

@@ -179,7 +179,7 @@ export class EmployeesPage implements OnDestroy {
   private async confirmDeactivate(employee: any): Promise<void> {
     const confirmed = await this._confirm.preguntar({
             titulo: '¿Dar de baja el empleado?',
-            mensaje: `"${employee.nombre} ${employee.apellido}" va a hacer dado de baja`,
+            mensaje: `"${employee.nombre} ${employee.apellido}" va a ser dado de baja`,
             textoConfirmar: 'Dar de baja',
             colorConfirmar: 'danger',
             icono: 'trash-outline',
