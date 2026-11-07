@@ -14,8 +14,20 @@ ion-content.products-content {
   --padding-bottom: 0;
 }
 
+.logo-toolbar {
+  height: 36px;
+  width: auto;
+  margin-left: 8px;
+  object-fit: contain;
+}
+
+// centrado en la pantalla aunque a la izquierda estén el volver y el logo
 .titulo-toolbar {
-  flex: 1;
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
   margin: 0;
   text-align: center;
   font-size: 18px;
