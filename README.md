@@ -19,7 +19,6 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Javier Francisco Vilchez](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#javier-francisco-vilchez)
   - 🔗 [Lucas Nicolás Ponte](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#lucas-nicolás-ponte)
   - 🔗 [Mariano Pastor](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#mariano-pastor)
-- 🔗 [Tareas complementarias y extras](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#tareas-complementarias-y-extras)
 - 🔗 [Tecnologías y funcionalidades nativas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#tecnologías-y-funcionalidades-nativas)
 - 🔗 [Cronología de avances](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#cronología-de-avances)
 - 🔗 [Códigos QR](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#códigos-qr-del-restaurante)
@@ -27,6 +26,7 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Logo del proyecto](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#logo-del-proyecto)
   - 🔗 [Splash Screen](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#splash-screen)
   - 🔗 [Login](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#login)
+  - 🔗 [Ingreso con redes sociales](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#ingreso-con-redes-sociales)
   - 🔗 [Acceso rápido](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#acceso-rápido)
   - 🔗 [Registro de clientes](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#registro-de-clientes)
   - 🔗 [Registro de invitados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#registro-de-invitados)
@@ -34,25 +34,30 @@ El proyecto está orientado a la gestión integral de un restaurante, contemplan
   - 🔗 [Gestión de clientes](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-clientes)
   - 🔗 [Rechazo de cliente](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#rechazo-de-cliente)
   - 🔗 [Lista de espera](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#lista-de-espera)
-  - 🔗 [Asinación de mesa](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#asignación-de-mesa)
+  - 🔗 [Asignación de mesa](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#asignación-de-mesa)
   - 🔗 [Administración de empleados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-empleados)
   - 🔗 [Creación de empleados](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#creación-de-empleados)
   - 🔗 [Administración de mesas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-mesas)
   - 🔗 [Gestión de pedidos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos)
   - 🔗 [Gestión de pedidos de cocina](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-cocina)
   - 🔗 [Gestión de pedidos de bar](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#gestión-de-pedidos-de-bar)
+  - 🔗 [Menú principal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#menú-principal)
   - 🔗 [Mi cuenta](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#mi-cuenta)
   - 🔗 [Modales del menú principal](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#modales-del-menú-principal)
   - 🔗 [Carta](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#carta)
   - 🔗 [Platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#platos)
   - 🔗 [Pedido](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#pedido)
   - 🔗 [Pagos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#pagos)
+  - 🔗 [Juegos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#juegos)
+  - 🔗 [Cuenta y pago confirmado](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#cuenta-y-pago-confirmado)
+  - 🔗 [Factura](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#factura)
+  - 🔗 [Mis facturas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#mis-facturas)
+  - 🔗 [Facturación](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#facturación)
   - 🔗 [Panel administrativo](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#panel-administrativo)
   - 🔗 [Consultas al mozo](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#consultas-al-mozo)
   - 🔗 [Administración de platos](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-platos)
   - 🔗 [Administración de bebidas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#administración-de-bebidas)
-  - 🔗 [Encuestas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#Encuestas)
-
+  - 🔗 [Encuestas](https://github.com/Joadiaz02/GLUTN_Especialista_en_pastas-2026/blob/main/README.md#encuestas)
 
 ---
 
@@ -625,6 +630,14 @@ QR correspondiente a la propina del 20%
 
 ---
 
+## Ingreso con redes sociales
+
+<p align="center">
+  <img src="images/registro-social.png" alt="Completá tu registro después de ingresar con Discord" width="250">
+</p>
+
+---
+
 ## Acceso rápido
 
 <p align="center">
@@ -761,21 +774,23 @@ QR correspondiente a la propina del 20%
 ## Gestión de pedidos de cocina
 
 <p align="center">
-  <img src="images/gestion-pedidos-cocina.jpg" alt="Gestión de pedidos de cocina" width="250">
+  <img src="images/gestion-pedidos-cocina.png" alt="Gestión de pedidos de cocina" width="250">
 </p>
+
 ---
 
 ## Gestión de pedidos de bar
 
 <p align="center">
-  <img src="images/gestion-pedidos-bar.jpg" alt="Gestión de pedidos de bar" width="250">
+  <img src="images/gestion-pedidos-bar.png" alt="Gestión de pedidos de bar" width="250">
 </p>
+
 ---
 
 ## Menú principal
 
 <p align="center">
-  <img src="images/menu-principal.jpg" alt="Menú principal" width="250">
+  <img src="images/menu-principal.png"alt="Menú principal" width="250">
 </p>
 
 ---
@@ -783,7 +798,7 @@ QR correspondiente a la propina del 20%
 ## Mi cuenta
 
 <p align="center">
-  <img src="images/mi-cuenta.jpg" alt="Mi cuenta" width="250">
+  <img src="images/mi-cuenta.png"alt="Mi cuenta" width="250">
 </p>
 
 ---
@@ -793,7 +808,7 @@ QR correspondiente a la propina del 20%
 ### Quiénes somos
 
 <p align="center">
-  <img src="images/modal-quienes-somos.jpg" alt="Modal Quiénes somos" width="250">
+  <img src="images/modal-quienes-somos.png"alt="Modal Quiénes somos" width="250">
 </p>
 
 ### Productos destacados
@@ -807,7 +822,19 @@ QR correspondiente a la propina del 20%
 ## Carta
 
 <p align="center">
-  <img src="images/carta.jpg" alt="Carta del restaurante" width="250">
+  <img src="images/carta.png" alt="Carta del restaurante" width="250">
+</p>
+
+<p align="center">
+  <img src="images/carta-plato.png" alt="Carta - Platos" width="250">
+</p>
+
+<p align="center">
+  <img src="images/carta-bebida.png" alt="Carta - Bebidas" width="250">
+</p>
+
+<p align="center">
+  <img src="images/carta-postre.png" alt="Carta - Postres" width="250">
 </p>
 
 ---
@@ -844,10 +871,78 @@ QR correspondiente a la propina del 20%
 
 ---
 
+## Juegos
+
+<p align="center">
+  <img src="images/juegos.png" alt="Juegos" width="250">
+</p>
+
+<p align="center">
+  <img src="images/juego-ruleta.png" alt="Ruleta" width="250">
+</p>
+
+<p align="center">
+  <img src="images/juego-ta-te-ti.png" alt="Ta-Te-Ti" width="250">
+</p>
+
+<p align="center">
+  <img src="images/juego-sopa-de-letras.png" alt="Sopa de letras" width="250">
+</p>
+
+---
+
+## Cuenta y pago confirmado
+
+<p align="center">
+  <img src="images/cuenta.png" alt="Detalle de la cuenta con descuento y propina" width="250">
+</p>
+
+<p align="center">
+  <img src="images/pago-confirmado.png" alt="Pago confirmado con descarga de la factura" width="250">
+</p>
+
+---
+
+## Factura
+
+### Cliente registrado
+
+<p align="center">
+  <img src="images/factura-registrado.png" alt="Factura de un cliente registrado" width="400">
+</p>
+
+### Cliente anónimo
+
+<p align="center">
+  <img src="images/factura-anonimo.png" alt="Factura de un cliente anónimo" width="400">
+</p>
+
+---
+
+## Mis facturas
+
+<p align="center">
+  <img src="images/mis-facturas.png" alt="Mis facturas del cliente registrado" width="250">
+</p>
+
+---
+
+## Facturación
+
+<p align="center">
+  <img src="images/facturacion.png" alt="Facturación del día para dueño y supervisor" width="250">
+</p>
+
+<p align="center">
+  <img src="images/facturacion-calendario.png" alt="Calendario de Facturación" width="250">
+</p>
+
+---
+
 ## Panel administrativo
 
 <p align="center">
-  <img src="images/panel-administrativo.jpg" alt="Panel administrativo" width="250">
+  <img src="images/panel-administrativo.png"alt="Panel administrativo" width="250">
 </p>
 
 ---
@@ -867,11 +962,11 @@ QR correspondiente a la propina del 20%
 </p>
 
 <p align="center">
-  <img src="images/administracion-platos-dos.jpg" alt="Administración de platos" width="250">
+  <img src="images/administracion-platos-dos.png"alt="Administración de platos" width="250">
 </p>
 
 <p align="center">
-  <img src="images/administracion-platos-tres.jpg" alt="Administración de platos" width="250">
+  <img src="images/administracion-platos-tres.png"alt="Administración de platos" width="250">
 </p>
 
 ---
@@ -883,11 +978,11 @@ QR correspondiente a la propina del 20%
 </p>
 
 <p align="center">
-  <img src="images/Creacion_bebidas_dos.jpg" alt="Creación de bebidas - Paso 2" width="250">
+  <img src="images/creacion-bebidas-dos.png"alt="Creación de bebidas - Paso 2" width="250">
 </p>
 
 <p align="center">
-  <img src="images/creacion_bebidas_tres.jpg" alt="Creación de bebidas - Paso 3" width="250">
+  <img src="images/creacion-bebidas-tres.png"alt="Creación de bebidas - Paso 3" width="250">
 </p>
 
 
@@ -897,6 +992,26 @@ QR correspondiente a la propina del 20%
 
 <p align="center">
   <img src="images/encuesta-menu.jpg" alt="encuestas" width="250">
+</p>
+
+<p align="center">
+  <img src="images/encuesta-pregunta-escala.png" alt="Encuesta - Escala del 1 al 5" width="250">
+</p>
+
+<p align="center">
+  <img src="images/encuesta-pregunta-opcion.png" alt="Encuesta - Una opción" width="250">
+</p>
+
+<p align="center">
+  <img src="images/encuesta-pregunta-multiple.png" alt="Encuesta - Varias opciones" width="250">
+</p>
+
+<p align="center">
+  <img src="images/encuesta-pregunta-deslizador.png" alt="Encuesta - Deslizador" width="250">
+</p>
+
+<p align="center">
+  <img src="images/encuesta-error.png" alt="Encuesta - Pregunta sin responder" width="250">
 </p>
 
 <p align="center">
@@ -912,4 +1027,3 @@ QR correspondiente a la propina del 20%
 </p>
 
 ---
-
