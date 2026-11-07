@@ -1,22 +1,31 @@
 <ion-content [fullscreen]="true">
   <div class="login">
-
     <div class="logo_container">
-      <img [src]="logo" alt="Logo GLUTN" class="logo">
+      <img [src]="logo" alt="Logo GLUTN" class="logo" />
     </div>
 
     <ion-text>
       <h2 class="textos textos-titulo">Iniciar sesión</h2>
     </ion-text>
-    
-    <ion-text>
+
+    <!-- <ion-text>
       <p class="textos">Por favor inicie sesión primero para disfrutar del servicio</p>
-    </ion-text>
+    </ion-text> -->
 
     <div class="campo">
       <label class="field__label label-centrado">Correo electrónico</label>
       <ion-item lines="none">
-        <ion-input class="field__input" fill="outline" (ionInput)="email = $event.detail.value ?? ''" [(ngModel)]="email" #emailInput="ngModel" name="email" type="email" placeholder="jperez@ejemplo.com" required></ion-input>
+        <ion-input
+          class="field__input"
+          fill="outline"
+          (ionInput)="email = $event.detail.value ?? ''"
+          [(ngModel)]="email"
+          #emailInput="ngModel"
+          name="email"
+          type="email"
+          placeholder="jperez@ejemplo.com"
+          required
+        ></ion-input>
       </ion-item>
       <p class="texto-error label-centrado">
         {{ emailInput.touched && !email ? 'Correo electrónico requerido' : '' }}
@@ -35,7 +44,8 @@
           type="password"
           placeholder="Contraseña"
           autocomplete="current-password"
-          required>
+          required
+        >
         </ion-input>
       </ion-item>
       <p class="texto-error label-centrado">
@@ -44,10 +54,10 @@
     </div>
 
     @if (cargando() || ingresoSocial.procesando()) {
-      <div class="page-loading">
-        <app-spinner-logo />
-        <span>Iniciando sesión...</span>
-      </div>
+    <div class="page-loading">
+      <app-spinner-logo />
+      <span>Iniciando sesión...</span>
+    </div>
     }
 
     <ion-button
@@ -85,29 +95,21 @@
         [disabled]="cargando() || ingresoSocial.procesando()"
         (click)="ingresarConRed('discord')"
       >
-        <img src="assets/icons/discord.svg" alt="" class="red__logo">
+        <img src="assets/icons/discord.svg" alt="" class="red__logo" />
       </button>
     </div>
 
-    <ion-button
-      expand="block"
-      class="boton_c"
-      routerLink="/guest"
-    >
+    <ion-button expand="block" class="boton_c" routerLink="/guest">
       Continuar como invitado
     </ion-button>
 
-    <ion-button
-      expand="block"
-      class="boton_a"
-      routerLink="/acceso_rapido"
-    >
+    <ion-button expand="block" class="boton_a" routerLink="/acceso_rapido">
       Acceso rápido
     </ion-button>
 
     <p class="textos">
-      ¿No tenés cuenta? <a routerLink="/register" class="registrate_spam">Registrate</a>
+      ¿No tenés cuenta?
+      <a routerLink="/register" class="registrate_spam">Registrate</a>
     </p>
-
   </div>
 </ion-content>

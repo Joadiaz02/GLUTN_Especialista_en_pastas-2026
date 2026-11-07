@@ -423,6 +423,7 @@ export class HomePage implements OnInit, OnDestroy {
 
       const valor = barcodes[0].rawValue ?? '';
 
+      // if ('ingreso-local' === 'ingreso-local') {
       if (valor === 'ingreso-local') {
         this.loading.set(true);
 

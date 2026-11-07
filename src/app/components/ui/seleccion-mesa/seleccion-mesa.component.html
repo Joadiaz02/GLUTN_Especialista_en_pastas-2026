@@ -1,4 +1,10 @@
-<div class="seleccion-mesa">
+<div class="content__body">
+  <img
+    class="content__logo"
+    src="assets/images/LOGO-GLUTN.png"
+    alt="GLUTN - Especialista en Pastas"
+  />
+
   <h2>¿Cuántos son?</h2>
 
   <div class="guest-stepper">
@@ -47,7 +53,9 @@
     <button
       type="button"
       class="guest-option"
-      [class.guest-option--active]="consideracion() === 'vip_movilidad_reducida'"
+      [class.guest-option--active]="
+        consideracion() === 'vip_movilidad_reducida'
+      "
       (click)="seleccionarConsideracion('vip_movilidad_reducida')"
     >
       VIP con Movilidad Reducida
@@ -64,11 +72,7 @@
   </div>
 
   <div class="seleccion-mesa__acciones">
-    <button
-      type="button"
-      class="seleccion-mesa__cancelar"
-      (click)="cancelar()"
-    >
+    <button type="button" class="seleccion-mesa__cancelar" (click)="cancelar()">
       Cancelar
     </button>
 

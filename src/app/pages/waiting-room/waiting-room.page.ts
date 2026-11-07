@@ -239,4 +239,16 @@ export class WaitingRoomPage implements OnInit, OnDestroy {
 
     await toast.present();
   }
+
+  async volverAlLogin(): Promise<void> {
+    try {
+    
+      await this._authService.logout(); 
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    } finally {
+      // Redirige al login limpiando el historial de navegación
+      await this._router.navigate(['/login'], { replaceUrl: true });
+    }
+  }
 }
