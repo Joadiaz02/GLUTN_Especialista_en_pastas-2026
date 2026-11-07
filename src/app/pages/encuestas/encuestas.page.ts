@@ -25,6 +25,8 @@ import {
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
+import { ListaEncajadaDirective } from '@app/directives/lista-encajada.directive';
+import { Vibracion } from '@app/services';
 import {
   EncuestasService, EstadoEncuesta, PreguntaEncuesta,
   ResultadoEncuesta, ResultadoTemporalEncuesta, TipoPregunta,
@@ -42,7 +44,8 @@ import {
     IonSpinner,
     IonRange,
     HeaderComponent,
-    SpinnerLogoComponent
+    SpinnerLogoComponent,
+    ListaEncajadaDirective,
   ],
   templateUrl: './encuestas.page.html',
   styleUrl: './encuestas.page.scss',
@@ -52,6 +55,7 @@ export class EncuestasPage implements OnInit, AfterViewInit, AfterViewChecked, O
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly toastController = inject(ToastController);
+  private readonly vibracion = inject(Vibracion);
   private readonly urlPrevia = (
   this.router.getCurrentNavigation()?.previousNavigation?.finalUrl?.toString() ?? ''
 ).split(/[?#]/)[0];
@@ -140,6 +144,50 @@ onResize(): void {
     () => this.pasoActual() === this.preguntas().length - 1,
   );
 
+  // pregunta que se quiso pasar sin responder: su ayuda se muestra como error
+  preguntaSinResponder = signal<string | null>(null);
+
+  // el error se va solo apenas se elige una respuesta
+  faltaResponder = computed(() => {
+    const pregunta = this.preguntaActual();
+
+    return (
+      !!pregunta &&
+      this.preguntaSinResponder() === pregunta.id &&
+      this.estaVacia(pregunta.id)
+    );
+  });
+
+  mensajeFalta(tipo: TipoPregunta): string {
+    switch (tipo) {
+      case 'escala':
+        return 'Elegí una calificación para seguir.';
+      case 'multiple':
+        return 'Elegí al menos una opción para seguir.';
+      case 'slider':
+        return 'Mové el deslizador para seguir.';
+      default:
+        return 'Elegí una opción para seguir.';
+    }
+  }
+
+  private estaVacia(id: string): boolean {
+    const valor = this.respuestas()[id];
+
+    return (
+      valor === undefined ||
+      valor === null ||
+      (typeof valor === 'string' && !valor.trim()) ||
+      (Array.isArray(valor) && valor.length === 0)
+    );
+  }
+
+  // marca la pregunta sin responder y vibra, como el resto de los errores de la app
+  private marcarSinResponder(id: string): void {
+    this.preguntaSinResponder.set(id);
+    void this.vibracion.errorValidacion();
+  }
+
 
   private programarAjuste(): void {
   cancelAnimationFrame(this.ajusteFrame);
@@ -198,20 +246,14 @@ private bloquesDeScroll(): HTMLElement[] {
     const pregunta = this.preguntaActual();
     if (!pregunta) return;
 
-    const valor = this.respuestas()[pregunta.id];
-
-    const vacia =
-      valor === undefined ||
-      valor === null ||
-      (typeof valor === 'string' && !valor.trim()) ||
-      (Array.isArray(valor) && valor.length === 0);
-
-    if (pregunta.obligatoria && vacia) {
-      this.error.set(`Completá la pregunta: ${pregunta.texto}`);
+    if (pregunta.obligatoria && this.estaVacia(pregunta.id)) {
+      // antes: this.error.set(`Completá la pregunta: ${pregunta.texto}`);
+      this.marcarSinResponder(pregunta.id);
       return;
     }
 
     this.error.set('');
+    this.preguntaSinResponder.set(null);
 
     if (!this.esUltimoPaso()) {
       this.pasoActual.update((paso) => paso + 1);
@@ -221,6 +263,7 @@ private bloquesDeScroll(): HTMLElement[] {
 
   retroceder(): void {
     this.error.set('');
+    this.preguntaSinResponder.set(null);
     this.pasoActual.update((paso) => Math.max(0, paso - 1));
     void this.desplazarArriba();
   }
@@ -350,17 +393,16 @@ const colores = [
       return;
     }
 
-    for (const pregunta of this.preguntas()) {
-      const valor = this.respuestas()[pregunta.id];
+    const preguntas = this.preguntas();
 
-      const vacia =
-        valor === undefined ||
-        valor === null ||
-        (typeof valor === 'string' && !valor.trim()) ||
-        (Array.isArray(valor) && valor.length === 0);
+    for (let paso = 0; paso < preguntas.length; paso++) {
+      const pregunta = preguntas[paso];
 
-      if (pregunta.obligatoria && vacia) {
-        this.error.set(`Completá la pregunta: ${pregunta.texto}`);
+      if (pregunta.obligatoria && this.estaVacia(pregunta.id)) {
+        // antes: this.error.set(`Completá la pregunta: ${pregunta.texto}`);
+        // se vuelve a la pregunta que falta y se marca ahí
+        this.pasoActual.set(paso);
+        this.marcarSinResponder(pregunta.id);
         return;
       }
     }
