@@ -79,10 +79,10 @@ La siguiente distribución corresponde al estado del proyecto luego de las modif
 
 | Integrante | Módulos asignados |
 |---|---|
-| **Joaquín Díaz** | 5, 6, 7, 8, **9 y 10 (en conjunto con Javier)**, 17 y 20 |
-| **Javier Vilchez** | 1, 3, 4, **9 y 10 (en conjunto con Joaquín)**, 22 |
+| **Joaquín Díaz** | 5, 6, 7, 8, **9 y 10 (en conjunto con Javier)**, 17, 20 y 22 (Parte 2) **(en conjunto con Mariano)** |
+| **Javier Vilchez** | 1, 3, 4, **9 y 10 (en conjunto con Joaquín)** y 22 |
 | **Lucas Ponte** |  12, 13, 14, 19 y 21 |
-| **Mariano Pastor** | 2, 11, 15, 16, 18 y 23 |
+| **Mariano Pastor** | 2, 11, 15, 16, 18, 22 (Parte 2) **(en conjunto con Joaquín)** y 23 |
 
 > **Nota:** Los puntos **9 y 10** son responsabilidad conjunta de **Joaquín Díaz y Javier Vilchez**. Se decidió trabajarlos en conjunto porque son módulos de mayor tamaño que integran varias funcionalidades relacionadas y requieren coordinación entre distintos flujos de la aplicación.
 
@@ -205,6 +205,15 @@ Los módulos se documentan individualmente indicando:
 **Finalización:** 25/10/2026
 **Estado:** Finalizado
 **Branch:** `Joaquin-Diaz`
+
+### Punto 22 (parte 2) - Facturación
+
+**Qué se realiza:** Facturación y avisos al cliente mediante notificaciones push y correos electrónicos.
+
+**Inicio:** 30/10/2026 
+**Finalización:** 05/11/2026
+**Estado:** Finalizado
+**Branch:** `Mariano-Pastor` y `Joaquin-Diaz`
 
 ---
 
@@ -374,6 +383,15 @@ Los módulos se documentan individualmente indicando:
 **Estado:** FInalizado 
 **Branch:** `Mariano-Pastor`
 
+
+### Punto 22 (parte 2) - Facturación
+
+**Qué se realiza:** Facturación y avisos al cliente mediante notificaciones push y correos electrónicos.
+
+**Inicio:** 30/10/2026 
+**Finalización:** 05/11/2026
+**Estado:** Finalizado
+**Branch:** `Mariano-Pastor` y `Joaquin-Diaz`
 ---
 
 # 5. 🛠️ Tecnologías y funcionalidades nativas
@@ -410,16 +428,16 @@ Además, se utilizan funcionalidades nativas de los dispositivos móviles, como:
 | Logo | Mariano Pastor | 23/08/2026 | 24/08/2026 | Realizado |
 | Splash Screen | Joaquín Díaz | 23/08/2026 | 24/08/2026 | Realizado |
 | Registro de usuarios | Javier Vilchez | 24/08/2026 | 28/08/2026 | Realizado |
-| Menú principal | Mariano Pastor | 24/08/2026 | — | En desarrollo |
+| Menú principal | Mariano Pastor | 24/08/2026 | 26/08/2026 | Realizado |
 | Login de usuarios registrados y personal | Lucas Ponte | 25/08/2026 | 03/09/2026 | Realizado |
 | Panel administrativo | Joaquín Díaz | 01/09/2026 | 03/09/2026 | Realizado |
 | Administración de bebidas | Javier Vilchez | 04/09/2026 | 15/09/2026 | Realizado |
-| Modales volver/cerrar sesión | Lucas Ponte | 05/09/2026 | 15/09/2026 | Realizado |
-| Chat / consulta al mozo | Mariano Pastor | 07/09/2026 | — | En desarrollo |
+| Modales de navegación y cierre de sesión | Lucas Ponte | 05/09/2026 | 15/09/2026 | Realizado |
+| Chat y consultas al mozo | Mariano Pastor | 07/09/2026 | 14/09/2026 | Realizado |
 | Spinner, vibración y sonido | Mariano Pastor | 11/09/2026 | 12/09/2026 | Realizado |
 | Administración de platos y postres | Mariano Pastor | 11/09/2026 | 22/09/2026 | Realizado |
 | Carta conectada a datos | Mariano Pastor | 12/09/2026 | 18/09/2026 | Realizado |
-| Juegos | Mariano Pastor | 13/09/2026 | 21/09/2026 | Realizado |
+| Juegos y descuentos | Mariano Pastor | 13/09/2026 | 21/09/2026 | Realizado |
 | Reservas - interfaz | Mariano Pastor | 14/09/2026 | 18/09/2026 | Realizado |
 | Puntos 5, 6, 7 y 8 - Clientes registrados | Joaquín Díaz | 15/09/2026 | 21/09/2026 | Realizado |
 | Realización del pedido | Lucas Ponte | 15/09/2026 | 23/09/2026 | Realizado |
@@ -427,19 +445,41 @@ Además, se utilizan funcionalidades nativas de los dispositivos móviles, como:
 | Confirmación del pedido | Lucas Ponte | 15/09/2026 | 02/10/2026 | Realizado |
 | Logo unificado | Mariano Pastor | 18/09/2026 | 22/09/2026 | Realizado |
 | Administración de mesas | Javier Vilchez | 20/09/2026 | 24/09/2026 | Realizado |
-| Correos y Push - Configuración inicial | Joaquín Díaz | 21/09/2026 | 23/09/2026 | Realizado |
+| Correos y notificaciones push - Configuración inicial | Joaquín Díaz | 21/09/2026 | 23/09/2026 | Realizado |
 | Header reutilizable | Lucas Ponte | 23/09/2026 | 24/09/2026 | Realizado |
-| Escáner QR del Home | Javier Vilchez | 23/09/2026 | — | En desarrollo |
-| Ícono y Splash en verde | Mariano Pastor | 24/09/2026 | 24/09/2026 | Realizado |
-| Agregado de sonidos | Joaquín Díaz | 26/09/2026 | 26/09/2026 | Realizado |
-| Colocación de vibraciones ante errores en toda la app | Joaquín Díaz | 28/09/2026 | 28/09/2026 | Realizado |
-| Colocación de spinner en toda la app | Joaquín Díaz | 29/09/2026 | 29/09/2026 | Realizado |
-| Agregado de push notifications módulo 9 | Joaquín Díaz | 30/09/2026 | 02/10/2026 | Realizado |
-| Mejoras UX lista de espera | Joaquín Díaz | 30/09/2026 | 02/10/2026 | Realizado |
-| Agregado de scroll bar | Joaquín Díaz | 01/10/2026 | 02/10/2026 | Realizado |
-| Lógica funcional para eliminar clientes en lista de espera | Joaquín Díaz | 01/10/2026 | 02/10/2026 | Realizado |
-| Correcciones visuales de Splash Screen y clientes pendientes | Joaquín Díaz | 07/10/2026 | 09/10/2026 | Realizado |
-| Correcciones de acceso rápido | Joaquín Díaz | 07/10/2026 | 09/10/2026 | Realizado |
+| Escáner QR del Home | Javier Vilchez | 23/09/2026 | 29/09/2026 | Realizado |
+| Ícono y Splash Screen en verde | Mariano Pastor | 24/09/2026 | 24/09/2026 | Realizado |
+| Incorporación de sonidos | Joaquín Díaz | 26/09/2026 | 26/09/2026 | Realizado |
+| Vibraciones hápticas ante errores en toda la aplicación | Joaquín Díaz | 28/09/2026 | 28/09/2026 | Realizado |
+| Incorporación de spinners en toda la aplicación | Joaquín Díaz | 29/09/2026 | 29/09/2026 | Realizado |
+| Notificaciones push del módulo de lista de espera | Joaquín Díaz | 30/09/2026 | 02/10/2026 | Realizado |
+| Mejoras de experiencia de usuario en lista de espera | Joaquín Díaz | 30/09/2026 | 02/10/2026 | Realizado |
+| Incorporación de barras de desplazamiento | Joaquín Díaz | 01/10/2026 | 02/10/2026 | Realizado |
+| Lógica para eliminar clientes de la lista de espera | Joaquín Díaz | 01/10/2026 | 02/10/2026 | Realizado |
+| Correcciones visuales del Splash Screen y clientes pendientes | Joaquín Díaz | 07/10/2026 | 09/10/2026 | Realizado |
+| Correcciones del acceso rápido | Joaquín Díaz | 07/10/2026 | 09/10/2026 | Realizado |
+| Mejoras de experiencia de usuario en pedidos, productos y asignación de mesas | Joaquín Díaz | 20/10/2026 | 23/10/2026 | Realizado |
+| Correcciones de visualización y distribución de espacios en la pantalla de mesas | Javier Vilchez | 22/10/2026 | 23/10/2026 | Realizado |
+| Implementación de la solicitud de cuenta y selección de propina | Lucas Ponte | 19/10/2026 | 22/10/2026 | Realizado |
+| Integración del flujo de pago y finalización de la cuenta | Lucas Ponte | 22/10/2026 | 23/10/2026 | Realizado |
+| Correcciones en el código QR del proceso de pago | Lucas Ponte | 21/10/2026 | 22/10/2026 | Realizado |
+| Ajustes en los mensajes de confirmación de victorias y descuentos de los juegos | Mariano Pastor | 27/10/2026 | 29/10/2026 | Realizado |
+| Implementación de autenticación e inicio de sesión con Google y Discord | Mariano Pastor | 23/10/2026 | 26/10/2026 | Realizado |
+| Integración de PKCE, servicios y configuración SQL para autenticación social | Mariano Pastor | 24/10/2026 | 26/10/2026 | Realizado |
+| Integración de Capacitor Browser y enlaces profundos para el retorno de autenticación social | Mariano Pastor | 25/10/2026 | 26/10/2026 | Realizado |
+| Incorporación de botones de acceso con Google y Discord en el Login | Mariano Pastor | 26/10/2026 | 26/10/2026 | Realizado |
+| Adaptación del registro de clientes de redes sociales con DNI y contraseña | Mariano Pastor | 26/10/2026 | 29/10/2026 | Realizado |
+| Incorporación de logotipos de Google y Discord en la sección Mi cuenta | Mariano Pastor | 28/10/2026 | 29/10/2026 | Realizado |
+| Correcciones y restablecimiento del funcionamiento del escáner QR | Javier Vilchez | 25/10/2026 | 26/10/2026 | Realizado |
+| Ampliación y optimización de las tarjetas del panel administrativo | Javier Vilchez | 26/10/2026 | 29/10/2026 | Realizado |
+| Correcciones en la gestión de encuestas y el flujo de pedidos | Joaquín Díaz | 02/11/2026 | 04/11/2026 | Realizado |
+| Ajustes de botones y abreviaciones en la interfaz | Lucas Ponte | 02/11/2026 | 04/11/2026 | Realizado |
+| Implementación de la generación de facturas en formato PDF | Mariano Pastor | 01/11/2026 | 03/11/2026 | Realizado |
+| Incorporación de la descarga de facturas y corrección del cálculo de propinas sobre el subtotal | Mariano Pastor | 02/11/2026 | 03/11/2026 | Realizado |
+| Corrección del flujo de estados de los pedidos | Joaquín Díaz | 04/11/2026 | 06/11/2026 | Realizado |
+| Implementación de notificaciones por correo electrónico para el Punto 22 - Confirmación del pago y liberación de la mesa | Joaquín Díaz | 04/11/2026 | 06/11/2026 | Realizado |
+| Incorporación de notificaciones push para la confirmación del pago | Javier Vilchez | 05/11/2026 | 06/11/2026 | Realizado |
+| Corrección del flujo de acceso de clientes anónimos con solicitudes rechazadas | Lucas Ponte | 04/11/2026 | 06/11/2026 | Realizado |
 
 ---
 
