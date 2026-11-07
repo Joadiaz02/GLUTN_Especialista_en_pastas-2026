@@ -1,59 +1,173 @@
+// Modal de estado de pedidos.
+// Estructura: título fijo, lista con scroll y acciones fijas abajo.
+
+$bordo: #7a1f2b;
+$verde-ok: #2e7d32;
+$rojo-error: #c62828;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  // Tope de alto para que nunca se corte el contenido.
+  max-height: 85vh;
+  max-height: 85dvh;
+  box-sizing: border-box;
+}
+
 .estado-pedido {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
+  min-height: 0;
+  max-height: inherit;
+  padding: 22px 16px 16px;
+  box-sizing: border-box;
   text-align: center;
 
-  h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--ion-text-color);
+  &__titulo {
+    flex-shrink: 0;
+    margin: 0 0 14px;
+    padding-bottom: 12px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
   }
 
-  &__indicador {
+  // --- Lista con scroll ---
+
+  &__lista-wrap {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0; // necesario para que el hijo pueda scrollear dentro de flex
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    width: 100%;
   }
 
-  &__etiqueta {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    opacity: 0.65;
+  &__lista {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    padding: 2px 2px 8px;
   }
 
+  // Tarjeta de cada pedido.
+  &__item {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px 14px 16px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  // "Pedido 1", "Pedido 2": grande y destacado.
+  &__nombre {
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.3px;
+    color: #fff;
+  }
+
+  // Estado como píldora clara: contrasta bien sobre el fondo verde.
   &__valor {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 9px;
-    font-size: 2.35rem;
-    font-weight: 600;
-    color: var(--ion-color-primary);
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
   }
 
   &__punto {
+    flex-shrink: 0;
     width: 10px;
     height: 10px;
-    flex-shrink: 0;
     border-radius: 50%;
     background: var(--ion-color-primary);
   }
 
+  &__texto {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: $bordo;
+  }
+
+  // Color del punto según el estado.
+  &__item[data-estado='listo'] &__punto,
+  &__item[data-estado='entregado'] &__punto,
+  &__item[data-estado='recibido'] &__punto {
+    background: $verde-ok;
+  }
+
+  &__item[data-estado='rechazado'] &__punto {
+    background: $rojo-error;
+  }
+
+  // --- Acciones fijas ---
+
+  &__acciones {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  &__aviso {
+    margin: 0;
+    padding: 0 4px;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    color: #fff;
+  }
+
+  // Todos los botones: ancho completo, centrados, sin márgenes raros.
   ion-button {
-    margin-top: 4px;
-    --padding-top: 8px;
-    --padding-bottom: 8px;
-    height: 60px;
-    font-size: 0.9rem;
     width: 100%;
-    max-width: 200px;
+    margin: 0;
+    font-weight: 700;
+    --padding-start: 12px;
+    --padding-end: 12px;
+
+    &::part(native) {
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  // Botón del pedido (confirmar / modificar): color primario de la app.
+  &__accion {
+    flex-shrink: 0;
+  }
+
+  // Solicitar cuenta / Ver mi cuenta: color primario, distinto de Cerrar.
+  &__cuenta {
+    --background: var(--ion-color-primary);
+  }
+
+  // Cerrar: bordó.
+  &__cerrar {
+    --background: #{$bordo};
+    --background-activated: #{darken($bordo, 6%)};
+    --background-hover: #{darken($bordo, 4%)};
+    --color: #fff;
   }
 }

@@ -285,13 +285,14 @@
     <div class="home-accesos">
 
       <!-- consultar estado del pedido -->
-      <div class="acceso">
-        @if (botones().estadoPedido && pedido.idUltimoPedido()) {
-          <button
-            type="button"
-            class="acceso__boton"
-            (click)="verEstadoPedido(pedido.idUltimoPedido()!)"
-          >
+<!-- consultar estado de los pedidos -->
+<div class="acceso">
+  @if (botones().estadoPedido) {
+    <button
+      type="button"
+      class="acceso__boton"
+      (click)="verEstadoPedido()"
+    >
             <p class="acceso__titulo">Consulta</p>
 
             <span class="acceso__circulo">

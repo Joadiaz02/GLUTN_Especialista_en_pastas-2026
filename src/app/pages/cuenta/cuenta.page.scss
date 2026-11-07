@@ -8,10 +8,44 @@
 .cuenta-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   height: 100%;
   max-height: 100%;
   box-sizing: border-box;
+
+  // Logo más arriba, compacto y centrado. Se anulan posiciones,
+  // márgenes y transformaciones heredadas de estilos globales (.logo-fijo).
+  .logo-container.logo-fijo {
+    position: relative;
+    inset: auto;
+    transform: none;
+    flex-shrink: 0;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .logo-container.logo-fijo .logo {
+    display: block;
+    position: static;
+    transform: none;
+    width: auto;
+    height: auto;
+    max-width: 130px;
+    max-height: 84px;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+
+  .titulo-pagina {
+    flex-shrink: 0;
+    margin: 0;
+    text-align: center;
+  }
 }
 
 .cuenta-vacio {
@@ -21,44 +55,67 @@
   text-align: center;
   padding: 40px 24px;
   color: #ffffff;
+  font-size: 18px;
 }
 
-/* Tarjeta principal fija que ocupa el espacio restante */
+/* Tarjeta principal: ocupa todo el alto libre y los textos crecen
+   según el alto de la pantalla (mínimo y máximo por dispositivo). */
 .cuenta-ticket {
+  --f-titulo: clamp(21px, 3.7vh, 32px);
+  --f-nombre: clamp(18px, 3.2vh, 27px);
+  --f-detalle: clamp(15px, 2.6vh, 21px);
+  --f-fila: clamp(16px, 2.9vh, 23px);
+  --f-total-etiqueta: clamp(19px, 3.4vh, 28px);
+  --f-total: clamp(32px, 6.2vh, 56px);
+  --f-boton: clamp(18px, 3vh, 25px);
+  --alto-boton: clamp(50px, 7.4vh, 70px);
+  --espacio: clamp(10px, 1.9vh, 20px);
+
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--espacio);
+  padding: clamp(16px, 2.6vh, 24px) 18px;
   border-radius: 24px;
   background: #6b5c4e; // Marrón de la tarjeta de postres
-  color: #ffffff;      // Texto blanco para contraste
+  color: #ffffff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   flex: 1;
-  min-height: 0;        /* Vital para que flexbox permita scroll interno */
+  min-height: 0; /* Vital para que flexbox permita scroll interno */
   box-sizing: border-box;
 }
 
 .cuenta-ticket__titulo {
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffc983; // Tono destacado cálido
+  font-size: var(--f-titulo, 22px);
+  font-weight: 800;
+  color: #ffc983;
   flex-shrink: 0;
 }
 
-/* Contenedor con scroll exclusivo para los productos */
+/* Contenedor de la lista: toma todo el espacio libre de la tarjeta */
+.cuenta-lineas-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Lista con scroll exclusivo para los productos (lleva appListaEncajada) */
 .cuenta-lineas {
   list-style: none;
   margin: 0;
-  padding: 0 4px 0 0; /* Pequeño espacio para la barra de scroll */
+  padding: 0 4px 0 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;     /* Activa el scroll solo aquí */
-  flex: 1;              /* Ocupa el espacio disponible dentro de la card */
+  gap: var(--espacio);
+  flex: 1 1 auto;
   min-height: 0;
-  
-  /* Estilo personalizado opcional para la barra de scroll */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+
   &::-webkit-scrollbar {
     width: 4px;
   }
@@ -69,57 +126,81 @@
 }
 
 .cuenta-linea {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
-  background: rgba(58, 36, 23, 0.4); // Fondo translúcido sutil
-  padding: 8px 12px;
-  border-radius: 12px;
+  background: rgba(58, 36, 23, 0.4);
+  padding: clamp(10px, 1.6vh, 16px) 14px;
+  border-radius: 14px;
 }
 
 .cuenta-linea__info {
   display: flex;
   flex-direction: column;
+  gap: 2px;
   min-width: 0;
 }
 
+// el nombre ocupa como máximo dos líneas, así todas las filas caben en el mismo alto
 .cuenta-linea__nombre {
+  font-size: var(--f-nombre);
   font-weight: 700;
+  line-height: 1.2;
   overflow-wrap: anywhere;
   color: #ffffff;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .cuenta-linea__detalle {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.75);
+  font-size: var(--f-detalle);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .cuenta-linea__importe {
+  font-size: var(--f-nombre);
   font-weight: 700;
   white-space: nowrap;
   color: #ffc983;
 }
 
+// la directiva activa esta clase: todas las filas tienen el mismo alto y se
+// alinean al scrollear, así nunca queda una cortada
+.cuenta-lineas.lista-encajada {
+  scroll-snap-type: y mandatory;
+
+  .cuenta-linea {
+    box-sizing: border-box;
+    height: var(--alto-fila);
+    align-items: center;
+    scroll-snap-align: start;
+  }
+}
+
 .cuenta-resumen {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-top: 12px;
+  gap: calc(var(--espacio) * 0.6);
+  padding-top: var(--espacio);
   border-top: 1px dashed rgba(255, 255, 255, 0.25);
-  flex-shrink: 0; /* Evita que se comprima */
+  flex-shrink: 0;
 }
 
 .cuenta-fila {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--f-fila);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .cuenta-fila--descuento {
-  color: #81c784; // Verde claro adaptado para descuentos
+  color: #81c784;
   font-weight: 700;
 }
 
@@ -128,33 +209,44 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  padding-top: 12px;
+  padding-top: var(--espacio);
   border-top: 2px solid rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
 }
 
 .cuenta-total__etiqueta {
-  font-size: 18px;
+  font-size: var(--f-total-etiqueta);
   font-weight: 700;
   color: #ffffff;
 }
 
 .cuenta-total__importe {
-  font-size: 32px;
+  font-size: var(--f-total);
   font-weight: 800;
+  line-height: 1.1;
   color: #ffc983;
+}
+
+.cuenta-boton {
+  flex-shrink: 0;
+  margin: 0;
+  height: var(--alto-boton);
+  font-size: var(--f-boton);
+  font-weight: 700;
 }
 
 .cuenta-aviso {
   margin: 0;
-  padding: 12px;
+  padding: 14px;
   border-radius: 12px;
-  background: #3a2417; // Marrón oscuro para el aviso
+  background: #3a2417;
   color: #ffffff;
   text-align: center;
+  font-size: var(--f-fila);
   font-weight: 600;
   flex-shrink: 0;
 }
+
 // verde de la app para que no se confunda con la tarjeta ni con "Volver al inicio"
 .boton-factura {
   --background: #657a4d;
@@ -166,6 +258,7 @@
   margin: 0;
   font-size: 16px;
 }
+
 // modal de pago confirmado: igual que quiénes somos y destacados del home, con los colores de la tarjeta
 ion-modal.cuenta-modal {
   --width: 90%;

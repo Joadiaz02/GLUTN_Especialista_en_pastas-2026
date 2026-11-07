@@ -1,64 +1,82 @@
 <div class="estado-pedido">
+  <h2 class="estado-pedido__titulo">Estado de tus pedidos</h2>
 
-  <h2 class="estado-pedido__titulo">
-    Estado de tu pedido
-  </h2>
+  <!-- Lista scrolleable de pedidos -->
+  <div class="estado-pedido__lista-wrap">
+    <div class="estado-pedido__lista" appLimitesLista>
+      @for (p of pedidos(); track p.id_pedido; let i = $index) {
+        <div class="estado-pedido__item" [attr.data-estado]="p.estado_pedido">
+          <span class="estado-pedido__nombre">Pedido {{ i + 1 }}</span>
 
-<div class="estado-pedido__indicador">
-<div class="estado-pedido__valor">
-    <span class="estado-pedido__punto"></span>
-    <span>{{ estadoLegible() }}</span>
+          <div class="estado-pedido__valor">
+            <span class="estado-pedido__punto"></span>
+            <span class="estado-pedido__texto">
+              {{ legible(p.estado_pedido) }}
+            </span>
+          </div>
+
+          @if (p.estado_pedido === 'rechazado') {
+            <ion-button
+              class="estado-pedido__accion"
+              shape="round"
+              expand="block"
+              (click)="modificar(p.id_pedido)"
+            >
+              Modificar pedido
+            </ion-button>
+          }
+
+          @if (p.estado_pedido === 'entregado') {
+            <ion-button
+              class="estado-pedido__accion"
+              shape="round"
+              expand="block"
+              [disabled]="confirmando() !== null"
+              (click)="confirmarRecepcion(p.id_pedido)"
+            >
+              Confirmar recepción
+            </ion-button>
+          }
+        </div>
+      }
+    </div>
   </div>
-</div>
 
-  @if (estado() === 'rechazado') {
+  <!-- Acciones fijas: siempre visibles, fuera del scroll -->
+  <div class="estado-pedido__acciones">
+    @if (puedeSolicitarCuenta()) {
+      <ion-button
+        class="estado-pedido__cuenta"
+        shape="round"
+        expand="block"
+        (click)="solicitarCuenta()"
+      >
+        Solicitar cuenta
+      </ion-button>
+    } @else if (hayPendientes()) {
+      <p class="estado-pedido__aviso">
+        Para pedir la cuenta, todos tus pedidos tienen que estar recibidos.
+      </p>
+    }
+
+    @if (hayCuentaEntregada()) {
+      <ion-button
+        class="estado-pedido__cuenta"
+        shape="round"
+        expand="block"
+        (click)="verCuenta()"
+      >
+        Ver mi cuenta
+      </ion-button>
+    }
+
     <ion-button
+      class="estado-pedido__cerrar"
       shape="round"
       expand="block"
-      (click)="modificar()"
+      (click)="volver()"
     >
-      Modificar pedido
+      Cerrar
     </ion-button>
-  }
-
-  @if (estado() === 'entregado') {
-    <ion-button
-      shape="round"
-      expand="block"
-      [disabled]="confirmando()"
-      (click)="confirmarRecepcion()"
-    >
-      Confirmar recepción
-    </ion-button>
-  }
-
-  @if (estado() === 'recibido') {
-    <ion-button
-      shape="round"
-      expand="block"
-      (click)="solicitarCuenta()"
-    >
-      Solicitar cuenta
-    </ion-button>
-  }
-
-  @if (estado() === 'cuenta_entregada') {
-    <ion-button
-      shape="round"
-      expand="block"
-      (click)="verCuenta()"
-    >
-      Ver mi cuenta
-    </ion-button>
-  }
-
-  <ion-button
-    class="estado-pedido__cerrar"
-    shape="round"
-    expand="block"
-    (click)="volver()"
-  >
-    Cerrar
-  </ion-button>
-
+  </div>
 </div>

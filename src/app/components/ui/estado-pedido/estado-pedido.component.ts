@@ -1,24 +1,10 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  OnDestroy,
-  inject,
-  signal,
-} from '@angular/core';
-
-import {
-  ModalController,
-  IonButton,
-  ToastController,
-} from '@ionic/angular';
-
-import { SupabaseService } from '../../../services/supabase.service';
-import { RealtimeChannel } from '@supabase/supabase-js';
-import { Pedido } from '@app/services/pedido/pedido';
+import { Component, computed, inject, signal } from '@angular/core';
+import { ModalController, IonButton, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Pedido } from '@app/services/pedido/pedido';
 import { Carrito } from '@app/pages/carrito/carrito';
 import { Vibracion } from '@app/services';
+import { LimitesListaDirective } from '@app/directives/limites-lista.directive';
 
 const estados_posibles: Record<string, string> = {
   pendiente: 'Esperando confirmación del mozo',
@@ -34,100 +20,85 @@ const estados_posibles: Record<string, string> = {
   pagado: 'Pago confirmado. ¡Gracias por tu visita!',
 };
 
+const ESTADOS_EN_CURSO = [
+  'pendiente',
+  'confirmado',
+  'en_preparacion',
+  'listo',
+  'entregado',
+];
+
 @Component({
   selector: 'app-estado-pedido',
   standalone: true,
   templateUrl: './estado-pedido.component.html',
   styleUrls: ['./estado-pedido.component.scss'],
-  imports: [IonButton],
+  imports: [IonButton, LimitesListaDirective],
 })
-export class EstadoPedidoComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) idPedido!: string;
-
-  private supabaseService = inject(SupabaseService);
+export class EstadoPedidoComponent {
   private modalController = inject(ModalController);
-
-  private canal?: RealtimeChannel;
-
-  public pedidoService = inject(Pedido);
-
   private router = inject(Router);
   private carrito = inject(Carrito);
-
   private toastController = inject(ToastController);
   private vibracion = inject(Vibracion);
 
-  confirmando = signal(false);
+  public pedidoService = inject(Pedido);
 
-  estado = signal<string>('pendiente');
+  // id del pedido que se está confirmando (null si ninguno)
+  confirmando = signal<string | null>(null);
 
-  estadoLegible = () =>
-    estados_posibles[this.estado()] ?? this.estado();
+  // La lista se mantiene actualizada desde el home (realtime).
+  pedidos = this.pedidoService.pedidosActivos;
 
-  async ngOnInit(): Promise<void> {
-    const { data, error } = await this.supabaseService.client
-      .from('pedido')
-      .select('estado_pedido')
-      .eq('id_pedido', this.idPedido)
-      .single();
+  legible = (estado: string) => estados_posibles[estado] ?? estado;
 
-    if (error) {
-      console.error(
-        'No se pudo consultar el estado del pedido:',
-        error
-      );
-    }
-
-    if (data) {
-      this.estado.set(data.estado_pedido);
-    }
-
-    this.canal = this.supabaseService.client
-      .channel(`pedido-estado-${this.idPedido}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'pedido',
-          filter: `id_pedido=eq.${this.idPedido}`,
-        },
-        (payload) => {
-          this.estado.set(payload.new['estado_pedido']);
-        }
-      )
-      .subscribe();
-  }
-
-  async modificar(): Promise<void> {
-    const pedidoCompleto =
-      await this.pedidoService.obtenerPedidoConItems(this.idPedido);
-
-    const itemsParaCarrito = pedidoCompleto.items.map(
-      (item: any) => ({
-        producto: item.carta,
-        cantidad: item.cantidad,
-      })
+  // Se puede pedir la cuenta solo si todos los pedidos (menos los
+  // rechazados) están recibidos.
+  puedeSolicitarCuenta = computed(() => {
+    const validos = this.pedidos().filter(
+      (p) => p.estado_pedido !== 'rechazado'
     );
+
+    return (
+      validos.length > 0 &&
+      validos.every((p) => p.estado_pedido === 'recibido')
+    );
+  });
+
+  hayPendientes = computed(() =>
+    this.pedidos().some((p) => ESTADOS_EN_CURSO.includes(p.estado_pedido))
+  );
+
+  hayCuentaEntregada = computed(() =>
+    this.pedidos().some((p) => p.estado_pedido === 'cuenta_entregada')
+  );
+
+  async modificar(idPedido: string): Promise<void> {
+    const pedidoCompleto =
+      await this.pedidoService.obtenerPedidoConItems(idPedido);
+
+    const itemsParaCarrito = pedidoCompleto.items.map((item: any) => ({
+      producto: item.carta,
+      cantidad: item.cantidad,
+    }));
 
     this.carrito.cargar(itemsParaCarrito);
 
-    this.pedidoService.idPedidoEnEdicion.set(this.idPedido);
+    this.pedidoService.idPedidoEnEdicion.set(idPedido);
 
     await this.modalController.dismiss();
 
     await this.router.navigate(['/carta']);
   }
 
-  async confirmarRecepcion(): Promise<void> {
+  async confirmarRecepcion(idPedido: string): Promise<void> {
     if (this.confirmando()) return;
 
-    this.confirmando.set(true);
+    this.confirmando.set(idPedido);
 
     try {
-      await this.pedidoService.confirmarRecepcion(this.idPedido);
-
-      this.estado.set('recibido');
+      // confirmarRecepcion ya recarga la lista de pedidos activos
+      await this.pedidoService.confirmarRecepcion(idPedido);
     } catch (error) {
       void this.vibracion.error();
 
@@ -140,21 +111,12 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
 
       await toast.present();
     } finally {
-      this.confirmando.set(false);
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.canal) {
-      void this.supabaseService.client.removeChannel(this.canal);
+      this.confirmando.set(null);
     }
   }
 
   solicitarCuenta(): void {
-    void this.modalController.dismiss(
-      null,
-      'solicitar-cuenta'
-    );
+    void this.modalController.dismiss(null, 'solicitar-cuenta');
   }
 
   async verCuenta(): Promise<void> {

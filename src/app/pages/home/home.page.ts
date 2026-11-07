@@ -46,7 +46,7 @@ import { EstadoPedidoComponent } from '@app/components/ui/estado-pedido/estado-p
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { parseTableQr, parseTipQr } from '@app/utils';
+import { parseTipQr } from '@app/utils';
 import { ConfirmDialogComponent } from '@app/components/ui/confirm-cartel/confirm-cartel.component';
 import { ConfirmVolverComponent } from '@app/components/ui/confirm-volver/confirm-volver.component';
 import { MiCuentaComponent } from '@app/components/ui/mi-cuenta/mi-cuenta.component';
@@ -92,8 +92,6 @@ export class HomePage implements OnInit, OnDestroy {
   private _waitlistService = inject(Waitlist);
   private _propinaService = inject(Propina);
 
-  // punto 19
-
   constructor() {
     addIcons({
       'chevron-back-outline': chevronBackOutline,
@@ -101,15 +99,16 @@ export class HomePage implements OnInit, OnDestroy {
       'time-outline': timeOutline,
     });
 
-    // Escucha el estado del último pedido del cliente.
+    // Escucha los pedidos del cliente. Se vuelve a suscribir cuando
+    // cambia el último pedido (por ejemplo, al crear uno nuevo).
     effect(() => {
-      const idPedido = this.pedido.idUltimoPedido();
-      untracked(() => void this.escucharPedido(idPedido));
+      this.pedido.idUltimoPedido();
+      untracked(() => void this.escucharPedidos());
     });
 
     // Cuando el mozo entrega la cuenta, el cliente va directo a verla.
     effect(() => {
-      if (this.estadoPedido() === 'cuenta_entregada') {
+      if (this.estadoCuenta() === 'cuenta_entregada') {
         untracked(() => {
           if (!this.router.url.startsWith('/cuenta')) {
             void this.router.navigate(['/cuenta']);
@@ -185,22 +184,32 @@ export class HomePage implements OnInit, OnDestroy {
       this.perfil() === EPerfilUsuario.ClienteAnonimo
   );
 
-  estadoPedido = signal<string | null>(null);
+  // Estados de todos los pedidos activos del cliente.
 
-  // El mozo ya confirmó el pedido, en cualquier etapa posterior.
+  private estados = computed(() =>
+    this.pedido.pedidosActivos().map((p) => p.estado_pedido)
+  );
+
+  // Hay al menos un pedido para consultar.
+
+  hayPedidos = computed(() => this.estados().length > 0);
+
+  // El mozo ya confirmó algún pedido, en cualquier etapa posterior.
 
   pedidoRecibido = computed(() =>
-    [
-      'confirmado',
-      'en_preparacion',
-      'listo',
-      'entregado',
-      'recibido',
-      'cuenta_solicitada',
-      'cuenta_entregada',
-      'pago_realizado',
-    ].includes(this.estadoPedido() ?? '')
+    this.estados().some((e) => e !== 'pendiente' && e !== 'rechazado')
   );
+
+  // Estado de la cuenta, si ya fue entregada o pagada por el cliente.
+
+  estadoCuenta = computed<'cuenta_entregada' | 'pago_realizado' | null>(() => {
+    const e = this.estados();
+
+    if (e.includes('cuenta_entregada')) return 'cuenta_entregada';
+    if (e.includes('pago_realizado')) return 'pago_realizado';
+
+    return null;
+  });
 
   // Botones que ve cada perfil.
 
@@ -227,23 +236,16 @@ export class HomePage implements OnInit, OnDestroy {
       escaner: cliente,
       consultas: (cliente && enMesa) || perfil === EPerfilUsuario.Mozo,
 
-      estadoPedido: cliente && this.pedido.idUltimoPedido() !== null,
+      estadoPedido: cliente && this.hayPedidos(),
 
-      verCuenta:
-        cliente &&
-        (this.estadoPedido() === 'cuenta_entregada' ||
-          this.estadoPedido() === 'pago_realizado'),
+      verCuenta: cliente && this.estadoCuenta() !== null,
     };
   });
 
   hayAccesos = computed(() => {
     const botones = this.botones();
 
-    return (
-      botones.estadoPedido ||
-      botones.escaner ||
-      botones.consultas
-    );
+    return botones.estadoPedido || botones.escaner || botones.consultas;
   });
 
   // Destacados y quiénes somos se abren en una ventana.
@@ -268,11 +270,7 @@ export class HomePage implements OnInit, OnDestroy {
 
     if (!producto) return '';
 
-    const fotos = [
-      producto.foto_1,
-      producto.foto_2,
-      producto.foto_3,
-    ];
+    const fotos = [producto.foto_1, producto.foto_2, producto.foto_3];
 
     return fotos[this.indiceFotoDestacado()];
   });
@@ -291,9 +289,7 @@ export class HomePage implements OnInit, OnDestroy {
 
     if (total < 2) return;
 
-    this.indiceDestacado.update(
-      (i) => (i - 1 + total) % total
-    );
+    this.indiceDestacado.update((i) => (i - 1 + total) % total);
 
     this.indiceFotoDestacado.set(0);
   }
@@ -326,8 +322,7 @@ export class HomePage implements OnInit, OnDestroy {
       return;
     }
 
-    const pantallaIngreso =
-      this.authService.obtenerPantallaIngreso();
+    const pantallaIngreso = this.authService.obtenerPantallaIngreso();
 
     if (this.isLoggedIn()) {
       await this.authService.logout();
@@ -412,8 +407,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.escaneando.set(true);
 
     try {
-      const { camera } =
-        await BarcodeScanner.requestPermissions();
+      const { camera } = await BarcodeScanner.requestPermissions();
 
       if (camera !== 'granted' && camera !== 'limited') {
         await this.mostrarToast(
@@ -432,9 +426,11 @@ export class HomePage implements OnInit, OnDestroy {
       if (valor === 'ingreso-local') {
         this.loading.set(true);
 
-        await this.procesarCodigo({ tipo: 'ingreso-local' });
-
-        this.loading.set(false);
+        try {
+          await this.procesarCodigo({ tipo: 'ingreso-local' });
+        } finally {
+          this.loading.set(false);
+        }
 
         return;
       }
@@ -445,127 +441,189 @@ export class HomePage implements OnInit, OnDestroy {
       //   return;
       // }
 
-      // QR de propina: el cliente pide la cuenta.
-      // const porcentaje = parseTipQr(valor);
-      // if (porcentaje !== null) {
-      //   this.pedirCuenta(porcentaje);
-      //   return;
-      // }
-
       await this.vibracion.error();
 
       await this.mostrarToast(
         'Ese código QR no corresponde al ingreso, a una mesa ni a una propina.'
+      );
+    } catch (error) {
+      console.error('Error al escanear:', error);
+
+      await this.vibracion.error();
+
+      await this.mostrarToast(
+        'No pudimos abrir el escáner. Intentá de nuevo.',
+        'danger'
       );
     } finally {
       this.escaneando.set(false);
     }
   }
 
-private async pedirCuenta(porcentaje: number): Promise<boolean> {
-  const usuario = this.authService.usuarioActual();
-  if (!usuario) return false;
+  // Escaneo del QR de propina para pedir la cuenta.
 
-  try {
-    await this.pedido.solicitarCuenta(usuario.id, porcentaje);
-    return true;
-  } catch (error) {
-    console.error('Error al pedir la cuenta:', error);
-    await this.vibracion.error();
-    await this.mostrarToast(
-      error instanceof Error
-        ? error.message
-        : 'No pudimos pedir la cuenta. Intentá de nuevo.',
-      'danger'
-    );
-    return false;
-  }
-}
+  private async escanearPropina(): Promise<void> {
+    if (this.escaneando()) return;
 
-private async procesarCodigo(codigo: CodigoQr): Promise<void> {
-  switch (codigo.tipo) {
-    case 'ingreso-local':
-      try {
-        const currentUser = this.authService.usuarioActual();
+    this.escaneando.set(true);
 
-        if (!currentUser?.id) {
-          await this.mostrarToast(
-            'No pudimos identificar tu usuario. Volvé a iniciar sesión.',
-            'danger'
-          );
-          return;
-        }
+    try {
+      const { camera } = await BarcodeScanner.requestPermissions();
 
-        // Verificamos si el cliente ya está anotado.
-        const entrada = await this._waitlistService.getMyEntry(
-          currentUser.id
+      if (camera !== 'granted' && camera !== 'limited') {
+        await this.mostrarToast(
+          'Necesitamos permiso de cámara para escanear el código.'
         );
+        return;
+      }
 
-        // Si todavía no está anotado, solicitamos sus preferencias.
-        if (!entrada) {
-          const modal = await this.modalController.create({
-            component: SeleccionMesaComponent,
-            cssClass: 'seleccion-mesa-modal',
-            backdropDismiss: false,
-          });
+      const { barcodes } = await BarcodeScanner.scan();
 
-          await modal.present();
+      if (barcodes.length === 0) return;
 
-          const { data, role } =
-            await modal.onDidDismiss<{
+      const valor = barcodes[0].rawValue ?? '';
+      const porcentaje = parseTipQr(valor);
+
+      if (porcentaje === null) {
+        await this.vibracion.error();
+        await this.mostrarToast(
+          'El código escaneado no es de propina. Por favor, volvé a intentarlo.'
+        );
+        return;
+      }
+
+      const ok = await this.pedirCuenta(porcentaje);
+
+      if (!ok) return;
+
+      this._propinaService.setPropinaPorcentaje(porcentaje);
+
+      await this.mostrarToast(
+        'El mozo ahora te llevará la cuenta. Disfrutá del lugar mientras esperás.'
+      );
+    } catch (error) {
+      console.error('Error al escanear propina:', error);
+
+      await this.vibracion.error();
+
+      await this.mostrarToast(
+        'No pudimos abrir el escáner. Intentá de nuevo.',
+        'danger'
+      );
+    } finally {
+      this.escaneando.set(false);
+    }
+  }
+
+  // Devuelve true si la cuenta se pidió correctamente.
+  private async pedirCuenta(porcentaje: number): Promise<boolean> {
+    const usuario = this.authService.usuarioActual();
+
+    if (!usuario) {
+      return false;
+    }
+
+    try {
+      await this.pedido.solicitarCuenta(usuario.id, porcentaje);
+      return true;
+    } catch (error) {
+      console.error('Error al pedir la cuenta:', error);
+
+      await this.vibracion.error();
+
+      await this.mostrarToast(
+        error instanceof Error
+          ? error.message
+          : 'No pudimos pedir la cuenta. Intentá de nuevo.',
+        'danger'
+      );
+
+      return false;
+    }
+  }
+
+  private async procesarCodigo(codigo: CodigoQr): Promise<void> {
+    switch (codigo.tipo) {
+      case 'ingreso-local':
+        try {
+          const currentUser = this.authService.usuarioActual();
+
+          if (!currentUser?.id) {
+            await this.mostrarToast(
+              'No pudimos identificar tu usuario. Volvé a iniciar sesión.',
+              'danger'
+            );
+            return;
+          }
+
+          // Verificamos si el cliente ya está anotado.
+          const entrada = await this._waitlistService.getMyEntry(
+            currentUser.id
+          );
+
+          // Si todavía no está anotado, solicitamos sus preferencias.
+          if (!entrada) {
+            const modal = await this.modalController.create({
+              component: SeleccionMesaComponent,
+              cssClass: 'seleccion-mesa-modal',
+              backdropDismiss: false,
+            });
+
+            await modal.present();
+
+            const { data, role } = await modal.onDidDismiss<{
               comensales: number;
               consideraciones: string;
             }>();
 
-          // Si cancela, no se lo agrega a la lista.
-          if (role !== 'confirm' || !data) {
-            return;
+            // Si cancela, no se lo agrega a la lista.
+            if (role !== 'confirm' || !data) {
+              return;
+            }
+
+            // Creamos la entrada con los datos seleccionados.
+            const nueva = await this._waitlistService.add({
+              usuario_id: currentUser.id,
+              estado: 'esperando',
+              comensales: data.comensales,
+              consideraciones: [data.consideraciones],
+            });
+
+            // Notificamos al metre.
+            try {
+              await this._waitlistService.notifyNewWaitlist(nueva.id);
+            } catch (error) {
+              console.warn('No se pudo notificar al metre:', error);
+            }
           }
 
-          // Creamos la entrada con los datos seleccionados.
-          const nueva = await this._waitlistService.add({
-            usuario_id: currentUser.id,
-            estado: 'esperando',
-            comensales: data.comensales,
-            consideraciones: [data.consideraciones],
-          });
+          // Si ya estaba anotado, también puede ingresar directamente.
+          await this.router.navigate(['/waiting-room']);
+        } catch (error) {
+          console.error(
+            'Error registrando cliente en lista de espera:',
+            error
+          );
 
-          // Notificamos al metre.
-          try {
-            await this._waitlistService.notifyNewWaitlist(nueva.id);
-          } catch (error) {
-            console.warn(
-              'No se pudo notificar al metre:',
-              error
-            );
-          }
+          await this.vibracion.error();
+
+          await this.mostrarToast(
+            'No pudimos anotarte en la lista de espera. Probá de nuevo.',
+            'danger'
+          );
         }
 
-        // Si ya estaba anotado, también puede ingresar directamente.
-        await this.router.navigate(['/waiting-room']);
-      } catch (error) {
-        console.error(
-          'Error registrando cliente en lista de espera:',
-          error
-        );
-
-        await this.vibracion.error();
-
-        await this.mostrarToast(
-          'No pudimos anotarte en la lista de espera. Probá de nuevo.',
-          'danger'
-        );
-      }
-
-      break;
+        break;
+    }
   }
-}
 
   // Vincula al cliente con la mesa escaneada.
 
   private async vincularMesa(valor: string): Promise<void> {
     try {
       const usuario = this.authService.usuarioActual();
+
+      if (!usuario) return;
 
       const resultado = await this._waitlistService.linkTable(
         usuario.id,
@@ -614,124 +672,63 @@ private async procesarCodigo(codigo: CodigoQr): Promise<void> {
     await toast.present();
   }
 
-  // Estado del pedido.
+  // Estado de los pedidos.
 
-  private async escucharPedido(
-    idPedido: string | null
-  ): Promise<void> {
+  private async escucharPedidos(): Promise<void> {
     this.dejarDeEscucharPedido();
 
-    this.estadoPedido.set(null);
+    const usuario = this.authService.usuarioActual();
 
-    if (!idPedido) return;
+    if (!usuario) return;
 
-    const { data } = await this.supabaseService.client
-      .from('pedido')
-      .select('estado_pedido')
-      .eq('id_pedido', idPedido)
-      .maybeSingle();
-
-    this.estadoPedido.set(data?.estado_pedido ?? null);
+    await this.pedido.cargarPedidosActivos();
 
     this._canalPedido = this.supabaseService.client
-      .channel(`home-pedido-${idPedido}`)
+      .channel(`home-pedidos-${usuario.id}`)
       .on(
         'postgres_changes',
         {
-          event: 'UPDATE',
+          event: '*',
           schema: 'public',
           table: 'pedido',
-          filter: `id_pedido=eq.${idPedido}`,
+          filter: `id_usuario=eq.${usuario.id}`,
         },
-        (payload) =>
-          this.estadoPedido.set(
-            payload.new['estado_pedido'] ?? null
-          )
+        () => void this.pedido.cargarPedidosActivos()
       )
       .subscribe();
   }
 
   private dejarDeEscucharPedido(): void {
     if (this._canalPedido) {
-      void this.supabaseService.client.removeChannel(
-        this._canalPedido
-      );
+      void this.supabaseService.client.removeChannel(this._canalPedido);
 
       this._canalPedido = null;
     }
   }
 
-  // Solicitar cuenta.
+  // Ver la cuenta.
 
   goToCuenta() {
     this.router.navigate(['/cuenta']);
   }
 
-  // Modal para consultar el estado del pedido.
+  // Modal para consultar el estado de los pedidos.
 
-async verEstadoPedido(idPedido: string): Promise<void> {
-  const modal = await this.modalController.create({
-    component: EstadoPedidoComponent,
-    componentProps: { idPedido },
-    cssClass: 'estado-pedido-modal',
-    backdropDismiss: true,
-  });
+  async verEstadoPedido(): Promise<void> {
+    const modal = await this.modalController.create({
+      component: EstadoPedidoComponent,
+      cssClass: 'estado-pedido-modal',
+      backdropDismiss: true,
+    });
 
-  await modal.present();
+    await modal.present();
 
-  // didDismiss: espera a que termine la animación de cierre.
-  const { role } = await modal.onDidDismiss();
+    // didDismiss espera a que termine la animación de cierre
+    // antes de abrir la cámara.
+    const { role } = await modal.onDidDismiss();
 
-  if (role === 'solicitar-cuenta') {
-    await this.escanearPropina();
-  }
-}
-
-private async escanearPropina(): Promise<void> {
-  if (this.escaneando()) return;
-
-  this.escaneando.set(true);
-
-  try {
-    const { camera } = await BarcodeScanner.requestPermissions();
-
-    if (camera !== 'granted' && camera !== 'limited') {
-      await this.mostrarToast(
-        'Necesitamos permiso de cámara para escanear el código.'
-      );
-      return;
+    if (role === 'solicitar-cuenta') {
+      await this.escanearPropina();
     }
-
-    const { barcodes } = await BarcodeScanner.scan();
-
-    if (barcodes.length === 0) return;
-
-    const valor = barcodes[0].rawValue ?? '';
-    const porcentaje = parseTipQr(valor);
-
-    if (porcentaje === null) {
-      await this.vibracion.error();
-      await this.mostrarToast(
-        'El código escaneado no es de propina. Por favor, volvé a intentarlo.'
-      );
-      return;
-    }
-
-    await this.pedirCuenta(porcentaje);
-    this._propinaService.setPropinaPorcentaje(porcentaje);
-
-    await this.mostrarToast(
-      'El mozo ahora te llevará la cuenta. Disfrutá del lugar mientras esperás.'
-    );
-  } catch (error) {
-    console.error('Error al escanear propina:', error);
-    await this.vibracion.error();
-    await this.mostrarToast(
-      'No pudimos abrir el escáner. Intentá de nuevo.',
-      'danger'
-    );
-  } finally {
-    this.escaneando.set(false);
   }
-}
 }

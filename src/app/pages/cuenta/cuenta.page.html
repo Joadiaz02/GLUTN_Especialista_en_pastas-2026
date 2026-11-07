@@ -22,21 +22,24 @@
       <section class="cuenta-ticket">
         <h2 class="cuenta-ticket__titulo">Detalle de tu pedido</h2>
 
-        <ul class="cuenta-lineas">
-          @for (linea of lineas(); track $index) {
-            <li class="cuenta-linea">
-              <div class="cuenta-linea__info">
-                <span class="cuenta-linea__nombre">{{ linea.nombre }}</span>
-                <span class="cuenta-linea__detalle">
-                  {{ linea.cantidad }} x {{ linea.precioUnitario | currency:'ARS':'$':'1.0-0' }}
+        <!-- lista con scroll que siempre muestra productos completos -->
+        <div class="cuenta-lineas-wrap">
+          <ul class="cuenta-lineas" appListaEncajada>
+            @for (linea of lineas(); track $index) {
+              <li class="cuenta-linea">
+                <div class="cuenta-linea__info">
+                  <span class="cuenta-linea__nombre">{{ linea.nombre }}</span>
+                  <span class="cuenta-linea__detalle">
+                    {{ linea.cantidad }} por {{ linea.precioUnitario | currency:'ARS':'$':'1.0-0' }}
+                  </span>
+                </div>
+                <span class="cuenta-linea__importe">
+                  {{ linea.importe | currency:'ARS':'$':'1.0-0' }}
                 </span>
-              </div>
-              <span class="cuenta-linea__importe">
-                {{ linea.importe | currency:'ARS':'$':'1.0-0' }}
-              </span>
-            </li>
-          }
-        </ul>
+              </li>
+            }
+          </ul>
+        </div>
 
         <div class="cuenta-resumen">
           <div class="cuenta-fila">
@@ -64,6 +67,7 @@
 
         @if (c.estado === 'cuenta_entregada') {
           <ion-button
+            class="cuenta-boton"
             expand="block"
             shape="round"
             [disabled]="pagando()"

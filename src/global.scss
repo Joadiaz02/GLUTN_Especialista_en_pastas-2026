@@ -170,6 +170,15 @@ ion-buttons {
     font-weight: 400;
     color: #FFF;
   }
+
+  ion-modal.seleccion-mesa-modal {
+  --width: 90%;
+  --max-width: 420px;
+  --height: auto;
+  --max-height: 90dvh;
+  --border-radius: 24px;
+  --backdrop-opacity: 0.6;
+}
 }
 @media (max-height: 780px) {
   :host > div {

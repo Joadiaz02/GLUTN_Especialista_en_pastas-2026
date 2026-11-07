@@ -3,7 +3,7 @@ import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonButton, IonContent, IonModal, ToastController } from '@ionic/angular';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-
+import { ListaEncajadaDirective } from '@app/directives/lista-encajada.directive';
 import { Auth, Juegos, SupabaseService, Vibracion } from '@app/services';
 import { CuentaCliente, Pedido } from '@app/services/pedido/pedido';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
@@ -25,7 +25,7 @@ const NIVEL_PROPINA: Record<number, string> = {
   standalone: true,
   templateUrl: './cuenta.page.html',
   styleUrls: ['./cuenta.page.scss'],
-  imports: [HeaderComponent, CurrencyPipe, IonButton, IonContent, IonModal, SpinnerLogoComponent, LoadingOverlayComponent],
+  imports: [HeaderComponent, CurrencyPipe, IonButton, IonContent, IonModal, SpinnerLogoComponent, LoadingOverlayComponent, ListaEncajadaDirective],
 })
 export class CuentaPage implements OnDestroy {
   private _auth = inject(Auth);
