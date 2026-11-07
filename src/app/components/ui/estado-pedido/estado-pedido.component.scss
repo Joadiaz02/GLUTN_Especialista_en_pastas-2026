@@ -2,31 +2,58 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px; 
-  padding: 12px;
+  gap: 16px;
+  padding: 16px;
   text-align: center;
-}
 
-.estado-pedido h2 {
-  margin: 0;
-  font-size: 1.5rem; 
-}
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ion-text-color);
+  }
 
-.estado-pedido p {
-  margin: 0;
-  font-size: 1.5rem;
-  opacity: 0.85;
-  border: solid var(--ion-color-primary);
-  border-radius: 10px;
-  padding: 5px 10px;
-}
+  &__indicador {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    width: 100%;
+  }
 
-.estado-pedido ion-button {
-  margin-top: 4px;
-  --padding-top: 8px;
-  --padding-bottom: 8px;
-  height: 60px; 
-  font-size: 0.9rem;
-  width: 100%;
-  max-width: 200px; 
+  &__etiqueta {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    opacity: 0.65;
+  }
+
+  &__valor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    font-size: 2.35rem;
+    font-weight: 600;
+    color: var(--ion-color-primary);
+  }
+
+  &__punto {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--ion-color-primary);
+  }
+
+  ion-button {
+    margin-top: 4px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    height: 60px;
+    font-size: 0.9rem;
+    width: 100%;
+    max-width: 200px;
+  }
 }

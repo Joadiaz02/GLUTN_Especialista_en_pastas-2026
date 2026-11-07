@@ -1,7 +1,10 @@
+
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+      <app-confirm-volver
+        (confirmadoVolver)="volver()"
+      ></app-confirm-volver>
     </ion-buttons>
 
     <ion-title>Pedidos</ion-title>
@@ -19,145 +22,253 @@
 
 <ion-content class="cocina-content" [scrollY]="false">
   <div class="cocina-wrapper">
+
     @if (cargando()) {
-    <!-- el spinner se muestra más abajo, como overlay -->
-    } @else if (pedidos().length === 0) {
-    <div class="cocina-vacio">
-      <p class="sin-pedidos">No hay pedidos pendientes.</p>
-    </div>
+      <!-- El spinner se muestra como overlay -->
+    } @else if (mesasAgrupadas().length === 0) {
+      <div class="cocina-vacio">
+        <p class="sin-pedidos">No hay pedidos pendientes.</p>
+      </div>
     } @else {
-    <!-- Carrusel de tarjetas -->
-    <div #viewport class="carrusel" (scroll)="alDesplazar()">
-      @for (pedido of pedidos(); track pedido.id_pedido; let i = $index) {
-      <article class="slide" [class.slide--activo]="i === indiceActual()">
-        <div class="pedido">
-<header class="pedido__mesa">
-  <div class="pedido__mesa-numero">
-    <small>Mesa</small>
-    <strong>{{ pedido.mesas?.numero }}</strong>
-  </div>
 
-  <div class="pedido__cliente">
-    <small>Cliente</small>
-    <strong>
-      {{ pedido.usuarios?.nombre }} {{ pedido.usuarios?.apellido }}
-    </strong>
-  </div>
-</header>
-          <div class="pedido__encabezado">
-            <div class="pedido__momento">
-              <span class="pedido__hora">
-                {{ pedido.fecha_emision_pedido | date : "HH:mm" }}
-              </span>
-              <span class="pedido__fecha">
-                {{ pedido.fecha_emision_pedido | date : "dd/MM/yyyy" }}
-              </span>
-            </div>
+      <!-- Carrusel horizontal de mesas -->
+      <div
+        #viewport
+        class="carrusel"
+        (scroll)="alDesplazarMesas()"
+      >
 
-            <span class="pedido__estado">
-              {{ pedido.estado_pedido }}
-            </span>
-          </div>
+        @for (
+          mesa of mesasAgrupadas();
+          track mesa.idMesa;
+          let i = $index
+        ) {
 
-          @if (pedido.items && pedido.items.length > 0) {
-          <!-- Única zona que scrollea: cada producto es una fila del mismo alto -->
-          <div class="pedido__items-wrap">
-            <div class="lista-productos" appListaFilas>
-              @for (item of pedido.items; track item.id_item) {
-              <div class="producto-card">
-                <div class="card-header-item">
-                  <span class="item-nombre">{{ item.carta.nombre }}</span>
-                  <span class="item-descripcion"
-                    >Cantidad: {{ item.cantidad }}
-                     </span
-                  >
-                </div>
-                <span class="item-precio">{{
-                  item.subtotal | currency : "ARS" : "$" : "1.0-0"
-                }}</span>
-              </div>
+          <section class="mesa-slide">
+
+            <!-- Encabezado de la mesa -->
+            <header class="mesa-encabezado">
+              <span>Mesa {{ mesa.numeroMesa }}</span>
+              <small>
+                {{ mesa.pedidos.length }}
+                {{ mesa.pedidos.length === 1 ? 'pedido' : 'pedidos' }}
+              </small>
+            </header>
+
+            <!-- Carrusel vertical de pedidos de esta mesa -->
+            <div
+              #mesaViewport
+              class="mesa-pedidos"
+              (scroll)="alDesplazarPedidos($event, i)"
+            >
+
+              @for (
+                pedido of mesa.pedidos;
+                track pedido.id_pedido;
+                let j = $index
+              ) {
+
+                <article class="pedido-slide">
+
+                  <div class="pedido">
+
+                    <!-- Mesa y cliente -->
+                    <header class="pedido__mesa">
+
+                      <div class="pedido__mesa-numero">
+                        <small>Mesa</small>
+                        <strong>{{ pedido.mesas?.numero }}</strong>
+                      </div>
+
+                      <div class="pedido__cliente">
+                        <small>Cliente</small>
+                        <strong>
+                          {{ pedido.usuarios?.nombre }}
+                          {{ pedido.usuarios?.apellido }}
+                        </strong>
+                      </div>
+
+                    </header>
+
+                    <!-- Fecha, hora y estado -->
+                    <div class="pedido__encabezado">
+
+                      <div class="pedido__momento">
+                        <span class="pedido__hora">
+                          {{ pedido.fecha_emision_pedido | date : "HH:mm" }}
+                        </span>
+
+                        <span class="pedido__fecha">
+                          {{ pedido.fecha_emision_pedido | date : "dd/MM/yyyy" }}
+                        </span>
+                      </div>
+
+                      <span class="pedido__estado">
+                        {{ pedido.estado_pedido }}
+                      </span>
+
+                    </div>
+
+                    <!-- Productos -->
+                    @if (pedido.items && pedido.items.length > 0) {
+
+                      <div class="pedido__items-wrap">
+
+                        <div class="lista-productos" appListaFilas>
+
+                          @for (
+                            item of pedido.items;
+                            track item.id_item
+                          ) {
+
+                            <div class="producto-card">
+
+                              <div class="card-header-item">
+                                <span class="item-nombre">
+                                  {{ item.carta.nombre }}
+                                </span>
+
+                                <span class="item-descripcion">
+                                  Cantidad: {{ item.cantidad }}
+                                </span>
+                              </div>
+
+                              <span class="item-precio">
+                                {{
+                                  item.subtotal
+                                    | currency : "ARS" : "$" : "1.0-0"
+                                }}
+                              </span>
+
+                            </div>
+
+                          }
+
+                        </div>
+                      </div>
+
+                      <!-- Total fijo -->
+                      <div class="producto-card total-card">
+                        <div class="resumen-fila">
+
+                          <span>Total a pagar:</span>
+
+                          <span class="item-precio">
+                            {{
+                              pedido.subtotal
+                                | currency : "ARS" : "$" : "1.0-0"
+                            }}
+                          </span>
+
+                        </div>
+                      </div>
+
+                    } @else {
+
+                      <p class="sin-items">
+                        Cargando detalles...
+                      </p>
+
+                    }
+
+                    <!-- Acciones -->
+                    <div class="pedido__acciones">
+
+                      <!-- Rechazar -->
+                      <ion-button
+                        class="pedido__boton pedido__boton--icono"
+                        fill="solid"
+                        color="danger"
+                        shape="round"
+                        [disabled]="estado() === pedido.id_pedido"
+                        aria-label="Rechazar pedido"
+                        (click)="rechazar(pedido.id_pedido)"
+                      >
+                        <img
+                          src="assets/icons/close.svg"
+                          alt="Rechazar"
+                        />
+                      </ion-button>
+
+                      <!-- Aceptar -->
+                      <ion-button
+                        class="pedido__boton pedido__boton--icono"
+                        fill="solid"
+                        color="success"
+                        shape="round"
+                        [disabled]="estado() === pedido.id_pedido"
+                        aria-label="Aceptar pedido"
+                        (click)="confirmar(pedido.id_pedido)"
+                      >
+                        <img
+                          src="assets/icons/check.svg"
+                          alt="Aceptar"
+                        />
+                      </ion-button>
+
+                    </div>
+
+                  </div>
+                </article>
+
               }
+
             </div>
-          </div>
+          </section>
 
-          <!-- Total fijo: siempre visible, no scrollea con los productos -->
-          <div class="producto-card total-card">
-            <div class="resumen-fila">
-              <span>Total a pagar:</span>
-              <span class="item-precio">{{
-                pedido.subtotal | currency : "ARS" : "$" : "1.0-0"
-              }}</span>
-            </div>
-          </div>
-          } @else {
-          <p class="sin-items">Cargando detalles...</p>
-          }
+        }
 
-          <!-- Botones de acción -->
-         <div class="pedido__acciones">
-            <!-- Botón Rechazar -->
-            <ion-button
-              class="pedido__boton pedido__boton--icono"
-              fill="solid"
-              color="danger"
-              shape="round"
-              [disabled]="estado() === pedido.id_pedido"
-              aria-label="Rechazar pedido"
-              (click)="rechazar(pedido.id_pedido)"
-            >
-              <img src="assets/icons/close.svg" alt="Rechazar" />
-            </ion-button>
+      </div>
 
-            <!-- Botón Aceptar -->
-            <ion-button
-              class="pedido__boton pedido__boton--icono"
-              fill="solid"
-              color="success"
-              shape="round"
-              aria-label="Aceptar pedido"
-              (click)="confirmar(pedido.id_pedido)"
-            >
-              <img src="assets/icons/check.svg" alt="Aceptar" />
-            </ion-button>
-          </div>
+      <!-- Controles inferiores -->
+      <div class="navegacion">
+
+        <!-- Navegación entre mesas -->
+        <div class="contador">
+
+          <button
+            type="button"
+            class="contador__flecha"
+            aria-label="Mesa anterior"
+            [disabled]="indiceMesaActual() === 0"
+            (click)="irAMesa(indiceMesaActual() - 1)"
+          >
+            ‹
+          </button>
+
+          <span>
+            Mesa {{ indiceMesaActual() + 1 }}
+            de {{ mesasAgrupadas().length }}
+          </span>
+
+          <button
+            type="button"
+            class="contador__flecha"
+            aria-label="Mesa siguiente"
+            [disabled]="
+              indiceMesaActual() === mesasAgrupadas().length - 1
+            "
+            (click)="irAMesa(indiceMesaActual() + 1)"
+          >
+            ›
+          </button>
+
         </div>
-      </article>
-      }
-    </div>
 
-    <!-- Controles de navegación de flechas inferior -->
-    <div class="contador">
-      <button
-        type="button"
-        class="contador__flecha"
-        aria-label="Pedido anterior"
-        [disabled]="indiceActual() === 0"
-        (click)="irA(indiceActual() - 1)"
-      >
-        ‹
-      </button>
 
-      <span> Pedido {{ indiceActual() + 1 }} de {{ pedidos().length }} </span>
 
-      <button
-        type="button"
-        class="contador__flecha"
-        aria-label="Pedido siguiente"
-        [disabled]="indiceActual() === pedidos().length - 1"
-        (click)="irA(indiceActual() + 1)"
-      >
-        ›
-      </button>
-    </div>
+      </div>
+
     }
+
   </div>
 </ion-content>
 
 @if (cargando()) {
-<div class="quick-loading">
-  <app-spinner-logo />
-  <span>Cargando pedidos...</span>
-</div>
+  <div class="quick-loading">
+    <app-spinner-logo />
+    <span>Cargando pedidos...</span>
+  </div>
 }
 
 @if (estadoPedidoCarga()) {

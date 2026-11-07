@@ -1,3 +1,4 @@
+
 import {
   Component,
   computed,
@@ -18,7 +19,6 @@ import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { addIcons } from 'ionicons';
 import { closeCircleOutline } from 'ionicons/icons';
 
-// pedidos de la cocina de a uno por tarjeta, por recibir o en preparación
 export type VistaCocina = 'por_recibir' | 'en_preparacion';
 
 export interface SlideCocina extends PedidoCocina {
@@ -27,12 +27,24 @@ export interface SlideCocina extends PedidoCocina {
   totalEnMesa: number;
 }
 
+export interface GrupoMesaCocina {
+  numeroMesa: string;
+  pedidos: SlideCocina[];
+}
+
 @Component({
   selector: 'app-cocina',
   standalone: true,
   templateUrl: './cocina.page.html',
   styleUrls: ['./cocina.page.scss'],
-  imports: [HeaderComponent, DatePipe, IonButton, IonContent, SpinnerLogoComponent, ListaFilasDirective],
+  imports: [
+    HeaderComponent,
+    DatePipe,
+    IonButton,
+    IonContent,
+    SpinnerLogoComponent,
+    ListaFilasDirective,
+  ],
 })
 export class CocinaPage implements OnDestroy {
   cocina = inject(Cocina);
@@ -45,16 +57,23 @@ export class CocinaPage implements OnDestroy {
 
   private _viewport = viewChild<ElementRef<HTMLElement>>('viewport');
 
-  // pedido que se está procesando
   procesando = signal<string | null>(null);
-
-  indiceActual = signal(0);
 
   vista = signal<VistaCocina>('por_recibir');
 
+  // Navegación horizontal entre mesas.
+  indiceMesaActual = signal(0);
+
+  // Navegación vertical entre pedidos.
+  indicePedidoActual = signal(0);
+
+  // Todos los pedidos de Cocina, con su número de mesa.
   private _todos = computed(() =>
     this.cocina.mesas().flatMap((mesa) =>
-      mesa.pedidos.map((pedido) => ({ ...pedido, numeroMesa: mesa.numeroMesa }))
+      mesa.pedidos.map((pedido) => ({
+        ...pedido,
+        numeroMesa: mesa.numeroMesa,
+      }))
     )
   );
 
@@ -63,43 +82,89 @@ export class CocinaPage implements OnDestroy {
   );
 
   cantidadEnPreparacion = computed(
-    () => this._todos().filter((p) => p.estadoCocina).length
+    () => this._todos().filter((p) => !!p.estadoCocina).length
   );
 
-  // pedidos de la pestaña elegida, numerados por mesa
+  // Pedidos de la pestaña seleccionada.
   pedidos = computed<SlideCocina[]>(() => {
     const porRecibir = this.vista() === 'por_recibir';
-    const lista = this._todos().filter((p) => !p.estadoCocina === porRecibir);
+
+    const lista = this._todos().filter((p) =>
+      porRecibir ? !p.estadoCocina : !!p.estadoCocina
+    );
 
     const totalPorMesa = new Map<string, number>();
-    for (const p of lista) {
-      totalPorMesa.set(p.numeroMesa, (totalPorMesa.get(p.numeroMesa) ?? 0) + 1);
+
+    for (const pedido of lista) {
+      totalPorMesa.set(
+        pedido.numeroMesa,
+        (totalPorMesa.get(pedido.numeroMesa) ?? 0) + 1
+      );
     }
 
     const vistosPorMesa = new Map<string, number>();
 
-    return lista.map((p) => {
-      const numero = (vistosPorMesa.get(p.numeroMesa) ?? 0) + 1;
-      vistosPorMesa.set(p.numeroMesa, numero);
+    return lista.map((pedido) => {
+      const numero =
+        (vistosPorMesa.get(pedido.numeroMesa) ?? 0) + 1;
 
-      return { ...p, numeroEnMesa: numero, totalEnMesa: totalPorMesa.get(p.numeroMesa)! };
+      vistosPorMesa.set(pedido.numeroMesa, numero);
+
+      return {
+        ...pedido,
+        numeroEnMesa: numero,
+        totalEnMesa: totalPorMesa.get(pedido.numeroMesa)!,
+      };
     });
   });
 
+  // Agrupamos por mesa, sin perder el orden de los pedidos.
+  mesas = computed<GrupoMesaCocina[]>(() => {
+    const grupos = new Map<string, SlideCocina[]>();
+
+    for (const pedido of this.pedidos()) {
+      const lista = grupos.get(pedido.numeroMesa) ?? [];
+
+      lista.push(pedido);
+      grupos.set(pedido.numeroMesa, lista);
+    }
+
+    return Array.from(grupos.entries()).map(
+      ([numeroMesa, pedidos]) => ({
+        numeroMesa,
+        pedidos,
+      })
+    );
+  });
+
   constructor() {
-    addIcons({ 'close-circle-outline': closeCircleOutline });
+    addIcons({
+      'close-circle-outline': closeCircleOutline,
+    });
 
-    // ajusta el contador cuando se va el último pedido
+    // Si desaparece una mesa o un pedido, ajustamos los índices.
     effect(() => {
-      const ultimo = Math.max(0, this.pedidos().length - 1);
+      const mesas = this.mesas();
 
-      if (this.indiceActual() > ultimo) {
-        this.indiceActual.set(ultimo);
+      const ultimaMesa = Math.max(0, mesas.length - 1);
+
+      if (this.indiceMesaActual() > ultimaMesa) {
+        this.indiceMesaActual.set(ultimaMesa);
+      }
+
+      const mesaActual = mesas[this.indiceMesaActual()];
+
+      const ultimoPedido = Math.max(
+        0,
+        (mesaActual?.pedidos.length ?? 1) - 1
+      );
+
+      if (this.indicePedidoActual() > ultimoPedido) {
+        this.indicePedidoActual.set(ultimoPedido);
       }
     });
   }
 
-  // recarga el listado al volver a la pantalla
   ionViewWillEnter(): void {
     void this.iniciar();
   }
@@ -109,9 +174,9 @@ export class CocinaPage implements OnDestroy {
   }
 
   recibir(pedido: PedidoCocina): Promise<void> {
-    console.log("COCINERO POR RECIBIR | CLICK EN ACEPTAR")
-    console.log(pedido)
-    
+    console.log('COCINERO POR RECIBIR | CLICK EN ACEPTAR');
+    console.log(pedido);
+
     return this.procesar(pedido, async () => {
       const recibido = await this.cocina.recibir(pedido);
 
@@ -122,7 +187,11 @@ export class CocinaPage implements OnDestroy {
         );
       } else {
         void this._vibracion.errorValidacion();
-        await this.avisar('Otro cocinero ya había recibido este pedido.', 'warning');
+
+        await this.avisar(
+          'Otro cocinero ya había recibido este pedido.',
+          'warning'
+        );
       }
     });
   }
@@ -140,7 +209,6 @@ export class CocinaPage implements OnDestroy {
     });
   }
 
-  // la cocina rechaza el pedido y vuelve al cliente
   async rechazar(pedido: SlideCocina): Promise<void> {
     const confirmado = await this._confirm.preguntar({
       titulo: '¿Rechazar el pedido?',
@@ -156,37 +224,56 @@ export class CocinaPage implements OnDestroy {
       const rechazado = await this.cocina.rechazar(pedido);
 
       if (rechazado) {
-        await this.avisar('Pedido rechazado. Se le avisó al cliente.', 'success');
+        await this.avisar(
+          'Pedido rechazado. Se le avisó al cliente.',
+          'success'
+        );
       } else {
         void this._vibracion.errorValidacion();
-        await this.avisar('Este pedido ya no se puede rechazar.', 'warning');
+
+        await this.avisar(
+          'Este pedido ya no se puede rechazar.',
+          'warning'
+        );
       }
     });
   }
 
-  // deshace recibir por si fue un error
   devolver(pedido: PedidoCocina): Promise<void> {
     return this.procesar(pedido, async () => {
       const devuelto = await this.cocina.devolver(pedido);
 
       if (devuelto) {
-        await this.avisar('El pedido volvió a "Por recibir".', 'success');
+        await this.avisar(
+          'El pedido volvió a "Por recibir".',
+          'success'
+        );
       } else {
         void this._vibracion.errorValidacion();
-        await this.avisar('Este pedido ya no se puede devolver.', 'warning');
+
+        await this.avisar(
+          'Este pedido ya no se puede devolver.',
+          'warning'
+        );
       }
     });
   }
 
-  private async procesar(pedido: PedidoCocina, accion: () => Promise<void>): Promise<void> {
+  private async procesar(
+    pedido: PedidoCocina,
+    accion: () => Promise<void>
+  ): Promise<void> {
     this.procesando.set(pedido.idPedido);
 
     try {
       await accion();
     } catch (error) {
       void this._vibracion.error();
+
       await this.avisar(
-        error instanceof Error ? error.message : 'No pudimos completar la acción.',
+        error instanceof Error
+          ? error.message
+          : 'No pudimos completar la acción.',
         'danger'
       );
     } finally {
@@ -195,51 +282,76 @@ export class CocinaPage implements OnDestroy {
   }
 
   cambiarVista(vista: VistaCocina): void {
-    if (vista === this.vista()) {
-      return;
-    }
+    if (vista === this.vista()) return;
 
     this.vista.set(vista);
-    this.indiceActual.set(0);
+
+    this.indiceMesaActual.set(0);
+    this.indicePedidoActual.set(0);
 
     const viewport = this._viewport()?.nativeElement;
+
     if (viewport) {
       viewport.scrollLeft = 0;
     }
   }
 
-  irA(indice: number): void {
+  // Cambiar de mesa con las flechas.
+  irAMesa(indice: number): void {
+    const mesas = this.mesas();
+
+    if (indice < 0 || indice >= mesas.length) return;
+
     const viewport = this._viewport()?.nativeElement;
-    const slide = viewport?.querySelectorAll<HTMLElement>('.slide')[indice];
 
-    if (!viewport || !slide) {
-      return;
-    }
+    if (!viewport) return;
 
-    this.indiceActual.set(indice);
+    const slides = viewport.querySelectorAll<HTMLElement>('.mesa-slide');
+    const slide = slides[indice];
+
+    if (!slide) return;
+
+    this.indiceMesaActual.set(indice);
+    this.indicePedidoActual.set(0);
 
     viewport.scrollTo({
-      left: slide.offsetLeft - (viewport.clientWidth - slide.offsetWidth) / 2,
+      left:
+        slide.offsetLeft -
+        (viewport.clientWidth - slide.offsetWidth) / 2,
       behavior: 'smooth',
+    });
+
+    // Al seleccionar otra mesa, empezamos por su primer pedido.
+    const pedidosViewport =
+      slide.querySelector<HTMLElement>('.mesa-pedidos');
+
+    pedidosViewport?.scrollTo({
+      top: 0,
+      behavior: 'instant',
     });
   }
 
-  // la tarjeta activa es la más cercana al centro
-  alDesplazar(): void {
+  // Detectar la mesa centrada al deslizar horizontalmente.
+  alDesplazarMesas(): void {
     const viewport = this._viewport()?.nativeElement;
 
-    if (!viewport) {
-      return;
-    }
+    if (!viewport) return;
 
-    const centro = viewport.scrollLeft + viewport.clientWidth / 2;
-    const slides = Array.from(viewport.querySelectorAll<HTMLElement>('.slide'));
+    const centroViewport =
+      viewport.getBoundingClientRect().left +
+      viewport.clientWidth / 2;
+
+    const slides = Array.from(
+      viewport.querySelectorAll<HTMLElement>('.mesa-slide')
+    );
 
     let masCercano = 0;
-    let distanciaMinima = Number.POSITIVE_INFINITY;
+    let distanciaMinima = Infinity;
 
     slides.forEach((slide, indice) => {
-      const distancia = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - centro);
+      const rect = slide.getBoundingClientRect();
+      const centroSlide = rect.left + rect.width / 2;
+      const distancia = Math.abs(centroSlide - centroViewport);
 
       if (distancia < distanciaMinima) {
         distanciaMinima = distancia;
@@ -247,9 +359,52 @@ export class CocinaPage implements OnDestroy {
       }
     });
 
-    if (masCercano !== this.indiceActual()) {
-      this.indiceActual.set(masCercano);
+    if (masCercano !== this.indiceMesaActual()) {
+      this.indiceMesaActual.set(masCercano);
+      this.indicePedidoActual.set(0);
+
+      // Restablecemos el scroll vertical de la nueva mesa.
+      const pedidosViewport =
+        slides[masCercano]?.querySelector<HTMLElement>('.mesa-pedidos');
+
+      if (pedidosViewport) {
+        pedidosViewport.scrollTop = 0;
+      }
     }
+  }
+
+  // Detectar el pedido visible al deslizar verticalmente.
+  alDesplazarPedidos(
+    event: Event,
+    indiceMesa: number
+  ): void {
+    if (indiceMesa !== this.indiceMesaActual()) return;
+
+    const viewport = event.currentTarget as HTMLElement;
+
+    const slides = Array.from(
+      viewport.querySelectorAll<HTMLElement>('.pedido-slide')
+    );
+
+    const centroViewport =
+      viewport.getBoundingClientRect().top +
+      viewport.clientHeight / 2;
+
+    let masCercano = 0;
+    let distanciaMinima = Infinity;
+
+    slides.forEach((slide, indice) => {
+      const rect = slide.getBoundingClientRect();
+      const centroSlide = rect.top + rect.height / 2;
+      const distancia = Math.abs(centroSlide - centroViewport);
+
+      if (distancia < distanciaMinima) {
+        distanciaMinima = distancia;
+        masCercano = indice;
+      }
+    });
+
+    this.indicePedidoActual.set(masCercano);
   }
 
   volver(): void {
@@ -269,8 +424,11 @@ export class CocinaPage implements OnDestroy {
       await this.cocina.iniciar();
     } catch (error) {
       void this._vibracion.error();
+
       await this.avisar(
-        error instanceof Error ? error.message : 'No pudimos cargar los pedidos.',
+        error instanceof Error
+          ? error.message
+          : 'No pudimos cargar los pedidos.',
         'danger'
       );
     }

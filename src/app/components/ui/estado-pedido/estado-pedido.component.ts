@@ -1,5 +1,18 @@
-import { Component, Input, OnInit, OnDestroy, inject, signal } from '@angular/core';
-import { ModalController, IonButton, ToastController } from '@ionic/angular';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  inject,
+  signal,
+} from '@angular/core';
+
+import {
+  ModalController,
+  IonButton,
+  ToastController,
+} from '@ionic/angular';
+
 import { SupabaseService } from '../../../services/supabase.service';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Pedido } from '@app/services/pedido/pedido';
@@ -18,11 +31,12 @@ const estados_posibles: Record<string, string> = {
   cuenta_solicitada: 'Cuenta solicitada, el mozo te la lleva enseguida',
   cuenta_entregada: 'Tu cuenta está lista',
   pago_realizado: 'Pago enviado, esperando la confirmación del mozo',
-  pagado: 'Pago confirmado. ¡Gracias por tu visita!'
+  pagado: 'Pago confirmado. ¡Gracias por tu visita!',
 };
 
 @Component({
   selector: 'app-estado-pedido',
+  standalone: true,
   templateUrl: './estado-pedido.component.html',
   styleUrls: ['./estado-pedido.component.scss'],
   imports: [IonButton],
@@ -32,12 +46,14 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
 
   private supabaseService = inject(SupabaseService);
   private modalController = inject(ModalController);
-  private canal!: RealtimeChannel;
+
+  private canal?: RealtimeChannel;
+
   public pedidoService = inject(Pedido);
+
   private router = inject(Router);
   private carrito = inject(Carrito);
 
-  //punto19
   private toastController = inject(ToastController);
   private vibracion = inject(Vibracion);
 
@@ -45,17 +61,27 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
 
   estado = signal<string>('pendiente');
 
-  estadoLegible = () => estados_posibles[this.estado()] ?? this.estado();
+  estadoLegible = () =>
+    estados_posibles[this.estado()] ?? this.estado();
 
   async ngOnInit(): Promise<void> {
-   
-    const { data } = await this.supabaseService.client.from('pedido').select('estado_pedido').eq('id_pedido', this.idPedido).single();
+    const { data, error } = await this.supabaseService.client
+      .from('pedido')
+      .select('estado_pedido')
+      .eq('id_pedido', this.idPedido)
+      .single();
+
+    if (error) {
+      console.error(
+        'No se pudo consultar el estado del pedido:',
+        error
+      );
+    }
 
     if (data) {
       this.estado.set(data.estado_pedido);
     }
 
-    
     this.canal = this.supabaseService.client
       .channel(`pedido-estado-${this.idPedido}`)
       .on(
@@ -64,54 +90,59 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
           event: 'UPDATE',
           schema: 'public',
           table: 'pedido',
-          filter: `id_pedido=eq.${this.idPedido}`
+          filter: `id_pedido=eq.${this.idPedido}`,
         },
         (payload) => {
           this.estado.set(payload.new['estado_pedido']);
         }
       )
       .subscribe();
-
   }
 
-  async modificar(): Promise<void>{
-        const pedidoCompleto = await this.pedidoService.obtenerPedidoConItems(this.idPedido);
+  async modificar(): Promise<void> {
+    const pedidoCompleto =
+      await this.pedidoService.obtenerPedidoConItems(this.idPedido);
 
-        const itemsParaCarrito = pedidoCompleto.items.map((item: any) => ({
-          producto: item.carta,
-          cantidad: item.cantidad
-        }));
+    const itemsParaCarrito = pedidoCompleto.items.map(
+      (item: any) => ({
+        producto: item.carta,
+        cantidad: item.cantidad,
+      })
+    );
 
-        this.carrito.cargar(itemsParaCarrito);
-        this.pedidoService.idPedidoEnEdicion.set(this.idPedido);
+    this.carrito.cargar(itemsParaCarrito);
 
-        this.modalController.dismiss();
-        this.router.navigate(['/carta']);
-      }
+    this.pedidoService.idPedidoEnEdicion.set(this.idPedido);
 
-    //logica de confirmar 
-    async confirmarRecepcion(): Promise<void> {
-      if (this.confirmando()) return;
+    await this.modalController.dismiss();
 
-      this.confirmando.set(true);
+    await this.router.navigate(['/carta']);
+  }
 
-      try {
-        await this.pedidoService.confirmarRecepcion(this.idPedido);
-        this.estado.set('recibido');
-      } catch (error) {
-        void this.vibracion.error();
+  async confirmarRecepcion(): Promise<void> {
+    if (this.confirmando()) return;
 
-        const toast = await this.toastController.create({
-          message: 'No pudimos confirmar la recepción. Intentá de nuevo.',
-          duration: 3000,
-          position: 'top',
-          color: 'danger',
-        });
-        await toast.present();
-      } finally {
-        this.confirmando.set(false);
-      }
+    this.confirmando.set(true);
+
+    try {
+      await this.pedidoService.confirmarRecepcion(this.idPedido);
+
+      this.estado.set('recibido');
+    } catch (error) {
+      void this.vibracion.error();
+
+      const toast = await this.toastController.create({
+        message: 'No pudimos confirmar la recepción. Intentá de nuevo.',
+        duration: 3000,
+        position: 'top',
+        color: 'danger',
+      });
+
+      await toast.present();
+    } finally {
+      this.confirmando.set(false);
     }
+  }
 
   ngOnDestroy(): void {
     if (this.canal) {
@@ -119,16 +150,20 @@ export class EstadoPedidoComponent implements OnInit, OnDestroy {
     }
   }
 
-  //punto 21
   solicitarCuenta(): void {
-    void this.modalController.dismiss('solicitar-cuenta');
+    void this.modalController.dismiss(
+      null,
+      'solicitar-cuenta'
+    );
   }
-  verCuenta(): void {
-      void this.modalController.dismiss();
-      void this.router.navigate(['/cuenta']);
-    }
+
+  async verCuenta(): Promise<void> {
+    await this.modalController.dismiss();
+
+    await this.router.navigate(['/cuenta']);
+  }
 
   volver(): void {
-    this.modalController.dismiss();
+    void this.modalController.dismiss();
   }
 }

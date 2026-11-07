@@ -1,3 +1,4 @@
+
 .cocina-content {
   --background: var(--ion-background-color);
   --padding-top: calc(14px + env(safe-area-inset-top));
@@ -6,7 +7,6 @@
   --padding-bottom: calc(min(16px, 2vh) + env(safe-area-inset-bottom));
 }
 
-// logo y título arriba, el carrusel ocupa el resto
 .cocina-wrapper {
   width: 100%;
   height: 100%;
@@ -27,7 +27,7 @@
   color: var(--ion-text-color);
 }
 
-// pestañas por recibir y en preparación
+/* Pestañas */
 .vistas {
   flex-shrink: 0;
   display: flex;
@@ -65,7 +65,7 @@
   height: 30px;
   padding: 0 8px;
   border-radius: 999px;
-  background: #5a4a3b; // Marrón oscuro
+  background: #5a4a3b;
   color: #ffffff;
   font-size: 16px;
   display: flex;
@@ -74,52 +74,111 @@
   box-sizing: border-box;
 }
 
-// carrusel de pedidos
+/* Carrusel horizontal: una posición por mesa */
 .carrusel {
   --ancho-tarjeta: min(420px, calc(100vw - 32px));
+
   flex: 1;
   min-height: 0;
+
   display: flex;
-  gap: calc(100vw - var(--ancho-tarjeta));
+  flex-direction: row;
+  align-items: stretch;
+
+  gap: 16px;
   margin: 0 -16px;
-  padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 12px;
+
+  padding:
+    4px
+    calc((100% + 32px - var(--ancho-tarjeta)) / 2)
+    12px;
+
   overflow-x: auto;
   overflow-y: hidden;
+
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   box-sizing: border-box;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-.carrusel::-webkit-scrollbar {
-  display: none;
-}
-
-.slide {
+/* Cada mesa contiene su propio carrusel vertical */
+.mesa-slide {
   flex: 0 0 var(--ancho-tarjeta);
+  width: var(--ancho-tarjeta);
   min-width: 0;
   min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
   scroll-snap-align: center;
   scroll-snap-stop: always;
+
   transform: scale(0.94);
   opacity: 0.6;
+
   transition:
     transform 0.2s ease,
     opacity 0.2s ease;
 }
 
-.slide--activo {
+.mesa-slide--activa {
   transform: scale(1);
   opacity: 1;
 }
 
+/* Pedidos de una mesa: desplazamiento vertical */
+.mesa-pedidos {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Cada pedido ocupa una pantalla vertical */
+.pedido-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Flechas: únicamente cambian de mesa */
 .contador {
   flex-shrink: 0;
   min-height: 54px;
+
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
+
   padding-bottom: 2px;
+
   font-size: 20px;
   font-weight: 700;
   color: var(--ion-text-color);
@@ -128,12 +187,16 @@
 .contador__flecha {
   width: 52px;
   height: 52px;
+
   border: 0;
   border-radius: 50%;
+
   background: var(--ion-color-primary);
   color: #ffffff;
+
   font-size: 32px;
   line-height: 1;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,17 +206,21 @@
   opacity: 0.4;
 }
 
-// tarjeta del pedido (Estilo marrón integrado)
+/* Tarjeta del pedido */
 .pedido {
   height: 100%;
   min-height: 0;
+
   display: flex;
   flex-direction: column;
   gap: 12px;
+
   padding: 16px;
   border-radius: 24px;
-  background: #6b5c4e; // Marrón de la tarjeta de postres
-  color: #ffffff;      // Texto en blanco para legibilidad
+
+  background: #6b5c4e;
+  color: #ffffff;
+
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
 }
@@ -172,7 +239,7 @@
     margin: 0;
     font-size: 26px;
     font-weight: 800;
-    color: #ffc983; // Tono secundario cálido destacado
+    color: #ffc983;
   }
 
   span {
@@ -210,7 +277,7 @@
   flex-shrink: 0;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #3a2417; // Marrón oscuro para los estados
+  background: #3a2417;
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
@@ -220,17 +287,80 @@
   background: var(--ion-color-primary);
 }
 
-// los ítems se desplazan y los botones quedan a la vista
-.pedido__items {
-  flex: 1;
+/* Lista de productos: mantiene su scroll independiente */
+.pedido__items-wrap {
+  position: relative;
+  flex: 1 1 0;
   min-height: 0;
-  overflow-y: auto;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+
+  padding-block: 5px;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.45);
+    opacity: 0;
+    transition: opacity 150ms ease;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: 0;
+  }
+
+  &::after {
+    bottom: 0;
+  }
+
+  &.tiene-arriba::before,
+  &.tiene-abajo::after {
+    opacity: 1;
+  }
+}
+
+.pedido__items {
+  --fila-min: 52px;
+  --fila-alto: var(--fila-min);
+
+  flex: 1 1 0;
+  min-height: 0;
+
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > * {
+    flex: 0 0 var(--fila-alto);
+    height: var(--fila-alto);
+    min-height: 0;
+    box-sizing: border-box;
+    scroll-snap-align: start;
+  }
 }
 
 .pedido__item {
@@ -244,11 +374,14 @@
   flex-shrink: 0;
   min-width: 44px;
   height: 44px;
+
   padding: 0 8px;
   border-radius: 12px;
-  background: #3a2417; // Fondo oscuro para las cantidades
+
+  background: #3a2417;
   color: #ffffff;
   font-weight: 700;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -256,12 +389,21 @@
 }
 
 .pedido__nombre {
+  display: -webkit-box;
   min-width: 0;
+  overflow: hidden;
+
   font-weight: 600;
+  line-height: 1.2;
   overflow-wrap: anywhere;
   color: #ffffff;
+
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
+/* Acciones */
 .pedido__acciones {
   flex-shrink: 0;
   display: flex;
@@ -274,10 +416,10 @@
   min-width: 0;
   margin: 0;
   min-height: 52px;
+
   font-weight: 700;
   --border-radius: 16px;
-  
-  /* Asegura que tanto la imagen como el spinner queden perfectamente centrados */
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -288,33 +430,40 @@
   width: 42px;
   height: 42px;
   object-fit: contain;
-  margin-top: 2px; /* Mantiene la misma alineación visual fina que logramos antes */
+  margin-top: 2px;
 }
 
+/* Overlay de carga */
 .cocina-loading {
   position: fixed;
   inset: 0;
   z-index: 100000;
+
   width: 100vw;
   height: 100dvh;
   box-sizing: border-box;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 14px;
+
   padding:
     max(24px, env(safe-area-inset-top))
     24px
     max(24px, env(safe-area-inset-bottom));
+
   background: rgba(31, 45, 24, 0.55);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
 }
 
+/* Pantallas de poca altura */
 @media (max-height: 720px) {
   .cocina-content {
     --padding-top: calc(8px + env(safe-area-inset-top));
@@ -366,6 +515,11 @@
     font-size: 13px;
   }
 
+  .pedido__items {
+    --fila-min: 46px;
+    gap: 7px;
+  }
+
   .pedido__item {
     font-size: 16px;
   }
@@ -391,12 +545,7 @@
   }
 }
 
-// logo más arriba, pegado al encabezado
-// .logo-container.logo-fijo {
-//   margin: 0 auto 8px;
-// }
-
-// el encabezado flota sobre la pantalla para que el logo suba a su altura
+/* Encabezado */
 app-header {
   position: absolute;
   top: 0;
@@ -404,7 +553,6 @@ app-header {
   right: 0;
   z-index: 10;
   pointer-events: none;
-  // sin fondo: lo que queda detrás del encabezado (el logo) se ve entero
   background: transparent;
 }
 
@@ -412,7 +560,6 @@ app-header ::ng-deep ion-buttons {
   pointer-events: auto;
 }
 
-// barra transparente para que no tape el logo
 app-header ::ng-deep ion-toolbar {
   --background: transparent;
   --border-width: 0;

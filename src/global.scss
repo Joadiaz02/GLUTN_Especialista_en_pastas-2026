@@ -212,4 +212,18 @@ ion-buttons {
     font-weight: 500;
     color: var(--text-secondary);
 }
+
+// Modal de consulta del estado del pedido.
+ion-modal.estado-pedido-modal {
+  --width: 90%;
+  --max-width: 420px;
+
+  --height: auto;
+  --max-height: 85%;
+
+  --border-radius: 24px;
+
+  --background: var(--ion-background-color);
+  --backdrop-opacity: 0.6;
+}
 }

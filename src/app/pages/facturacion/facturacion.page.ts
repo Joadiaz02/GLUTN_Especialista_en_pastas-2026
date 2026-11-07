@@ -3,7 +3,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { IonButton, IonContent, IonIcon, IonModal, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
-
+import { LimitesListaDirective } from '@app/directives/limites-lista.directive';
 import { Vibracion } from '@app/services';
 import { Factura, FacturaDelRestaurante } from '@app/services/factura/factura';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
@@ -30,7 +30,9 @@ function inicioDelDia(fecha: Date): Date {
   standalone: true,
   templateUrl: './facturacion.page.html',
   styleUrls: ['./facturacion.page.scss'],
-  imports: [HeaderComponent, CurrencyPipe, DatePipe, IonButton, IonContent, IonIcon, IonModal, SpinnerLogoComponent, LoadingOverlayComponent],
+  imports: [HeaderComponent, CurrencyPipe, DatePipe, IonButton, IonContent, IonIcon, IonModal, SpinnerLogoComponent, LoadingOverlayComponent,
+    LimitesListaDirective
+  ],
 })
 export class FacturacionPage {
   private _factura = inject(Factura);

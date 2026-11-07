@@ -9,6 +9,7 @@ import {
   untracked,
 } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
+import { SeleccionMesaComponent } from '@app/components/ui/seleccion-mesa/seleccion-mesa.component';
 import {
   IonContent,
   IonFooter,
@@ -91,7 +92,7 @@ export class HomePage implements OnInit, OnDestroy {
   private _waitlistService = inject(Waitlist);
   private _propinaService = inject(Propina);
 
-  //punto19
+  // punto 19
 
   constructor() {
     addIcons({
@@ -100,12 +101,13 @@ export class HomePage implements OnInit, OnDestroy {
       'time-outline': timeOutline,
     });
 
-    // escucha el estado del último pedido del cliente
+    // Escucha el estado del último pedido del cliente.
     effect(() => {
       const idPedido = this.pedido.idUltimoPedido();
       untracked(() => void this.escucharPedido(idPedido));
     });
-    // cuando el mozo entrega la cuenta, el cliente va directo a verla
+
+    // Cuando el mozo entrega la cuenta, el cliente va directo a verla.
     effect(() => {
       if (this.estadoPedido() === 'cuenta_entregada') {
         untracked(() => {
@@ -124,6 +126,7 @@ export class HomePage implements OnInit, OnDestroy {
       this.destacados.set(await this.cartaService.getSugeridos());
     } catch (error) {
       void this.vibracion.error();
+
       await this.mostrarToast(
         error instanceof Error
           ? error.message
@@ -140,14 +143,16 @@ export class HomePage implements OnInit, OnDestroy {
     this.dejarDeEscucharPedido();
   }
 
-  // estados
+  // Estados
 
   loading = signal(false);
 
-  // sesión iniciada
+  // Sesión iniciada
+
   isLoggedIn = computed(() => this.authService.usuarioActual() !== null);
 
-  // el personal vuelve a la selección de acceso
+  // El personal vuelve a su panel.
+
   esPersonal = computed(() =>
     this.authService.esPersonal(this.authService.usuarioActual())
   );
@@ -164,10 +169,11 @@ export class HomePage implements OnInit, OnDestroy {
     return 'Vas a volver a la pantalla de ingreso.';
   });
 
-  // mesa asignada por el metre
+  // Mesa asignada por el metre.
+
   enMesa = computed(() => this.mesaCliente.numero() !== null);
 
-  // botones visibles según perfil y estado
+  // Botones visibles según perfil y estado.
 
   perfil = computed(() =>
     this.authService.obtenerPerfil(this.authService.usuarioActual())
@@ -181,7 +187,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   estadoPedido = signal<string | null>(null);
 
-  // el mozo ya confirmó el pedido, en cualquier etapa posterior
+  // El mozo ya confirmó el pedido, en cualquier etapa posterior.
+
   pedidoRecibido = computed(() =>
     [
       'confirmado',
@@ -195,7 +202,8 @@ export class HomePage implements OnInit, OnDestroy {
     ].includes(this.estadoPedido() ?? '')
   );
 
-  // botones que ve cada perfil
+  // Botones que ve cada perfil.
+
   botones = computed(() => {
     const perfil = this.perfil();
     const cliente = this.esCliente();
@@ -203,19 +211,24 @@ export class HomePage implements OnInit, OnDestroy {
     const pedidoRecibido = this.pedidoRecibido();
 
     return {
-      // reservas oculto hasta la segunda entrega
+      // Reservas oculto hasta la segunda entrega.
       reservas: false,
       carta: cliente ? enMesa : perfil !== null,
       juegos: cliente && pedidoRecibido,
-      // el anónimo es un usuario nuevo en cada visita: no tiene facturas anteriores
+
+      // El anónimo es un usuario nuevo en cada visita.
       facturas: perfil === EPerfilUsuario.ClienteRegistrado,
+
       encuestas:
         cliente ||
         perfil === EPerfilUsuario.Dueno ||
         perfil === EPerfilUsuario.Supervisor,
+
       escaner: cliente,
       consultas: (cliente && enMesa) || perfil === EPerfilUsuario.Mozo,
+
       estadoPedido: cliente && this.pedido.idUltimoPedido() !== null,
+
       verCuenta:
         cliente &&
         (this.estadoPedido() === 'cuenta_entregada' ||
@@ -225,14 +238,20 @@ export class HomePage implements OnInit, OnDestroy {
 
   hayAccesos = computed(() => {
     const botones = this.botones();
-    return botones.estadoPedido || botones.escaner || botones.consultas;
+
+    return (
+      botones.estadoPedido ||
+      botones.escaner ||
+      botones.consultas
+    );
   });
 
-  // destacados y quiénes somos se abren en una ventana
+  // Destacados y quiénes somos se abren en una ventana.
+
   showDestacados = signal(false);
   showQuienesSomos = signal(false);
 
-  // productos destacados
+  // Productos destacados.
 
   destacados = signal<CartaItem[]>([]);
   isLoadingDestacados = signal(false);
@@ -246,14 +265,21 @@ export class HomePage implements OnInit, OnDestroy {
 
   fotoDestacadaActual = computed(() => {
     const producto = this.productoDestacadoActual();
+
     if (!producto) return '';
 
-    const fotos = [producto.foto_1, producto.foto_2, producto.foto_3];
+    const fotos = [
+      producto.foto_1,
+      producto.foto_2,
+      producto.foto_3,
+    ];
+
     return fotos[this.indiceFotoDestacado()];
   });
 
   siguienteDestacado(): void {
     const total = this.destacados().length;
+
     if (total < 2) return;
 
     this.indiceDestacado.update((i) => (i + 1) % total);
@@ -262,9 +288,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   anteriorDestacado(): void {
     const total = this.destacados().length;
+
     if (total < 2) return;
 
-    this.indiceDestacado.update((i) => (i - 1 + total) % total);
+    this.indiceDestacado.update(
+      (i) => (i - 1 + total) % total
+    );
+
     this.indiceFotoDestacado.set(0);
   }
 
@@ -283,7 +313,7 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  // login y logout
+  // Login y logout.
 
   irALogin(): void {
     this.router.navigate(['/login']);
@@ -291,12 +321,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   async volver(): Promise<void> {
     if (this.esPersonal()) {
-      // el personal vuelve a su panel
+      // El personal vuelve al panel.
       void this.router.navigate(['/admin']);
       return;
     }
 
-    const pantallaIngreso = this.authService.obtenerPantallaIngreso();
+    const pantallaIngreso =
+      this.authService.obtenerPantallaIngreso();
 
     if (this.isLoggedIn()) {
       await this.authService.logout();
@@ -317,12 +348,13 @@ export class HomePage implements OnInit, OnDestroy {
       position: 'top',
       color: 'success',
     });
+
     await toast.present();
 
     void this.router.navigate(['/login']);
   }
 
-  // botones principales
+  // Botones principales.
 
   abrirDestacados(): void {
     this.showDestacados.set(true);
@@ -342,14 +374,16 @@ export class HomePage implements OnInit, OnDestroy {
     this.showQuienesSomos.set(false);
   }
 
-  // navegaciones
+  // Navegaciones.
 
   goToCarta() {
     this.router.navigate(['/carta']);
   }
 
   goToJuegos() {
-    this.router.navigate(['/juegos'], { state: { origenValido: true } });
+    this.router.navigate(['/juegos'], {
+      state: { origenValido: true },
+    });
   }
 
   goToReservas() {
@@ -368,7 +402,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.router.navigate(['/facturas']);
   }
 
-  // escáner qr
+  // Escáner QR.
 
   escaneando = signal(false);
 
@@ -376,8 +410,10 @@ export class HomePage implements OnInit, OnDestroy {
     if (this.escaneando()) return;
 
     this.escaneando.set(true);
+
     try {
-      const { camera } = await BarcodeScanner.requestPermissions();
+      const { camera } =
+        await BarcodeScanner.requestPermissions();
 
       if (camera !== 'granted' && camera !== 'limited') {
         await this.mostrarToast(
@@ -403,13 +439,13 @@ export class HomePage implements OnInit, OnDestroy {
         return;
       }
 
-      // el cliente con mesa asignada también puede escanearla desde acá
+      // El cliente con mesa asignada también puede escanearla desde acá.
       // if (parseTableQr(valor)) {
       //   await this.vincularMesa(valor);
       //   return;
       // }
 
-      // QR de propina: el cliente pide la cuenta
+      // QR de propina: el cliente pide la cuenta.
       // const porcentaje = parseTipQr(valor);
       // if (porcentaje !== null) {
       //   this.pedirCuenta(porcentaje);
@@ -417,6 +453,7 @@ export class HomePage implements OnInit, OnDestroy {
       // }
 
       await this.vibracion.error();
+
       await this.mostrarToast(
         'Ese código QR no corresponde al ingreso, a una mesa ni a una propina.'
       );
@@ -424,71 +461,112 @@ export class HomePage implements OnInit, OnDestroy {
       this.escaneando.set(false);
     }
   }
-  private async pedirCuenta(porcentaje: number): Promise<void> {
-    const usuario = this.authService.usuarioActual();
 
-    if (!usuario) {
-      return;
-    }
+private async pedirCuenta(porcentaje: number): Promise<boolean> {
+  const usuario = this.authService.usuarioActual();
+  if (!usuario) return false;
 
-    try {
-      await this.pedido.solicitarCuenta(usuario.id, porcentaje);
-      // await this.vibracion.confirmacion();
-    } catch (error) {
-      console.error('Error al pedir la cuenta:', JSON.stringify(error));
-      await this.vibracion.error();
-      await this.mostrarToast(
-        error instanceof Error
-          ? error.message
-          : 'No pudimos pedir la cuenta. Intentá de nuevo.',
-        'danger'
-      );
-    }
+  try {
+    await this.pedido.solicitarCuenta(usuario.id, porcentaje);
+    return true;
+  } catch (error) {
+    console.error('Error al pedir la cuenta:', error);
+    await this.vibracion.error();
+    await this.mostrarToast(
+      error instanceof Error
+        ? error.message
+        : 'No pudimos pedir la cuenta. Intentá de nuevo.',
+      'danger'
+    );
+    return false;
   }
+}
 
-  private async procesarCodigo(codigo: CodigoQr): Promise<void> {
-    switch (codigo.tipo) {
-      case 'ingreso-local':
-        // await this.mostrarToast('La lista de espera todavía no está disponible.');
-        try {
-          const currentUser = this.authService.usuarioActual();
+private async procesarCodigo(codigo: CodigoQr): Promise<void> {
+  switch (codigo.tipo) {
+    case 'ingreso-local':
+      try {
+        const currentUser = this.authService.usuarioActual();
 
-          // si ya está anotado no lo agrega de nuevo
-          const entrada = await this._waitlistService.getMyEntry(
-            currentUser.id
-          );
-
-          if (!entrada) {
-            const nueva = await this._waitlistService.add({
-              usuario_id: currentUser.id,
-              estado: 'esperando',
-            });
-
-            // avisa al metre que hay un cliente nuevo
-            try {
-              await this._waitlistService.notifyNewWaitlist(nueva.id);
-            } catch (error) {
-              console.warn('No se pudo notificar al metre:', error);
-            }
-          }
-
-          this.router.navigate(['/waiting-room']);
-        } catch {
-          await this.vibracion.error();
-
+        if (!currentUser?.id) {
           await this.mostrarToast(
-            'No pudimos anotarte en la lista de espera. Probá de nuevo.'
+            'No pudimos identificar tu usuario. Volvé a iniciar sesión.',
+            'danger'
           );
+          return;
         }
 
-        break;
-    }
-  }
+        // Verificamos si el cliente ya está anotado.
+        const entrada = await this._waitlistService.getMyEntry(
+          currentUser.id
+        );
 
-  // vincula al cliente con la mesa escaneada
+        // Si todavía no está anotado, solicitamos sus preferencias.
+        if (!entrada) {
+          const modal = await this.modalController.create({
+            component: SeleccionMesaComponent,
+            cssClass: 'seleccion-mesa-modal',
+            backdropDismiss: false,
+          });
+
+          await modal.present();
+
+          const { data, role } =
+            await modal.onDidDismiss<{
+              comensales: number;
+              consideraciones: string;
+            }>();
+
+          // Si cancela, no se lo agrega a la lista.
+          if (role !== 'confirm' || !data) {
+            return;
+          }
+
+          // Creamos la entrada con los datos seleccionados.
+          const nueva = await this._waitlistService.add({
+            usuario_id: currentUser.id,
+            estado: 'esperando',
+            comensales: data.comensales,
+            consideraciones: [data.consideraciones],
+          });
+
+          // Notificamos al metre.
+          try {
+            await this._waitlistService.notifyNewWaitlist(nueva.id);
+          } catch (error) {
+            console.warn(
+              'No se pudo notificar al metre:',
+              error
+            );
+          }
+        }
+
+        // Si ya estaba anotado, también puede ingresar directamente.
+        await this.router.navigate(['/waiting-room']);
+      } catch (error) {
+        console.error(
+          'Error registrando cliente en lista de espera:',
+          error
+        );
+
+        await this.vibracion.error();
+
+        await this.mostrarToast(
+          'No pudimos anotarte en la lista de espera. Probá de nuevo.',
+          'danger'
+        );
+      }
+
+      break;
+  }
+}
+
+  // Vincula al cliente con la mesa escaneada.
+
   private async vincularMesa(valor: string): Promise<void> {
     try {
       const usuario = this.authService.usuarioActual();
+
       const resultado = await this._waitlistService.linkTable(
         usuario.id,
         valor
@@ -513,7 +591,9 @@ export class HomePage implements OnInit, OnDestroy {
       }
     } catch (error) {
       console.error('Error vinculando mesa:', error);
+
       await this.vibracion.error();
+
       await this.mostrarToast(
         'No pudimos vincularte con la mesa. Intentá nuevamente.'
       );
@@ -530,13 +610,17 @@ export class HomePage implements OnInit, OnDestroy {
       position: 'top',
       color,
     });
+
     await toast.present();
   }
 
-  // estado del pedido
+  // Estado del pedido.
 
-  private async escucharPedido(idPedido: string | null): Promise<void> {
+  private async escucharPedido(
+    idPedido: string | null
+  ): Promise<void> {
     this.dejarDeEscucharPedido();
+
     this.estadoPedido.set(null);
 
     if (!idPedido) return;
@@ -559,92 +643,95 @@ export class HomePage implements OnInit, OnDestroy {
           table: 'pedido',
           filter: `id_pedido=eq.${idPedido}`,
         },
-        (payload) => this.estadoPedido.set(payload.new['estado_pedido'] ?? null)
+        (payload) =>
+          this.estadoPedido.set(
+            payload.new['estado_pedido'] ?? null
+          )
       )
       .subscribe();
   }
 
   private dejarDeEscucharPedido(): void {
     if (this._canalPedido) {
-      void this.supabaseService.client.removeChannel(this._canalPedido);
+      void this.supabaseService.client.removeChannel(
+        this._canalPedido
+      );
+
       this._canalPedido = null;
     }
   }
 
-  // solicitar cuenta
+  // Solicitar cuenta.
+
   goToCuenta() {
     this.router.navigate(['/cuenta']);
   }
 
-  async verEstadoPedido(idPedido: string) {
-    const modal = await this.modalController.create({
-      component: EstadoPedidoComponent,
-      componentProps: { idPedido },
-      breakpoints: [0, 0.4],
-      initialBreakpoint: 0.2,
-    });
+  // Modal para consultar el estado del pedido.
 
-    await modal.present();
+async verEstadoPedido(idPedido: string): Promise<void> {
+  const modal = await this.modalController.create({
+    component: EstadoPedidoComponent,
+    componentProps: { idPedido },
+    cssClass: 'estado-pedido-modal',
+    backdropDismiss: true,
+  });
 
-    const { data } = await modal.onWillDismiss();
+  await modal.present();
 
-    if (data === 'solicitar-cuenta') {
-      if (this.escaneando()) return;
+  // didDismiss: espera a que termine la animación de cierre.
+  const { role } = await modal.onDidDismiss();
 
-      this.escaneando.set(true);
-
-      try {
-        const { camera } = await BarcodeScanner.requestPermissions();
-
-        if (camera !== 'granted' && camera !== 'limited') {
-          await this.mostrarToast(
-            'Necesitamos permiso de cámara para escanear el código.'
-          );
-
-          return;
-        }
-
-        const { barcodes } = await BarcodeScanner.scan();
-
-        if (barcodes.length === 0) return;
-
-        const valor = barcodes[0].rawValue ?? '';
-
-        if (
-          valor === 'propina:0' ||
-          valor === 'propina:5' ||
-          valor === 'propina:10' ||
-          valor === 'propina:15' ||
-          valor === 'propina:20'
-        ) {
-          const porcentaje = parseTipQr(valor);
-
-          if (porcentaje !== null) {
-            this.pedirCuenta(porcentaje);
-
-            this._propinaService.setPropinaPorcentaje(porcentaje)
-
-            await this.toastController.create({
-              message: 'El mozo ahora te llevara la cuenta. Disfruta del lugar mientras esperas.',
-  
-              duration: 3000,
-  
-              position: 'bottom',
-  
-            });
-
-            return;
-          }
-        } else {
-          await this.vibracion.error();
-
-          await this.mostrarToast(
-            'El codigo escaneado no es de propina. Por favor, vuelva a intentarlo.'
-          );
-        }
-      } finally {
-        this.escaneando.set(false);
-      }
-    }
+  if (role === 'solicitar-cuenta') {
+    await this.escanearPropina();
   }
+}
+
+private async escanearPropina(): Promise<void> {
+  if (this.escaneando()) return;
+
+  this.escaneando.set(true);
+
+  try {
+    const { camera } = await BarcodeScanner.requestPermissions();
+
+    if (camera !== 'granted' && camera !== 'limited') {
+      await this.mostrarToast(
+        'Necesitamos permiso de cámara para escanear el código.'
+      );
+      return;
+    }
+
+    const { barcodes } = await BarcodeScanner.scan();
+
+    if (barcodes.length === 0) return;
+
+    const valor = barcodes[0].rawValue ?? '';
+    const porcentaje = parseTipQr(valor);
+
+    if (porcentaje === null) {
+      await this.vibracion.error();
+      await this.mostrarToast(
+        'El código escaneado no es de propina. Por favor, volvé a intentarlo.'
+      );
+      return;
+    }
+
+    await this.pedirCuenta(porcentaje);
+    this._propinaService.setPropinaPorcentaje(porcentaje);
+
+    await this.mostrarToast(
+      'El mozo ahora te llevará la cuenta. Disfrutá del lugar mientras esperás.'
+    );
+  } catch (error) {
+    console.error('Error al escanear propina:', error);
+    await this.vibracion.error();
+    await this.mostrarToast(
+      'No pudimos abrir el escáner. Intentá de nuevo.',
+      'danger'
+    );
+  } finally {
+    this.escaneando.set(false);
+  }
+}
 }

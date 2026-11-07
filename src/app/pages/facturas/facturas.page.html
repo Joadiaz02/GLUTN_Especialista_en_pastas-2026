@@ -23,27 +23,32 @@
           <p class="facturas-vacio__detalle">Cuando el mozo confirme el pago de tu cuenta, vas a poder descargarla desde acá.</p>
         </div>
       } @else {
-        <ul class="facturas-lista">
-          @for (factura of facturas(); track factura.idTicket) {
-            <li class="factura">
-              <div class="factura__info">
-                <span class="factura__fecha">{{ factura.fecha | date: 'dd/MM/yyyy' }}</span>
-                <span class="factura__hora">{{ factura.fecha | date: 'HH:mm' }}</span>
-              </div>
+        <!-- Única zona que scrollea: cada factura es una fila del mismo alto.
+             La directiva calcula cuántas filas completas entran, así nunca queda una cortada.
+             El contenedor muestra una línea cuando hay más facturas arriba o abajo. -->
+        <div class="facturas-lista-wrap">
+          <ul class="facturas-lista" appLimitesLista>
+            @for (factura of facturas(); track factura.idTicket) {
+              <li class="factura">
+                <div class="factura__info">
+                  <span class="factura__fecha">{{ factura.fecha | date: 'dd/MM/yyyy' }}</span>
+                  <span class="factura__hora">{{ factura.fecha | date: 'HH:mm' }}</span>
+                </div>
 
-              <span class="factura__total">{{ factura.total | currency:'ARS':'$':'1.0-0' }}</span>
+                <span class="factura__total">{{ factura.total | currency:'ARS':'$':'1.0-0' }}</span>
 
-              <ion-button
-                class="factura__descargar"
-                aria-label="Descargar factura"
-                [disabled]="descargando() !== null"
-                (click)="descargar(factura)"
-              >
-                <ion-icon slot="icon-only" src="assets/icons/download.svg"></ion-icon>
-              </ion-button>
-            </li>
-          }
-        </ul>
+                <ion-button
+                  class="factura__descargar"
+                  aria-label="Descargar factura"
+                  [disabled]="descargando() !== null"
+                  (click)="descargar(factura)"
+                >
+                  <ion-icon slot="icon-only" src="assets/icons/download.svg"></ion-icon>
+                </ion-button>
+              </li>
+            }
+          </ul>
+        </div>
       }
     </section>
   </div>

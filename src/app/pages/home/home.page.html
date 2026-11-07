@@ -10,26 +10,28 @@
     </ion-button>
   }
 </app-header> -->
+
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <!-- el personal vuelve a su panel; el cliente cierra sesión -->
       @if (esPersonal()) {
-      <app-confirm-volver
-        titulo="¿Volver a tu panel?"
-        [mensaje]="mensajeVolver()"
-        textoConfirmar="Volver"
-        colorConfirmar="primary"
-        (confirmadoVolver)="volver()"
-      />
+        <app-confirm-volver
+          titulo="¿Volver a tu panel?"
+          [mensaje]="mensajeVolver()"
+          textoConfirmar="Volver"
+          colorConfirmar="primary"
+          (confirmadoVolver)="volver()"
+        />
       } @else {
-      <app-confirm-dialog
-        titulo="¿Cerrar sesión?"
-        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
-        textoConfirmar="Cerrar sesión"
-        (confirmado)="cerrarSesion()"
-      ></app-confirm-dialog>
+        <app-confirm-dialog
+          titulo="¿Cerrar sesión?"
+          mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+          textoConfirmar="Cerrar sesión"
+          (confirmado)="cerrarSesion()"
+        ></app-confirm-dialog>
       }
+
       <!-- <img
         src="assets/images/LOGO-GLUTN.png"
         alt="GLUTN - Especialista en Pastas"
@@ -45,12 +47,12 @@
 
       <!-- el personal tiene la flecha a la izquierda: cerrar sesión va al lado de la foto -->
       @if (esPersonal()) {
-      <app-confirm-dialog
-        titulo="¿Cerrar sesión?"
-        mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
-        textoConfirmar="Cerrar sesión"
-        (confirmado)="cerrarSesion()"
-      ></app-confirm-dialog>
+        <app-confirm-dialog
+          titulo="¿Cerrar sesión?"
+          mensaje="Vas a tener que volver a ingresar tus credenciales para acceder de nuevo."
+          textoConfirmar="Cerrar sesión"
+          (confirmado)="cerrarSesion()"
+        ></app-confirm-dialog>
       }
     </ion-buttons>
   </ion-toolbar>
@@ -58,6 +60,7 @@
 
 <ion-content class="home-content">
   <div class="home-wrapper">
+
     <!-- logo y botones principales -->
     <div class="home-botones">
       <div class="logo-container logo-fijo">
@@ -69,14 +72,14 @@
       </div>
 
       @if (botones().reservas) {
-      <ion-button
-        class="home-button"
-        expand="block"
-        shape="round"
-        (click)="goToReservas()"
-      >
-        <span class="home-button__texto">Reservas</span>
-      </ion-button>
+        <ion-button
+          class="home-button"
+          expand="block"
+          shape="round"
+          (click)="goToReservas()"
+        >
+          <span class="home-button__texto">Reservas</span>
+        </ion-button>
       }
 
       <ion-button
@@ -98,50 +101,58 @@
       </ion-button>
 
       @if (botones().carta) {
-      <ion-button
-        class="home-button"
-        expand="block"
-        shape="round"
-        (click)="goToCarta()"
-      >
-        <span class="home-button__texto">Carta</span>
-      </ion-button>
-      } @if (botones().juegos) {
-      <ion-button
-        class="home-button"
-        expand="block"
-        shape="round"
-        (click)="goToJuegos()"
-      >
-        <span class="home-button__texto">Juegos</span>
-      </ion-button>
-      } @if (botones().facturas) {
-      <ion-button
-        class="home-button"
-        expand="block"
-        shape="round"
-        (click)="goToFacturas()"
-      >
-        <span class="home-button__texto">Mis facturas</span>
-      </ion-button>
-      } @if (botones().encuestas) {
-      <ion-button
-        class="home-button"
-        expand="block"
-        shape="round"
-        (click)="goToEncuestas()"
-      >
-        <span class="home-button__texto">Encuestas</span>
-      </ion-button>
-      } @if (botones().verCuenta) {
-      <ion-button
-        class="home-button"
-        expand="block"
-        shape="round"
-        (click)="goToCuenta()"
-      >
-        <span class="home-button__texto">Ver cuenta</span>
-      </ion-button>
+        <ion-button
+          class="home-button"
+          expand="block"
+          shape="round"
+          (click)="goToCarta()"
+        >
+          <span class="home-button__texto">Carta</span>
+        </ion-button>
+      }
+
+      @if (botones().juegos) {
+        <ion-button
+          class="home-button"
+          expand="block"
+          shape="round"
+          (click)="goToJuegos()"
+        >
+          <span class="home-button__texto">Juegos</span>
+        </ion-button>
+      }
+
+      @if (botones().facturas) {
+        <ion-button
+          class="home-button"
+          expand="block"
+          shape="round"
+          (click)="goToFacturas()"
+        >
+          <span class="home-button__texto">Mis facturas</span>
+        </ion-button>
+      }
+
+      @if (botones().encuestas) {
+        <ion-button
+          class="home-button"
+          expand="block"
+          shape="round"
+          (click)="goToEncuestas()"
+        >
+          <span class="home-button__texto">Encuestas</span>
+        </ion-button>
+      }
+
+      @if (botones().verCuenta) {
+        <ion-button
+          class="home-button"
+          expand="block"
+          shape="round"
+          (click)="goToCuenta()"
+        >
+          <span class="home-button__texto">Ver cuenta</span>
+        </ion-button>
       }
     </div>
   </div>
@@ -157,59 +168,71 @@
         <h2 class="destacados__titulo">Productos destacados</h2>
 
         @if (isLoadingDestacados()) {
-        <div class="destacados__cargando">
-          <app-spinner-logo />
-        </div>
+          <div class="destacados__cargando">
+            <app-spinner-logo />
+          </div>
         } @else if (destacados().length === 0) {
-        <p class="destacados__vacio">Todavía no hay sugerencias del chef.</p>
+          <p class="destacados__vacio">
+            Todavía no hay sugerencias del chef.
+          </p>
         } @else if (productoDestacadoActual(); as producto) {
-        <div class="destacados__carrusel">
-          <button
-            type="button"
-            class="destacados__flecha"
-            [disabled]="destacados().length < 2"
-            (click)="anteriorDestacado()"
-            aria-label="Producto destacado anterior"
-          >
-            <ion-icon name="chevron-back-outline"></ion-icon>
-          </button>
-
-          <div class="destacado-card">
-            <img
-              class="destacado-card__imagen"
-              [src]="fotoDestacadaActual()"
-              [alt]="producto.nombre"
-            />
-            <h3 class="destacado-card__nombre">{{ producto.nombre }}</h3>
-            <span class="destacado-card__precio"
-              >{{ producto.precio | currency:'ARS':'$' }}</span
+          <div class="destacados__carrusel">
+            <button
+              type="button"
+              class="destacados__flecha"
+              [disabled]="destacados().length < 2"
+              (click)="anteriorDestacado()"
+              aria-label="Producto destacado anterior"
             >
-            <p class="destacado-card__descripcion">
-              {{ producto.descripcion }}
-            </p>
+              <ion-icon name="chevron-back-outline"></ion-icon>
+            </button>
+
+            <div class="destacado-card">
+              <img
+                class="destacado-card__imagen"
+                [src]="fotoDestacadaActual()"
+                [alt]="producto.nombre"
+              />
+
+              <h3 class="destacado-card__nombre">
+                {{ producto.nombre }}
+              </h3>
+
+              <span class="destacado-card__precio">
+                {{ producto.precio | currency:'ARS':'$' }}
+              </span>
+
+              <p class="destacado-card__descripcion">
+                {{ producto.descripcion }}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="destacados__flecha"
+              [disabled]="destacados().length < 2"
+              (click)="siguienteDestacado()"
+              aria-label="Siguiente producto destacado"
+            >
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
           </div>
 
-          <button
-            type="button"
-            class="destacados__flecha"
-            [disabled]="destacados().length < 2"
-            (click)="siguienteDestacado()"
-            aria-label="Siguiente producto destacado"
-          >
-            <ion-icon name="chevron-forward-outline"></ion-icon>
-          </button>
-        </div>
-
-        @if (destacados().length > 1) {
-        <div class="destacados__paginacion">
-          @for (item of destacados(); track item.id_carta; let i = $index) {
-          <span
-            class="destacados__punto"
-            [class.destacados__punto--activo]="i === indiceDestacado()"
-          ></span>
+          @if (destacados().length > 1) {
+            <div class="destacados__paginacion">
+              @for (
+                item of destacados();
+                track item.id_carta;
+                let i = $index
+              ) {
+                <span
+                  class="destacados__punto"
+                  [class.destacados__punto--activo]="i === indiceDestacado()"
+                ></span>
+              }
+            </div>
           }
-        </div>
-        } }
+        }
 
         <ion-button
           class="home-modal__cerrar"
@@ -232,6 +255,7 @@
     <ng-template>
       <div class="home-modal__contenido historia">
         <h2>Quiénes somos</h2>
+
         <p>
           Somos cuatro estudiantes de programación que, entre parciales, commits
           y deploys, descubrieron que también compilaban buenas pastas. Somos
@@ -251,105 +275,127 @@
       </div>
     </ng-template>
   </ion-modal>
+
 </ion-content>
 
 <ion-footer class="home-footer">
+
   <!-- footer: pedido, escáner y chat -->
   @if (hayAccesos()) {
-  <div class="home-accesos">
-    <div class="acceso">
-      @if (botones().estadoPedido && pedido.idUltimoPedido()) {
-      <button
-        type="button"
-        class="acceso__boton"
-        (click)="verEstadoPedido(pedido.idUltimoPedido()!)"
-      >
-        <p class="acceso__titulo">Consulta</p>
-        <span class="acceso__circulo">
-          <ion-icon name="time-outline"></ion-icon>
-        </span>
-        <p class="acceso__subtitulo">Pedido</p>
-      </button>
-      }
-    </div>
+    <div class="home-accesos">
 
-    <div class="acceso">
-      @if (botones().escaner) {
-      <button
-        type="button"
-        class="acceso__boton"
-        [disabled]="escaneando()"
-        (click)="escanear()"
-      >
-        <span class="acceso__circulo">
-          <svg
-            width="40"
-            height="40"
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+      <!-- consultar estado del pedido -->
+      <div class="acceso">
+        @if (botones().estadoPedido && pedido.idUltimoPedido()) {
+          <button
+            type="button"
+            class="acceso__boton"
+            (click)="verEstadoPedido(pedido.idUltimoPedido()!)"
           >
-            <!-- esquinas del ícono del escáner -->
-            <path
-              d="M14 10H10V14"
-              stroke="#ffffff"
-              stroke-width="4"
-              stroke-linecap="round"
-            />
-            <path
-              d="M34 10H38V14"
-              stroke="#ffffff"
-              stroke-width="4"
-              stroke-linecap="round"
-            />
-            <path
-              d="M10 34V38H14"
-              stroke="#ffffff"
-              stroke-width="4"
-              stroke-linecap="round"
-            />
-            <path
-              d="M34 38H38V34"
-              stroke="#ffffff"
-              stroke-width="4"
-              stroke-linecap="round"
-            />
+            <p class="acceso__titulo">Consulta</p>
 
-            <!-- cuadrado central del ícono -->
-            <rect
-              x="16"
-              y="16"
-              width="16"
-              height="16"
-              rx="4"
-              stroke="#ffffff"
-              stroke-width="2"
-            />
-          </svg>
-        </span>
-        <p class="acceso__subtitulo">Escanear QR</p>
-      </button>
-      }
-    </div>
+            <span class="acceso__circulo">
+              <ion-icon name="time-outline"></ion-icon>
+            </span>
 
-    <div class="acceso">
-      @if (botones().consultas) {
-      <button type="button" class="acceso__boton" (click)="goToChat()">
-        <p class="acceso__titulo">Consultas</p>
-        <span class="acceso__circulo">
-          <img src="assets/images/LOGO-GLUTN.png" alt="Chat GLUTN" />
-        </span>
-        <p class="acceso__subtitulo">Chat</p>
-      </button>
-      }
+            <p class="acceso__subtitulo">Pedido</p>
+          </button>
+        }
+      </div>
+
+      <!-- escáner QR -->
+      <div class="acceso">
+        @if (botones().escaner) {
+          <button
+            type="button"
+            class="acceso__boton"
+            [disabled]="escaneando()"
+            (click)="escanear()"
+          >
+            <span class="acceso__circulo">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 48 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <!-- esquinas del ícono del escáner -->
+                <path
+                  d="M14 10H10V14"
+                  stroke="#ffffff"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+
+                <path
+                  d="M34 10H38V14"
+                  stroke="#ffffff"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+
+                <path
+                  d="M10 34V38H14"
+                  stroke="#ffffff"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+
+                <path
+                  d="M34 38H38V34"
+                  stroke="#ffffff"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+
+                <!-- cuadrado central del ícono -->
+                <rect
+                  x="16"
+                  y="16"
+                  width="16"
+                  height="16"
+                  rx="4"
+                  stroke="#ffffff"
+                  stroke-width="2"
+                />
+              </svg>
+            </span>
+
+            <p class="acceso__subtitulo">Escanear QR</p>
+          </button>
+        }
+      </div>
+
+      <!-- chat -->
+      <div class="acceso">
+        @if (botones().consultas) {
+          <button
+            type="button"
+            class="acceso__boton"
+            (click)="goToChat()"
+          >
+            <p class="acceso__titulo">Consultas</p>
+
+            <span class="acceso__circulo">
+              <img
+                src="assets/images/LOGO-GLUTN.png"
+                alt="Chat GLUTN"
+              />
+            </span>
+
+            <p class="acceso__subtitulo">Chat</p>
+          </button>
+        }
+      </div>
+
     </div>
-  </div>
   }
 </ion-footer>
 
 @if (loading()) {
-<div class="quick-loading">
-  <app-spinner-logo />
-  <span>Cargando...</span>
-</div>
+  <div class="quick-loading">
+    <app-spinner-logo />
+    <span>Cargando...</span>
+  </div>
 }

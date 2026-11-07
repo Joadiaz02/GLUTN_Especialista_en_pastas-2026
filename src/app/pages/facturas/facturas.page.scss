@@ -28,16 +28,69 @@
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   Lista de facturas: es lo único que scrollea dentro de la tarjeta.
+
+   La directiva appLimitesLista calcula cuántas filas completas entran y les da
+   a todas el mismo alto (--fila-alto). Cada fila es un punto de reposo, así
+   nunca queda una factura cortada arriba ni abajo, en cualquier pantalla.
+   Si hay más facturas, una línea arriba o abajo de la lista lo avisa.
+   ========================================================================== */
+
+.facturas-lista-wrap {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-block: 5px;
+
+  // líneas que avisan que hay más facturas arriba / abajo (la directiva activa las clases)
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.45);
+    opacity: 0;
+    transition: opacity 150ms ease;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: 0;
+  }
+
+  &::after {
+    bottom: 0;
+  }
+
+  &.tiene-arriba::before,
+  &.tiene-abajo::after {
+    opacity: 1;
+  }
+}
+
 .facturas-lista {
+  --fila-min: 72px;                 // alto mínimo de una fila (la directiva lo lee)
+  --fila-alto: var(--fila-min);     // alto real: lo calcula la directiva
+
   list-style: none;
   margin: 0;
   padding: 0 4px 0 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  overflow-y: auto;
-  flex: 1;
+  flex: 1 1 0;
   min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -46,36 +99,45 @@
     background: rgba(255, 255, 255, 0.3);
     border-radius: 4px;
   }
+
+  > * {
+    flex: 0 0 var(--fila-alto);
+    height: var(--fila-alto);
+    min-height: 0;
+    box-sizing: border-box;
+    scroll-snap-align: start;
+  }
 }
 
 .factura {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   background: rgba(58, 36, 23, 0.4);
-  padding: 10px 8px 10px 16px;
+  padding: 0 8px 0 16px;
   border-radius: 16px;
 }
 
 .factura__info {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
 .factura__fecha {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .factura__hora {
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.75);
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .factura__total {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 800;
   white-space: nowrap;
   color: #ffc983;
@@ -120,7 +182,31 @@
 }
 
 .facturas-vacio__detalle {
-  font-size: 15px !important;
+  font-size: 16px !important;
   font-weight: 400 !important;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Pantallas bajas: filas un poco más compactas (entran más facturas completas) */
+@media (max-height: 700px) {
+  .facturas-lista {
+    --fila-min: 68px;
+    gap: 10px;
+  }
+}
+
+/* Pantallas angostas: la fecha y el total tienen que seguir entrando en una fila */
+@media (max-width: 340px) {
+  .factura {
+    gap: 6px;
+    padding-left: 12px;
+  }
+
+  .factura__fecha {
+    font-size: 16px;
+  }
+
+  .factura__total {
+    font-size: 18px;
+  }
 }

@@ -9,7 +9,8 @@
         class="logo"
       />
     </div>
-    <h1 class="titulo-pagina">Pedidos pendientes</h1>
+
+    <h1 class="titulo-pagina">Pedidos</h1>
 
     <div class="vistas" role="tablist">
       <button
@@ -21,7 +22,9 @@
         (click)="cambiarVista('listos')"
       >
         Listos
-        <span class="vistas__cantidad">{{ pedidosListos.completos().length }}</span>
+        <span class="vistas__cantidad">
+          {{ pedidosListos.completos().length }}
+        </span>
       </button>
 
       <button
@@ -33,7 +36,9 @@
         (click)="cambiarVista('en_preparacion')"
       >
         En preparación
-        <span class="vistas__cantidad">{{ pedidosListos.enPreparacion().length }}</span>
+        <span class="vistas__cantidad">
+          {{ pedidosListos.enPreparacion().length }}
+        </span>
       </button>
     </div>
 
@@ -45,96 +50,147 @@
     } @else if (pedidos().length === 0) {
       <div class="cocina-vacio">
         <p>
-          {{ vista() === 'listos' ? 'No hay pedidos listos para llevar a las mesas.' : 'No hay pedidos en preparación.' }}
+          {{
+            vista() === 'listos'
+              ? 'No hay pedidos listos para llevar a las mesas.'
+              : 'No hay pedidos en preparación.'
+          }}
         </p>
       </div>
     } @else {
-      <!-- un pedido por tarjeta -->
-      <div #viewport class="carrusel" (scroll)="alDesplazar()">
-        @for (pedido of pedidos(); track pedido.idPedido; let i = $index) {
-          <article class="slide" [class.slide--activo]="i === indiceActual()">
-            <div class="pedido" [class.pedido--preparando]="pedido.completo">
-              <header class="pedido__mesa">
-                <h2>Mesa {{ pedido.numeroMesa }}</h2>
-              </header>
+      <!-- Carrusel horizontal: una pantalla por mesa -->
+      <div #viewport class="carrusel" (scroll)="alDesplazarMesas()">
+        @for (mesa of mesas(); track mesa.numeroMesa; let i = $index) {
+          <section
+  class="mesa-slide"
+  [class.mesa-slide--activa]="i === indiceMesaActual()"
+>
+            <!-- Carrusel vertical: pedidos de la misma mesa -->
+            <div class="mesa-pedidos" (scroll)="alDesplazarPedidos()">
+              @for (
+                pedido of mesa.pedidos;
+                track pedido.idPedido;
+                let j = $index
+              ) {
+                <article class="pedido-slide">
+                  <div
+                    class="pedido"
+                    [class.pedido--preparando]="pedido.completo"
+                  >
+                    <header class="pedido__mesa">
+                      <h2>Mesa {{ pedido.numeroMesa }}</h2>
+                    </header>
 
-              <div class="pedido__encabezado">
-                <div class="pedido__momento">
-                  <span class="pedido__hora">{{ pedido.fecha | date: 'HH:mm' }}</span>
-                  <span class="pedido__fecha">{{ pedido.fecha | date: 'dd/MM/yyyy' }}</span>
-                </div>
+                    <div class="pedido__encabezado">
+                      <div class="pedido__momento">
+                        <span class="pedido__hora">
+                          {{ pedido.fecha | date: 'HH:mm' }}
+                        </span>
+                        <span class="pedido__fecha">
+                          {{ pedido.fecha | date: 'dd/MM/yyyy' }}
+                        </span>
+                      </div>
 
-                <span
-                  class="pedido__estado"
-                  [class.pedido__estado--preparando]="pedido.completo"
-                >
-                  {{ pedido.entregado ? 'Entregado' : pedido.completo ? 'Completo' : 'En preparación' }}
-                </span>
-              </div>
-
-              <!-- cada parte del pedido con su estado -->
-              <div class="pedido__items-wrap">
-              <div class="pedido__items" appListaFilas>
-                @for (parte of pedido.partes; track parte.sector) {
-                  <div class="parte">
-                    <span class="parte__sector">{{ nombreSector(parte.sector) }}</span>
-                    <span
-                      class="parte__estado"
-                      [class]="'parte__estado--' + parte.estado"
-                    >
-                      {{ nombreEstado(parte.estado) }}
-                    </span>
-                  </div>
-
-                  @for (item of parte.items; track $index) {
-                    <div class="pedido__item">
-                      <span class="pedido__cantidad">{{ item.cantidad }}</span>
-                      <span class="pedido__nombre">{{ item.nombre }}</span>
+                      <span
+                        class="pedido__estado"
+                        [class.pedido__estado--preparando]="pedido.completo"
+                      >
+                        {{
+                          pedido.entregado
+                            ? 'Entregado'
+                            : pedido.completo
+                              ? 'Completo'
+                              : 'En preparación'
+                        }}
+                      </span>
                     </div>
-                  }
-                }
-              </div>
-              </div>
-              @if (pedido.entregado) {
-              <p class="pedido__aviso">Entregado. Esperando que el cliente confirme la recepción.</p>
-            } @else if (pedido.completo) {
-              <p class="pedido__aviso">Cocina y bar terminaron: ya se puede llevar a la mesa.</p>
 
-              <div class="pedido__acciones">
-                <ion-button
-                  class="pedido__boton"
-                  shape="round"
-                  [disabled]="procesando() !== null"
-                  (click)="entregar(pedido)"
-                >
-                  Entregar pedido
-                </ion-button>
-              </div>
-            }
+                    <!-- Cada parte del pedido con su estado -->
+                    <div class="pedido__items-wrap">
+                      <div class="pedido__items" appListaFilas>
+                        @for (parte of pedido.partes; track parte.sector) {
+                          <div class="parte">
+                            <span class="parte__sector">
+                              {{ nombreSector(parte.sector) }}
+                            </span>
+
+                            <span
+                              class="parte__estado"
+                              [class]="'parte__estado--' + parte.estado"
+                            >
+                              {{ nombreEstado(parte.estado) }}
+                            </span>
+                          </div>
+
+                          @for (item of parte.items; track $index) {
+                            <div class="pedido__item">
+                              <span class="pedido__cantidad">
+                                {{ item.cantidad }}
+                              </span>
+                              <span class="pedido__nombre">
+                                {{ item.nombre }}
+                              </span>
+                            </div>
+                          }
+                        }
+                      </div>
+                    </div>
+
+                    @if (pedido.entregado) {
+                      <p class="pedido__aviso">
+                        Entregado. Esperando que el cliente confirme la
+                        recepción.
+                      </p>
+                    } @else if (pedido.completo) {
+                      <p class="pedido__aviso">
+                        Cocina y bar terminaron: ya se puede llevar a la mesa.
+                      </p>
+
+                      <div class="pedido__acciones">
+                        <ion-button
+                          class="pedido__boton"
+                          shape="round"
+                          [disabled]="procesando() !== null"
+                          (click)="entregar(pedido)"
+                        >
+                          @if (procesando() === pedido.idPedido) {
+                            <app-spinner-logo size="sm" />
+                          } @else {
+                            Entregar pedido
+                          }
+                        </ion-button>
+                      </div>
+                    }
+                  </div>
+                </article>
+              }
             </div>
-          </article>
+          </section>
         }
       </div>
 
+      <!-- Las flechas cambian de mesa, no de pedido -->
       <div class="contador">
         <button
           type="button"
           class="contador__flecha"
-          aria-label="Pedido anterior"
-          [disabled]="indiceActual() === 0"
-          (click)="irA(indiceActual() - 1)"
+          aria-label="Mesa anterior"
+          [disabled]="indiceMesaActual() === 0"
+          (click)="irAMesa(indiceMesaActual() - 1)"
         >
           ‹
         </button>
 
-        <span>Pedido {{ indiceActual() + 1 }} de {{ pedidos().length }}</span>
+        <span>
+          Mesa {{ indiceMesaActual() + 1 }} de {{ mesas().length }}
+        </span>
 
         <button
           type="button"
           class="contador__flecha"
-          aria-label="Pedido siguiente"
-          [disabled]="indiceActual() === pedidos().length - 1"
-          (click)="irA(indiceActual() + 1)"
+          aria-label="Mesa siguiente"
+          [disabled]="indiceMesaActual() === mesas().length - 1"
+          (click)="irAMesa(indiceMesaActual() + 1)"
         >
           ›
         </button>

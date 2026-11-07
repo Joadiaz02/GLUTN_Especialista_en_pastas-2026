@@ -42,7 +42,7 @@
           <span class="facturacion-resumen__total">{{ totalDelDia() | currency:'ARS':'$':'1.0-0' }}</span>
         </div>
 
-        <ul class="facturacion-lista">
+        <ul class="facturacion-lista" appLimitesLista>
           @for (factura of facturas(); track factura.idTicket) {
             <li class="factura">
               <div class="factura__info">

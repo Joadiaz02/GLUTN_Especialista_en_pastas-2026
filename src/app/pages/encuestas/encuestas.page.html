@@ -8,6 +8,7 @@
     class="surveys-layout"
     [class.is-survey]="modoEncuesta()"
     [class.is-grafico]="esPantallaGrafico()"
+    [class.is-inicio]="!esPantallaGrafico() && !modoEncuesta()"
   >
     <!-- Header fijo: no scrollea -->
     <header class="surveys-header">
@@ -220,6 +221,7 @@
               <ion-button
                 expand="block"
                 shape="round"
+                [disabled]="!!error()"
                 (click)="irAGrafico('torta')"
               >
                 Gráfico de torta
@@ -228,6 +230,7 @@
               <ion-button
                 expand="block"
                 shape="round"
+                [disabled]="!!error()"
                 (click)="irAGrafico('barras')"
               >
                 Gráfico de barras
@@ -236,6 +239,7 @@
               <ion-button
                 expand="block"
                 shape="round"
+                [disabled]="!!error()"
                 (click)="irAGrafico('columnas')"
               >
                 Gráfico de columnas
@@ -416,7 +420,7 @@
                   </div>
 
                   <small class="question-hint">
-                    Podés elegir más de una opción.
+                    Podés elegir más de una.
                   </small>
                 } @else if (pregunta.tipo === 'slider') {
                   <div class="slider-box">

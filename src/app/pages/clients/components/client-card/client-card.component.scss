@@ -99,7 +99,7 @@ box-sizing: border-box;
 padding: 10px 15px;
 margin-bottom: 14px;
 border-radius: 999px;
-background: rgba(231, 111, 69, 0.25);
+background: #e76f45;
 color: #fff;
 font-size: 16px;
 font-weight: 800;
@@ -188,15 +188,15 @@ overflow-wrap: anywhere;
 
 /* RECHAZAR */
 .reject-button {
-  border: 2px solid #e76f45;
-  background: transparent;
-  color: #e76f45;
+  border: 2px solid #c5000f;
+  background: #c5000f;
+  color: #fff;
 }
 
 /* ICONOS */
 .button-icon {
   margin-right: 8px;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 900;
 }
 

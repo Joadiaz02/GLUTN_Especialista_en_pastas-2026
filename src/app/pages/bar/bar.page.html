@@ -1,7 +1,9 @@
+
 <app-header routeBackName="/admin" />
 
 <ion-content class="cocina-content" [scrollY]="false">
   <div class="cocina-wrapper">
+
     <div class="logo-container logo-fijo">
       <img
         src="assets/images/LOGO-GLUTN.png"
@@ -9,9 +11,12 @@
         class="logo"
       />
     </div>
+
     <h1 class="titulo-pagina">Bar</h1>
 
+    <!-- Pestañas -->
     <div class="vistas" role="tablist">
+
       <button
         type="button"
         role="tab"
@@ -21,7 +26,9 @@
         (click)="cambiarVista('por_recibir')"
       >
         Por recibir
-        <span class="vistas__cantidad">{{ cantidadPorRecibir() }}</span>
+        <span class="vistas__cantidad">
+          {{ cantidadPorRecibir() }}
+        </span>
       </button>
 
       <button
@@ -33,15 +40,19 @@
         (click)="cambiarVista('en_preparacion')"
       >
         En preparación
-        <span class="vistas__cantidad">{{ cantidadEnPreparacion() }}</span>
+        <span class="vistas__cantidad">
+          {{ cantidadEnPreparacion() }}
+        </span>
       </button>
+
     </div>
 
     @if (bar.cargando() && pedidos().length === 0) {
-      <div class="cocina-vacio">
-        <app-spinner-logo />
-      </div>
-    } @else if (pedidos().length === 0) {
+
+      <div class="cocina-vacio"></div>
+
+    } @else if (mesas().length === 0) {
+
       <div class="cocina-vacio">
         <p>
           {{
@@ -51,100 +62,209 @@
           }}
         </p>
       </div>
+
     } @else {
-      <!-- un pedido por tarjeta, ordenados por mesa -->
-      <div #viewport class="carrusel" (scroll)="alDesplazar()">
-        @for (pedido of pedidos(); track pedido.idPedido; let i = $index) {
-          <article
-            class="slide"
-            [class.slide--activo]="i === indiceActual()"
+
+      <!-- Carrusel horizontal de mesas -->
+      <div
+        #viewport
+        class="carrusel"
+        (scroll)="alDesplazarMesas()"
+      >
+
+        @for (
+          mesa of mesas();
+          track mesa.numeroMesa;
+          let i = $index
+        ) {
+
+          <section
+            class="mesa-slide"
+            [class.mesa-slide--activa]="i === indiceMesaActual()"
           >
-            <div class="pedido" [class.pedido--preparando]="pedido.estadoBar">
-              <header class="pedido__mesa">
-                <h2>Mesa {{ pedido.numeroMesa }}</h2>
-                @if (pedido.totalEnMesa > 1) {
-                  <span>Pedido {{ pedido.numeroEnMesa }} de {{ pedido.totalEnMesa }}</span>
-                }
-              </header>
 
-              <div class="pedido__encabezado">
-                <div class="pedido__momento">
-                  <span class="pedido__hora">{{ pedido.fecha | date: 'HH:mm' }}</span>
-                  <span class="pedido__fecha">{{ pedido.fecha | date: 'dd/MM/yyyy' }}</span>
-                </div>
+            <!-- Carrusel vertical de pedidos -->
+            <div
+              class="mesa-pedidos"
+              (scroll)="alDesplazarPedidos($event, i)"
+            >
 
-                <span
-                  class="pedido__estado"
-                  [class.pedido__estado--preparando]="pedido.estadoBar"
-                >
-                  {{ pedido.estadoBar ? 'En preparación' : 'Nuevo' }}
-                </span>
-              </div>
-              <div class="pedido__items-wrap">
-              <ul class="pedido__items" appListaFilas>
-                @for (item of pedido.items; track $index) {
-                  <li class="pedido__item">
-                    <span class="pedido__cantidad">{{ item.cantidad }}</span>
-                    <span class="pedido__nombre">{{ item.nombre }}</span>
-                  </li>
-                }
-              </ul>
-              </div>
-              <div class="pedido__acciones">
-                <ion-button
-                  class="pedido__boton"
-                  fill="solid"
-                  color="danger"
-                  shape="round"
-                  [disabled]="procesando() !== null"
-                  (click)="pedido.estadoBar ? devolver(pedido) : rechazar(pedido)"
-                >
-                  <img src="assets/icons/close.svg" alt="Rechazar" />
-                </ion-button>
+              @for (
+                pedido of mesa.pedidos;
+                track pedido.idPedido;
+                let j = $index
+              ) {
 
-                <ion-button
-                  class="pedido__boton"
-                  fill="solid"
-                  color="success"
-                  shape="round"
-                  [disabled]="procesando() !== null"
-                  (click)="pedido.estadoBar ? entregar(pedido) : recibir(pedido)"
-                >
-                  @if (procesando() === pedido.idPedido) {
-                    <app-spinner-logo size="sm" />
-                  } @else {
-                    <img src="assets/icons/check.svg" alt="Aceptar" />
-                  }
-                </ion-button>
-              </div>
+                <article class="pedido-slide">
+
+                  <div
+                    class="pedido"
+                    [class.pedido--preparando]="pedido.estadoBar"
+                  >
+
+                    <header class="pedido__mesa">
+                      <h2>Mesa {{ pedido.numeroMesa }}</h2>
+
+                      @if (pedido.totalEnMesa > 1) {
+                        <span>
+                          Pedido {{ pedido.numeroEnMesa }}
+                          de {{ pedido.totalEnMesa }}
+                        </span>
+                      }
+                    </header>
+
+                    <div class="pedido__encabezado">
+
+                      <div class="pedido__momento">
+                        <span class="pedido__hora">
+                          {{ pedido.fecha | date: 'HH:mm' }}
+                        </span>
+
+                        <span class="pedido__fecha">
+                          {{ pedido.fecha | date: 'dd/MM/yyyy' }}
+                        </span>
+                      </div>
+
+                      <span
+                        class="pedido__estado"
+                        [class.pedido__estado--preparando]="pedido.estadoBar"
+                      >
+                        {{
+                          pedido.estadoBar
+                            ? 'En preparación'
+                            : 'Nuevo'
+                        }}
+                      </span>
+
+                    </div>
+
+                    <!-- Productos -->
+                    <div class="pedido__items-wrap">
+
+                      <ul class="pedido__items" appListaFilas>
+
+                        @for (item of pedido.items; track $index) {
+                          <li class="pedido__item">
+
+                            <span class="pedido__cantidad">
+                              {{ item.cantidad }}
+                            </span>
+
+                            <span class="pedido__nombre">
+                              {{ item.nombre }}
+                            </span>
+
+                          </li>
+                        }
+
+                      </ul>
+
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="pedido__acciones">
+
+                      <ion-button
+                        class="pedido__boton"
+                        fill="solid"
+                        color="danger"
+                        shape="round"
+                        [disabled]="procesando() !== null"
+                        (click)="
+                          pedido.estadoBar
+                            ? devolver(pedido)
+                            : rechazar(pedido)
+                        "
+                      >
+                        <img
+                          src="assets/icons/close.svg"
+                          alt="Rechazar"
+                        />
+                      </ion-button>
+
+                      <ion-button
+                        class="pedido__boton"
+                        fill="solid"
+                        color="success"
+                        shape="round"
+                        [disabled]="procesando() !== null"
+                        (click)="
+                          pedido.estadoBar
+                            ? entregar(pedido)
+                            : recibir(pedido)
+                        "
+                      >
+                        @if (procesando() === pedido.idPedido) {
+                          <app-spinner-logo size="sm" />
+                        } @else {
+                          <img
+                            src="assets/icons/check.svg"
+                            alt="Aceptar"
+                          />
+                        }
+                      </ion-button>
+
+                    </div>
+
+                  </div>
+
+                </article>
+
+              }
+
             </div>
-          </article>
+
+          </section>
+
         }
+
       </div>
 
+      <!-- Navegación horizontal entre mesas -->
       <div class="contador">
+
         <button
           type="button"
           class="contador__flecha"
-          aria-label="Pedido anterior"
-          [disabled]="indiceActual() === 0"
-          (click)="irA(indiceActual() - 1)"
+          aria-label="Mesa anterior"
+          [disabled]="indiceMesaActual() === 0"
+          (click)="irAMesa(indiceMesaActual() - 1)"
         >
           ‹
         </button>
 
-        <span>Pedido {{ indiceActual() + 1 }} de {{ pedidos().length }}</span>
+        <span>
+          Mesa {{ indiceMesaActual() + 1 }}
+          de {{ mesas().length }}
+        </span>
 
         <button
           type="button"
           class="contador__flecha"
-          aria-label="Pedido siguiente"
-          [disabled]="indiceActual() === pedidos().length - 1"
-          (click)="irA(indiceActual() + 1)"
+          aria-label="Mesa siguiente"
+          [disabled]="indiceMesaActual() === mesas().length - 1"
+          (click)="irAMesa(indiceMesaActual() + 1)"
         >
           ›
         </button>
+
       </div>
+
     }
+
   </div>
 </ion-content>
+
+@if (bar.cargando() && pedidos().length === 0) {
+  <div class="cocina-loading">
+    <app-spinner-logo />
+    <span>Cargando pedidos...</span>
+  </div>
+}
+
+@if (procesando() !== null) {
+  <div class="cocina-loading">
+    <app-spinner-logo />
+    <span>Procesando pedido...</span>
+  </div>
+}

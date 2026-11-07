@@ -328,3 +328,23 @@ ion-header ion-toolbar {
 .home-botones > :last-child {
   margin-bottom: auto;
 }
+
+ion-modal.estado-pedido-modal {
+  --width: 90%;
+  --max-width: 420px;
+  --height: auto;
+  --max-height: 85%;
+  --border-radius: 24px;
+  --background: var(--ion-background-color);
+  --backdrop-opacity: 0.6;
+}
+
+ion-modal.seleccion-mesa-modal {
+  --width: 90%;
+  --max-width: 420px;
+  --height: auto;
+  --max-height: 85%;
+  --border-radius: 24px;
+  --background: #657a4d;
+  --backdrop-opacity: 0.6;
+}

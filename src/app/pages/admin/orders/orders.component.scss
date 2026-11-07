@@ -13,8 +13,10 @@
 }
 
 /* Carrusel de pedidos horizontal */
+/* Carrusel horizontal de mesas */
 .carrusel {
-  --ancho-tarjeta: min(360px, calc(100vw - 48px));
+  --ancho-mesa: min(360px, calc(100vw - 48px));
+
   flex: 1;
   min-height: 0;
   display: flex;
@@ -22,9 +24,11 @@
   align-items: stretch;
   gap: 16px;
   margin: 0 -16px;
-  padding: 4px calc((100% + 32px - var(--ancho-tarjeta)) / 2) 12px;
+  padding: 4px calc((100% + 32px - var(--ancho-mesa)) / 2) 12px;
+
   overflow-x: auto;
   overflow-y: hidden;
+
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   box-sizing: border-box;
@@ -34,23 +38,132 @@
   }
 }
 
-.slide {
-  flex: 0 0 var(--ancho-tarjeta);
-  width: var(--ancho-tarjeta);
-  min-width: var(--ancho-tarjeta);
+/* Cada mesa ocupa una posición horizontal */
+.mesa-slide {
+  flex: 0 0 var(--ancho-mesa);
+  width: var(--ancho-mesa);
+  min-width: var(--ancho-mesa);
   min-height: 0;
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  transform: scale(0.94);
-  opacity: 0.6;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+
   display: flex;
   flex-direction: column;
+  gap: 10px;
+
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
 }
 
-.slide--activo {
-  transform: scale(1);
-  opacity: 1;
+/* Encabezado de la mesa */
+.mesa-encabezado {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 8px 14px;
+  border-radius: 14px;
+
+  background: #3a2417;
+  color: #ffc983;
+
+  font-size: 24px;
+  font-weight: 800;
+
+  small {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Carrusel vertical de pedidos de una misma mesa */
+.mesa-pedidos {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  scroll-snap-type: y mandatory;
+  scroll-snap-stop: always;
+
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Cada pedido ocupa toda la altura disponible de la mesa */
+.pedido-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Contadores de mesa y pedido */
+.navegacion {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.contador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  font-weight: 700;
+  font-size: 15px;
+  color: #ffffff;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.contador__flecha {
+  background: #f26838;
+  border: none;
+  border-radius: 50%;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 }
 
 /* Estructura general de la tarjeta de pedido (Marrón) */

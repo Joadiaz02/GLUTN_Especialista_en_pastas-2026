@@ -155,6 +155,13 @@ async obtenerEncuestaActiva(): Promise<Encuesta | null> {
     );
 
     if (error) {
+      // la base rechaza la consulta si la persona no está en la lista de espera ni en una mesa
+      if (error.message.toLowerCase().includes('permiso')) {
+        throw new Error(
+          'Los resultados se pueden consultar cuando estás en la lista de espera o en una mesa.',
+        );
+      }
+
       throw new Error(
         `No se pudieron cargar los resultados: ${error.message}`,
       );

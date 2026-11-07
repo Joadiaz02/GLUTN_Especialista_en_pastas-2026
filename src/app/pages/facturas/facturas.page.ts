@@ -7,13 +7,24 @@ import { Factura, FacturaCliente } from '@app/services/factura/factura';
 import { HeaderComponent } from '@app/components/ui/header/header.component';
 import { SpinnerLogoComponent } from '@app/components/ui/spinner-logo/spinner-logo.component';
 import { LoadingOverlayComponent } from '@app/components/ui/loading-overlay/loading-overlay.component';
+import { LimitesListaDirective } from '@app/directives/limites-lista.directive';
 
 @Component({
   selector: 'app-facturas',
   standalone: true,
   templateUrl: './facturas.page.html',
   styleUrls: ['./facturas.page.scss'],
-  imports: [HeaderComponent, CurrencyPipe, DatePipe, IonButton, IonContent, IonIcon, SpinnerLogoComponent, LoadingOverlayComponent],
+  imports: [
+    HeaderComponent,
+    CurrencyPipe,
+    DatePipe,
+    IonButton,
+    IonContent,
+    IonIcon,
+    SpinnerLogoComponent,
+    LoadingOverlayComponent,
+    LimitesListaDirective,
+  ],
 })
 export class FacturasPage {
   private _auth = inject(Auth);

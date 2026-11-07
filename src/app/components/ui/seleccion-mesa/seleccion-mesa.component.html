@@ -1,0 +1,84 @@
+<div class="seleccion-mesa">
+  <h2>¿Cuántos son?</h2>
+
+  <div class="guest-stepper">
+    <button
+      type="button"
+      aria-label="Disminuir cantidad"
+      [disabled]="comensales() === 1"
+      (click)="ajustarComensales(-1)"
+    >
+      −
+    </button>
+
+    <strong>{{ comensales() }}</strong>
+
+    <button
+      type="button"
+      aria-label="Aumentar cantidad"
+      [disabled]="comensales() === 20"
+      (click)="ajustarComensales(1)"
+    >
+      +
+    </button>
+  </div>
+
+  <h2>Elegí el tipo de mesa</h2>
+
+  <div class="guest-options">
+    <button
+      type="button"
+      class="guest-option"
+      [class.guest-option--active]="consideracion() === 'estandar'"
+      (click)="seleccionarConsideracion('estandar')"
+    >
+      Estándar
+    </button>
+
+    <button
+      type="button"
+      class="guest-option"
+      [class.guest-option--active]="consideracion() === 'vip'"
+      (click)="seleccionarConsideracion('vip')"
+    >
+      VIP
+    </button>
+
+    <button
+      type="button"
+      class="guest-option"
+      [class.guest-option--active]="consideracion() === 'vip_movilidad_reducida'"
+      (click)="seleccionarConsideracion('vip_movilidad_reducida')"
+    >
+      VIP con Movilidad Reducida
+    </button>
+
+    <button
+      type="button"
+      class="guest-option"
+      [class.guest-option--active]="consideracion() === 'movilidad_reducida'"
+      (click)="seleccionarConsideracion('movilidad_reducida')"
+    >
+      Movilidad Reducida
+    </button>
+  </div>
+
+  <div class="seleccion-mesa__acciones">
+    <button
+      type="button"
+      class="seleccion-mesa__cancelar"
+      (click)="cancelar()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      type="button"
+      class="seleccion-mesa__confirmar"
+      [disabled]="!consideracion()"
+      (click)="confirmar()"
+    >
+      Confirmar
+    </button>
+  </div>
+</div>

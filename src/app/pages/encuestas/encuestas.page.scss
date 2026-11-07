@@ -93,6 +93,24 @@ ion-content.surveys-page {
   }
 }
 
+// Pantalla de inicio: si algo no entra (por ejemplo un mensaje de error de más
+// o un texto del sistema muy grande), se muestra una barra fina visible para
+// que se sepa que hay más contenido abajo.
+.surveys-layout.is-inicio .surveys-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 244 233 / 70%) transparent;
+
+  &::-webkit-scrollbar {
+    display: block;
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgb(255 244 233 / 70%);
+  }
+}
+
 // Espaciador heredado: si todavía existe el <div> en el HTML, no ocupa lugar
 .surveys-scroller__fin {
   display: none;
@@ -186,11 +204,11 @@ p {
   animation: card-enter 320ms ease-out both;
 }
 
-// El texto escala con el alto de pantalla: así las dos tarjetas entran sin scroll
+// El texto escala con el alto de pantalla (nunca menos de 16px)
 .results-shortcut p,
 .surveys-notice p {
   margin: 6px 0 0;
-  font-size: clamp(14px, 2.3vh, 18px);
+  font-size: clamp(16px, 2.3vh, 18px);
   line-height: 1.4;
 }
 
@@ -222,13 +240,34 @@ p {
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  h2 {
+    font-size: 22px;
+  }
 }
 
 .chart-links {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 7px;
+  gap: 8px;
   margin: 0;
+
+  // alto fijo y sin márgenes propios: así las tres entran siempre iguales
+  ion-button {
+    height: 54px;
+    min-height: 54px;
+    margin: 0;
+    font-size: 18px;
+    --padding-top: 0;
+    --padding-bottom: 0;
+
+    // sin resultados disponibles: el botón se ve apagado y no se puede tocar
+    &.button-disabled {
+      opacity: 1;
+      --background: #8f8574;
+      --color: var(--survey-light);
+    }
+  }
 }
 
 /* ===== Avisos ===== */
@@ -926,7 +965,8 @@ p {
   }
 
   .chart-links ion-button {
-    min-height: 37px;
+    height: 52px;
+    min-height: 52px;
   }
 
   .column-chart {
@@ -969,6 +1009,30 @@ p {
   }
 }
 
+// Pantalla de inicio (resultados + aviso, y el error si lo hay):
+// se saca la descripción de arriba y se achica el logo para que todo entre
+// sin cortarse ni hacer scroll.
+@media (max-height: 900px) {
+  .surveys-layout.is-inicio {
+    .surveys-intro {
+      display: none;
+    }
+
+    .surveys-page__logo {
+      width: 72px;
+      height: 46px;
+    }
+  }
+}
+
+// En pantallas más bajas también se saca el texto de la tarjeta de resultados,
+// porque repite lo que dicen el título y los botones.
+@media (max-height: 760px) {
+  .surveys-layout.is-inicio .results-shortcut p {
+    display: none;
+  }
+}
+
 @media (max-height: 700px) {
   .surveys-layout.is-survey {
     .surveys-page__logo {
@@ -980,7 +1044,8 @@ p {
     }
   }
 
-  .surveys-layout.is-grafico .surveys-page__logo {
+  .surveys-layout.is-grafico .surveys-page__logo,
+  .surveys-layout.is-inicio .surveys-page__logo {
     height: 40px;
   }
 }
@@ -1046,6 +1111,11 @@ p {
   .question-hint {
     font-size: 18px;
   }
+
+  .chart-links ion-button {
+    height: 48px;
+    min-height: 48px;
+  }
 }
 
 @media (min-width: 600px) {
@@ -1073,7 +1143,8 @@ p {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 
     ion-button {
-      min-height: 44px;
+      height: 56px;
+      min-height: 56px;
     }
   }
 }
