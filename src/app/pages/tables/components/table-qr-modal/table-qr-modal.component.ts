@@ -51,7 +51,7 @@ export class TableQrModalComponent implements OnInit {
         });
 
         await Share.share({
-          title: `QR de la mesa N° ${this.table.numero}`,
+          title: `QR de la mesa ${this.table.numero}`,
           url: uri,
           dialogTitle: 'Guardar código QR',
         });
