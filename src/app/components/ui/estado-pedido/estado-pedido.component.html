@@ -5,69 +5,75 @@
   <div class="estado-pedido__lista-wrap">
     <div class="estado-pedido__lista" appLimitesLista>
       @for (p of pedidos(); track p.id_pedido; let i = $index) {
-        <div class="estado-pedido__item" [attr.data-estado]="p.estado_pedido">
+      <div class="estado-pedido__item" [attr.data-estado]="p.estado_pedido">
+        <div class="header__top">
           <span class="estado-pedido__nombre">Pedido {{ i + 1 }}</span>
-
-          <div class="estado-pedido__valor">
-            <span class="estado-pedido__punto"></span>
-            <span class="estado-pedido__texto">
-              {{ legible(p.estado_pedido) }}
-            </span>
-          </div>
-
-          @if (p.estado_pedido === 'rechazado') {
-            <ion-button
-              class="estado-pedido__accion"
-              shape="round"
-              expand="block"
-              (click)="modificar(p.id_pedido)"
-            >
-              Modificar pedido
-            </ion-button>
-          }
-
-          @if (p.estado_pedido === 'entregado') {
-            <ion-button
-              class="estado-pedido__accion"
-              shape="round"
-              expand="block"
-              [disabled]="confirmando() !== null"
-              (click)="confirmarRecepcion(p.id_pedido)"
-            >
-              Confirmar recepción
-            </ion-button>
-          }
+          <span class="title_total">{{
+            p.subtotal | currency : "AS" : "$" : (true ? "1.2-2" : "1.0-0")
+          }}</span>
         </div>
+
+        <div class="estado-pedido__valor">
+          <span class="estado-pedido__punto"></span>
+          <span class="estado-pedido__texto">
+            {{ legible(p.estado_pedido) }}
+          </span>
+        </div>
+
+        @if (p.estado_pedido === 'rechazado') {
+        <ion-button
+          class="estado-pedido__accion"
+          shape="round"
+          expand="block"
+          (click)="modificar(p.id_pedido)"
+        >
+          Modificar pedido
+        </ion-button>
+        } @if (p.estado_pedido === 'entregado') {
+        <ion-button
+          class="estado-pedido__accion"
+          shape="round"
+          expand="block"
+          [disabled]="confirmando() !== null"
+          (click)="confirmarRecepcion(p.id_pedido)"
+        >
+          Confirmar recepción
+        </ion-button>
+        }
+      </div>
       }
+
+      <span class="title_total"
+        >Total:
+        {{ total() | currency : "AS" : "$" : (true ? "1.2-2" : "1.0-0") }}</span
+      >
     </div>
   </div>
 
   <!-- Acciones fijas: siempre visibles, fuera del scroll -->
   <div class="estado-pedido__acciones">
     @if (puedeSolicitarCuenta()) {
-      <ion-button
-        class="estado-pedido__cuenta"
-        shape="round"
-        expand="block"
-        (click)="solicitarCuenta()"
-      >
-        Solicitar cuenta
-      </ion-button>
+    <ion-button
+      class="estado-pedido__cuenta"
+      shape="round"
+      expand="block"
+      (click)="solicitarCuenta()"
+    >
+      Solicitar cuenta
+    </ion-button>
     } @else if (hayPendientes()) {
-      <p class="estado-pedido__aviso">
-        Para pedir la cuenta, todos tus pedidos tienen que estar recibidos.
-      </p>
-    }
-
-    @if (hayCuentaEntregada()) {
-      <ion-button
-        class="estado-pedido__cuenta"
-        shape="round"
-        expand="block"
-        (click)="verCuenta()"
-      >
-        Ver mi cuenta
-      </ion-button>
+    <p class="estado-pedido__aviso">
+      Para pedir la cuenta, todos tus pedidos tienen que estar recibidos.
+    </p>
+    } @if (hayCuentaEntregada()) {
+    <ion-button
+      class="estado-pedido__cuenta"
+      shape="round"
+      expand="block"
+      (click)="verCuenta()"
+    >
+      Ver mi cuenta
+    </ion-button>
     }
 
     <ion-button

@@ -484,6 +484,7 @@ export class HomePage implements OnInit, OnDestroy {
 
       const valor = barcodes[0].rawValue ?? '';
       const porcentaje = parseTipQr(valor);
+      // const porcentaje = parseTipQr('propina:5');
 
       if (porcentaje === null) {
         await this.vibracion.error();
@@ -718,7 +719,7 @@ export class HomePage implements OnInit, OnDestroy {
   async verEstadoPedido(): Promise<void> {
     const modal = await this.modalController.create({
       component: EstadoPedidoComponent,
-      cssClass: 'estado-pedido-modal',
+      cssClass: 'confirm-modal',
       backdropDismiss: true,
     });
 

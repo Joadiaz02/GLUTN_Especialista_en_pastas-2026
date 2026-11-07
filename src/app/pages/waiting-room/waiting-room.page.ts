@@ -110,7 +110,7 @@ export class WaitingRoomPage implements OnInit, OnDestroy {
     try {
       // const result = await this._waitlistService.linkTable(
       //   this._userId,
-      //   "mesa:c80da3b5-fa09-4029-8dfd-b8966141d3ce"
+      //   "mesa:b63469cd-404d-460c-a193-4eb153b9dec1"
       // );
 
       const result = await this._waitlistService.linkTable(

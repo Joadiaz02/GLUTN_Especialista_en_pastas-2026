@@ -43,7 +43,7 @@ export class Pedido {
   public idPedidoEnEdicion = signal<string | null>(null);
 
   // Todos los pedidos no pagados del cliente en su mesa y estadía actuales.
-  public pedidosActivos = signal<PedidoActivo[]>([]);
+  public pedidosActivos = signal<any[]>([]);
 
   private mesaCliente = inject(MesaCliente);
 
@@ -108,7 +108,8 @@ export class Pedido {
 
     const { data, error } = await this.sup.client
       .from('pedido')
-      .select('id_pedido, estado_pedido')
+      .select('*')
+      // .select('id_pedido, estado_pedido')
       .eq('id_usuario', idUsuario)
       .eq('id_mesa', idMesa)
       .gte('fecha_emision_pedido', desde)
@@ -121,6 +122,7 @@ export class Pedido {
         .map((p) => ({
           id_pedido: p.id_pedido as string,
           estado_pedido: String(p.estado_pedido).toLowerCase(),
+          subtotal: p.subtotal
         }))
         .filter((p) => p.estado_pedido !== 'pagado')
     );

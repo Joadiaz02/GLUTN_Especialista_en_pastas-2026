@@ -5,6 +5,7 @@ import { Pedido } from '@app/services/pedido/pedido';
 import { Carrito } from '@app/pages/carrito/carrito';
 import { Vibracion } from '@app/services';
 import { LimitesListaDirective } from '@app/directives/limites-lista.directive';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 const estados_posibles: Record<string, string> = {
   pendiente: 'Esperando confirmación del mozo',
@@ -33,7 +34,7 @@ const ESTADOS_EN_CURSO = [
   standalone: true,
   templateUrl: './estado-pedido.component.html',
   styleUrls: ['./estado-pedido.component.scss'],
-  imports: [IonButton, LimitesListaDirective],
+  imports: [CommonModule, CurrencyPipe, IonButton, LimitesListaDirective],
 })
 export class EstadoPedidoComponent {
   private modalController = inject(ModalController);
@@ -52,6 +53,14 @@ export class EstadoPedidoComponent {
 
   legible = (estado: string) => estados_posibles[estado] ?? estado;
 
+  total = computed(() =>
+  this.pedidos().reduce((acc, pedido) => acc + pedido.subtotal, 0)
+);
+
+  ngOnInit() {
+    console.log(this.pedidos())
+  }
+
   // Se puede pedir la cuenta solo si todos los pedidos (menos los
   // rechazados) están recibidos.
   puedeSolicitarCuenta = computed(() => {
@@ -65,9 +74,7 @@ export class EstadoPedidoComponent {
     );
   });
 
-  hayPendientes = computed(() =>
-    this.pedidos().some((p) => ESTADOS_EN_CURSO.includes(p.estado_pedido))
-  );
+  hayPendientes = computed(() => this.pedidos().some((p) => ESTADOS_EN_CURSO.includes(p.estado_pedido)));
 
   hayCuentaEntregada = computed(() =>
     this.pedidos().some((p) => p.estado_pedido === 'cuenta_entregada')
