@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, signal, ViewChild } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonButton, IonContent, IonModal, ToastController } from '@ionic/angular';
@@ -54,6 +54,8 @@ export class CuentaPage implements OnDestroy {
   idPedidoPagado = signal<string | null>(null);
   descargandoFactura = signal(false);
 
+  @ViewChild('modalPago') private modalPago?: IonModal;
+
   lineas = computed(() => this.cuenta()?.lineas ?? []);
 
   propina = computed(() => {
@@ -79,8 +81,10 @@ export class CuentaPage implements OnDestroy {
   }
 
   ionViewWillLeave(): void {
-    // el modal de pago confirmado no debe quedar abierto en la pantalla siguiente
+    // el modal de pago confirmado no debe quedar abierto en la pantalla siguiente;
+    // se cierra a mano porque Ionic deja de actualizar la pantalla que queda atrás
     this.pagoConfirmado.set(false);
+    void this.modalPago?.dismiss();
     this.dejarDeEscuchar();
   }
 
