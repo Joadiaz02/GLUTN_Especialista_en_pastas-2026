@@ -2,6 +2,13 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <app-confirm-volver (confirmadoVolver)="volver()"></app-confirm-volver>
+
+      <!-- logo chico al lado del volver -->
+      <img
+        class="logo-toolbar"
+        src="assets/images/LOGO-GLUTN.png"
+        alt="GLUTN - Especialista en Pastas"
+      />
     </ion-buttons>
 
     <h1 class="titulo-toolbar">{{ titulo() }}</h1>

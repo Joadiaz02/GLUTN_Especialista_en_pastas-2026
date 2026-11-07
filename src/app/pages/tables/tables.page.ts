@@ -228,14 +228,14 @@ export class TablesPage {
       const confirmed = activa
         ? await this._confirm.preguntar({
             titulo: '¿Reactivar la mesa?',
-            mensaje: `"La mesa N°${table.numero}" va a volver a estar disponible.`,
+            mensaje: `"La mesa ${table.numero}" va a volver a estar disponible.`,
             textoConfirmar: 'Reactivar',
             colorConfirmar: 'primary',
             icono: 'refresh-outline',
           })
         : await this._confirm.preguntar({
             titulo: '¿Dar de baja la mesa?',
-            mensaje: `"La mesa N°${table.numero}" va a dejar de estar disponible. Vas a poder reactivarlo cuando quieras.`,
+            mensaje: `"La mesa ${table.numero}" va a dejar de estar disponible. Vas a poder reactivarlo cuando quieras.`,
             textoConfirmar: 'Dar de baja',
             colorConfirmar: 'danger',
             icono: 'trash-outline',

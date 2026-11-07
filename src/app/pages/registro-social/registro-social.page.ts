@@ -17,6 +17,7 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { Auth, DatosRedSocial } from '@app/services/auth/auth';
+import { EPerfilUsuario } from '@app/enums';
 import { Storage } from '@app/services/storage';
 import { Vibracion } from '@app/services/vibracion/vibracion';
 import { SupabaseService } from '@app/services/supabase.service';
@@ -117,8 +118,17 @@ export class RegistroSocialPage implements OnInit {
   async ngOnInit(): Promise<void> {
     const usuario = await this.auth.obtenerUsuarioActual();
 
-    // ya tiene perfil: no corresponde completar el registro
-    if (!usuario || this.auth.obtenerPerfil(usuario)) {
+    const perfil = usuario ? this.auth.obtenerPerfil(usuario) : null;
+
+    // el cliente registrado ya completó su registro: vuelve a su home
+    if (perfil === EPerfilUsuario.ClienteRegistrado) {
+      await this.router.navigate(['/home'], { replaceUrl: true });
+
+      return;
+    }
+
+    // sin sesión o con otro perfil (por ejemplo el visitante): no corresponde completar el registro
+    if (!usuario || perfil) {
       await this.router.navigate(['/login'], { replaceUrl: true });
 
       return;

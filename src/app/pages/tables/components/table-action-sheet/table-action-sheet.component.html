@@ -1,5 +1,5 @@
 <div class="qr-modal">
-  <h2 class="qr-modal__title">Mesa N° {{ table.numero }}</h2>
+  <h2 class="qr-modal__title">Mesa {{ table.numero }}</h2>
   <p class="qr-modal__subtitle">
     <span>
       @switch (table.tipo) { @case ('movilidad_reducida') { Movilidad Reducida }
@@ -41,7 +41,7 @@
     <img
       class="qr-modal__img"
       [src]="src"
-      [alt]="'Código QR de la mesa N° ' + table.numero"
+      [alt]="'Código QR de la mesa ' + table.numero"
     />
     } @else {
     <app-spinner-logo />

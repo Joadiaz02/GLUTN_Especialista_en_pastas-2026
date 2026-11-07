@@ -326,6 +326,7 @@
             @if (preguntaActual(); as pregunta) {
               <div
                 class="question-card"
+                [class.question-card--error]="faltaResponder()"
                 role="group"
                 [attr.aria-labelledby]="'pregunta-' + pregunta.id"
               >
@@ -363,11 +364,15 @@
                     }
                   </div>
 
-                  <small class="question-hint">
-                    1 es la calificación más baja y 5 la más alta.
+                  <small
+                    class="question-hint"
+                    [class.question-hint--error]="faltaResponder()"
+                    [attr.role]="faltaResponder() ? 'alert' : null"
+                  >
+                    {{ faltaResponder() ? mensajeFalta(pregunta.tipo) : '1 es la calificación más baja y 5 la más alta.' }}
                   </small>
                 } @else if (pregunta.tipo === 'opcion') {
-                  <div class="choice-list">
+                  <div class="choice-list" appListaEncajada raizObservada=".choice-list">
                     @for (opcion of pregunta.opciones; track opcion) {
                       <label
                         [class.is-selected]="
@@ -389,11 +394,15 @@
                     }
                   </div>
 
-                  <small class="question-hint">
-                    Elegí una sola opción.
+                  <small
+                    class="question-hint"
+                    [class.question-hint--error]="faltaResponder()"
+                    [attr.role]="faltaResponder() ? 'alert' : null"
+                  >
+                    {{ faltaResponder() ? mensajeFalta(pregunta.tipo) : 'Elegí una sola opción.' }}
                   </small>
                 } @else if (pregunta.tipo === 'multiple') {
-                  <div class="choice-list">
+                  <div class="choice-list" appListaEncajada raizObservada=".choice-list">
                     @for (opcion of pregunta.opciones; track opcion) {
                       <label
                         [class.is-selected]="
@@ -419,8 +428,12 @@
                     }
                   </div>
 
-                  <small class="question-hint">
-                    Podés elegir más de una.
+                  <small
+                    class="question-hint"
+                    [class.question-hint--error]="faltaResponder()"
+                    [attr.role]="faltaResponder() ? 'alert' : null"
+                  >
+                    {{ faltaResponder() ? mensajeFalta(pregunta.tipo) : 'Podés elegir más de una.' }}
                   </small>
                 } @else if (pregunta.tipo === 'slider') {
                   <div class="slider-box">
@@ -448,8 +461,12 @@
                     </ion-range>
                   </div>
 
-                  <small class="question-hint">
-                    Deslizá para elegir: 1 es nada probable y 10 muy probable.
+                  <small
+                    class="question-hint"
+                    [class.question-hint--error]="faltaResponder()"
+                    [attr.role]="faltaResponder() ? 'alert' : null"
+                  >
+                    {{ faltaResponder() ? mensajeFalta(pregunta.tipo) : 'Deslizá para elegir: 1 es nada probable y 10 muy probable.' }}
                   </small>
                 }
               </div>

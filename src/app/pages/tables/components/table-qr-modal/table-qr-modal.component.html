@@ -1,5 +1,5 @@
 <div class="qr-modal">
-  <h2 class="qr-modal__title">Código QR de la mesa N° {{ table.numero }}</h2>
+  <h2 class="qr-modal__title">Código QR de la mesa {{ table.numero }}</h2>
   <p class="qr-modal__subtitle">
     Imprimilo y pegalo en la mesa para que los clientes lo escaneen.
   </p>
@@ -9,7 +9,7 @@
     <img
       class="qr-modal__img"
       [src]="src"
-      [alt]="'Código QR de la mesa N° ' + table.numero"
+      [alt]="'Código QR de la mesa ' + table.numero"
     />
     } @else {
     <app-spinner-logo />
