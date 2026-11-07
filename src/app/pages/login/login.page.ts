@@ -53,6 +53,9 @@ export class LoginPage {
   protected readonly ingresoSocial = inject(IngresoSocial);
   email = '';
 
+  // se tocó Iniciar sesión con datos incompletos: se muestran los errores de cada campo
+  intentoIngresar = signal(false);
+
   contrasena = '';
 
   logo ='assets/images/LOGO-GLUTN.png';
@@ -124,6 +127,21 @@ const navigationState =
     );
   }
 
+// mismo texto que en el registro
+errorEmail(): string {
+  const email = this.email.trim();
+
+  if (!email) {
+    return 'El correo electrónico es obligatorio.';
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return 'Ingresá un correo electrónico válido.';
+  }
+
+  return '';
+}
+
 async iniciarSesion(): Promise<void> {
   if (this.cargando()) {
     return;
@@ -136,6 +154,7 @@ async iniciarSesion(): Promise<void> {
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
     password.length === 0
   ) {
+    this.intentoIngresar.set(true);
     await this.vibracion.errorValidacion();
     return;
   }

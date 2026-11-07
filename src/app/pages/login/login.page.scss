@@ -59,6 +59,12 @@ ion-content {
   margin: 0;
 }
 
+// campo con error: borde rojo, como en el registro
+.field__input.campo-invalido {
+  --border-color: var(--ion-color-danger, #eb444a);
+  --border-width: 2px;
+}
+
 .texto-error {
   color: var(--ion-color-danger, #eb444a);
   font-size: 16px;

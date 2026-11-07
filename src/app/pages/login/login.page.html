@@ -16,10 +16,11 @@
     <div class="campo">
       <label class="field__label label-centrado">Correo electrónico</label>
       <ion-item lines="none">
-        <ion-input class="field__input" fill="outline" (ionInput)="email = $event.detail.value ?? ''" [(ngModel)]="email" #emailInput="ngModel" name="email" type="email" placeholder="jperez@ejemplo.com" required></ion-input>
+        <ion-input class="field__input" [class.campo-invalido]="(emailInput.touched || intentoIngresar()) && !!errorEmail()" fill="outline" (ionInput)="email = $event.detail.value ?? ''" [(ngModel)]="email" #emailInput="ngModel" name="email" type="email" placeholder="jperez@ejemplo.com" required></ion-input>
       </ion-item>
+      <!-- antes: {{ emailInput.touched && !email ? 'Correo electrónico requerido' : '' }} -->
       <p class="texto-error label-centrado">
-        {{ emailInput.touched && !email ? 'Correo electrónico requerido' : '' }}
+        {{ (emailInput.touched || intentoIngresar()) ? errorEmail() : '' }}
       </p>
     </div>
 
@@ -28,6 +29,7 @@
       <ion-item lines="none">
         <ion-input
           class="field__input"
+          [class.campo-invalido]="intentoIngresar() && !contrasena"
           fill="outline"
           [(ngModel)]="contrasena"
           #contraInput="ngModel"
@@ -38,8 +40,9 @@
           required>
         </ion-input>
       </ion-item>
+      <!-- antes: {{ contraInput.touched && !contrasena ? 'Contraseña requerida' : '' }} -->
       <p class="texto-error label-centrado">
-        {{ contraInput.touched && !contrasena ? 'Contraseña requerida' : '' }}
+        {{ (contraInput.touched || intentoIngresar()) && !contrasena ? 'La contraseña es obligatoria.' : '' }}
       </p>
     </div>
 
