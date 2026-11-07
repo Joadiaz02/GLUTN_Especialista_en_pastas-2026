@@ -79,9 +79,9 @@ La siguiente distribución corresponde al estado del proyecto luego de las modif
 
 | Integrante | Módulos asignados |
 |---|---|
-| **Joaquín Díaz** | 5, 6, 7, 8, **9 y 10 (en conjunto con Javier)**, 17, 20 y 22 (Parte 2) **(en conjunto con Mariano)** |
+| **Joaquín Díaz** | 5, 6, 7, 8, **9 y 10 (en conjunto con Javier)**, 20 y 22 (Parte 2) **(en conjunto con Mariano)** |
 | **Javier Vilchez** | 1, 3, 4, **9 y 10 (en conjunto con Joaquín)** y 22 |
-| **Lucas Ponte** |  12, 13, 14, 19 y 21 |
+| **Lucas Ponte** |  12, 13, 14, 17, 19 y 21 |
 | **Mariano Pastor** | 2, 11, 15, 16, 18, 22 (Parte 2) **(en conjunto con Joaquín)** y 23 |
 
 > **Nota:** Los puntos **9 y 10** son responsabilidad conjunta de **Joaquín Díaz y Javier Vilchez**. Se decidió trabajarlos en conjunto porque son módulos de mayor tamaño que integran varias funcionalidades relacionadas y requieren coordinación entre distintos flujos de la aplicación.
@@ -188,14 +188,6 @@ Los módulos se documentan individualmente indicando:
 
 > **Cambio:** desde el 27/09/2026 este módulo se desarrolla en conjunto debido a su tamaño y a la cantidad de funcionalidades que integra.
 
-### Punto 17 - Sector bar
-
-**Qué se realiza:** recepción en el sector bar de los productos correspondientes a cada pedido, mostrando número de mesa, fecha, hora, productos y cantidades, agrupados para facilitar la gestión del cantinero.
-
-**Inicio:** 31/09/2026
-**Finalización:** 17/10/2026  
-**Estado:** Finalizado  
-**Branch:** `Joaquin-Diaz`
 
 ### Punto 20 - Encuestas y gráficos
 
@@ -311,6 +303,15 @@ Los módulos se documentan individualmente indicando:
 
 **Inicio:** 15/09/2026  
 **Finalización:** 02/10/2026  
+**Estado:** Finalizado  
+**Branch:** `Lucas-ponte`
+
+### Punto 17 - Sector bar
+
+**Qué se realiza:** recepción en el sector bar de los productos correspondientes a cada pedido, mostrando número de mesa, fecha, hora, productos y cantidades, agrupados para facilitar la gestión del cantinero.
+
+**Inicio:** 31/09/2026
+**Finalización:** 17/10/2026  
 **Estado:** Finalizado  
 **Branch:** `Lucas-ponte`
 
